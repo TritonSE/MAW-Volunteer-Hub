@@ -1,0 +1,19 @@
+{
+  "name": "maw-volunteer-hub",
+  "version": "1.0.0",
+  "description": "Volunteer Hub for Make-A-Wish San Diego",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TritonSE/MAW-Volunteer-Hub.git"
+  },
+  "author": "Triton Software Engineering",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TritonSE/MAW-Volunteer-Hub/issues"
+  },
+  "homepage": "https://github.com/TritonSE/MAW-Volunteer-Hub#readme"
+}
