@@ -1,8 +1,6 @@
 ### Administrative Info
+[GitHub Issue #]
 Make sure your branch name conforms to: `<feature/staging/hotfix/...>/[username]/[3-4 word description separated by dashes]`. Otherwise, please rename your branch and create a new PR.
-
-Github Issue ID(s): 
-
 
 ### Changes
 What changes did you make?
