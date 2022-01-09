@@ -102,6 +102,10 @@ code {
   background: #BBBCBC;
 }
 
+.login button:hover {
+  cursor: pointer;
+}
+
 .login_switch {
   position: absolute;
   width: 298px;
