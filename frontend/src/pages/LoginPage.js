@@ -25,10 +25,6 @@ function LoginPage() {
   const [rpassword, setRPassword] = useState("");
   
   function validate(){
-    // if(isLogin) return true;
-
-    /* TODO */
-
     return (name && email && password && rpassword && (password === rpassword));
   }
 
