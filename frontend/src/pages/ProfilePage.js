@@ -52,32 +52,45 @@ function ProfilePage() {
 
       {/* Change Password and Delete Profile Modals */}
       <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
         isOpen={passModalOpen}
         onRequestClose={() => setPassModalOpen(false)}
-        contentLabel="Example Modal"
+        contentLabel="Change Password Modal"
       >
-        <h2>Change Password</h2>
-        <button type="button" onClick={() => setPassModalOpen(false)}>x</button>
-        <form>
-          <input />
-          <input />
-          <input />
+        <button className="close-button" type="button" onClick={() => setPassModalOpen(false)} />
+        <form className="change-pass-form">
+          <input placeholder="Enter old password" type="password" />
+          <input placeholder="Enter new password" type="password" />
+          <input placeholder="Reenter new password" type="password" />
 
-          <button type="submit"> submit</button>
+          <button className="modal-button button-primary" type="submit">
+            Change password
+          </button>
         </form>
       </Modal>
 
       <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
         isOpen={deleteModalOpen}
         onRequestClose={() => setDeleteModalOpen(false)}
-        contentLabel="Example Modal"
+        contentLabel="Delete Account Modal"
       >
-        <h2>Are you sure you want to delete this profile?</h2>
-        <button type="button" onClick={() => setDeleteModalOpen(false)}>
-          x
-        </button>
-        <button type="button">Cancel</button>
-        <button type="button">Delete</button>
+        <h1>Are you sure you want to delete this profile?</h1>
+        <button className="close-button" type="button" onClick={() => setDeleteModalOpen(false)} />
+        <div className="delete-button-container">
+          <button
+            className="modal-button small button-secondary"
+            type="button"
+            onClick={() => setDeleteModalOpen(false)}
+          >
+            Cancel
+          </button>
+          <button className="modal-button small button-danger " type="button">
+            Delete
+          </button>
+        </div>
       </Modal>
     </div>
   );
