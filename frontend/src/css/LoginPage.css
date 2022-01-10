@@ -1,120 +1,120 @@
 .hidden {
-display: none !important;
-visibility: hidden !important;
-opacity: 0 !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
 }
 
 .login {
-width: 100vw;
-height: 100vh;
-background-color: var(--background-grey);
-background-image: url('../../public/vector4.svg');
-background-size: 100vw;
-background-position: center bottom;
-background-repeat: no-repeat;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-grey);
+    background-image: url('../../public/vector4.svg');
+    background-size: 100vw;
+    background-position: center bottom;
+    background-repeat: no-repeat;
 }
 
 .login_logo {
-position: absolute;
-width: 369px;
-height: 102.84px;
-left: 6vw;
-top: 38vh;
+    position: absolute;
+    width: 369px;
+    height: 102.84px;
+    left: 6vw;
+    top: 38vh;
 }
 
 .login_box {
-position: absolute;
-width: 300px;
-height: 258px;
-right: 8vw;
-top: 25vh;
+    position: absolute;
+    width: 300px;
+    height: 258px;
+    right: 8vw;
+    top: 25vh;
 
-padding: 50px;
+    padding: 50px;
 
-background: #FFFFFF;
-box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.25);
-border-radius: 20px;
+    background: #FFFFFF;
+    box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
 }
 
 .login input:not([type="checkbox"]) {
-width: calc(300px - 2px - 5px);
-height: 28px;
-padding: 0;
-padding-left: 5px;
+    width: calc(300px - 2px - 5px);
+    height: 28px;
+    padding: 0;
+    padding-left: 5px;
 
-border: 1px solid #000000;
+    border: 1px solid #000000;
 
-font-family: 'Lato' !important;
+    font-family: 'Lato' !important;
 
-margin-bottom: 16px;
+    margin-bottom: 16px;
 }
 
 .login button {
-width: 300px;
-height: 28px;
-padding: 0;
-border-radius: 0;
-background: rgba(0, 87, 184, 0.9);
-color: #FFFFFF;
-border: 0;
+    width: 300px;
+    height: 28px;
+    padding: 0;
+    border-radius: 0;
+    background: rgba(0, 87, 184, 0.9);
+    color: #FFFFFF;
+    border: 0;
 
-font-family: 'Lato' !important;
+    font-family: 'Lato' !important;
 }
 
 .login button:disabled {
-color: #FFFFFF;
-background: #BBBCBC;
+    color: #FFFFFF;
+    background: #BBBCBC;
 }
 
 .login button:hover {
-cursor: pointer;
+    cursor: pointer;
 }
 
 .login_switch {
-position: absolute;
-width: 298px;
-bottom: 25px;
-left: 50px;
-/* TODO: Bad! */
-background: #FFFFFF !important;
-border: 1px solid #000000 !important;
-color: #000000 !important;
+    position: absolute;
+    width: 298px;
+    bottom: 25px;
+    left: 50px;
+    /* TODO: Bad! */
+    background: #FFFFFF !important;
+    border: 1px solid #000000 !important;
+    color: #000000 !important;
 }
 
 .login_password {
-height: calc(60px - 14px);
+    height: calc(60px - 14px);
 }
 
 .login_password_eye {
-display: block;
-width: 16px;
-height: 16px;
-position: relative;
-top: -38px;
-left: calc(300px - 22px);
-cursor: pointer;
+    display: block;
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: -38px;
+    left: calc(300px - 22px);
+    cursor: pointer;
 }
 
 .login_flex {
-display: flex;
-align-items: center;
-justify-content: space-between;
-width: 100%;
-margin-bottom: 16px;
-font-size: 12px;
-font-family: 'Lato', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 16px;
+    font-size: 12px;
+    font-family: 'Lato', sans-serif;
 }
 
 .login_flex_center {
-display: flex;
-align-items: center;
-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .login_flex_center input[type="checkbox"] {
-margin-left: 0;
+    margin-left: 0;
 }
 
 .login_flex a {
-color: #000000;
+    color: #000000;
 }
