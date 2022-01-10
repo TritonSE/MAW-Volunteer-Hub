@@ -3,13 +3,13 @@
   It currently just puts a navbar at the top of the page.
  */
 import React from "react";
-import NavBar from "./NavBar.js";
+import NavBar from "./NavBar";
 
 export default function PageLayout({ children }) {
-    return (
-        <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
-            <NavBar />
-            {children}
-        </div>
-    );
+  return (
+    <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
+      <NavBar />
+      {children}
+    </div>
+  );
 }
