@@ -1,0 +1,76 @@
+.container {
+    font-family: Lato;
+    font-weight: 400;
+    width: 100%;
+    display: flex;
+    background-color: var(--primary-blue);
+    padding-top: 22px;
+    padding-left: 20px;
+    padding-bottom: 19px;
+    padding-left: 28px;
+}
+
+.maw-logo {
+    width: 104px;
+    height: 28px;
+    margin-left: 26px;
+    margin-right: 39px;
+}
+
+.page-name {
+    display: flex;
+    flex-direction: column;
+    margin-top: 7px;
+    margin-right: 32px;
+}
+
+.page-links {
+    color: var(--white);
+    text-decoration: none;
+}
+
+.page-links:hover + .underline-hidden {
+    display: block;
+    width: auto;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--white);
+    margin-top: 4px;
+}
+
+.underline-shown {
+    width: auto;
+    height: 2px;
+    border-radius: 1px;
+    background-color: var(--white);
+    margin-top: 4px;
+}
+
+.underline-hidden {
+    display: none;
+}
+
+.searchbar {
+    width: 36.85px;
+    height: 30px;
+}
+
+.profile-icon {
+    width: 37px;
+    height: 37px;
+    margin-right: 7px;
+}
+
+.arrow-dropdown {
+    width: 15px;
+    height: 9px;
+}
+
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+}
