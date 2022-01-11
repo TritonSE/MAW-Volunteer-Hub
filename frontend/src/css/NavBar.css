@@ -1,0 +1,51 @@
+.container {
+    font-family: Lato;
+    width: 100%;
+    display: flex;
+    background-color: #1A68BF; /* var(--blue) */
+    padding-top: 22px;
+    padding-left: 20px;
+    padding-bottom: 19px;
+    padding-left: 28px;
+}
+
+.maw-logo {
+    width: 104px;
+    height: 28px;
+}
+
+.page-links {
+    color: #FFFFFF; /* var(--white) */
+    text-decoration: none;
+}
+
+.page-links:hover + .underline-hidden {
+    display: block;
+    width: auto;
+    height: 2px;
+    border-radius: 1px;
+    background-color: #FFFFFF; /* var(--white) */
+}
+
+.underline-shown {
+    width: auto;
+    height: 2px;
+    border-radius: 1px;
+    background-color: #FFFFFF; /* var(--white) */
+}
+
+.underline-hidden {
+    display: none;
+}
+
+.page-name {
+    display: flex;
+    flex-direction: column;
+}
+
+.searchbar {
+    width: 36.85px;
+    height: 30px;
+    background-color: black;
+}
+

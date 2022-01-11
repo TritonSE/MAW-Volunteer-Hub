@@ -8,6 +8,7 @@ import PeoplePage from "./pages/PeoplePage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
+import ManagePage from './pages/ManagePage';
  
 function App() {
   return (
@@ -36,6 +37,12 @@ function App() {
                     <WishGrantingPage />
                 </PageLayout>
             </Route>
+            {/* Manage Page */}
+            <Route exact path={SITE_PAGES.MANAGE}>
+                <PageLayout>
+                    <ManagePage />
+                </PageLayout>
+            </Route>            
 
             {/* Any other URL is automatically matched to 404 Page */}
             <Route path="/">
