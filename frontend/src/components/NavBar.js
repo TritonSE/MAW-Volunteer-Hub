@@ -1,7 +1,7 @@
 /**
     Super basic navbar without any styles
  */
-import React from "react";
+import React, { useState } from "react";
 import { SITE_PAGES } from "../constants/links";
 import { useLocation } from "react-router-dom";
 import "../styles/NavBar.css";
@@ -15,6 +15,9 @@ export default function NavBar() {
 
     const location = useLocation().pathname;
 
+    const signout = () => {};
+
+    const [dropdown, setDropdown] = useState(false);
 
     return (
 
@@ -34,16 +37,30 @@ export default function NavBar() {
 
         
             <div className="search-container">
-                <button className="button" onClick={() => window.location.reload()}>
+                <button className="search-button" onClick={() => window.location.reload()}>
                     <img src="/img/searchbar.svg" alt="Search Bar" className="searchbar"/>
                 </button>
             </div>
 
             <div className="profile-container">
-                <button className="button" onClick={() => window.location.reload()}>
-                    <img src="/img/profile_icon.svg" alt="Profile Icon" className="profile-icon"/>
+
+                <div className="profile-icon" onClick={()=>setDropdown(prev => !prev)}>
+                    <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
                     <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
-                </button>
+                </div>
+
+                {dropdown && (
+                    <div className="profile-dropdown">
+                        <div className="view-profile">
+                            <a className="view-profile-link" href={SITE_PAGES.PROFILE}>View your profile</a>
+                        </div>
+                        <div className="signout">
+                            <a className="signout-link" href={SITE_PAGES.LOGIN} onClick={signout()}>Sign out</a>
+                        </div>
+                    </div>
+                )}
+
+
             </div>
 
         </div>

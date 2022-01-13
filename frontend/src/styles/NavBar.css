@@ -3,25 +3,23 @@
     font-weight: 400;
     width: 100%;
     display: flex;
+    overflow: scroll;
+    flex-direction: row;
     background-color: var(--primary-blue);
-    padding-top: 22px;
-    padding-left: 20px;
-    padding-bottom: 19px;
-    padding-left: 28px;
+    padding: 16px 28px 0px 26px;
 }
 
 .maw-logo {
     width: 104px;
     height: 28px;
-    margin-left: 26px;
-    margin-right: 39px;
+    margin: 6px 39px 20px 0px;
 }
 
 .page-name {
     display: flex;
     flex-direction: column;
-    margin-top: 7px;
-    margin-right: 32px;
+    margin: 13px 32px 19px 0px;
+    white-space: nowrap;
 }
 
 .page-links {
@@ -50,12 +48,36 @@
     display: none;
 }
 
+.search-container {
+    margin-right: 10vw;
+}
+
 .searchbar {
     width: 36.85px;
     height: 30px;
 }
 
+.search-button {
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+}
+
+.profile-container {
+    width: 59px;
+    justify-content: flex-end;
+}
+
 .profile-icon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+}
+
+.account-icon {
     width: 37px;
     height: 37px;
     margin-right: 7px;
@@ -66,11 +88,22 @@
     height: 9px;
 }
 
-.button {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: transparent;
-    border: transparent;
-    cursor: pointer;
+.profile-dropdown {
+    position: absolute;
+    width: 153px;
+    height: 126px;
+    z-index: 1;
+    background-color: var(--white);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    margin-top: 20px;
+    padding: 36px 0px 0px 30px;
+}
+
+.view-profile {
+    margin-bottom: 48px;
+}
+
+.view-profile-link, .signout-link {
+    color: var(--black);
+    text-decoration: none;
 }
