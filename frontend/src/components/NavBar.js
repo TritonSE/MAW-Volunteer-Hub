@@ -37,6 +37,7 @@ export default function NavBar() {
 
         
             <div className="search-container">
+                <input className="search-input" placeholder="Search all files..."/>
                 <button className="search-button" onClick={() => window.location.reload()}>
                     <img src="/img/searchbar.svg" alt="Search Bar" className="searchbar"/>
                 </button>
