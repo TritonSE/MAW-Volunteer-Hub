@@ -121,6 +121,12 @@
 }
 
 .view-profile-link, .signout-link {
+    display: flex;
     color: var(--black);
     text-decoration: none;
+}
+
+.signout-icon {
+    margin-left: 20px;
+    align-items: center;
 }

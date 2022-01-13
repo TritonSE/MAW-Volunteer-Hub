@@ -3,7 +3,7 @@
  */
 import React, { useState } from "react";
 import { SITE_PAGES } from "../constants/links";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import "../styles/NavBar.css";
 
 const PAGES = {
@@ -11,7 +11,7 @@ const PAGES = {
     "Manage": SITE_PAGES.MANAGE,    
 };
 
-export default function NavBar() {
+function NavBar() {
 
     const location = useLocation().pathname;
 
@@ -21,19 +21,22 @@ export default function NavBar() {
 
     return (
 
-        <div className="container">
+        <nav className="container">
 
-            <img src="/img/maw_logo.svg" alt="Make-A-Wish logo" className="maw-logo"/>
+            <NavLink to={SITE_PAGES.MANAGE}>
+                <img src="/img/maw_logo.svg" alt="Make-A-Wish logo" className="maw-logo"/>
+            </NavLink>
 
-
+            
             { Object.entries(PAGES).map( ([page, route]) => (
 
                 <div className="page-name">
-                    <a className="page-links" href={route}>{page}</a>
+                    <NavLink className="page-links" to={route}>{page}</NavLink>
                     <div className={location === route ? "underline-shown" : "underline-hidden"}/>
                 </div>
 
             ))}
+            
 
         
             <div className="search-container">
@@ -45,7 +48,7 @@ export default function NavBar() {
 
             <div className="profile-container">
 
-                <div className="profile-icon" onClick={()=>setDropdown(prev => !prev)}>
+                <div className="profile-icon" onClick={() => setDropdown(prev => !prev)}>
                     <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
                     <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
                 </div>
@@ -53,18 +56,23 @@ export default function NavBar() {
                 {dropdown && (
                     <div className="profile-dropdown">
                         <div className="view-profile">
-                            <a className="view-profile-link" href={SITE_PAGES.PROFILE}>View your profile</a>
+                            <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE}>View your profile</NavLink>
                         </div>
-                        <div className="signout">
-                            <a className="signout-link" href={SITE_PAGES.LOGIN} onClick={signout()}>Sign out</a>
+                        <div onClick={() => signout()}>
+                            <NavLink className="signout-link" to={SITE_PAGES.LOGIN}>
+                                <span>Sign Out</span>
+                                <img src="/img/signout_icon.svg" alt="Sign out icon" className="signout-icon"/>
+                            </NavLink>
                         </div>
                     </div>
                 )}
 
 
             </div>
-
-        </div>
+            
+        </nav>
 
     );
 }
+
+export default NavBar;
