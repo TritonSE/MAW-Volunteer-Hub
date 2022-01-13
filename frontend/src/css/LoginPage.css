@@ -10,6 +10,9 @@
   background-size: 100vw;
   background-position: center bottom;
   background-repeat: no-repeat;
+
+  --box-padding-small: 5vw;
+  --box-width-small: calc(100vw - 5vw - (var(--box-padding-small) * 2));
 }
 
 .login_logo {
@@ -36,22 +39,6 @@
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-}
-
-@media only screen and (max-width: 900px) {
-  .login {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .login_logo {
-    position: unset;
-    margin-bottom: 50px;
-  }
-  .login_box {
-    position: unset;
-  }
 }
 
 .login input:not([type="checkbox"]) {
@@ -88,17 +75,12 @@
   cursor: pointer;
 }
 
-.login_switch {
+.login button.login_switch {
   width: 298px;
   margin-top: auto;
-  /*
-  bottom: 25px;
-  left: 50px;
-  */
-  /* TODO: Bad! */
-  background: #ffffff !important;
-  border: 1px solid #000000 !important;
-  color: #000000 !important;
+  background: #ffffff;
+  border: 1px solid #000000;
+  color: #000000;
 }
 
 .login_password {
@@ -137,4 +119,50 @@
 
 .login_flex a {
   color: #000000;
+}
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 900px) {
+  .login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .login_logo {
+    position: unset;
+    margin-bottom: 50px;
+  }
+  .login_box {
+    position: unset;
+  }
+}
+
+@media only screen and (max-width: 420px) {
+  .login_logo {
+    width: 90vw;
+  }
+  .login_box {
+    width: var(--box-width-small);
+    padding-left: var(--box-padding-small);
+    padding-right: var(--box-padding-small);
+  }
+  .login input:not([type="checkbox"]) {
+    width: calc(var(--box-width-small) - 50px - 2px - 5px);
+  }
+  .login button,
+  .login button.login_switch {
+    width: calc(var(--box-width-small) - 50px);
+  }
+  .login_password_eye {
+    left: calc(var(--box-width-small) - 50px - 2px - 5px - 16px);
+  }
+}
+
+@media only screen and (max-width: 300px) {
+  .login_flex {
+    flex-direction: column;
+  }
 }
