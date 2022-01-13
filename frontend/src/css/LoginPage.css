@@ -121,6 +121,11 @@
   color: #000000;
 }
 
+.login_form {
+  display: flex;
+  flex-direction: column;
+}
+
 /**
  * MEDIA QUERIES
  */

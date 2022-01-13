@@ -33,7 +33,7 @@ function LoginPage() {
     <div className="login">
       <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
       <form className="login_box" action="/">
-        <div>
+        <div className="login_form">
           <input
             placeholder="Full Name"
             className={isLogin ? "hidden" : ""}
