@@ -41,6 +41,7 @@ function LoginPage() {
           />
           <input placeholder="Email" type="email" onChange={(e) => setEmail(e.target.value)} />
           <PasswordField
+            className=""
             placeholder="Password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
