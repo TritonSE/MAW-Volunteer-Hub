@@ -8,12 +8,13 @@ import "../styles/NavBar.css";
 
 const PAGES = {
     "Wish Granting": SITE_PAGES.WISH_GRANTING,
-    "Manage": SITE_PAGES.MANAGE,    
+    "Manage": SITE_PAGES.MANAGE,
+    "Calendar": SITE_PAGES.PROFILE,
+    "Additional Resources": SITE_PAGES.PEOPLE,  
+    "Contact": SITE_PAGES.LOGIN,   
 };
 
 function NavBar() {
-
-    const location = useLocation().pathname;
 
     const signout = () => {};
 
@@ -31,18 +32,21 @@ function NavBar() {
                 </NavLink>
             </li>
 
-            
+
+
+            <li className="pages-container">
             { Object.entries(PAGES).map( ([page, route]) => (
                 
                 <li className="page-name">
                     <NavLink className="page-links" activeClassName="underline" to={route}>{page}</NavLink>
-                    {/* <div className={location === route ? "underline-shown" : "underline-hidden"}/> */}
                 </li>
 
             ))}
+            </li>
             
 
         <li className="search-and-profile">
+            
             <div className="search-container">
                 <input className="search-input" placeholder="Search all files..."/>
                 <button className="search-button" onClick={() => window.location.reload()}>

@@ -24,8 +24,12 @@
     margin: 6px 39px 0px 0px;
 }
 
+/*
+some unecessary css
+overflow: flex-wrap
+*/
 .page-name {
-    display: flex;
+    display: flex; 
     flex-direction: column;
     float: left;
     margin: 13px 32px 0px 0px;
@@ -88,6 +92,8 @@
     cursor: pointer;
 }
 
+/* image size? */
+
 .account-icon {
     width: 37px;
     height: 37px;
@@ -126,14 +132,27 @@
     align-items: center;
 }
 
-
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1200px) {
     .profile-container {
         margin-left: 10px;
     }
-    .search-container {
-        margin-right: 2vw;
+}
+
+@media only screen and (max-width: 1000px) {
+
+    .navlist {
+        display: flex;
+        flex-wrap: wrap;
     }
+
+    .pages-container {
+        margin-bottom: 20px;
+    }
+
+    .profile-dropdown {
+        left: 110px;
+    }
+
 }
 
 @media only screen and (max-width: 700px) {
@@ -141,12 +160,6 @@
     .search-and-profile {
         display: flex;
         flex-direction: column;
-    }
-
-    .navlist {
-        display: flex;
-        flex-direction: column;
-        overflow: scroll;
     }
 
     .search-container {
@@ -158,3 +171,4 @@
         left: 0px;
     }
 }
+
