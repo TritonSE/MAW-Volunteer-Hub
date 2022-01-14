@@ -2,11 +2,20 @@
     font-family: Lato;
     font-weight: 400;
     font-size: 14px;
-    display: flex;
     overflow: scroll;
-    flex-direction: row;
     background-color: var(--primary-blue);
     padding: 16px 28px 19px 26px;
+}
+
+.navlist {
+    margin: 0;
+    overflow: scroll;
+    padding: 0;
+    list-style-type: none;
+}
+
+.logo-container {
+    float: left;
 }
 
 .maw-logo {
@@ -18,6 +27,7 @@
 .page-name {
     display: flex;
     flex-direction: column;
+    float: left;
     margin: 13px 32px 0px 0px;
     white-space: nowrap;
 }
@@ -27,31 +37,16 @@
     text-decoration: none;
 }
 
-.page-links:hover + .underline-hidden {
-    display: block;
-    width: auto;
-    height: 2px;
-    border-radius: 1px;
-    background-color: var(--white);
-    margin-top: 4px;
+.underline {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
 }
 
-.underline-shown {
-    width: auto;
-    height: 2px;
-    border-radius: 1px;
-    background-color: var(--white);
-    margin-top: 4px;
-}
-
-.underline-hidden {
-    height: 2px;
-    margin-top: 4px;
-}
-
-.search-container {
-    margin-right: 5vw;
-    flex: 1;
+.search-and-profile {
+    float: right;
+    display: flex;
+    flex-direction: row;
 }
 
 .searchbar {
@@ -81,7 +76,7 @@
 
 .profile-container {
     width: 59px;
-    /* margin-left: auto; */
+    margin-left: 15vw;
 }
 
 .profile-icon {
@@ -129,4 +124,37 @@
 .signout-icon {
     margin-left: 20px;
     align-items: center;
+}
+
+
+@media only screen and (max-width: 800px) {
+    .profile-container {
+        margin-left: 10px;
+    }
+    .search-container {
+        margin-right: 2vw;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+   
+    .search-and-profile {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navlist {
+        display: flex;
+        flex-direction: column;
+        overflow: scroll;
+    }
+
+    .search-container {
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .profile-dropdown {
+        left: 0px;
+    }
 }

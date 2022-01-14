@@ -23,22 +23,26 @@ function NavBar() {
 
         <nav className="container">
 
-            <NavLink to={SITE_PAGES.MANAGE}>
-                <img src="/img/maw_logo.svg" alt="Make-A-Wish logo" className="maw-logo"/>
-            </NavLink>
+        <ul className="navlist">
+
+            <li className="logo-container">
+                <NavLink to={SITE_PAGES.MANAGE}>
+                    <img src="/img/maw_logo.svg" alt="Make-A-Wish logo" className="maw-logo"/>
+                </NavLink>
+            </li>
 
             
             { Object.entries(PAGES).map( ([page, route]) => (
-
-                <div className="page-name">
-                    <NavLink className="page-links" to={route}>{page}</NavLink>
-                    <div className={location === route ? "underline-shown" : "underline-hidden"}/>
-                </div>
+                
+                <li className="page-name">
+                    <NavLink className="page-links" activeClassName="underline" to={route}>{page}</NavLink>
+                    {/* <div className={location === route ? "underline-shown" : "underline-hidden"}/> */}
+                </li>
 
             ))}
             
 
-        
+        <li className="search-and-profile">
             <div className="search-container">
                 <input className="search-input" placeholder="Search all files..."/>
                 <button className="search-button" onClick={() => window.location.reload()}>
@@ -67,9 +71,11 @@ function NavBar() {
                     </div>
                 )}
 
-
             </div>
-            
+            </li>
+
+        </ul>
+
         </nav>
 
     );
