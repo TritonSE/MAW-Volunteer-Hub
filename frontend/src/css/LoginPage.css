@@ -1,6 +1,6 @@
 .login {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -153,9 +153,11 @@
   .login_logo {
     position: unset;
     margin-bottom: 50px;
+    margin-top: 25px;
   }
   .login_box {
     position: unset;
+    margin-bottom: 25px;
   }
 }
 
