@@ -83,6 +83,16 @@
   color: #000000;
 }
 
+.login button.login_unstyled {
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
 .login_password {
   height: calc(60px - 14px);
 }
@@ -92,7 +102,7 @@
   width: 16px;
   height: 16px;
   position: relative;
-  top: -38px;
+  top: 8px;
   left: calc(300px - 22px);
   cursor: pointer;
 }
@@ -124,6 +134,10 @@
 .login_form {
   display: flex;
   flex-direction: column;
+}
+
+.login_pointer {
+  cursor: pointer;
 }
 
 /**

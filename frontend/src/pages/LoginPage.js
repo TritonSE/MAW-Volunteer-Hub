@@ -8,12 +8,13 @@ function PasswordField({ placeholder, className, onChange }) {
   return (
     <div className={className + " login_password"}>
       <input placeholder={placeholder} type={isVisible ? "text" : "password"} onChange={onChange} />
-      <img
-        alt="Toggle password visibility"
-        src={isVisible ? "/img/login_visible.svg" : "/img/login_notvisible.svg"}
-        className={"login_password_eye" + (isVisible ? " visible" : "")}
-        onClick={() => setIsVisible(!isVisible)}
-      />
+      <button type="button" className="login_unstyled" onClick={() => setIsVisible(!isVisible)}>
+        <img
+          alt="Toggle password visibility"
+          src={isVisible ? "/img/login_visible.svg" : "/img/login_notvisible.svg"}
+          className={"login_password_eye" + (isVisible ? " visible" : "")}
+        />
+      </button>
     </div>
   );
 }
@@ -54,10 +55,10 @@ function LoginPage() {
             onChange={(e) => setRPassword(e.target.value)}
           />
           <div className={"login_flex" + (isLogin ? "" : " hidden")}>
-            <div className="login_flex_center">
+            <label htmlFor="remember" className="login_flex_center login_pointer">
               <input type="checkbox" id="remember" />
-              <label htmlFor="remember">Keep me signed in</label>
-            </div>
+              Keep me signed in
+            </label>
             <a href="#forgot">Forgot password</a>
           </div>
           <button type="submit" disabled={!isLogin && !validate()}>
