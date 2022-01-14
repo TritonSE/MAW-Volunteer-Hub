@@ -58,7 +58,12 @@ function ProfilePage() {
         onRequestClose={() => setPassModalOpen(false)}
         contentLabel="Change Password Modal"
       >
-        <button className="close-button" type="button" onClick={() => setPassModalOpen(false)} />
+        <button
+          className="close-button"
+          aria-label="close-button"
+          type="button"
+          onClick={() => setPassModalOpen(false)}
+        />
         <form className="change-pass-form">
           <input placeholder="Enter old password" type="password" />
           <input placeholder="Enter new password" type="password" />
@@ -78,7 +83,12 @@ function ProfilePage() {
         contentLabel="Delete Account Modal"
       >
         <h1>Are you sure you want to delete this profile?</h1>
-        <button className="close-button" type="button" onClick={() => setDeleteModalOpen(false)} />
+        <button
+          className="close-button"
+          aria-label="close-button"
+          type="button"
+          onClick={() => setDeleteModalOpen(false)}
+        />
         <div className="delete-button-container">
           <button
             className="modal-button small button-secondary"
