@@ -1,7 +1,12 @@
+.side_nav_layout {
+  display: flex;
+  flex-direction: row;
+}
+
 .side_nav_buttons {
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: relative;
   align-items: center;
   background-color: white;
   height: 100%;
@@ -24,7 +29,6 @@
   text-align: center;
   color: #0057b8;
 
-  text-decoration: none;
   background-color: white;
   border-width: 0px;
   border-radius: 8px;
@@ -34,4 +38,5 @@
 
 .side_nav_links:hover {
   background-color: rgba(0, 87, 184, 0.1);
+  cursor: pointer;
 }
