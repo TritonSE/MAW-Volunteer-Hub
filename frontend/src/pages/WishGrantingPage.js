@@ -32,7 +32,6 @@ function WishGrantingPage() {
 
   return (
     <div>
-      <h1>Wish Granting</h1>
       <SideNav tabs={tabs} />
     </div>
   );

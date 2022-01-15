@@ -3,9 +3,13 @@ import "../styles/SideNav.css";
 
 function SideNav({ tabs }) {
   return (
-    <div>
+    <div className="side_nav_buttons">
       {tabs.map((tab) => (
-        <div>{tab.tab_name}</div>
+        <a href={tab.tab_content}>
+          <button className="side_nav_links" type="button">
+            {tab.tab_name}
+          </button>
+        </a>
       ))}
     </div>
   );
