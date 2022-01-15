@@ -14,6 +14,8 @@
   --blackish: #101010;
 
   --white: #FFFFFF;
+
+  --blue-gradient: linear-gradient(90deg, rgba(0, 87, 184, 0.6) -1.35%, rgba(0, 87, 184, 0.7) 52.84%, #0057B8 102.69%);
 }
 
 body {

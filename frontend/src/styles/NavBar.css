@@ -3,8 +3,9 @@
     font-weight: 400;
     font-size: 14px;
     overflow: scroll;
-    background-color: var(--primary-blue);
+    background: var(--blue-gradient);
     padding: 16px 28px 19px 26px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
 }
 
 .navlist {
@@ -24,21 +25,12 @@
     margin: 6px 39px 0px 0px;
 }
 
-/*
-some unecessary css
-overflow: flex-wrap
-*/
-.page-name {
-    display: flex; 
-    flex-direction: column;
-    float: left;
-    margin: 13px 32px 0px 0px;
-    white-space: nowrap;
-}
-
 .page-links {
     color: var(--white);
     text-decoration: none;
+    float: left;
+    margin: 13px 32px 0px 0px;
+    /* white-space: nowrap; */
 }
 
 .underline {
@@ -53,10 +45,6 @@ overflow: flex-wrap
     flex-direction: row;
 }
 
-.searchbar {
-    vertical-align: middle;
-}
-
 .search-input {
     height: 17px;
     padding-bottom: 5px;
@@ -64,8 +52,12 @@ overflow: flex-wrap
     padding-left: 4.95px;
     font-size: 14px;
     /* border-radius: 3px 0px 0px 3px; */
-    vertical-align: middle;
+}
 
+.searchbar-icon {
+    /* vertical-align: middle; */
+    width: 10.45px;
+    height: 15px;
 }
 
 .search-button {
@@ -75,6 +67,8 @@ overflow: flex-wrap
     width: 36.85px;
     height: 30px;
     background-color: red;
+    /* background: rgba(0, 87, 184, 0.3); */
+    border-radius: 3px 0px 0px 3px;
     border-radius: 0px 3px 3px 0px;
 }
 
@@ -87,12 +81,9 @@ overflow: flex-wrap
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: transparent;
     border: transparent;
     cursor: pointer;
 }
-
-/* image size? */
 
 .account-icon {
     width: 37px;
@@ -117,7 +108,7 @@ overflow: flex-wrap
     padding: 36px 0px 0px 30px;
 }
 
-.view-profile {
+.view-profile-link {
     margin-bottom: 48px;
 }
 
@@ -131,6 +122,8 @@ overflow: flex-wrap
     margin-left: 20px;
     align-items: center;
 }
+
+/* Media queries for responsive display */
 
 @media only screen and (max-width: 1200px) {
     .profile-container {
