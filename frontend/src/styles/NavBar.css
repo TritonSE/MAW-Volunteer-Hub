@@ -2,7 +2,7 @@
     font-family: Lato;
     font-weight: 400;
     font-size: 14px;
-    overflow: scroll;
+    /* overflow: scroll; */
     background: var(--blue-gradient);
     padding: 16px 28px 19px 26px;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
@@ -13,10 +13,16 @@
     overflow: scroll;
     padding: 0;
     list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.logo-container {
-    float: left;
+/* .logo-container {
+} */
+
+.logo-and-pages {
+    display: flex;
 }
 
 .maw-logo {
@@ -24,6 +30,9 @@
     height: 28px;
     margin: 6px 39px 0px 0px;
 }
+
+/* .pages-container {
+} */
 
 .page-links {
     color: var(--white);
@@ -66,9 +75,7 @@
     cursor: pointer;
     width: 36.85px;
     height: 30px;
-    background-color: red;
-    /* background: rgba(0, 87, 184, 0.3); */
-    border-radius: 3px 0px 0px 3px;
+    background-color: rgb(178 204 234);
     border-radius: 0px 3px 3px 0px;
 }
 
@@ -125,43 +132,8 @@
 
 /* Media queries for responsive display */
 
-@media only screen and (max-width: 1200px) {
-    .profile-container {
-        margin-left: 10px;
-    }
-}
-
-@media only screen and (max-width: 1000px) {
-
-    .navlist {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
+@media only screen and (max-width: 800px) {  /* change depending on how many pages*/
     .pages-container {
-        margin-bottom: 20px;
-    }
-
-    .profile-dropdown {
-        left: 110px;
-    }
-
-}
-
-@media only screen and (max-width: 700px) {
-   
-    .search-and-profile {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .search-container {
-        margin-bottom: 20px;
-        margin-top: 20px;
-    }
-
-    .profile-dropdown {
-        left: 0px;
+        display: none;
     }
 }
-

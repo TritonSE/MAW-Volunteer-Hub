@@ -1,6 +1,3 @@
-/**
-    Super basic navbar without any styles
- */
 import React, { useState } from "react";
 import { SITE_PAGES } from "../constants/links";
 import { NavLink } from "react-router-dom";
@@ -9,9 +6,9 @@ import "../styles/NavBar.css";
 const PAGES = {
     "Wish Granting": SITE_PAGES.WISH_GRANTING,
     "Manage": SITE_PAGES.MANAGE,
-    "Calendar": SITE_PAGES.PROFILE,
-    "Additional Resources": SITE_PAGES.PEOPLE,  
-    "Contact": SITE_PAGES.LOGIN,   
+    // "Calendar": SITE_PAGES.PROFILE,
+    // "Additional Resources": SITE_PAGES.PEOPLE,  
+    // "Contact": SITE_PAGES.LOGIN,   
 };
 
 function NavBar() {
@@ -27,16 +24,18 @@ function NavBar() {
 
         <ul className="navlist">
 
-            <li className="logo-container">
-                <NavLink to={SITE_PAGES.MANAGE}>
-                    <img src="/img/maw_logo.png" alt="Make-A-Wish logo" className="maw-logo"/>
-                </NavLink>
-            </li>
+            <li className="logo-and-pages">
+                <li className="logo-container">
+                    <NavLink to={SITE_PAGES.MANAGE}>
+                        <img src="/img/maw_logo.png" alt="Make-A-Wish logo" className="maw-logo"/>
+                    </NavLink>
+                </li>
 
-            <li className="pages-container">
-                { Object.entries(PAGES).map( ([page, route]) => (
-                    <NavLink className="page-links" activeClassName="underline" to={route}>{page}</NavLink>
-                ))}
+                <li className="pages-container">
+                    { Object.entries(PAGES).map( ([page, route]) => (
+                        <NavLink className="page-links" activeClassName="underline" to={route}>{page}</NavLink>
+                    ))}
+                </li>
             </li>
 
             <li className="search-and-profile">
