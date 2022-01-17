@@ -18,8 +18,11 @@
     flex-wrap: wrap;
 }
 
-/* .logo-container {
-} */
+.logo-container {
+    width: 104px;
+    height: 28px;
+    margin: 6px 39px 0px 0px;
+}
 
 .logo-and-pages {
     display: flex;
@@ -28,18 +31,17 @@
 .maw-logo {
     width: 104px;
     height: 28px;
-    margin: 6px 39px 0px 0px;
 }
 
-/* .pages-container {
-} */
+.pages-container {
+    display: flex;
+    justify-content: center;
+}
 
 .page-links {
     color: var(--white);
     text-decoration: none;
-    float: left;
     margin: 13px 32px 0px 0px;
-    /* white-space: nowrap; */
 }
 
 .underline {
@@ -49,24 +51,23 @@
 }
 
 .search-and-profile {
-    float: right;
     display: flex;
     flex-direction: row;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
 .search-input {
-    height: 17px;
+    height: 21px;
     padding-bottom: 5px;
     padding-top: 4px;
     padding-left: 4.95px;
     font-size: 14px;
-    /* border-radius: 3px 0px 0px 3px; */
-}
-
-.searchbar-icon {
-    /* vertical-align: middle; */
-    width: 10.45px;
-    height: 15px;
+    border: 0px;
+    border-radius: 3px 0px 0px 3px;
 }
 
 .search-button {
@@ -77,6 +78,12 @@
     height: 30px;
     background-color: rgb(178 204 234);
     border-radius: 0px 3px 3px 0px;
+    /* vertical-align: middle; */
+}
+
+.searchbar-icon {
+    width: 10.45px;
+    height: 15px;
 }
 
 .profile-container {
@@ -132,8 +139,28 @@
 
 /* Media queries for responsive display */
 
-@media only screen and (max-width: 800px) {  /* change depending on how many pages*/
+/* Page Links media query: change max-width depending on number of pages */
+@media only screen and (max-width: 800px) {
+    .profile-container {
+        margin-left: 10px;
+    }
+}
+
+/* Switch page links to hamburger menu */
+@media only screen and (max-width: 700px) {
     .pages-container {
         display: none;
+    }    
+}
+
+@media only screen and (max-width: 500px) {
+    .navlist {
+        flex-direction: column;
+    }
+    .search-and-profile {
+        flex-direction: column;
+    }
+    .profile-dropdown {
+        left: 0px;
     }
 }

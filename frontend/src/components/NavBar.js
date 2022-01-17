@@ -3,14 +3,16 @@ import { SITE_PAGES } from "../constants/links";
 import { NavLink } from "react-router-dom";
 import "../styles/NavBar.css";
 
+// Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
 const PAGES = {
     "Wish Granting": SITE_PAGES.WISH_GRANTING,
     "Manage": SITE_PAGES.MANAGE,
-    // "Calendar": SITE_PAGES.PROFILE,
-    // "Additional Resources": SITE_PAGES.PEOPLE,  
-    // "Contact": SITE_PAGES.LOGIN,   
 };
 
+/*
+    NavBar component, which is at the top of each page and provides links to navigate between each page. 
+    Also contains the file search bar and the account menu to go to the profile page or sign out.
+*/
 function NavBar() {
 
     const [dropdown, setDropdown] = useState(false);
@@ -24,6 +26,7 @@ function NavBar() {
 
         <ul className="navlist">
 
+            {/* Container for Logo and page links */}
             <li className="logo-and-pages">
                 <li className="logo-container">
                     <NavLink to={SITE_PAGES.MANAGE}>
@@ -38,6 +41,7 @@ function NavBar() {
                 </li>
             </li>
 
+            {/* Container for search bar and account menu */}
             <li className="search-and-profile">
                 
                 <form className="search-container">
@@ -48,7 +52,6 @@ function NavBar() {
                 </form>
 
                 <div className="profile-container">
-
                     <div className="profile-icon" onClick={() => setDropdown(prev => !prev)}>
                         <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
                         <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
@@ -65,6 +68,7 @@ function NavBar() {
                     )}
 
                 </div>
+                
             </li>
 
         </ul>
