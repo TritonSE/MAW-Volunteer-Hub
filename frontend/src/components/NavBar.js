@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { SITE_PAGES } from "../constants/links";
 import { NavLink } from "react-router-dom";
+import Modal from 'react-modal';
+import Search from '../components/Search.js';
 import "../styles/NavBar.css";
 
 // Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
@@ -9,6 +11,8 @@ const PAGES = {
     "Manage": SITE_PAGES.MANAGE,
 };
 
+Modal.setAppElement(document.getElementById('#root'));
+
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.
@@ -16,9 +20,6 @@ const PAGES = {
 function NavBar() {
 
     const [dropdown, setDropdown] = useState(false);
-
-    const signout = () => {};
-
 
     return (
 
@@ -44,12 +45,7 @@ function NavBar() {
             {/* Container for search bar and account menu */}
             <li className="search-and-profile">
                 
-                <form className="search-container">
-                    <input className="search-input" placeholder="Search all files..."/>
-                    <button className="search-button" type="submit">
-                        <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon"/>
-                    </button>
-                </form>
+                <Search/>
 
                 <div className="profile-container">
                     <div className="profile-icon" onClick={() => setDropdown(prev => !prev)}>
@@ -57,15 +53,20 @@ function NavBar() {
                         <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
                     </div>
 
-                    {dropdown && (
-                        <div className="profile-dropdown">
-                            <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE}>View your profile</NavLink>
-                            <NavLink className="signout-link" to={SITE_PAGES.LOGIN} onClick={() => signout()}>
-                                <span>Sign Out</span>
-                                <img src="/img/signout_icon.svg" alt="Sign out icon" className="signout-icon"/>
-                            </NavLink>
-                        </div>
-                    )}
+                    {/* Profile dropdown */}
+                    <Modal
+                        isOpen={dropdown}
+                        className="profile-dropdown"
+                        overlayClassName="profile-dropdown-overlay"
+                        onRequestClose={() => setDropdown(prevState => !prevState)}
+                        style={{ overlay: {'backgroundColor': 'transparent'} }}
+                    >
+                        <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE} onClick={() => setDropdown(prev => !prev)}>View your profile</NavLink>
+                        <NavLink className="signout-link" to={SITE_PAGES.LOGIN} onClick={() => window.location.reload()}>
+                            <span>Sign Out</span>
+                            <img src="/img/signout_icon.svg" alt="Sign out icon" className="signout-icon"/>
+                        </NavLink>
+                    </Modal>
 
                 </div>
                 

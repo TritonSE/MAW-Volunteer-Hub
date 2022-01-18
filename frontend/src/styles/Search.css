@@ -1,0 +1,30 @@
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    height: 21px;
+    padding-bottom: 5px;
+    padding-top: 4px;
+    padding-left: 4.95px;
+    font-size: 14px;
+    border: 0px;
+    border-radius: 3px 0px 0px 3px;
+}
+
+.search-button {
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+    width: 36.85px;
+    height: 30px;
+    background-color: rgb(178 204 234);
+    border-radius: 0px 3px 3px 0px;
+    /* vertical-align: middle; */
+}
+
+.searchbar-icon {
+    width: 10.45px;
+    height: 15px;
+}
