@@ -72,3 +72,16 @@
   transition: top 0.4s;
   width: 100%;
 }
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 500px) {
+  .filelisting_separator {
+    width: 8vw;
+  }
+  .filelisting_accordion {
+    margin-left: 12%;
+    width: calc(100% - 12%);
+  }
+}
