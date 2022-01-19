@@ -56,10 +56,10 @@ function NavBar() {
                     {/* Profile dropdown */}
                     <Modal
                         isOpen={dropdown}
-                        className="profile-dropdown"
-                        overlayClassName="profile-dropdown-overlay"
                         onRequestClose={() => setDropdown(prevState => !prevState)}
                         style={{ overlay: {'backgroundColor': 'transparent'} }}
+                        className="profile-dropdown"
+                        overlayClassName="profile-dropdown-overlay"
                     >
                         <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE} onClick={() => setDropdown(prev => !prev)}>View your profile</NavLink>
                         <NavLink className="signout-link" to={SITE_PAGES.LOGIN} onClick={() => window.location.reload()}>

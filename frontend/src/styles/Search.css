@@ -28,3 +28,30 @@
     width: 10.45px;
     height: 15px;
 }
+
+.search-results {
+    position: relative;
+    max-width: 802px;
+    max-height: 630px;
+    background-color: var(--white);
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    overflow: scroll;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.search-results-overlay {
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+.results-container {
+    width: 200px;
+    /* height: 200px; */
+}
