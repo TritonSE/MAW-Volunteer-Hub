@@ -2,7 +2,7 @@ const express = require("express")
 const route = express.Router()
 const {User} = require("./model")
 
-route.get("/:id", (req,res)=>{
+route.patch("/User/:id/verify", (req,res)=>{
     try{
         User.findById(req.params.id).then((user) => {
             if (user.verified){
