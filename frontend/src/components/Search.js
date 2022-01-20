@@ -52,12 +52,14 @@ function Search() {
         >
             <div className="results-container">
 
-                <p>"{input}"</p>
-
+                <button className="close-button" onClick={() => setShowResults(prevState => !prevState)}>
+                    <img src="/img/search_exit_icon.svg" alt="Close Search Results" className="close-icon"/>
+                </button>
 
                 { input === "" ? (
 
                     <div>
+                        <p className="fontsize-18">All files</p>
                         {allFiles.map(val => (
                             <p>{val.name}</p>
                         ))}  
@@ -65,15 +67,20 @@ function Search() {
                 )
                 :
                 ( filteredFiles.length === 0 ? (
-                    <div>
-                        <p>No results for {input}</p>
+                    <div className="no-results">
+                        <img src="/img/sad_face.svg" alt="Sad Face" className="sad-face"/>
+                        <p className="fontsize-18">No files related to <q>{input}</q> found.</p>
+                        <p className="fontsize-12">Please enter a new search keyword.</p>
                     </div>
                     )
                     :
                     (
                     <div>
-                        {filteredFiles.map(val => (
-                            <p>{val.name}</p>
+                        <p className="fontsize-18">All files with keyword <q>{input}</q></p>
+                        {filteredFiles.map( (val, index) => (
+                            <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
+                                <p>{val.name}</p>
+                            </div>
                         ))}                        
                     </div>
                     )

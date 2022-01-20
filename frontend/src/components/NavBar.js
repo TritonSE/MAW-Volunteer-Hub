@@ -48,7 +48,7 @@ function NavBar() {
                 <Search/>
 
                 <div className="profile-container">
-                    <div className="profile-icon" onClick={() => setDropdown(prev => !prev)}>
+                    <div className="profile-icon" onClick={() => setDropdown(prevState => !prevState)}>
                         <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
                         <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
                     </div>
@@ -61,8 +61,8 @@ function NavBar() {
                         className="profile-dropdown"
                         overlayClassName="profile-dropdown-overlay"
                     >
-                        <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE} onClick={() => setDropdown(prev => !prev)}>View your profile</NavLink>
-                        <NavLink className="signout-link" to={SITE_PAGES.LOGIN} onClick={() => window.location.reload()}>
+                        <NavLink className="view-profile-link" to={SITE_PAGES.PROFILE} onClick={() => setDropdown(prevState => !prevState)}>View your profile</NavLink>
+                        <NavLink className="signout-link" to={SITE_PAGES.LOGIN} onClick={() => setDropdown(prevState => !prevState)}>
                             <span>Sign Out</span>
                             <img src="/img/signout_icon.svg" alt="Sign out icon" className="signout-icon"/>
                         </NavLink>
