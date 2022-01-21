@@ -39,17 +39,20 @@
     overflow: scroll;
     padding-right: 10px;
     padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 72px;
 }
 
 .search-results-overlay {
     display: flex;
     justify-content: center;
     position: fixed;
-    top: 72px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 .results-container {
@@ -60,10 +63,11 @@
 .close-button {
     background-color: transparent;
     border: transparent;
-    margin-right: 27.53px;
-    margin-top: 26.53px;
-    margin-bottom: 16.51px;
+    margin-top: 16px;
     cursor: pointer;
+    padding: 0;
+    align-self: flex-end;
+    margin-right: 17px;
 }
 
 .close-icon {
@@ -74,8 +78,9 @@
 .no-results {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    width: 742px;
+    margin-top: 210px;
 }
 
 .sad-face {

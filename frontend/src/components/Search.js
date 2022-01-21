@@ -60,8 +60,10 @@ function Search() {
 
                     <div>
                         <p className="fontsize-18">All files</p>
-                        {allFiles.map(val => (
+                        {allFiles.map( (val, index) => (
+                        <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
                             <p>{val.name}</p>
+                        </div>
                         ))}  
                     </div>
                 )
