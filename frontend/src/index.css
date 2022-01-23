@@ -16,12 +16,7 @@
   --white: #ffffff;
   --grey-white: #f7f7f7;
 
-  --blue-gradient: linear-gradient(
-    90deg,
-    rgba(0, 87, 184, 0.6) -1.35%,
-    rgba(0, 87, 184, 0.7) 52.84%,
-    #0057b8 102.69%
-  );
+  --blue-gradient: linear-gradient(90deg, #487db9 -1.35%, #3975b8 52.84%, #0459b8 102.69%);
 }
 
 body {
