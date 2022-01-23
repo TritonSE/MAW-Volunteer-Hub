@@ -1,35 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
 :root {
-  --primary-blue: #1A68BF;
+  --primary-blue: #1a68bf;
 
-  --secondary-red: #FF585D;
-  --secondary-orange: #FFB549;
-  --secondary-blue: #8DC8E8;
+  --secondary-red: #ff585d;
+  --secondary-orange: #ffb549;
+  --secondary-blue: #8dc8e8;
 
-  --grey: #75787B;
-  --light-grey: #BBBCBC;
-  --background-grey: #F7F7F7;
+  --grey: #75787b;
+  --light-grey: #bbbcbc;
+  --background-grey: #f7f7f7;
 
   --blackish: #101010;
 
-  --white: #FFFFFF;
-  --grey-white: #F7F7F7;
+  --white: #ffffff;
+  --grey-white: #f7f7f7;
 
-  --blue-gradient: linear-gradient(90deg, rgba(0, 87, 184, 0.6) -1.35%, rgba(0, 87, 184, 0.7) 52.84%, #0057B8 102.69%);
-
+  --blue-gradient: linear-gradient(
+    90deg,
+    rgba(0, 87, 184, 0.6) -1.35%,
+    rgba(0, 87, 184, 0.7) 52.84%,
+    #0057b8 102.69%
+  );
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }

@@ -1,0 +1,235 @@
+.profile-page {
+  margin: 3% 6%;
+  display: block;
+  color: black;
+  font-family: Lato;
+}
+.header-section {
+  display: inline-block;
+  width: 100%;
+}
+.profile-image {
+  float: left;
+  width: 138px;
+  height: 138px;
+  position: relative;
+  margin-right: 42px;
+}
+.profile-image > img {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-image > button {
+  position: absolute;
+  bottom: 3px;
+  right: 3px;
+  height: 34px;
+  width: 34px;
+
+  border-radius: 50%;
+  filter: drop-shadow(3px 6px 14px rgba(26, 104, 191, 0.1));
+  /* Change colors to vars after merge */
+  background: #ffffff;
+  border: 1px solid var(--primary-blue);
+  font-size: 28px;
+  color: var(--primary-blue);
+}
+.profile-image > button:hover {
+  background: var(--background-grey);
+  cursor: pointer;
+}
+
+.profile-header-info {
+  display: inline-block;
+  margin: 30px 0 20px 0;
+  height: auto;
+  width: auto;
+}
+.profile-header-info > * {
+  margin: 0 50px 0 0;
+  width: auto;
+  display: inline-block;
+}
+.profile-header-info > h1 {
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: normal;
+}
+.profile-header-info > h2 {
+  font-size: 14px;
+  line-height: 17px;
+  color: var(--grey);
+  font-weight: normal;
+}
+.profile-header-info > p {
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.profile-header-info > p {
+  font-size: 12px;
+  line-height: 14px;
+  margin-right: 150px;
+}
+
+.profile-buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  width: 100%;
+}
+@media (max-width: 350px) {
+  .profile-buttons-container {
+    justify-content: flex-start;
+  }
+}
+.profile-buttons-container > button {
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+
+  font-family: Lato;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+
+  padding: 3px 10px;
+  right: 0;
+}
+.change-password-button {
+  border: 1px solid black;
+  background-color: white;
+  margin-right: 28px;
+  font-size: 14px;
+  line-height: 16px;
+}
+.delete-account-button {
+  background: var(--secondary-red);
+  border: 1px solid var(--secondary-red);
+  color: white;
+  font-size: 14px;
+  line-height: 16px;
+}
+
+/* Modal styles */
+
+/* Style reset to make modal container 
+ * flex (lets me center actual modal) 
+ */
+.profile-page-modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+.profile-page-modal {
+  max-width: 400px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  margin: 5px;
+}
+
+.profile-page-modal > h1 {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  margin: 30px 10px;
+
+  color: black;
+}
+.close-button {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  border: none;
+  background: none;
+  background: url(../../public/close-modal.svg) no-repeat;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}
+.modal-button {
+  cursor: pointer;
+  border-radius: 3px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  height: 26px;
+  width: 100%;
+}
+.modal-button.small {
+  width: 105px !important;
+  margin: 5px;
+}
+.button-primary {
+  color: white;
+  background-color: rgba(0, 87, 184, 0.9);
+  border: 1px solid rgba(0, 87, 184, 0.9);
+  margin-bottom: 20px;
+}
+.button-secondary {
+  border: 1px solid black;
+  background: white;
+  font-size: 12px;
+  line-height: 14px;
+}
+.button-danger {
+  color: white;
+  background: var(--light-red);
+  border: 1px solid var(--light-red);
+  font-size: 12px;
+  line-height: 14px;
+}
+.change-pass-form {
+  max-width: 300px;
+  margin: 50px 30px 30px;
+}
+@media only screen and (max-width: 450px) {
+  .change-pass-form {
+    margin: 30px 10px 0px;
+  }
+}
+.change-pass-form > input {
+  background: white;
+  border: 1px solid black;
+  margin-bottom: 14px;
+  font-size: 12px;
+  line-height: 14px;
+  text-align: center;
+  width: 100%;
+  height: 28px;
+  color: var(--blackish);
+  box-sizing: border-box;
+}
+.change-pass-form > .button-primary {
+  margin-top: 70px;
+  box-sizing: border-box;
+  height: 28px;
+  font-size: 12px;
+  line-height: 14px;
+}
+.delete-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
