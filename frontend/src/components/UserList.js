@@ -27,15 +27,33 @@ function UserList() {
     []
   );
 
+  // const columns = React.useMemo(
+  //   () => [
+  //     {
+  //       Header: "Column 1",
+  //       accessor: "col1", // accessor is the "key" in the data
+  //     },
+  //     {
+  //       Header: "Column 2",
+  //       accessor: "col2",
+  //     },
+  //   ],
+  //   []
+  // );
   const columns = React.useMemo(
     () => [
       {
-        Header: "Column 1",
-        accessor: "col1", // accessor is the "key" in the data
-      },
-      {
-        Header: "Column 2",
-        accessor: "col2",
+        Header: "Column",
+        columns: [
+          {
+            Header: "Column 1",
+            accessor: "col1", // accessor is the "key" in the data
+          },
+          {
+            Header: "Column 2",
+            accessor: "col2",
+          },
+        ],
       },
     ],
     []
@@ -47,20 +65,12 @@ function UserList() {
   });
 
   return (
-    <table {...getTableProps()} style={{ border: "solid 1px blue" }}>
+    <table className="people_table" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
-              <th
-                {...column.getHeaderProps()}
-                style={{
-                  borderBottom: "solid 3px red",
-                  background: "aliceblue",
-                  color: "black",
-                  fontWeight: "bold",
-                }}
-              >
+              <th className="people_table_header" {...column.getHeaderProps()}>
                 {column.render("Header")}
               </th>
             ))}
@@ -73,14 +83,7 @@ function UserList() {
           return (
             <tr {...row.getRowProps()}>
               {row.cells.map((cell) => (
-                <td
-                  {...cell.getCellProps()}
-                  style={{
-                    padding: "10px",
-                    border: "solid 1px gray",
-                    background: "papayawhip",
-                  }}
-                >
+                <td {...cell.getCellProps()} className="people_table_data">
                   {cell.render("Cell")}
                 </td>
               ))}
