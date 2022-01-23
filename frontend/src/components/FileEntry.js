@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from "react";
-import "../css/FileEntry.css";
+import "../styles/FileEntry.css";
 
 function UnmemoizedFileAccordion({ children }) {
   if (!children) children = [<div>There are no files in this category.</div>];

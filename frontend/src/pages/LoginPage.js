@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../index.css";
-import "../css/LoginPage.css";
+import "../styles/LoginPage.css";
 
 function PasswordField({ placeholder, className, onChange }) {
   const [isVisible, setIsVisible] = useState(false);
