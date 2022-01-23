@@ -1,3 +1,5 @@
+/* Search input/button & modal styles */
+
 .search-container {
     display: flex;
     align-items: center;
@@ -38,12 +40,14 @@
     background-color: var(--grey-white);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
     overflow: scroll;
-    padding-right: 10px;
-    padding-left: 10px;
+    padding-right: 30px;
+    padding-left: 30px;
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 73px;
 }
+
+/* Search results overlay styles */
 
 .search-results-overlay {
     display: flex;
@@ -53,7 +57,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(0, 0, 0, 0.15);
 }
 
 .results-container {
@@ -90,17 +94,57 @@
     margin-bottom: 28px;
 }
 
+
+/* FileResult styles */
+
 .files-title {
     margin-bottom: 48px;
     font-size: 18px;
+    margin-left: 4px;
 }
 
 .file-result {
-    width: 742px;
+    width: 705px;
     border-radius: 8px;
+    height: 41px;
+    display: flex;
+    align-items: center;
+    padding-left: 17px;
+    padding-right: 20px;
+    margin-bottom: 15px;
 }
 
 .file-content {
     padding-left: 16px;
     padding-right: 20px;
+}
+
+.file-name {
+    font-size: 14px;
+    margin: 0px; 
+    flex: 1 ;
+}
+
+.file-res-button {
+    background-color: transparent;
+    border: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.export, .export-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+}
+
+.edit, .edit-icon {
+    width: 12.5px;
+    height: 12.5px;
+    margin-right: 17px;
+}
+
+.delete, .delete-icon {
+    width: 13px;
+    height: 15px;
 }

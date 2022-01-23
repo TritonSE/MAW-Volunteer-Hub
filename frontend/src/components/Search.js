@@ -18,6 +18,28 @@ const allFiles = [
     },
 ];
 
+
+function FileResult ({ val, index }) {
+
+    return (
+        <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? 'rgba(187, 188, 188, 0.2)' : '#FFFFFF' }}>
+            <button className="file-res-button export">
+                <img src="/img/export_icon.svg" alt="export" className="export-icon"/>
+            </button>
+            <p style={{ fontSize: '14px', margin: 0, flex: 1 }}>{val.name}</p>
+            <button className="file-res-button edit">
+                <img src="/img/edit_icon.svg" alt="export" className="edit-icon"/>
+            </button>
+            <button className="file-res-button delete">
+                <img src="/img/delete_icon.svg" alt="export" className="delete-icon"/>
+            </button>
+        </div>
+    );
+
+}
+
+
+
 function Search() {
 
     const [input, setInput] = useState("");
@@ -61,9 +83,7 @@ function Search() {
                     <div>
                         <p className="files-title">All files</p>
                         {allFiles.map( (val, index) => (
-                            <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
-                                <p style={{ fontSize: '14px', margin: 0 }}>{val.name}</p>
-                            </div>
+                            <FileResult val={val} index={index}/>
                         ))}  
                     </div>
                 )
@@ -80,9 +100,7 @@ function Search() {
                     <div>
                         <p className="files-title">All files with keyword <q>{input}</q></p>
                         {filteredFiles.map( (val, index) => (
-                            <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
-                                <p style={{ fontSize: '14px', margin: 0 }}>{val.name}</p>
-                            </div>
+                            <FileResult val={val} index={index}/>
                         ))}                        
                     </div>
                     )

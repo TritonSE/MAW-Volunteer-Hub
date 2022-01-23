@@ -1,3 +1,5 @@
+/* Navigation bar container styles */
+
 .container {
     font-family: Lato;
     font-weight: 400;
@@ -16,6 +18,8 @@
     justify-content: space-between;
     flex-wrap: wrap;
 }
+
+/* Logo and pages styles */
 
 .logo-container {
     width: 104px;
@@ -48,6 +52,8 @@
     text-underline-offset: 4px;
     text-decoration-thickness: 2px;
 }
+
+/* Search and profile styles */
 
 .search-and-profile {
     display: flex;
@@ -92,6 +98,8 @@
     height: 9px;
 }
 
+/* Profile dropdown styles */
+
 .profile-dropdown {
     position: relative;
     width: 153px;
@@ -127,6 +135,7 @@
     margin-left: 20px;
     align-items: center;
 }
+
 
 /* Media queries for responsive display */
 
