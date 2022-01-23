@@ -31,6 +31,7 @@
 .searchbar-icon {
   width: 10.45px;
   height: 15px;
+  vertical-align: middle;
 }
 
 .search-results {
@@ -151,4 +152,21 @@
 .delete-icon {
   width: 13px;
   height: 15px;
+}
+
+/* Change placeholder color for input */
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--black);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--black);
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--black);
 }
