@@ -48,9 +48,13 @@ function NavBar() {
                 <Search/>
 
                 <div className="profile-container">
-                    <div className="profile-icon" onClick={() => setDropdown(prevState => !prevState)}>
-                        <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
-                        <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
+                    <div className="profile-icon">
+                        <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
+                            <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon"/>
+                        </NavLink>
+                        <button className="arrow-button" onClick={() => setDropdown(prevState => !prevState)}>
+                            <img src="/img/dropdown_icon.svg" alt="Arrow Dropdown" className="arrow-dropdown"/>
+                        </button>
                     </div>
 
                     {/* Profile dropdown */}

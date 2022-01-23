@@ -13,6 +13,7 @@
     font-size: 14px;
     border: 0px;
     border-radius: 3px 0px 0px 3px;
+    z-index: 1;
 }
 
 .search-button {
@@ -41,7 +42,7 @@
     padding-left: 10px;
     padding-top: 10px;
     padding-bottom: 10px;
-    margin-top: 72px;
+    margin-top: 73px;
 }
 
 .search-results-overlay {
@@ -86,16 +87,20 @@
 .sad-face {
     width: 61px;
     height: 61px;
+    margin-bottom: 28px;
 }
 
-.fontsize-18 {
+.files-title {
+    margin-bottom: 48px;
     font-size: 18px;
-}
-
-.fontsize-12 {
-    font-size: 12px;
 }
 
 .file-result {
     width: 742px;
+    border-radius: 8px;
+}
+
+.file-content {
+    padding-left: 16px;
+    padding-right: 20px;
 }

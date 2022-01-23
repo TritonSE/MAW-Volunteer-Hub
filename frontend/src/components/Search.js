@@ -59,11 +59,11 @@ function Search() {
                 { input === "" ? (
 
                     <div>
-                        <p className="fontsize-18">All files</p>
+                        <p className="files-title">All files</p>
                         {allFiles.map( (val, index) => (
-                        <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
-                            <p>{val.name}</p>
-                        </div>
+                            <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
+                                <p style={{ fontSize: '14px', margin: 0 }}>{val.name}</p>
+                            </div>
                         ))}  
                     </div>
                 )
@@ -71,17 +71,17 @@ function Search() {
                 ( filteredFiles.length === 0 ? (
                     <div className="no-results">
                         <img src="/img/sad_face.svg" alt="Sad Face" className="sad-face"/>
-                        <p className="fontsize-18">No files related to <q>{input}</q> found.</p>
-                        <p className="fontsize-12">Please enter a new search keyword.</p>
+                        <p style={{ fontSize: '18px', marginBottom: '14px', marginTop: 0 }}>No files related to <q>{input}</q> found.</p>
+                        <p style={{ fontSize: '12px', margin: 0 }}>Please enter a new search keyword.</p>
                     </div>
                     )
                     :
                     (
                     <div>
-                        <p className="fontsize-18">All files with keyword <q>{input}</q></p>
+                        <p className="files-title">All files with keyword <q>{input}</q></p>
                         {filteredFiles.map( (val, index) => (
                             <div className="file-result" style={{ backgroundColor: index % 2 === 0 ? '#FFFFFF': '#bbbcbc33' }}>
-                                <p>{val.name}</p>
+                                <p style={{ fontSize: '14px', margin: 0 }}>{val.name}</p>
                             </div>
                         ))}                        
                     </div>
