@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import "../styles/SideNav.css";
 
 /**
- *
  * @param {Array} tabs The array of tabs that you want to populate the side nav with.
  *                     Each element should be formated as such:
  *                     {
- *                      tab_id: {number from 0 to n - 1 where n is the number of tabs}
- *                              (Note: tabs need to be labeled sequentially)
  *                      tab_name: {the name/title that will be displayed on the side-nav bar}
  *                      tab_content: {jsx component that will be rendered on the right-hand side of the screen}
  *                     }
@@ -28,12 +25,13 @@ function SideNav({ tabs }) {
   return (
     <div className="side_nav_layout">
       <div className="side_nav_buttons">
-        {tabs.map((tab) => (
+        {tabs.map((tab, tab_id) => (
           <button
-            className={selected === tab.tab_id ? "side_nav_selected" : "side_nav_links"}
+            className={selected === tab_id ? "side_nav_selected" : "side_nav_links"}
+            key={tab.tab_name}
             type="button"
             onClick={() => {
-              changeTab(tab.tab_id);
+              changeTab(tab_id);
             }}
           >
             {tab.tab_name}
