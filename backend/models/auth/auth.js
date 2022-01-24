@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
-const UserModel = require('../model/model');
+const UserModel = require('../models/model');
 
 
 passport.use(

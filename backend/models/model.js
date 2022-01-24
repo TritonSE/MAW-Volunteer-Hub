@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
+
 mongoose.connect('mongodb://127.0.0.1:27017/test');
-const uniqueValidator = require('mongoose-unique-validator');
+//const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require('bcrypt');
 
  const { Schema } = mongoose;
