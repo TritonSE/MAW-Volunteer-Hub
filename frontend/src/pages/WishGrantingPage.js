@@ -30,16 +30,7 @@ function WishGrantingPage() {
     },
   ];
 
-  /*
-   * Note: Manual style on background is just for
-   *   demo purposes (otherwise every other file
-   *   entry would blend into the white background)
-   */
-  return (
-    <div style={{ background: "#f7f7f7" }}>
-      <SideNav tabs={tabs} />
-    </div>
-  );
+  return <SideNav tabs={tabs} />;
 }
 
 export default WishGrantingPage;

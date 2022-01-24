@@ -8,8 +8,8 @@
   flex-direction: column;
   position: relative;
   align-items: center;
+  min-height: 100vh;
   background-color: white;
-  height: 100%;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -64,4 +64,8 @@
 .side_nav_links:hover {
   background-color: rgba(0, 87, 184, 0.1);
   cursor: pointer;
+}
+
+.side_nav_display {
+  width: calc(100vw - 190px);
 }
