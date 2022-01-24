@@ -5,16 +5,19 @@ const bcrypt = require('bcrypt');
 
  const { Schema } = mongoose;
 
- const Email = new Schema({	
+ //Anonther way to add an email section-- to make sure the email is a real email and belongs to the user 
+ // doesn't completely work and may be unnecessarily complicated so I commented it out
+ // in case we want to use this in the future
+/* const Email = new Schema({	
     address: {
         type: String,  
         required: [true, "can't be blank"],
         match: [/\S+@\S+\.\S+/, 'is invalid'], 
         index: true},
     validated: {type: Boolean, default: false}
-    // to make sure the email is a real email and belongs to the user 
+    
 
-});
+}); */
 
  const UserSchema = new Schema({
      verified: {
@@ -22,14 +25,29 @@ const bcrypt = require('bcrypt');
          required: true,
          default: false
      },
-     profile: {
-         firstName: String,
-         lastName : String,
-         Picture: Mixed,
-         active: {type: Boolean, default: true}
-     },
-     email: {
+     verified: {
+        type: Boolean,
+        required: true
+    },
+    // to make sure the user is a part of make-a-wish 
+     firstName :{
+       type: String,
+       required : true
+    },
+     lastName :{
+       type: String,
+       required : true
+    },
+    profilePicture :{
+       type: File,
+       required : false
+    },
+     /*email: {
         type: Email,
+        required: true,
+    },*/
+     email: {
+        type: String,
         required: true,
     },
      admin :{
@@ -38,7 +56,8 @@ const bcrypt = require('bcrypt');
      },
      active: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
      password: {
         type: String,
@@ -68,6 +87,6 @@ const bcrypt = require('bcrypt');
     return compare;
   }
 
- const User = mongoose.model("User", UserSchema);
+
 module.exports = {User}
 
