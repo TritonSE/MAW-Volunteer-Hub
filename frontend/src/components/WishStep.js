@@ -5,11 +5,12 @@ import "../styles/WishGrantingPage.css";
 
 Modal.setAppElement("#root");
 
-function WishDiscovery() {
+function WishStep({ stepName }) {
+  /* Note: This localStorage approach is temporary */
   const [categories, setCategories] = React.useState(
-    JSON.parse(localStorage.getItem("temp_files")) ?? [
+    JSON.parse(localStorage.getItem(`temp_files_${stepName}`)) ?? [
       {
-        name: "Category",
+        name: `${stepName.replace(/Step [0-9]:/g, "")} Files`,
         files: [
           { name: "Example File #1", contents: "hello" },
           { name: "Example File #2", contents: "world" },
@@ -33,13 +34,14 @@ function WishDiscovery() {
 
   /*
    * Local storage/downloading utils
+   *
+   * (All a placeholder until the file
+   *   uploading backend is set up)
    */
   function write() {
-    localStorage.setItem("temp_files", JSON.stringify(categories));
+    localStorage.setItem(`temp_files_${stepName}`, JSON.stringify(categories));
   }
   function file_upload(e) {
-    /* Note: This is temporary */
-
     if (e.target.files.length === 0) return;
 
     const file = e.target.files[0];
@@ -121,10 +123,23 @@ function WishDiscovery() {
     write();
   }
 
+  /*
+   * Util for <style> tag injection
+   * https://stackoverflow.com/questions/7627000/javascript-convert-string-to-safe-class-name-for-css
+   */
+  function make_safe(unsafe) {
+    return unsafe.replace(/[^a-z0-9]/g, (s) => {
+      const c = s.charCodeAt(0);
+      if (c === 32) return "-";
+      if (c >= 65 && c <= 90) return "_" + s.toLowerCase();
+      return "__" + ("000" + c.toString(16)).slice(-4);
+    });
+  }
+
   return (
     <div className="wishgranting">
       <div className="wishgranting_header">
-        <h1 className="wishgranting_title">Step 1: Wish Discovery</h1>
+        <h1 className="wishgranting_title">{stepName}</h1>
       </div>
       <br />
       <div className="wishgranting_categories">
@@ -147,7 +162,7 @@ function WishDiscovery() {
           <FileCategory
             name={cat.name}
             key={Math.random()}
-            id={`category_${ind}`}
+            id={`category_${ind}_${make_safe(cat.name)}_${cat.files.length}_${make_safe(stepName)}`}
             onDownloadFile={() => {}}
             onAddFile={() => {
               setAddFileModal(true);
@@ -341,29 +356,26 @@ function WishDiscovery() {
               <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="wishgranting_modal_center halfheight">
-            <div>
-              <div className="wishgranting_modal_center">
-                Are you sure you want to delete this file?
-              </div>
-              <br />
-              <div className="wishgranting_modal_center">
-                <button
-                  type="button"
-                  className="wishgranting_modal_button"
-                  onClick={() => setDeleteFileModal(false)}
-                >
-                  Cancel
-                </button>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <button
-                  type="button"
-                  className="wishgranting_modal_button error"
-                  onClick={delete_file}
-                >
-                  Delete
-                </button>
-              </div>
+          <div className="wishgranting_modal_center halfheight column">
+            <div className="wishgranting_modal_center">
+              Are you sure you want to delete this file?
+            </div>
+            <br />
+            <div className="wishgranting_modal_center thin">
+              <button
+                type="button"
+                className="wishgranting_modal_button"
+                onClick={() => setDeleteFileModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="wishgranting_modal_button error"
+                onClick={delete_file}
+              >
+                Delete
+              </button>
             </div>
           </div>
         </div>
@@ -418,4 +430,4 @@ function WishDiscovery() {
   );
 }
 
-export default WishDiscovery;
+export default WishStep;

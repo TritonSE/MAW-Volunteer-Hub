@@ -1,32 +1,28 @@
 import React from "react";
 import SideNav from "../components/SideNav";
-import WishDiscovery from "../components/WishDiscovery";
-import WishPlanning from "../components/WishPlanning";
-import WishEnhancements from "../components/WishEnhancements";
-import WishReveal from "../components/WishReveal";
-import WishCloseout from "../components/WishCloseout";
+import WishStep from "../components/WishStep";
 
 function WishGrantingPage() {
   const tabs = [
     {
       tab_name: "Wish Discovery",
-      tab_content: <WishDiscovery />,
+      tab_content: <WishStep stepName="Step 1: Wish Discovery" />,
     },
     {
       tab_name: "Wish Planning",
-      tab_content: <WishPlanning />,
+      tab_content: <WishStep stepName="Step 2: Wish Planning" />,
     },
     {
       tab_name: "Wish Journey Enhancements",
-      tab_content: <WishEnhancements />,
+      tab_content: <WishStep stepName="Step 3: Wish Enhancements" />,
     },
     {
       tab_name: "Wish Reveal & Celebration",
-      tab_content: <WishReveal />,
+      tab_content: <WishStep stepName="Step 4: Wish Reveal & Celebration" />,
     },
     {
       tab_name: "Wish Closeout",
-      tab_content: <WishCloseout />,
+      tab_content: <WishStep stepName="Step 5: Wish Closeout" />,
     },
   ];
 
