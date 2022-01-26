@@ -27,33 +27,23 @@ function UserList() {
     []
   );
 
-  // const columns = React.useMemo(
-  //   () => [
-  //     {
-  //       Header: "Column 1",
-  //       accessor: "col1", // accessor is the "key" in the data
-  //     },
-  //     {
-  //       Header: "Column 2",
-  //       accessor: "col2",
-  //     },
-  //   ],
-  //   []
-  // );
   const columns = React.useMemo(
     () => [
       {
-        Header: "Column",
-        columns: [
-          {
-            Header: "Column 1",
-            accessor: "col1", // accessor is the "key" in the data
-          },
-          {
-            Header: "Column 2",
-            accessor: "col2",
-          },
-        ],
+        Header: "Column 1",
+        accessor: "col1", // accessor is the "key" in the data
+      },
+      {
+        Header: "Column 2",
+        accessor: "col2",
+      },
+      {
+        Header: "Column 3",
+        accessor: "col3",
+      },
+      {
+        Header: "Column 4",
+        accessor: "col4",
       },
     ],
     []
@@ -64,16 +54,44 @@ function UserList() {
     data,
   });
 
+  /**
+   * Returns the header element to be displayed depending on the position in the table
+   * @param {*} column A column acquired with react table methods
+   * @param {int} index The current location in the table header
+   * @returns
+   */
+  const getHeader = (column, index) => {
+    // Start of the header
+    if (index === 0) {
+      return (
+        <th className="people_table_header_start" {...column.getHeaderProps()}>
+          {column.render("Header")}
+        </th>
+      );
+    }
+    // End of the header
+    if (index === columns.length - 1) {
+      return (
+        <th className="people_table_header_end" {...column.getHeaderProps()}>
+          {column.render("Header")}
+        </th>
+      );
+    }
+    // Header elements in the middle
+
+    return (
+      <th className="people_table_header" {...column.getHeaderProps()}>
+        {column.render("Header")}
+      </th>
+    );
+  };
+
   return (
-    <table className="people_table" {...getTableProps()}>
+    <table cellPadding="0" cellSpacing="0" border="0" className="people_table" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th className="people_table_header" {...column.getHeaderProps()}>
-                {column.render("Header")}
-              </th>
-            ))}
+            {headerGroup.headers.map((column, index) => getHeader(column, index))}
           </tr>
         ))}
       </thead>
