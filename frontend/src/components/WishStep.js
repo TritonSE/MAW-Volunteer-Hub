@@ -63,6 +63,7 @@ function WishStep({ stepName }) {
     a.download = file.name;
     a.click();
     window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   }
 
   /*
@@ -87,7 +88,7 @@ function WishStep({ stepName }) {
     write();
   }
   function delete_category() {
-    const cpy = categories;
+    const cpy = categories.slice();
     cpy.splice(categories.indexOf(activeListing), 1);
     setCategories(cpy);
     setDeleteCategoryModal(false);
@@ -398,14 +399,14 @@ function WishStep({ stepName }) {
             </button>
           </div>
           <div className="wishgranting_modal_center halfheight">
-            <div>
+            <div className="wishgranting_modal_center column">
               <div className="wishgranting_modal_center">
                 Are you sure you want to delete this category?
                 <br />
                 All files under this category will also be deleted.
               </div>
               <br />
-              <div className="wishgranting_modal_center">
+              <div className="wishgranting_modal_center thin">
                 <button
                   type="button"
                   className="wishgranting_modal_button"
@@ -413,7 +414,6 @@ function WishStep({ stepName }) {
                 >
                   Cancel
                 </button>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                 <button
                   type="button"
                   className="wishgranting_modal_button error"
