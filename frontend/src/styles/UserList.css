@@ -65,8 +65,28 @@
 
 .people_table_data {
   text-align: center;
-  background: rgba(187, 188, 188, 0.2);
-  border-radius: 8px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.people_table_data_start {
+  text-align: center;
+  border-radius: 8px 0px 0px 8px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.people_table_data_end {
+  text-align: center;
+  border-radius: 0px 8px 8px 0px;
 
   font-family: Lato;
   font-style: normal;

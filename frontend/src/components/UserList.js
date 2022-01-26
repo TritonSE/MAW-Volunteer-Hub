@@ -23,6 +23,14 @@ function UserList() {
         col1: "whatever",
         col2: "you want",
       },
+      {
+        col1: "Alice",
+        col2: "Bob",
+      },
+      {
+        col1: "test",
+        col4: "test4",
+      },
     ],
     []
   );
@@ -86,6 +94,52 @@ function UserList() {
     );
   };
 
+  const getCell = (cell, colIndex, rowIndex) => {
+    if (colIndex === 0) {
+      return (
+        <td
+          {...cell.getCellProps()}
+          style={
+            rowIndex % 2 === 0
+              ? { background: "rgba(187, 188, 188, 0.2)" }
+              : { background: "white" }
+          }
+          className="people_table_data_start"
+        >
+          {cell.render("Cell")}
+        </td>
+      );
+    }
+
+    if (colIndex === columns.length - 1) {
+      return (
+        <td
+          {...cell.getCellProps()}
+          style={
+            rowIndex % 2 === 0
+              ? { background: "rgba(187, 188, 188, 0.2)" }
+              : { background: "white" }
+          }
+          className="people_table_data_end"
+        >
+          {cell.render("Cell")}
+        </td>
+      );
+    }
+
+    return (
+      <td
+        {...cell.getCellProps()}
+        style={
+          rowIndex % 2 === 0 ? { background: "rgba(187, 188, 188, 0.2)" } : { background: "white" }
+        }
+        className="people_table_data"
+      >
+        {cell.render("Cell")}
+      </td>
+    );
+  };
+
   return (
     <table cellPadding="0" cellSpacing="0" border="0" className="people_table" {...getTableProps()}>
       <thead>
@@ -96,15 +150,11 @@ function UserList() {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
+        {rows.map((row, rowIndex) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <td {...cell.getCellProps()} className="people_table_data">
-                  {cell.render("Cell")}
-                </td>
-              ))}
+              {row.cells.map((cell, colIndex) => getCell(cell, colIndex, rowIndex))}
             </tr>
           );
         })}
