@@ -31,6 +31,14 @@ function UserList() {
         col1: "test",
         col4: "test4",
       },
+      {
+        col1: "test",
+        col4: "test4",
+      },
+      {
+        col1: "test",
+        col4: "test4",
+      },
     ],
     []
   );
@@ -101,8 +109,8 @@ function UserList() {
           {...cell.getCellProps()}
           style={
             rowIndex % 2 === 0
-              ? { background: "rgba(187, 188, 188, 0.2)" }
-              : { background: "white" }
+              ? { background: "white" }
+              : { background: "rgba(187, 188, 188, 0.2)" }
           }
           className="people_table_data_start"
         >
@@ -117,8 +125,8 @@ function UserList() {
           {...cell.getCellProps()}
           style={
             rowIndex % 2 === 0
-              ? { background: "rgba(187, 188, 188, 0.2)" }
-              : { background: "white" }
+              ? { background: "white" }
+              : { background: "rgba(187, 188, 188, 0.2)" }
           }
           className="people_table_data_end"
         >
@@ -131,7 +139,7 @@ function UserList() {
       <td
         {...cell.getCellProps()}
         style={
-          rowIndex % 2 === 0 ? { background: "rgba(187, 188, 188, 0.2)" } : { background: "white" }
+          rowIndex % 2 === 0 ? { background: "white" } : { background: "rgba(187, 188, 188, 0.2)" }
         }
         className="people_table_data"
       >
@@ -141,7 +149,7 @@ function UserList() {
   };
 
   return (
-    <table cellPadding="0" cellSpacing="0" border="0" className="people_table" {...getTableProps()}>
+    <table className="people_table" {...getTableProps()}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
