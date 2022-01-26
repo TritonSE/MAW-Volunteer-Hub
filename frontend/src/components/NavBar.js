@@ -25,19 +25,19 @@ function NavBar() {
       <ul className="navlist">
         {/* Container for Logo and page links */}
         <li className="logo-and-pages">
-          <li className="logo-container">
+          <div className="logo-container">
             <NavLink to={SITE_PAGES.MANAGE}>
               <img src="/img/maw_logo.png" alt="Make-A-Wish logo" className="maw-logo" />
             </NavLink>
-          </li>
+          </div>
 
-          <li className="pages-container">
+          <div className="pages-container">
             {Object.entries(PAGES).map(([page, route]) => (
-              <NavLink className="page-links" activeClassName="underline" to={route}>
+              <NavLink key={route} className="page-links" activeClassName="underline" to={route}>
                 {page}
               </NavLink>
             ))}
-          </li>
+          </div>
         </li>
 
         {/* Container for search bar and account menu */}

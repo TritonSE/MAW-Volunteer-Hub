@@ -91,7 +91,7 @@ function Search() {
             <div>
               <p className="files-title">All files</p>
               {allFiles.map((val, index) => (
-                <FileResult val={val} index={index} />
+                <FileResult key={val.id} val={val} index={index} />
               ))}
             </div>
           ) : filteredFiles.length === 0 ? (
@@ -108,7 +108,7 @@ function Search() {
                 All files with keyword <q>{input}</q>
               </p>
               {filteredFiles.map((val, index) => (
-                <FileResult val={val} index={index} />
+                <FileResult key={val.id} val={val} index={index} />
               ))}
             </div>
           )}
