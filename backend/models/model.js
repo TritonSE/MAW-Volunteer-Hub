@@ -1,14 +1,14 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-mongoose.connect('mongodb://127.0.0.1:27017/test');
-//const uniqueValidator = require('mongoose-unique-validator');
-const bcrypt = require('bcrypt');
+mongoose.connect("mongodb://127.0.0.1:27017/test");
+// const uniqueValidator = require('mongoose-unique-validator');
+const bcrypt = require("bcrypt");
 
- const { Schema } = mongoose;
+const { Schema } = mongoose;
 
- //Anonther way to add an email section-- to make sure the email is a real email and belongs to the user 
- // doesn't completely work and may be unnecessarily complicated so I commented it out
- // in case we want to use this in the future
+// Anonther way to add an email section-- to make sure the email is a real email and belongs to the user
+// doesn't completely work and may be unnecessarily complicated so I commented it out
+// in case we want to use this in the future
 /* const Email = new Schema({	
     address: {
         type: String,  
@@ -20,72 +20,68 @@ const bcrypt = require('bcrypt');
 
 }); */
 
- const UserSchema = new Schema({
-     verified: {
-         type: Boolean,
-        //  required: true,
-         default: false
-     },
-    // to make sure the user is a part of make-a-wish 
-     firstName :{
-       type: String,
-      //  required : true
-    },
-     lastName :{
-       type: String,
-      //  required : true
-    },
-    profilePicture :{
-       type: String,
-      //  required : false
-    },
-     /*email: {
+const UserSchema = new Schema({
+  verified: {
+    type: Boolean,
+    //  required: true,
+    default: false,
+  },
+  // to make sure the user is a part of make-a-wish
+  firstName: {
+    type: String,
+    //  required : true
+  },
+  lastName: {
+    type: String,
+    //  required : true
+  },
+  profilePicture: {
+    type: String,
+    //  required : false
+  },
+  /* email: {
         type: Email,
         required: true,
-    },*/
-     email: {
-        type: String,
-        required: true,
-    },
-     admin :{
-         type: Boolean,
-         default: false,
-        //  required : true
-     },
-     active: {
-        type: Boolean,
-        // required: true,
-        default: false
-    },
-     password: {
-        type: String,
-        required: true
-    },
-    roles: {
-        type: [String],
-        // required: true
-    }
- });
+    }, */
+  email: {
+    type: String,
+    required: true,
+  },
+  admin: {
+    type: Boolean,
+    default: false,
+    //  required : true
+  },
+  active: {
+    type: Boolean,
+    // required: true,
+    default: false,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  roles: {
+    type: [String],
+    // required: true
+  },
+});
 
- UserSchema.pre(
-    'save',
-    async function(next) {
-      const user = this;
-      const hash = await bcrypt.hash(this.password, 10);
-  
-      this.password = hash;
-      next();
-    }
-  );
+UserSchema.pre("save", async (next) => {
+  // const user = this;
+  const hash = await bcrypt.hash(this.password, 10);
 
-  UserSchema.methods.isValidPassword = async function(password) {
-    const user = this;
-    const compare = await bcrypt.compare(password, user.password);
-  
-    return compare;
-  }
+  this.password = hash;
+  next();
+});
 
-const UserModel = mongoose.model('user', UserSchema);
+UserSchema.methods.isValidPassword = async (password) => {
+  const user = this;
+  const compare = await bcrypt.compare(password, user.password);
 
-module.exports = { UserModel }
+  return compare;
+};
 
+const UserModel = mongoose.model("user", UserSchema);
+
+module.exports = { UserModel };

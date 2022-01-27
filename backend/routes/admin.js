@@ -1,13 +1,12 @@
-const express = require("express")
-const route = express.Router()
-const {User} = require("./model")
+const express = require("express");
 
+const route = express.Router();
+const { UserModel } = require("../models/model");
 
 route.get("/:admin", (req, res) => {
-    User.find({admin: req.params.admin}, 'profile').then((user)=>{
-        res.json(user)
-    })
+  UserModel.find({ admin: req.params.admin }, "profile").then((user) => {
+    res.json(user);
+  });
 });
 
-
-module.exports = route
+module.exports = route;
