@@ -7,3 +7,12 @@ export class SITE_PAGES {
   static PROFILE = "/profile";
   static PEOPLE = "/people";
 }
+
+const SIDENAV_STEPS = [
+  "Wish Discovery",
+  "Wish Planning",
+  "Wish Enhancements",
+  "Wish Reveal & Celebration",
+  "Wish Closeout",
+];
+export { SIDENAV_STEPS };

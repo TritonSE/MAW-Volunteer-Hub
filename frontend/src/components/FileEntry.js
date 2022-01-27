@@ -31,7 +31,7 @@ function UnmemoizedFileAccordion({ children }) {
       <div className="filelisting_accordion">
         {children.map((child, i) => (
           <div
-            key={Math.random()}
+            key={child.props.name ?? child.props.children}
             className={`filelisting_accordion_entry${i % 2 === 1 ? " is_odd" : ""}`}
             style={{
               top: `calc(var(--is-expanded) * ${compute_top(i)})`,
@@ -88,7 +88,7 @@ function FileListing({
         {leftButtonOverride ?? (
           <FileButton
             description="Download file"
-            image="img/filelisting_download.svg"
+            image="/img/filelisting_download.svg"
             onClick={evt_wrapper(onDownloadFile)}
           />
         )}
@@ -104,12 +104,12 @@ function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile }) {
     <FileListing name={name} onDownloadFile={onDownloadFile}>
       <FileButton
         description="Edit file"
-        image="img/filelisting_edit.svg"
+        image="/img/filelisting_edit.svg"
         onClick={evt_wrapper(onEditFile)}
       />
       <FileButton
         description="Delete file"
-        image="img/filelisting_delete.svg"
+        image="/img/filelisting_delete.svg"
         onClick={evt_wrapper(onDeleteFile)}
       />
     </FileListing>
@@ -152,23 +152,23 @@ function FileCategory({
       >
         <FileButton
           description="Add file"
-          image="img/filelisting_add.svg"
+          image="/img/filelisting_add.svg"
           onClick={evt_wrapper(onAddFile)}
         />
         <FileButton
           description="Edit file"
-          image="img/filelisting_edit.svg"
+          image="/img/filelisting_edit.svg"
           onClick={evt_wrapper(onEditCategory)}
         />
         <FileButton
           description="Delete file"
-          image="img/filelisting_delete.svg"
+          image="/img/filelisting_delete.svg"
           onClick={evt_wrapper(onDeleteCategory)}
         />
         <div className="filelisting_separator" />
         <FileButton
           description="Expand category"
-          image="img/filelisting_chevron.svg"
+          image="/img/filelisting_chevron.svg"
           onClick={() => setIsExpanded(!isExpanded)}
           className={isExpanded ? "expanded" : "not_expanded"}
         />

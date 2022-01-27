@@ -1,26 +1,13 @@
 import React from "react";
 import Modal from "react-modal";
+import { useOutletContext } from "react-router-dom";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import "../styles/WishGrantingPage.css";
 
 Modal.setAppElement("#root");
 
 function WishStep({ stepName }) {
-  /* Note: This localStorage approach is temporary */
-  const [categories, setCategories] = React.useState(
-    JSON.parse(localStorage.getItem(`temp_files_${stepName}`)) ?? [
-      {
-        name: `${stepName.replace(/Step [0-9]:/g, "")} Files`,
-        files: [
-          { name: "Example File #1", contents: "hello" },
-          { name: "Example File #2", contents: "world" },
-          { name: "Example File #3", contents: "this is a sample file" },
-          { name: "Example File #4", contents: "this is also a sample file" },
-        ],
-      },
-      { name: "Category", files: [] },
-    ]
-  );
+  const [categories, setCategories] = useOutletContext();
 
   const [addFileModal, setAddFileModal] = React.useState(false);
   const [editFileModal, setEditFileModal] = React.useState(false);
@@ -32,15 +19,6 @@ function WishStep({ stepName }) {
   const [name, setName] = React.useState("");
   const [fileContents, setFileContents] = React.useState("");
 
-  /*
-   * Local storage/downloading utils
-   *
-   * (All a placeholder until the file
-   *   uploading backend is set up)
-   */
-  function write() {
-    localStorage.setItem(`temp_files_${stepName}`, JSON.stringify(categories));
-  }
   function file_upload(e) {
     if (e.target.files.length === 0) return;
 
@@ -72,11 +50,10 @@ function WishStep({ stepName }) {
   function add_category() {
     if (name.trim() === "") return;
 
-    setCategories([...categories, { name, files: [] }]);
+    categories.push({ id: Math.random(), name, files: [] });
     setName("");
     setAddCategoryModal(false);
-
-    write();
+    setCategories(categories);
   }
   function edit_category() {
     if (name.trim() === "") return;
@@ -84,29 +61,25 @@ function WishStep({ stepName }) {
     activeListing.name = name;
     setName("");
     setEditCategoryModal(false);
-
-    write();
+    setCategories(categories);
   }
   function delete_category() {
-    const cpy = categories.slice();
-    cpy.splice(categories.indexOf(activeListing), 1);
-    setCategories(cpy);
+    categories.splice(categories.indexOf(activeListing), 1);
     setDeleteCategoryModal(false);
-
-    write();
+    setCategories(categories);
   }
   function add_file() {
     if (name.trim() === "") return;
 
     activeListing.files.push({
+      id: Math.random(),
       name,
       contents: fileContents,
     });
     setName("");
     setFileContents("");
     setAddFileModal(false);
-
-    write();
+    setCategories(categories);
   }
   function edit_file() {
     if (name.trim() === "") return;
@@ -114,14 +87,12 @@ function WishStep({ stepName }) {
     activeListing.name = name;
     setName("");
     setEditFileModal(false);
-
-    write();
+    setCategories(categories);
   }
   function delete_file() {
     activeListing.cat.files.splice(activeListing.find, 1);
     setDeleteFileModal(false);
-
-    write();
+    setCategories(categories);
   }
 
   /*
@@ -154,7 +125,7 @@ function WishStep({ stepName }) {
           leftButtonOverride={
             <FileButton
               description="Add category"
-              image="img/wishgranting_plus.svg"
+              image="/img/wishgranting_plus.svg"
               onClick={() => add_category()}
             />
           }
@@ -162,7 +133,7 @@ function WishStep({ stepName }) {
         {categories.map((cat, ind) => (
           <FileCategory
             name={cat.name}
-            key={Math.random()}
+            key={cat.id + cat.name}
             id={`category_${ind}_${make_safe(cat.name)}_${cat.files.length}_${make_safe(stepName)}`}
             onDownloadFile={() => {}}
             onAddFile={() => {
@@ -183,7 +154,7 @@ function WishStep({ stepName }) {
             {cat.files.map((f, find) => (
               <FileEntry
                 name={f.name}
-                key={Math.random()}
+                key={f.id + f.name}
                 onDownloadFile={() => download_file(f)}
                 onEditFile={() => {
                   setEditFileModal(true);
@@ -213,7 +184,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setAddFileModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_label">File Name</div>
@@ -248,7 +219,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setEditFileModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_label">File Name</div>
@@ -283,7 +254,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setAddCategoryModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_label">Category Name</div>
@@ -318,7 +289,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setEditCategoryModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_label">Category Name</div>
@@ -354,7 +325,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setDeleteFileModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_center halfheight column">
@@ -395,7 +366,7 @@ function WishStep({ stepName }) {
               className="wishgranting_modal_close"
               onClick={() => setDeleteCategoryModal(false)}
             >
-              <img src="img/wishgranting_modal_close.svg" alt="Close modal" />
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
           <div className="wishgranting_modal_center halfheight">
