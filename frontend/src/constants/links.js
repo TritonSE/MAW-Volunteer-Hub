@@ -15,4 +15,11 @@ const SIDENAV_STEPS = [
   "Wish Reveal & Celebration",
   "Wish Closeout",
 ];
-export { SIDENAV_STEPS };
+const SIDENAV_ROUTES = [
+  "wish-discovery",
+  "wish-planning",
+  "wish-enhancements",
+  "wish-reveal-celebration",
+  "wish-closeout",
+];
+export { SIDENAV_STEPS, SIDENAV_ROUTES };

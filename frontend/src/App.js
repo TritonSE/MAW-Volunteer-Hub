@@ -1,6 +1,7 @@
+/* eslint no-restricted-globals: "off" */
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { SITE_PAGES, SIDENAV_STEPS } from "./constants/links";
+import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
 import PeoplePage from "./pages/PeoplePage";
@@ -10,6 +11,13 @@ import Custom404Page from "./pages/Custom404Page";
 import WishStep from "./components/WishStep";
 
 function App() {
+  function redirect_helper(base, to) {
+    const paths = location.pathname.split("/");
+    if (base.indexOf(paths[paths.length - 1]) > -1) {
+      location.pathname = `${base}/${to}`;
+    }
+  }
+
   return (
     <Routes>
       {/* Log In Page */}
@@ -39,6 +47,7 @@ function App() {
         path={SITE_PAGES.WISH_GRANTING}
         element={
           <PageLayout>
+            {redirect_helper(SITE_PAGES.WISH_GRANTING, SIDENAV_ROUTES[0])}
             <WishGrantingPage />
           </PageLayout>
         }
@@ -46,23 +55,15 @@ function App() {
         {SIDENAV_STEPS.map((name, ind) => (
           <Route
             key={name}
-            path={name.toLowerCase().replace(/ |&/g, "-")}
+            path={ind === 0 ? "*" : SIDENAV_ROUTES[ind]}
             element={<WishStep stepName={`Step ${ind + 1}: ${name}`} />}
           />
         ))}
-        <Route
-          path="*"
-          element={
-            <PageLayout>
-              <Custom404Page />
-            </PageLayout>
-          }
-        />
       </Route>
 
       {/* Any other URL is automatically matched to 404 Page */}
       <Route
-        path="/"
+        path="*"
         element={
           <PageLayout>
             <Custom404Page />

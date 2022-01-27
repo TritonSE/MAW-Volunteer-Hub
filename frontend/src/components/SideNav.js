@@ -13,15 +13,11 @@ import "../styles/SideNav.css";
  *                     }
  */
 function SideNav({ tabs, getContext }) {
-  function does_match(tab) {
-    return location.href.indexOf(tab.tab_route) > -1;
-  }
-
   function compute_route_tab() {
     let out = 0;
     // tabs.findIndex() causes React to throw an error
     tabs.forEach((tab, ind) => {
-      if (does_match(tab)) {
+      if (location.pathname.indexOf(tab.tab_route) > -1) {
         out = ind;
       }
     });
@@ -46,7 +42,9 @@ function SideNav({ tabs, getContext }) {
           <Link
             to={tab.tab_route}
             key={tab.tab_name}
-            className={`side_nav_links${does_match(tab) ? " side_nav_selected" : ""}`}
+            className={`side_nav_links${
+              tab_id === compute_route_tab() ? " side_nav_selected" : ""
+            }`}
             onClick={() => setSelected(tab_id)}
           >
             {tab.tab_name}
