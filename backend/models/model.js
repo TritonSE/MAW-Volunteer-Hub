@@ -23,25 +23,21 @@ const bcrypt = require('bcrypt');
  const UserSchema = new Schema({
      verified: {
          type: Boolean,
-         required: true,
+        //  required: true,
          default: false
      },
-     verified: {
-        type: Boolean,
-        required: true
-    },
     // to make sure the user is a part of make-a-wish 
      firstName :{
        type: String,
-       required : true
+      //  required : true
     },
      lastName :{
        type: String,
-       required : true
+      //  required : true
     },
     profilePicture :{
-       type: File,
-       required : false
+       type: String,
+      //  required : false
     },
      /*email: {
         type: Email,
@@ -53,11 +49,12 @@ const bcrypt = require('bcrypt');
     },
      admin :{
          type: Boolean,
-         required : true
+         default: false,
+        //  required : true
      },
      active: {
         type: Boolean,
-        required: true,
+        // required: true,
         default: false
     },
      password: {
@@ -65,8 +62,8 @@ const bcrypt = require('bcrypt');
         required: true
     },
     roles: {
-        type: [],
-        required: true
+        type: [String],
+        // required: true
     }
  });
 
@@ -88,6 +85,7 @@ const bcrypt = require('bcrypt');
     return compare;
   }
 
+const UserModel = mongoose.model('user', UserSchema);
 
-module.exports = {User}
+module.exports = { UserModel }
 

@@ -3,6 +3,7 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
+
 router.post(
   '/signup',
   passport.authenticate('signup', { session: false }),
@@ -33,7 +34,7 @@ router.post(
             async (error) => {
               if (error) return next(error);
 
-              const body = { _id: user._id, email: user.email };
+              const body = { _id: user._id, email: user.email }; // sign is admin into this body
               const token = jwt.sign({ user: body }, 'TOP_SECRET');
 
               return res.json({ token });
