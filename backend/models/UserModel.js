@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/MAW-DB");
+mongoose.connect("mongodb://127.0.0.1:27017/MAWDB");
 // const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcrypt");
 
@@ -67,7 +67,7 @@ const UserSchema = new Schema({
   },
 });
 
-UserSchema.pre("save", async (next) => {
+UserSchema.pre("save", async function (next) {
   // const user = this;
   const hash = await bcrypt.hash(this.password, 10);
 
@@ -75,7 +75,7 @@ UserSchema.pre("save", async (next) => {
   next();
 });
 
-UserSchema.methods.isValidPassword = async (password) => {
+UserSchema.methods.isValidPassword = async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
 
@@ -84,4 +84,4 @@ UserSchema.methods.isValidPassword = async (password) => {
 
 const UserModel = mongoose.model("user", UserSchema);
 
-module.exports = { UserModel };
+module.exports = UserModel;
