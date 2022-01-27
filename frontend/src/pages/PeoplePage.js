@@ -1,24 +1,25 @@
 import React from "react";
 import UserList from "../components/UserList";
 import SideNav from "../components/SideNav";
+import AssignBtn from "../components/AssignBtn";
 
 function PeoplePage() {
   const userData = [
     {
       Name: "Gibby Gibson",
-      Roles: [],
+      Roles: [<AssignBtn label="Assign Role" />],
       Completed: 3,
       Start: "May 2017",
     },
     {
       Name: "Carly Shay",
-      Roles: ["Airport Greeter"],
+      Roles: [<AssignBtn label="Airport Greeter" />],
       Completed: 1,
       Start: "Feb 2019",
     },
     {
       Name: "Freddie Benson",
-      Roles: ["Wish Granter", "Meeter"],
+      Roles: [<AssignBtn label="Wish Granter" />, <AssignBtn label="Meeter" />],
       Completed: 2,
       Start: "June 2016",
     },

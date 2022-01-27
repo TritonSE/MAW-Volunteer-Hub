@@ -4,7 +4,6 @@ import { useTable } from "react-table";
 import "../styles/UserList.css";
 
 /**
- *
  * @param {Array} tableHeaders Array containing header objects with corresponding accessors
  * @param {Array} userData Array containing user information to be displayed
  * @returns
@@ -15,7 +14,7 @@ function UserList({ tableHeaders, userData }) {
    * const userData = [
    *    {
    *        Name: "User's name",
-   *        Roles: []             // Contains user's roles
+   *        Roles: []             // Contains user's roles via AssignBtn components
    *        Completed: 0          // Number of assignments completed
    *        Start: "Date"         // Day volunter started
    *    },
