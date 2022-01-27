@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import { useOutletContext } from "react-router-dom";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
@@ -9,15 +9,15 @@ Modal.setAppElement("#root");
 function WishStep({ stepName }) {
   const [categories, setCategories] = useOutletContext();
 
-  const [addFileModal, setAddFileModal] = React.useState(false);
-  const [editFileModal, setEditFileModal] = React.useState(false);
-  const [addCategoryModal, setAddCategoryModal] = React.useState(false);
-  const [editCategoryModal, setEditCategoryModal] = React.useState(false);
-  const [deleteFileModal, setDeleteFileModal] = React.useState(false);
-  const [deleteCategoryModal, setDeleteCategoryModal] = React.useState(false);
-  const [activeListing, setActiveListing] = React.useState(null);
-  const [name, setName] = React.useState("");
-  const [fileContents, setFileContents] = React.useState("");
+  const [addFileModal, setAddFileModal] = useState(false);
+  const [editFileModal, setEditFileModal] = useState(false);
+  const [addCategoryModal, setAddCategoryModal] = useState(false);
+  const [editCategoryModal, setEditCategoryModal] = useState(false);
+  const [deleteFileModal, setDeleteFileModal] = useState(false);
+  const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
+  const [activeListing, setActiveListing] = useState(null);
+  const [name, setName] = useState("");
+  const [fileContents, setFileContents] = useState("");
 
   function file_upload(e) {
     if (e.target.files.length === 0) return;
