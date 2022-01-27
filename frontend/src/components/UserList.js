@@ -3,67 +3,36 @@ import React from "react";
 import { useTable } from "react-table";
 import "../styles/UserList.css";
 
-function UserList() {
+/**
+ *
+ * @param {Array} tableHeaders Array containing header objects with corresponding accessors
+ * @param {Array} userData Array containing user information to be displayed
+ * @returns
+ */
+function UserList({ tableHeaders, userData }) {
   /**
-   * Plan:
-   * 0. Read through the documentation and this page to understand what the code is doing.
-   * 1. Automate the data variable such that it can take in information from props.
+   * userData should be formated as such:
+   * const userData = [
+   *    {
+   *        Name: "User's name",
+   *        Roles: []             // Contains user's roles
+   *        Completed: 0          // Number of assignments completed
+   *        Start: "Date"         // Day volunter started
+   *    },
+   * ]
    */
-  const data = React.useMemo(
-    () => [
-      {
-        col1: "Hello",
-        col2: "World",
-      },
-      {
-        col1: "react-table",
-        col2: "rocks",
-      },
-      {
-        col1: "whatever",
-        col2: "you want",
-      },
-      {
-        col1: "Alice",
-        col2: "Bob",
-      },
-      {
-        col1: "test",
-        col4: "test4",
-      },
-      {
-        col1: "test",
-        col4: "test4",
-      },
-      {
-        col1: "test",
-        col4: "test4",
-      },
-    ],
-    []
-  );
+  const data = React.useMemo(() => userData, []);
 
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Column 1",
-        accessor: "col1", // accessor is the "key" in the data
-      },
-      {
-        Header: "Column 2",
-        accessor: "col2",
-      },
-      {
-        Header: "Column 3",
-        accessor: "col3",
-      },
-      {
-        Header: "Column 4",
-        accessor: "col4",
-      },
-    ],
-    []
-  );
+  /**
+   * tableHeaders should be formatted as such:
+   * const headers = [
+   *    {
+   *        Header: "Displayed Name",
+   *        accessor: "label"       // Used to assign elements to columns in userData
+   *    }
+   * ]
+   */
+  const columns = React.useMemo(() => tableHeaders, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
