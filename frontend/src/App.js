@@ -4,10 +4,10 @@ import { Routes, Route } from "react-router-dom";
 import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
-import PeoplePage from "./pages/PeoplePage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
+import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
 
 function App() {
@@ -39,6 +39,16 @@ function App() {
         element={
           <PageLayout>
             <ProfilePage />
+          </PageLayout>
+        }
+      />
+      {/* Manage Page */}
+      <Route
+        exact
+        path={SITE_PAGES.MANAGE}
+        element={
+          <PageLayout>
+            <ManagePage />
           </PageLayout>
         }
       />
