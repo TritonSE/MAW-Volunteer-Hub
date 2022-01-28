@@ -5,5 +5,5 @@ export class SITE_PAGES {
   static LOGIN = "/login";
   static WISH_GRANTING = "/wish-granting";
   static PROFILE = "/profile";
-  static PEOPLE = "/people";
+  static MANAGE = "/manage";
 }

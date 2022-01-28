@@ -4,10 +4,10 @@ import { SITE_PAGES } from "./constants/links";
 
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
-import PeoplePage from "./pages/PeoplePage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
+import ManagePage from "./pages/ManagePage";
 
 function App() {
   return (
@@ -17,12 +17,6 @@ function App() {
         {/* Log In Page */}
         <Route exact path={[SITE_PAGES.LOGIN]}>
           <LoginPage />
-        </Route>
-        {/* People Page */}
-        <Route exact path={SITE_PAGES.PEOPLE}>
-          <PageLayout>
-            <PeoplePage />
-          </PageLayout>
         </Route>
         {/* Profile Page */}
         <Route exact path={SITE_PAGES.PROFILE}>
@@ -34,6 +28,12 @@ function App() {
         <Route exact path={SITE_PAGES.WISH_GRANTING}>
           <PageLayout>
             <WishGrantingPage />
+          </PageLayout>
+        </Route>
+        {/* Manage Page */}
+        <Route exact path={SITE_PAGES.MANAGE}>
+          <PageLayout>
+            <ManagePage />
           </PageLayout>
         </Route>
 

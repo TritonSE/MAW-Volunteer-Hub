@@ -75,6 +75,11 @@
   width: 100%;
 }
 
+/* if the file entry & file listing is displaying for the search modal */
+.search-modal {
+  width: unset;
+}
+
 /**
  * MEDIA QUERIES
  */
