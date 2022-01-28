@@ -73,7 +73,7 @@ function FileListing({
   onClick,
   style,
   children,
-  searchModal = false
+  searchModal = false,
 }) {
   return (
     <div

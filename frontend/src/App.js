@@ -13,7 +13,7 @@ import WishStep from "./components/WishStep";
 function App() {
   function redirect_helper(base, to) {
     const paths = location.pathname.split("/");
-    if (base.indexOf(paths[paths.length - 1]) > -1) {
+    if (paths[paths.length - 1].trim() !== "" && base.indexOf(paths[paths.length - 1]) > -1) {
       location.pathname = `${base}/${to}`;
     }
   }
@@ -22,16 +22,6 @@ function App() {
     <Routes>
       {/* Log In Page */}
       <Route exact path={SITE_PAGES.LOGIN} element={<LoginPage />} />
-      {/* People Page */}
-      <Route
-        exact
-        path={SITE_PAGES.PEOPLE}
-        element={
-          <PageLayout>
-            <PeoplePage />
-          </PageLayout>
-        }
-      />
       {/* Profile Page */}
       <Route
         exact
