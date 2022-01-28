@@ -16,7 +16,7 @@
   border: 0px;
   border-radius: 3px 0px 0px 3px;
   z-index: 101;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 .search-button {
@@ -37,6 +37,7 @@
 
 .search-results {
   position: relative;
+  display: flex;
   max-width: 802px;
   max-height: 630px;
   background-color: var(--grey-white);
@@ -48,7 +49,7 @@
   padding-bottom: 10px;
   margin-top: 73px;
   z-index: 100;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
 }
 
 /* Search results overlay styles */
@@ -70,7 +71,7 @@
   flex-direction: column;
 }
 
-.close-button {
+.close-btn {
   background-color: transparent;
   border: transparent;
   margin-top: 16px;
@@ -78,11 +79,12 @@
   padding: 0;
   align-self: flex-end;
   margin-right: 17px;
+  background: none;
 }
 
 .close-icon {
-  width: 14.96px;
-  height: 14.96px;
+  width: 15px;
+  height: 15px;
 }
 
 .no-results {
@@ -107,53 +109,8 @@
   margin-left: 4px;
 }
 
-.file-result {
-  width: 705px;
-  border-radius: 8px;
-  height: 41px;
-  display: flex;
-  align-items: center;
-  padding-left: 17px;
-  padding-right: 20px;
-  margin-bottom: 15px;
-}
-
-.file-content {
-  padding-left: 16px;
-  padding-right: 20px;
-}
-
-.file-name {
-  font-size: 14px;
-  margin: 0px;
-  flex: 1;
-}
-
-.file-res-button {
-  background-color: transparent;
-  border: transparent;
-  cursor: pointer;
-  padding: 0;
-}
-
-.export,
-.export-icon {
-  width: 14px;
-  height: 14px;
-  margin-right: 10px;
-}
-
-.edit,
-.edit-icon {
-  width: 12.5px;
-  height: 12.5px;
-  margin-right: 17px;
-}
-
-.delete,
-.delete-icon {
-  width: 13px;
-  height: 15px;
+.show-results {
+  width: 742px;
 }
 
 /* Change placeholder color for input */
@@ -171,4 +128,16 @@
 ::-ms-input-placeholder {
   /* Microsoft Edge */
   color: var(--black);
+}
+
+@media only screen and (max-width: 795px) {
+  .show-results {
+    width: 500px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .show-results {
+    width: 400px;
+  }
 }

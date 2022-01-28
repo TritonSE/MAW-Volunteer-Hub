@@ -11,8 +11,6 @@ const PAGES = {
   Manage: SITE_PAGES.MANAGE,
 };
 
-Modal.setAppElement(document.getElementById("#root"));
-
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.

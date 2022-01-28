@@ -58,12 +58,13 @@ function FileButton({ description, image, onClick, className }) {
   );
 }
 
-function FileListing({ name, noalternate, onClick, style, children }) {
+function FileListing({ name, noalternate, onClick, style, children, searchModal = false }) {
   return (
     <div
       className={`filelisting
         ${noalternate ? " no_nth_child" : ""}
-        ${onClick !== undefined ? " pointer" : ""}`}
+        ${onClick !== undefined ? " pointer" : ""}
+        ${searchModal ? " search-modal" : ""}`}
       onClick={onClick ?? (() => {})}
       style={style !== undefined ? style : {}}
       role="presentation"
@@ -83,9 +84,9 @@ function FileListing({ name, noalternate, onClick, style, children }) {
   );
 }
 
-function FileEntry({ name }) {
+function FileEntry({ name, searchModal = false }) {
   return (
-    <FileListing name={name}>
+    <FileListing name={name} searchModal={searchModal}>
       <FileButton
         description="Edit file"
         image="img/filelisting_edit.svg"
