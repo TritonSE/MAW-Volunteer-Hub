@@ -113,3 +113,7 @@ tbody tr {
   font-size: 14px;
   line-height: 17px;
 }
+
+.sort_toggle {
+  margin-left: 10px;
+}

@@ -24,7 +24,7 @@ function PeoplePage() {
     },
     {
       Name: "Carly Shay",
-      Roles: [<ButtonContainer btnLabels={["Airport Greeter"]} />],
+      Roles: [<ButtonContainer btnLabels={["Airport Greeter", "Wish Granter"]} />],
       Completed: 1,
       Start: "Feb 2019",
     },

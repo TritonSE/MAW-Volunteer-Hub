@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
-import { useTable } from "react-table";
+import { useTable, useSortBy } from "react-table";
 import "../styles/UserList.css";
 
 /**
@@ -33,10 +33,25 @@ function UserList({ tableHeaders, userData }) {
    */
   const columns = React.useMemo(() => tableHeaders, []);
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns,
-    data,
-  });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+    {
+      columns,
+      data,
+    },
+    useSortBy
+  );
+
+  const getArrowImage = (sorted, direction) => {
+    if (sorted) {
+      if (direction) {
+        return <img src="/img/up_arrow.svg" alt="Up Arrow" />;
+      }
+
+      return <img src="/img/down_arrow.svg" alt="Down Arrow" />;
+    }
+
+    return <img src="/img/updown_arrow.svg" alt="upDown Arrow" />;
+  };
 
   /**
    * Returns the header element to be displayed depending on the position in the table
@@ -48,24 +63,33 @@ function UserList({ tableHeaders, userData }) {
     // Start of the header
     if (index === 0) {
       return (
-        <th className="people_table_header_start" {...column.getHeaderProps()}>
+        <th
+          className="people_table_header_start"
+          {...column.getHeaderProps(column.getSortByToggleProps())}
+        >
           {column.render("Header")}
+          <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span>
         </th>
       );
     }
     // End of the header
     if (index === columns.length - 1) {
       return (
-        <th className="people_table_header_end" {...column.getHeaderProps()}>
+        <th
+          className="people_table_header_end"
+          {...column.getHeaderProps(column.getSortByToggleProps())}
+        >
           {column.render("Header")}
+          <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span>
         </th>
       );
     }
     // Header elements in the middle
 
     return (
-      <th className="people_table_header" {...column.getHeaderProps()}>
+      <th className="people_table_header" {...column.getHeaderProps(column.getSortByToggleProps())}>
         {column.render("Header")}
+        <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span>
       </th>
     );
   };
@@ -81,6 +105,7 @@ function UserList({ tableHeaders, userData }) {
               : { background: "rgba(187, 188, 188, 0.2)" }
           }
           className="people_table_data_start"
+          key={Math.random()}
         >
           {cell.render("Cell")}
         </td>
@@ -97,6 +122,7 @@ function UserList({ tableHeaders, userData }) {
               : { background: "rgba(187, 188, 188, 0.2)" }
           }
           className="people_table_data_end"
+          key={Math.random()}
         >
           {cell.render("Cell")}
         </td>
@@ -110,6 +136,7 @@ function UserList({ tableHeaders, userData }) {
           rowIndex % 2 === 0 ? { background: "white" } : { background: "rgba(187, 188, 188, 0.2)" }
         }
         className="people_table_data"
+        key={Math.random()}
       >
         {cell.render("Cell")}
       </td>
@@ -129,7 +156,7 @@ function UserList({ tableHeaders, userData }) {
         {rows.map((row, rowIndex) => {
           prepareRow(row);
           return (
-            <tr {...row.getRowProps()}>
+            <tr {...row.getRowProps()} key={Math.random()}>
               {row.cells.map((cell, colIndex) => getCell(cell, colIndex, rowIndex))}
             </tr>
           );
