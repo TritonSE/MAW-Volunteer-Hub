@@ -34,7 +34,7 @@
 .btn_aGreeter {
   padding: 7px 16px;
   max-height: 31px;
-  min-width: 130px;
+  min-width: 135px;
 
   display: flex;
   flex-direction: row;
@@ -97,5 +97,4 @@
   display: flex;
   max-width: 212px;
   flex-direction: row;
-  overflow-x: scroll;
 }

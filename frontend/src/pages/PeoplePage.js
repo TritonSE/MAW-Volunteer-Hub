@@ -1,15 +1,16 @@
 import React from "react";
+import ScrollContainer from "react-indiana-drag-scroll";
 import UserList from "../components/UserList";
 import SideNav from "../components/SideNav";
 import AssignBtn from "../components/AssignBtn";
 
 function ButtonContainer({ btnLabels }) {
   return (
-    <div className="assign_btn_container">
-      {btnLabels.map((label, id) => (
-        <AssignBtn label={label} key={id} />
+    <ScrollContainer className="assign_btn_container">
+      {btnLabels.map((label) => (
+        <AssignBtn label={label} key={Math.random()} />
       ))}
-    </div>
+    </ScrollContainer>
   );
 }
 
@@ -17,24 +18,33 @@ function PeoplePage() {
   const userData = [
     {
       Name: "Gibby Gibson",
-      // Roles: [<AssignBtn label="Assign Role" />],
       Roles: [<ButtonContainer btnLabels={["Assign Role"]} />],
       Completed: 3,
       Start: "May 2017",
     },
     {
       Name: "Carly Shay",
-      // Roles: [<AssignBtn label="Airport Greeter" />],
       Roles: [<ButtonContainer btnLabels={["Airport Greeter"]} />],
       Completed: 1,
       Start: "Feb 2019",
     },
     {
       Name: "Freddie Benson",
-      // Roles: [<AssignBtn label="Wish Granter" />, <AssignBtn label="Meeter" />],
       Roles: [<ButtonContainer btnLabels={["Wish Granter", "Meeter"]} />],
       Completed: 2,
       Start: "June 2016",
+    },
+    {
+      Name: "Bob Bob",
+      Roles: [<ButtonContainer btnLabels={["Wish Granter"]} />],
+      Completed: 2,
+      Start: "May 2020",
+    },
+    {
+      Name: "Bob Rob",
+      Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      Completed: 2,
+      Start: "June 2020",
     },
   ];
 
