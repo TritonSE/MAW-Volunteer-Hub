@@ -4,6 +4,7 @@ import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
 import Search from "./Search";
 import "../styles/NavBar.css";
+import NavMenuDropdown from "./NavMenuDropdown";
 
 // Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
 const PAGES = {
@@ -41,6 +42,7 @@ function NavBar() {
         {/* Container for search bar and account menu */}
         <li className="search-and-profile">
           <Search />
+          <NavMenuDropdown />
 
           <div className="profile-container">
             <div className="profile-icon">

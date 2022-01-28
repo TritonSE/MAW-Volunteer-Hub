@@ -62,7 +62,7 @@
 
 .profile-container {
   width: 59px;
-  margin-left: 15vw;
+  margin-left: 40px;
 }
 
 .profile-icon {
@@ -138,7 +138,7 @@
   align-items: center;
 }
 
-/* Media queries for responsive display */
+/* Media queries for responsive display desktop/mobile */
 
 /* 
     Breakpoint 1: 795px
@@ -146,6 +146,9 @@
 */
 @media only screen and (max-width: 795px) {
   .pages-container {
+    display: none;
+  }
+  .profile-container {
     display: none;
   }
 }

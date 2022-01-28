@@ -130,6 +130,10 @@
   color: var(--black);
 }
 
+/*
+  media queries for responsive display desktop/mobile
+*/
+
 @media only screen and (max-width: 795px) {
   .show-results {
     width: 500px;
@@ -139,5 +143,11 @@
 @media only screen and (max-width: 575px) {
   .show-results {
     width: 400px;
+  }
+}
+
+@media only screen and (max-width: 475px) {
+  .search-container {
+    display: none;
   }
 }
