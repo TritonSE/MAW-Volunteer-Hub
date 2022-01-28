@@ -1,6 +1,10 @@
 const express = require("express");
 
+const FileRoutes = require("./routes/FileRoutes");
+
 const app = express();
+
+app.use("/file", FileRoutes);
 
 const port = process.env.PORT || 5000;
 
@@ -10,7 +14,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   res.send("Welcome to Express");
 });
 
