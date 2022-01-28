@@ -23,7 +23,7 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   verified: {
     type: Boolean,
-    required: true,
+    //  required: true,
     default: false,
   },
   // to make sure the user is a part of make-a-wish

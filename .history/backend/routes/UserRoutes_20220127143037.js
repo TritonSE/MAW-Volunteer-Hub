@@ -12,7 +12,7 @@ router.get("/secure", (req, res, next) => {
   });
 });
 
-router.get("/users/:admin", (req, res, next) => {
+router.get("/getUsers/:admin", (req, res) => {
   UserModel.find({ admin: req.params.admin }).then((user) => {
     res.json(user);
   });

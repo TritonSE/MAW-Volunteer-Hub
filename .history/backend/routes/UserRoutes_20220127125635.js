@@ -12,8 +12,8 @@ router.get("/secure", (req, res, next) => {
   });
 });
 
-router.get("/users/:admin", (req, res, next) => {
-  UserModel.find({ admin: req.params.admin }).then((user) => {
+router.get("/:admin", (req, res) => {
+  UserModel.find({ admin: req.params.admin }, "profile").then((user) => {
     res.json(user);
   });
 });
