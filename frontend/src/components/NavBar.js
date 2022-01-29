@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+/* eslint no-restricted-globals: "off" */
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
-import { SITE_PAGES } from "../constants/links";
+import { SITE_PAGES, SIDENAV_ROUTES } from "../constants/links";
 import Search from "./Search";
+import history from "../history";
 import "../styles/NavBar.css";
 
 // Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
 const PAGES = {
-  "Wish Granting": SITE_PAGES.WISH_GRANTING,
+  "Wish Granting": `${SITE_PAGES.WISH_GRANTING}/${SIDENAV_ROUTES[0]}`,
   Manage: SITE_PAGES.MANAGE,
 };
 
@@ -17,6 +19,15 @@ const PAGES = {
 */
 function NavBar() {
   const [dropdown, setDropdown] = useState(false);
+  const [active, setActive] = useState(location.pathname.split("/")[1]);
+
+  useEffect(
+    () =>
+      history.listen((e) => {
+        setActive(e.location.pathname.split("/")[1]);
+      }),
+    []
+  );
 
   return (
     <nav className="container">
@@ -31,7 +42,13 @@ function NavBar() {
 
           <div className="pages-container">
             {Object.entries(PAGES).map(([page, route]) => (
-              <NavLink key={route} className="page-links" activeClassName="underline" to={route}>
+              <NavLink
+                key={route}
+                className={`page-links ${
+                  active.trim() !== "" && route.indexOf(active) > -1 ? "underline" : ""
+                }`}
+                to={route}
+              >
                 {page}
               </NavLink>
             ))}

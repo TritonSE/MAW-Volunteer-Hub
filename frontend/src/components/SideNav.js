@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+/* eslint no-restricted-globals: "off" */
+import React, { useEffect, useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import history from "../history";
 import "../styles/SideNav.css";
 
 /**
@@ -9,36 +12,48 @@ import "../styles/SideNav.css";
  *                      tab_content: {jsx component that will be rendered on the right-hand side of the screen}
  *                     }
  */
-function SideNav({ tabs }) {
-  // This is the content that is displayed on the right-hand side of the screen
-  // based on which tab was selected in the side-nav bar.
-  const [displayed, setDisplayed] = useState(tabs[0].tab_content);
-  // This helps determine which tab in the side nav bar should be highlighted.
-  const [selected, setSelected] = useState(0);
+function SideNav({ tabs, getContext }) {
+  function compute_route_tab() {
+    let out = 0;
+    // tabs.findIndex() causes React to throw an error
+    tabs.forEach((tab, ind) => {
+      if (location.pathname.indexOf(tab.tab_route) > -1) {
+        out = ind;
+      }
+    });
+    return out;
+  }
 
-  // Changes the content displayed, and the tab that gets highlighted.
-  const changeTab = (id) => {
-    setDisplayed(tabs[id].tab_content);
-    setSelected(id);
-  };
+  // This helps determine which tab in the side nav bar should be highlighted.
+  const [selected, setSelected] = useState(compute_route_tab());
+
+  useEffect(
+    () =>
+      history.listen(() => {
+        setSelected(compute_route_tab());
+      }),
+    []
+  );
 
   return (
     <div className="side_nav_layout">
       <div className="side_nav_buttons">
         {tabs.map((tab, tab_id) => (
-          <button
-            className={selected === tab_id ? "side_nav_selected" : "side_nav_links"}
+          <Link
+            to={tab.tab_route}
             key={tab.tab_name}
-            type="button"
-            onClick={() => {
-              changeTab(tab_id);
-            }}
+            className={`side_nav_links${
+              tab_id === compute_route_tab() ? " side_nav_selected" : ""
+            }`}
+            onClick={() => setSelected(tab_id)}
           >
             {tab.tab_name}
-          </button>
+          </Link>
         ))}
       </div>
-      <div className="side_nav_display">{displayed}</div>
+      <div className="side_nav_display">
+        <Outlet context={getContext(tabs[selected], selected)} />
+      </div>
     </div>
   );
 }
