@@ -19,7 +19,7 @@ router.get("/users/:admin", (req, res, next) => {
     });
   }
   else{
-    return res.status(400).json({error: 'Malformed Input' });
+    return res.status(400).json({ message: err });
   }
 });
 module.exports = router;
