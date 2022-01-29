@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage";
 import PeoplePage from "./pages/PeoplePage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
+import FileUploadTestPage from "./pages/FileUploadTestPage";
 import Custom404Page from "./pages/Custom404Page";
 
 function App() {
@@ -34,6 +35,11 @@ function App() {
         <Route exact path={SITE_PAGES.WISH_GRANTING}>
           <PageLayout>
             <WishGrantingPage />
+          </PageLayout>
+        </Route>
+        <Route exact path="/fileuploadtest">
+          <PageLayout>
+            <FileUploadTestPage />
           </PageLayout>
         </Route>
 

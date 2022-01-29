@@ -1,8 +1,9 @@
 const express = require("express");
-
+const cors = require("cors");
 const FileRoutes = require("./routes/FileRoutes");
 
 const app = express();
+app.use(cors({ methods: ["GET", "POST", "PUT", "DELETE"] }));
 
 app.use("/file", FileRoutes);
 

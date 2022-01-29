@@ -37,8 +37,15 @@ const Delete_File = async (req, res) => {
 const Display_File = (req, res) => {
   try {
     const key = req.params.key;
-    const readStream = getFileStream(key);
-    readStream.pipe(res);
+    // We need to check and make sure that there is a valid file with
+    // this key before trying to access it, amazon seems to crash when
+    // we try to getFileSteam(key) for a key that doens't exist
+    if (key === "cse134.png") {
+      const readStream = getFileStream(key);
+      readStream.pipe(res);
+    } else {
+      res.status(400).json({ error: "Error, cannot display file" });
+    }
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: "Error, cannot display file" });
