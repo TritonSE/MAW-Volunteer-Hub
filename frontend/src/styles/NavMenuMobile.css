@@ -21,12 +21,12 @@
   padding: 0;
 }
 
-.hamburger {
+.hamburger-mobile {
   width: 37px;
   height: 37px;
 }
 
-.dropdown-container {
+.dropdown-container-mobile {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -42,7 +42,7 @@
   flex-direction: column;
 }
 
-.logo-and-exit {
+.logo-and-exit-mobile {
   display: flex;
   justify-content: space-between;
   padding-top: 22px;
@@ -50,7 +50,7 @@
   padding-right: 32px;
 }
 
-.maw-logo {
+.maw-logo-mobile {
   width: 104px;
   height: 28px;
 }
@@ -62,12 +62,12 @@
   padding: 0;
 }
 
-.close-menu-btn {
+.close-menu-btn-mobile {
   width: 26px;
   height: 26px;
 }
 
-.separator {
+.separator-mobile {
   width: 90%;
   height: 0px;
   left: 32px;
@@ -88,6 +88,18 @@
   margin: 13px 32px 0px 0px;
 }
 
+.view-profile-link-mobile,
+.signout-link-mobile {
+  display: flex;
+  color: var(--white);
+  text-decoration: none;
+}
+
+.signout-icon-mobile {
+  margin-left: 20px;
+  align-items: center;
+}
+
 /* media queries for mobile menu */
 
 @media only screen and (max-width: 795px) {
@@ -95,18 +107,18 @@
     display: flex;
   }
 
-  .mobile-search {
+  .search-mobile {
     display: none;
   }
 
-  .mobile-dropdown {
+  .dropdown-icon-mobile {
     margin-left: 38px;
     margin-right: 11px;
   }
 }
 
 @media only screen and (max-width: 475px) {
-  .mobile-search {
+  .search-mobile {
     display: block;
     align-self: center;
   }
