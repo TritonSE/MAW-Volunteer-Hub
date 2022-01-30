@@ -2,15 +2,10 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
+import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import "../styles/NavBar.css";
-import NavMenuDropdown from "./NavMenuDropdown";
-
-// Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
-const PAGES = {
-  "Wish Granting": SITE_PAGES.WISH_GRANTING,
-  Manage: SITE_PAGES.MANAGE,
-};
+import NavMenuMobile from "./NavMenuMobile";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
@@ -42,7 +37,7 @@ function NavBar() {
         {/* Container for search bar and account menu */}
         <li className="search-and-profile">
           <Search />
-          <NavMenuDropdown />
+          <NavMenuMobile desktopDropdown={dropdown} setDesktopDropdown={setDropdown} />
 
           <div className="profile-container">
             <div className="profile-icon">

@@ -151,4 +151,7 @@
   .profile-container {
     display: none;
   }
+  .profile-dropdown {
+    display: none;
+  }
 }
