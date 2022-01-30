@@ -10,8 +10,14 @@
 import React, { useState } from "react";
 import "../styles/FileEntry.css";
 
+function evt_wrapper(func) {
+  if (func) return () => func();
+  return () => {};
+}
+
 function UnmemoizedFileAccordion({ children }) {
-  if (!children) children = [<div>There are no files in this category.</div>];
+  if (!children || children.length === 0)
+    children = [<div>There are no files in this category.</div>];
 
   function compute_top(i) {
     return (i + 1) * 60 + "px";
@@ -25,7 +31,7 @@ function UnmemoizedFileAccordion({ children }) {
       <div className="filelisting_accordion">
         {children.map((child, i) => (
           <div
-            key={Math.random()}
+            key={child.props.name ?? child.props.children}
             className={`filelisting_accordion_entry${i % 2 === 1 ? " is_odd" : ""}`}
             style={{
               top: `calc(var(--is-expanded) * ${compute_top(i)})`,
@@ -58,24 +64,36 @@ function FileButton({ description, image, onClick, className }) {
   );
 }
 
-function FileListing({ name, noalternate, onClick, style, children }) {
+function FileListing({
+  name,
+  noalternate,
+  leftButtonOverride,
+  onDownloadFile,
+  className,
+  onClick,
+  style,
+  children,
+  searchModal = false,
+}) {
   return (
     <div
       className={`filelisting
         ${noalternate ? " no_nth_child" : ""}
-        ${onClick !== undefined ? " pointer" : ""}`}
+        ${onClick !== undefined ? " pointer " : ""}
+        ${className !== undefined ? className : ""}
+        ${searchModal ? " search-modal" : ""}`}
       onClick={onClick ?? (() => {})}
       style={style !== undefined ? style : {}}
       role="presentation"
     >
       <div className="filelisting_flex_center">
-        <FileButton
-          description="Download file"
-          image="img/filelisting_download.svg"
-          onClick={() => {
-            alert("Download file clicked.");
-          }}
-        />
+        {leftButtonOverride ?? (
+          <FileButton
+            description="Download file"
+            image="/img/filelisting_download.svg"
+            onClick={evt_wrapper(onDownloadFile)}
+          />
+        )}
         {name}
       </div>
       <div className="filelisting_flex_center">{children}</div>
@@ -83,28 +101,32 @@ function FileListing({ name, noalternate, onClick, style, children }) {
   );
 }
 
-function FileEntry({ name }) {
+function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile, searchModal = false }) {
   return (
-    <FileListing name={name}>
+    <FileListing name={name} onDownloadFile={onDownloadFile} searchModal={searchModal}>
       <FileButton
         description="Edit file"
-        image="img/filelisting_edit.svg"
-        onClick={() => {
-          alert("Edit file clicked.");
-        }}
+        image="/img/filelisting_edit.svg"
+        onClick={evt_wrapper(onEditFile)}
       />
       <FileButton
         description="Delete file"
-        image="img/filelisting_delete.svg"
-        onClick={() => {
-          alert("Delete file clicked.");
-        }}
+        image="/img/filelisting_delete.svg"
+        onClick={evt_wrapper(onDeleteFile)}
       />
     </FileListing>
   );
 }
 
-function FileCategory({ name, children }) {
+function FileCategory({
+  name,
+  id,
+  children,
+  onDownloadFile,
+  onAddFile,
+  onEditCategory,
+  onDeleteCategory,
+}) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   /*
@@ -112,7 +134,7 @@ function FileCategory({ name, children }) {
    *   I tried prevented React's rerendering logic from
    *   playing nice with CSS transitions.
    */
-  const hash = `${name}-${children ? children.length : 0}`;
+  const hash = id ?? `${name}-${children ? children.length : 0}`;
 
   return (
     <div className={`filelisting_folder ${hash}`}>
@@ -126,34 +148,29 @@ function FileCategory({ name, children }) {
       <FileListing
         name={name}
         noalternate
+        onDownloadFile={onDownloadFile}
         onClick={() => setIsExpanded(!isExpanded)}
         style={{ zIndex: (children ?? []).length + 2 }}
       >
         <FileButton
           description="Add file"
-          image="img/filelisting_add.svg"
-          onClick={() => {
-            alert("Add file clicked.");
-          }}
+          image="/img/filelisting_add.svg"
+          onClick={evt_wrapper(onAddFile)}
         />
         <FileButton
           description="Edit file"
-          image="img/filelisting_edit.svg"
-          onClick={() => {
-            alert("Edit file clicked.");
-          }}
+          image="/img/filelisting_edit.svg"
+          onClick={evt_wrapper(onEditCategory)}
         />
         <FileButton
           description="Delete file"
-          image="img/filelisting_delete.svg"
-          onClick={() => {
-            alert("Delete file clicked.");
-          }}
+          image="/img/filelisting_delete.svg"
+          onClick={evt_wrapper(onDeleteCategory)}
         />
         <div className="filelisting_separator" />
         <FileButton
           description="Expand category"
-          image="img/filelisting_chevron.svg"
+          image="/img/filelisting_chevron.svg"
           onClick={() => setIsExpanded(!isExpanded)}
           className={isExpanded ? "expanded" : "not_expanded"}
         />
@@ -163,4 +180,4 @@ function FileCategory({ name, children }) {
   );
 }
 
-export { FileEntry, FileCategory };
+export { FileEntry, FileCategory, FileListing, FileButton };

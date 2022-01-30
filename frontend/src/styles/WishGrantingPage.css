@@ -1,0 +1,155 @@
+/**
+ * Generic wish granting styles
+ */
+
+.wishgranting {
+  min-height: 100vh;
+  background: var(--background-grey);
+}
+
+.wishgranting_header {
+  width: 100%;
+  height: 171px;
+  background-color: rgba(16, 16, 16, 0.65);
+  /*
+   * TODO: Different steps' pages should probably have different backgrounds,
+   *   need to ask designers
+   */
+  background-image: url("../../public/img/wishgranting_back.png");
+  background-blend-mode: darken;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.wishgranting_title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-family: "Lato", sans-serif;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.wishgranting_categories {
+  position: relative;
+  margin-left: 60px;
+  margin-right: 60px;
+}
+
+.wishgranting_newcategory {
+  width: calc(100% - (10px * 2) - (1.4px * 2));
+  background: white;
+  color: var(--primary-blue);
+  cursor: pointer;
+  border: 2px solid;
+  border-color: #8ac4e4;
+  /* TODO */
+  /* border-image-source: linear-gradient(170.51deg, #8DC8E8 -12.27%, rgba(26, 104, 191, 0.6) 45.67%, rgba(26, 104, 191, 0.6) 85.79%); */
+}
+
+.ReactModal__Overlay {
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+.ReactModal__Content:not(.search-results) {
+  width: 466px;
+  height: 278px;
+  left: calc(50vw - (466px / 2)) !important;
+  top: calc(50vh - (278px / 2)) !important;
+  padding-top: 21px !important;
+  padding-left: 25px !important;
+}
+.ReactModal__Content {
+  border: none !important;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px !important;
+}
+.wishgranting_modal {
+  font-family: "Lato", sans-serif;
+}
+.wishgranting_modal h3 {
+  margin: 0;
+}
+.wishgranting_modal_close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.wishgranting_modal_label {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+.wishgranting_modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.wishgranting_modal input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+}
+.wishgranting_modal input[type="file"]::file-selector-button {
+  width: 103px;
+  height: 26px;
+  background: white;
+  font-family: "Lato", sans-serif;
+  border-radius: 3px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.wishgranting_modal input[type="file"]::after {
+  display: none;
+}
+
+.wishgranting_modal_bottom {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+}
+
+.wishgranting_modal_button {
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
+  border: 1px solid black;
+  background: white;
+}
+.wishgranting_modal_button.primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+.wishgranting_modal_button.error {
+  background: #ff797d;
+  color: white;
+  border: none;
+}
+
+.wishgranting_modal_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wishgranting_modal_center.halfheight {
+  height: calc(248px / 2);
+}
+.wishgranting_modal_center.column {
+  flex-direction: column;
+}
+.wishgranting_modal_center.thin {
+  width: 245px;
+  justify-content: space-between;
+}

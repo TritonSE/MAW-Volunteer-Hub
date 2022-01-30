@@ -14,7 +14,7 @@ function ButtonContainer({ btnLabels }) {
   );
 }
 
-function PeoplePage() {
+function ManagePage() {
   const userData = [
     {
       Name: "Gibby Gibson",
@@ -80,10 +80,11 @@ function PeoplePage() {
   return (
     <div>
       <div style={{ background: "#f7f7f7" }}>
-        <SideNav tabs={tabs} />
+        {/* <SideNav tabs={tabs} /> */}
+        <UserList tableHeaders={headers} userData={userData} />
       </div>
     </div>
   );
 }
 
-export default PeoplePage;
+export default ManagePage;

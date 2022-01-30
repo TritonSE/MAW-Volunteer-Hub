@@ -10,8 +10,8 @@
   flex-direction: column;
   position: relative;
   align-items: center;
+  min-height: 100vh;
   background-color: white;
-  height: 100%;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -37,33 +37,22 @@
   border-radius: 8px;
 
   margin: 40px 20px 40px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .side_nav_selected {
-  left: 17.39%;
-  right: 16.96%;
-  top: 36%;
-  bottom: 34.67%;
-
-  width: 190px;
-  height: 59px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-
-  text-align: center;
-  color: #0057b8;
-
   background-color: rgba(0, 87, 184, 0.1);
-  border-width: 0px;
-  border-radius: 8px;
-
-  margin: 40px 20px 40px 20px;
 }
 
 .side_nav_links:hover {
   background-color: rgba(0, 87, 184, 0.1);
   cursor: pointer;
+}
+
+.side_nav_display {
+  width: calc(100vw - 190px);
 }
