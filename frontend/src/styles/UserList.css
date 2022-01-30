@@ -87,7 +87,7 @@ tbody tr {
 }
 
 .people_table_data_start {
-  width: 209px;
+  width: auto;
   height: 62px;
 
   text-align: left;
