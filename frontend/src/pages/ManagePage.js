@@ -67,16 +67,16 @@ function ManagePage() {
     },
   ];
 
-  const tabs = [
-    {
-      tab_name: "People",
-      tab_content: <UserList tableHeaders={headers} userData={userData} />,
-    },
-    {
-      tab_name: "Places",
-      tab_content: <UserList />,
-    },
-  ];
+  // const tabs = [
+  //   {
+  //     tab_name: "People",
+  //     tab_content: <UserList tableHeaders={headers} userData={userData} />,
+  //   },
+  //   {
+  //     tab_name: "Places",
+  //     tab_content: <UserList />,
+  //   },
+  // ];
   return (
     <div>
       <div style={{ background: "#f7f7f7" }}>

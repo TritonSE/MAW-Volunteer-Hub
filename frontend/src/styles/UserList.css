@@ -90,7 +90,8 @@ tbody tr {
   width: 209px;
   height: 62px;
 
-  text-align: center;
+  text-align: left;
+  padding-left: 50px;
   border-radius: 8px 0px 0px 8px;
 
   font-family: Lato;
