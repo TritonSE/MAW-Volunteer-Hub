@@ -146,14 +146,7 @@ function LoginPage({ setIsAuth }) {
       <Modal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
-        style={{
-          content: {
-            width: "462px",
-            height: "202px",
-            borderRadius: "10px",
-            boxSizing: "border-box",
-          },
-        }}
+        className="login_react_modal"
       >
         <div className="login_flex login_form login_modal">
           <div className="login_flex nomargin">

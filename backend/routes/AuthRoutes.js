@@ -42,11 +42,8 @@ router.post("/login", async (req, res, next) => {
 });
 
 // Token validation route
-router.post("/token", passport.authenticate('jwt', {session: false}),
-  (req, res) => {
-    console.log(req.user);
-    res.json({valid: Boolean(req.user)});
-  }
+router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) =>
+  res.json({ valid: Boolean(req.user) })
 );
 
 module.exports = router;

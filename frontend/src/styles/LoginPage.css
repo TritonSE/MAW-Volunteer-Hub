@@ -158,6 +158,19 @@
 .ReactModal__Overlay {
   background: rgba(0, 0, 0, 0.3) !important;
 }
+.ReactModal__Content.login_react_modal {
+  position: absolute;
+  width: 462px;
+  height: 202px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  left: calc(50vw - (462px / 2)) !important;
+  top: calc(50vh - (202px / 2)) !important;
+  padding-top: 21px !important;
+  padding-bottom: 21px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+}
 .login_modal {
   height: 100%;
   text-align: center;
