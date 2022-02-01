@@ -15,8 +15,11 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
 
   useEffect(async () => {
-    const res = await has_auth_token();
-    setIsAuth(res && res.valid);
+    if (localStorage.getItem("token")) {
+      const res = await has_auth_token();
+      setIsAuth(res && res.valid);
+    }
+
     setHasFired(true);
   }, []);
 
@@ -29,7 +32,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
 
 function SignoutHelper({ setIsAuth }) {
   useEffect(() => {
-    localStorage.setItem("token", null);
+    localStorage.removeItem("token");
     setIsAuth(false);
   }, []);
 
@@ -75,15 +78,7 @@ function App() {
           }
         />
         {/* Redirect to Manage Page, only when authenticated */}
-        <Route
-          exact
-          path="/"
-          element={
-            <PageLayout>
-              <ManagePage />
-            </PageLayout>
-          }
-        />
+        <Route exact path="/" element={<Navigate to={SITE_PAGES.MANAGE} />} />
         {/* Wish Granting Page */}
         <Route
           path={SITE_PAGES.WISH_GRANTING}

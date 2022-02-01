@@ -65,13 +65,17 @@ function LoginPage({ setIsAuth }) {
         setSuccessState(-1);
         setIsAuth(false);
         /* Failed -- if signup, email is most likely already in use */
-      } else {
+      } else if (isLogin) {
         setSuccessState(1);
-        if (isLogin) {
-          localStorage.setItem("token", res.token);
-          setIsAuth(true);
-          navigate("/");
-        } else setModalOpen(true);
+        localStorage.setItem("token", res.token);
+        setIsAuth(true);
+        navigate("/");
+      } else {
+        // TODO: Use this state more effectively
+        //   once user verification has been implemented
+        setSuccessState(0);
+
+        setModalOpen(true);
       }
     }
   }
