@@ -15,7 +15,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
 
   useEffect(async () => {
-    if (localStorage.getItem("token")) {
+    if (sessionStorage.getItem("token") ?? localStorage.getItem("token")) {
       const res = await has_auth_token();
       setIsAuth(res && res.valid);
     }
@@ -32,6 +32,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
 
 function SignoutHelper({ setIsAuth }) {
   useEffect(() => {
+    sessionStorage.removeItem("token");
     localStorage.removeItem("token");
     setIsAuth(false);
   }, []);

@@ -39,6 +39,7 @@ function LoginPage({ setIsAuth }) {
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
+  const [doRemember, setDoRemember] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -57,7 +58,7 @@ function LoginPage({ setIsAuth }) {
 
     if (successState < 1) {
       const res = await api_call(
-        isLogin ? API_ENDPOINTS.LOGIN : API_ENDPOINTS.SIGNUP,
+        e.target.action,
         Object.fromEntries(new FormData(e.target).entries())
       );
 
@@ -67,7 +68,7 @@ function LoginPage({ setIsAuth }) {
         /* Failed -- if signup, email is most likely already in use */
       } else if (isLogin) {
         setSuccessState(1);
-        localStorage.setItem("token", res.token);
+        (doRemember ? localStorage : sessionStorage).setItem("token", res.token);
         setIsAuth(true);
         navigate("/");
       } else {
@@ -122,7 +123,12 @@ function LoginPage({ setIsAuth }) {
           />
           <div className={"login_flex" + (isLogin ? "" : " hidden")}>
             <label htmlFor="remember" className="login_flex_center login_pointer">
-              <input type="checkbox" id="remember" />
+              <input
+                type="checkbox"
+                id="remember"
+                checked={doRemember}
+                onChange={(e) => setDoRemember(e.target.checked)}
+              />
               Keep me signed in
             </label>
             <a href="#forgot">Forgot password</a>
