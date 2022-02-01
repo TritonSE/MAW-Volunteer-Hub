@@ -10,6 +10,7 @@ const SITE_PAGES = {
 const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  TOKEN: "/auth/token",
 };
 
 const SIDENAV_STEPS = [

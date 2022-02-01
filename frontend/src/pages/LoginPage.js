@@ -35,7 +35,7 @@ function PasswordField({ name, placeholder, className, onChange }) {
   );
 }
 
-function LoginPage() {
+function LoginPage({ setIsAuth }) {
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
@@ -63,11 +63,13 @@ function LoginPage() {
 
       if (res === null || res.error) {
         setSuccessState(-1);
+        setIsAuth(false);
         /* Failed -- if signup, email is most likely already in use */
       } else {
         setSuccessState(1);
         if (isLogin) {
           localStorage.setItem("token", res.token);
+          setIsAuth(true);
           navigate("/");
         } else setModalOpen(true);
       }
