@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1065.0",
+    "axios": "^0.25.0",
     "body-parser": "^1.19.1",
     "cors": "^2.8.5",
     "dotenv": "^14.3.2",
