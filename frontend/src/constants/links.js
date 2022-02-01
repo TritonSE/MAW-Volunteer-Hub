@@ -5,6 +5,8 @@ const SITE_PAGES = {
   WISH_GRANTING: "/wish-granting",
   PROFILE: "/profile",
   MANAGE: "/manage",
+
+  SIGNOUT: "/signout",
 };
 
 const API_ENDPOINTS = {

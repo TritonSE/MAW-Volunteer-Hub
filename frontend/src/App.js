@@ -14,19 +14,26 @@ import WishStep from "./components/WishStep";
 function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
 
-  async function do_auth() {
+  useEffect(async () => {
     const res = await has_auth_token();
     setIsAuth(res && res.valid);
     setHasFired(true);
-  }
-
-  useEffect(do_auth, []);
+  }, []);
 
   if (!isAuth) {
     if (hasFired) return <Navigate to={SITE_PAGES.LOGIN} />;
     return null;
   }
   return <Outlet />;
+}
+
+function SignoutHelper({ setIsAuth }) {
+  useEffect(() => {
+    localStorage.setItem("token", null);
+    setIsAuth(false);
+  }, []);
+
+  return <Navigate to={SITE_PAGES.LOGIN} />;
 }
 
 function App() {
@@ -67,7 +74,7 @@ function App() {
             </PageLayout>
           }
         />
-        {/* Redirect root when authenticated to Manage Page */}
+        {/* Redirect to Manage Page, only when authenticated */}
         <Route
           exact
           path="/"
@@ -95,6 +102,9 @@ function App() {
             />
           ))}
         </Route>
+
+        {/* Sign out */}
+        <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper setIsAuth={setIsAuth} />} />
 
         {/* Any other URL is automatically matched to 404 Page */}
         <Route

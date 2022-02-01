@@ -90,7 +90,7 @@ function NavBar() {
               </NavLink>
               <NavLink
                 className="signout-link"
-                to={SITE_PAGES.LOGIN}
+                to={SITE_PAGES.SIGNOUT}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 <span>Sign Out</span>

@@ -175,6 +175,7 @@ function WishStep({ stepName }) {
         isOpen={addFileModal}
         onRequestClose={() => setAddFileModal(false)}
         contentLabel="Add File"
+        className="wishgranting_react_modal"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
@@ -210,6 +211,7 @@ function WishStep({ stepName }) {
         isOpen={editFileModal}
         onRequestClose={() => setEditFileModal(false)}
         contentLabel="Edit File"
+        className="wishgranting_react_modal"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
@@ -245,6 +247,7 @@ function WishStep({ stepName }) {
         isOpen={addCategoryModal}
         onRequestClose={() => setAddCategoryModal(false)}
         contentLabel="Add Category"
+        className="wishgranting_react_modal"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
@@ -280,6 +283,7 @@ function WishStep({ stepName }) {
         isOpen={editCategoryModal}
         onRequestClose={() => setEditCategoryModal(false)}
         contentLabel="Edit Category"
+        className="wishgranting_react_modal"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
@@ -315,6 +319,7 @@ function WishStep({ stepName }) {
         isOpen={deleteFileModal}
         onRequestClose={() => setDeleteFileModal(false)}
         contentLabel="Delete File"
+        className="wishgranting_react_modal"
         style={{ content: { height: "202px" } }}
       >
         <div className="wishgranting_modal">
@@ -356,6 +361,7 @@ function WishStep({ stepName }) {
         isOpen={deleteCategoryModal}
         onRequestClose={() => setDeleteCategoryModal(false)}
         contentLabel="Delete Category"
+        className="wishgranting_react_modal"
         style={{ content: { height: "202px" } }}
       >
         <div className="wishgranting_modal">
