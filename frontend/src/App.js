@@ -1,4 +1,3 @@
-/* eslint no-restricted-globals: "off" */
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import { token_clear, api_validtoken } from "./auth";
@@ -38,15 +37,6 @@ function SignoutHelper({ setIsAuth }) {
 function App() {
   const [isAuth, setIsAuth] = useState(false);
 
-  function redirect_helper(base, to) {
-    if (!isAuth) return;
-
-    const paths = location.pathname.split("/");
-    if (paths[paths.length - 1].trim() !== "" && base.indexOf(paths[paths.length - 1]) > -1) {
-      location.pathname = `${base}/${to}`;
-    }
-  }
-
   return (
     <Routes>
       {/* Log In Page */}
@@ -80,15 +70,20 @@ function App() {
           path={SITE_PAGES.WISH_GRANTING}
           element={
             <PageLayout>
-              {redirect_helper(SITE_PAGES.WISH_GRANTING, SIDENAV_ROUTES[0])}
               <WishGrantingPage />
             </PageLayout>
           }
         >
+          <Route
+            exact
+            path={SITE_PAGES.WISH_GRANTING}
+            element={<Navigate to={`${SITE_PAGES.WISH_GRANTING}/${SIDENAV_ROUTES[0]}`} />}
+          />
           {SIDENAV_STEPS.map((name, ind) => (
             <Route
+              exact
               key={name}
-              path={ind === 0 ? "*" : SIDENAV_ROUTES[ind]}
+              path={SIDENAV_ROUTES[ind]}
               element={<WishStep stepName={`Step ${ind + 1}: ${name}`} />}
             />
           ))}

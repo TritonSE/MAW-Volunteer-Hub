@@ -60,10 +60,9 @@ function LoginPage({ setIsAuth }) {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
+      const success = Boolean(res);
 
       if (isLogin) {
-        const success = Boolean(res);
-
         setSuccessState(success);
         setIsAuth(success);
 
@@ -75,7 +74,7 @@ function LoginPage({ setIsAuth }) {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes
         setSuccessState(-1);
-        setModalOpen(true);
+        setModalOpen(success);
       }
     }
   }
