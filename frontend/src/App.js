@@ -1,7 +1,7 @@
 /* eslint no-restricted-globals: "off" */
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import has_auth_token from "./auth";
+import { token_clear, api_validtoken } from "./auth";
 import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -15,11 +15,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
 
   useEffect(async () => {
-    if (sessionStorage.getItem("token") ?? localStorage.getItem("token")) {
-      const res = await has_auth_token();
-      setIsAuth(res && res.valid);
-    }
-
+    setIsAuth(await api_validtoken());
     setHasFired(true);
   }, []);
 
@@ -32,8 +28,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
 
 function SignoutHelper({ setIsAuth }) {
   useEffect(() => {
-    sessionStorage.removeItem("token");
-    localStorage.removeItem("token");
+    token_clear();
     setIsAuth(false);
   }, []);
 

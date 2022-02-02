@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import api_call from "../auth";
-import { API_ENDPOINTS } from "../constants/links";
+import { token_set, api_login, api_signup } from "../auth";
+import { SITE_PAGES } from "../constants/links";
 import "../index.css";
 import "../styles/LoginPage.css";
 
@@ -37,7 +37,7 @@ function PasswordField({ name, placeholder, className, onChange }) {
 
 function LoginPage({ setIsAuth }) {
   const [isLogin, setIsLogin] = useState(true);
-  const [successState, setSuccessState] = useState(0);
+  const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
   const [doRemember, setDoRemember] = useState(false);
 
@@ -57,43 +57,37 @@ function LoginPage({ setIsAuth }) {
     e.preventDefault();
 
     if (successState < 1) {
-      const res = await api_call(
-        e.target.action,
-        Object.fromEntries(new FormData(e.target).entries())
-      );
+      const formdata = Object.fromEntries(new FormData(e.target).entries());
 
-      if (res === null || res.error) {
-        setSuccessState(-1);
-        setIsAuth(false);
-        /* Failed -- if signup, email is most likely already in use */
-      } else if (isLogin) {
-        setSuccessState(1);
-        (doRemember ? localStorage : sessionStorage).setItem("token", res.token);
-        setIsAuth(true);
-        navigate("/");
+      const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
+
+      if (isLogin) {
+        const success = Boolean(res);
+
+        setSuccessState(success);
+        setIsAuth(success);
+
+        if (success) {
+          token_set(res);
+          navigate(SITE_PAGES.HOME);
+        }
       } else {
-        // TODO: Use this state more effectively
-        //   once user verification has been implemented
-        setSuccessState(0);
-
+        // TODO: This lets the user log in immediately
+        //   after signing up, for debug purposes
+        setSuccessState(-1);
         setModalOpen(true);
       }
     }
   }
 
   useEffect(() => {
-    setSuccessState(0);
+    setSuccessState(-1);
   }, [email, password]);
 
   return (
     <div className="login">
       <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
-      <form
-        className="login_box"
-        action={isLogin ? API_ENDPOINTS.LOGIN : API_ENDPOINTS.SIGNUP}
-        onSubmit={handle_submit}
-        method="POST"
-      >
+      <form className="login_box" onSubmit={handle_submit} method="POST">
         <div className="login_form">
           <input
             name="name"
@@ -137,7 +131,7 @@ function LoginPage({ setIsAuth }) {
             {isLogin ? "Login" : "Create new account"}
           </button>
         </div>
-        {isLogin && successState === -1 ? (
+        {isLogin && !successState ? (
           <div className="login_errorbox">
             {/*
              * Security-wise, it's generally a
