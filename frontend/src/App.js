@@ -1,56 +1,79 @@
+/* eslint no-restricted-globals: "off" */
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { SITE_PAGES } from "./constants/links";
-
+import { Routes, Route } from "react-router-dom";
+import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
-import PeoplePage from "./pages/PeoplePage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
-import FileUploadTestPage from "./pages/FileUploadTestPage";
 import Custom404Page from "./pages/Custom404Page";
+import ManagePage from "./pages/ManagePage";
+import WishStep from "./components/WishStep";
+
+import FileUploadTestPage from "./pages/FileUploadTestPage";
 
 function App() {
+  function redirect_helper(base, to) {
+    const paths = location.pathname.split("/");
+    if (paths[paths.length - 1].trim() !== "" && base.indexOf(paths[paths.length - 1]) > -1) {
+      location.pathname = `${base}/${to}`;
+    }
+  }
+
   return (
-    <Router>
-      {/* Switch gurantees that a URL can match to only one route */}
-      <Switch>
-        {/* Log In Page */}
-        <Route exact path={[SITE_PAGES.LOGIN]}>
-          <LoginPage />
-        </Route>
-        {/* People Page */}
-        <Route exact path={SITE_PAGES.PEOPLE}>
-          <PageLayout>
-            <PeoplePage />
-          </PageLayout>
-        </Route>
-        {/* Profile Page */}
-        <Route exact path={SITE_PAGES.PROFILE}>
+    <Routes>
+      {/* Log In Page */}
+      <Route exact path={SITE_PAGES.LOGIN} element={<LoginPage />} />
+      {/* Profile Page */}
+      <Route
+        exact
+        path={SITE_PAGES.PROFILE}
+        element={
           <PageLayout>
             <ProfilePage />
           </PageLayout>
-        </Route>
-        {/* Wish Granting Page */}
-        <Route exact path={SITE_PAGES.WISH_GRANTING}>
+        }
+      />
+      {/* Manage Page */}
+      <Route
+        exact
+        path={SITE_PAGES.MANAGE}
+        element={
           <PageLayout>
+            <ManagePage />
+          </PageLayout>
+        }
+      />
+      {/* Wish Granting Page */}
+      <Route
+        path={SITE_PAGES.WISH_GRANTING}
+        element={
+          <PageLayout>
+            {redirect_helper(SITE_PAGES.WISH_GRANTING, SIDENAV_ROUTES[0])}
             <WishGrantingPage />
           </PageLayout>
-        </Route>
-        <Route exact path="/fileuploadtest">
+        }
+      >
+        <Route exact path="/wish-granting/fileuploadtest" element={<FileUploadTestPage />} />
+        {SIDENAV_STEPS.map((name, ind) => (
+          <Route
+            key={name}
+            path={ind === 0 ? "*" : SIDENAV_ROUTES[ind]}
+            element={<WishStep stepName={`Step ${ind + 1}: ${name}`} />}
+          />
+        ))}
+      </Route>
+
+      {/* Any other URL is automatically matched to 404 Page */}
+      <Route
+        path="*"
+        element={
           <PageLayout>
             <FileUploadTestPage />
           </PageLayout>
-        </Route>
-
-        {/* Any other URL is automatically matched to 404 Page */}
-        <Route path="/">
-          <PageLayout>
-            <Custom404Page />
-          </PageLayout>
-        </Route>
-      </Switch>
-    </Router>
+        }
+      />
+    </Routes>
   );
 }
 
