@@ -54,3 +54,40 @@
 .side_nav_display {
   width: calc(100vw - 190px);
 }
+
+@media only screen and (max-width: 550px) {
+  .side_nav_layout {
+    flex-direction: column;
+  }
+
+  .side_nav_buttons {
+    display: flex;
+    flex-direction: row;
+    min-height: 0vh;
+    height: 62px;
+    background-image: url("../../public/img/side-nav-mobile-background.svg");
+    background-size: 100vh;
+    background-position: center;
+  }
+
+  .side_nav_links {
+    left: 11.76%;
+    right: 11.76%;
+    top: 23.53%;
+    bottom: 23.53%;
+
+    min-width: 136px;
+    height: 34px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+
+    color: #ffffff;
+  }
+
+  .side_nav_display {
+    width: 100vw;
+  }
+}

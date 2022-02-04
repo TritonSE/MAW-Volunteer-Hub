@@ -1,6 +1,7 @@
 /* eslint no-restricted-globals: "off" */
 import React, { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import ScrollContainer from "react-indiana-drag-scroll";
 import history from "../history";
 import "../styles/SideNav.css";
 
@@ -24,8 +25,15 @@ function SideNav({ tabs, getContext }) {
     return out;
   }
 
+  // Returns the width of the window
+  function getWindowWidth() {
+    const { innerWidth: width } = window;
+    return width;
+  }
+
   // This helps determine which tab in the side nav bar should be highlighted.
   const [selected, setSelected] = useState(compute_route_tab());
+  const [windowWidth, setWindowWidth] = useState(getWindowWidth());
 
   useEffect(
     () =>
@@ -35,9 +43,22 @@ function SideNav({ tabs, getContext }) {
     []
   );
 
+  // Updates the windowWidth variable if the window is resized
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(getWindowWidth());
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div className="side_nav_layout">
-      <div className="side_nav_buttons">
+      <ScrollContainer
+        className="side_nav_buttons"
+        vertical={false}
+        horizontal={!(windowWidth > 550)}
+      >
         {tabs.map((tab, tab_id) => (
           <Link
             to={tab.tab_route}
@@ -50,7 +71,7 @@ function SideNav({ tabs, getContext }) {
             {tab.tab_name}
           </Link>
         ))}
-      </div>
+      </ScrollContainer>
       <div className="side_nav_display">
         <Outlet context={getContext(tabs[selected], selected)} />
       </div>
