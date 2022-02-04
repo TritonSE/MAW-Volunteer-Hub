@@ -1,17 +1,15 @@
 const express = require("express");
+const createError = require("http-errors");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const bodyParser = require("body-parser");
-
+const config = require("./config");
 // const UserModel = require("./models/model");
 
-mongoose.connect(
-  "mongodb+srv://Mohak:yXcov2Wtwx7ikj1n@cluster0.1divz.mongodb.net/cluster0?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect(config.db.uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 mongoose.set("useCreateIndex", true);
 mongoose.connection.on("error", (error) => console.log(error));
 mongoose.Promise = global.Promise;
@@ -29,6 +27,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/auth", authRoutes); // authentication routes are not JWT protected
 app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes); // all user routes are JWT protected
 app.use("/file", passport.authenticate("jwt", { session: false }), fileRoutes);
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  console.error("Error caught");
+  next(createError(404));
+});
 
 // Handle errors.
 app.use((err, req, res, next) => {

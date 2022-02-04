@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import axios from "axios";
 
 const DEBUG_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxZmEyMDQwMWMxOThlOTY3Y2IwYWU5ZSIsImVtYWlsIjoibW9oYWt2MTVAZ21haWwuY29tIn0sImlhdCI6MTY0MzgyNzAwM30.a6oz0g3miTQMUpSSU-2MMkpBVi2-lZFhsz_pfQg4X_U";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxZjg1MGZjMTQ3MmM1ZDA2MWFiNDZhZiIsImVtYWlsIjoidGVzdEBlbWFpbC5jb20ifSwiaWF0IjoxNjQ0MDA3ODMxfQ.z1EIWevtvEW09mUss8yPN64UtLvqNWUZbzffYl0f9vQ";
 
 async function postFile({ file, name }) {
   const formData = new FormData();
@@ -11,6 +11,7 @@ async function postFile({ file, name }) {
   formData.append("name", name);
 
   const result = await axios.post(
+    // "http://localhost:3000/file/upload?secret_token=abc", // invalid secret token
     "http://localhost:3000/file/upload?secret_token=" + DEBUG_TOKEN,
     formData,
     {
@@ -27,6 +28,7 @@ function ProfilePage() {
   const submit = async (event) => {
     event.preventDefault();
     const result = await postFile({ file, name });
+    console.log(result);
   };
   const fileSelected = (event) => {
     const f = event.target.files[0];

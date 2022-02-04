@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
-
-mongoose.connect(
-  "mongodb+srv://Mohak:yXcov2Wtwx7ikj1n@cluster0.1divz.mongodb.net/Cluster0?retryWrites=true&w=majority"
-);
 // const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcrypt");
+const config = require("../config");
+
+// mongoose.connect(config.db.uri);
 
 const { Schema } = mongoose;
 

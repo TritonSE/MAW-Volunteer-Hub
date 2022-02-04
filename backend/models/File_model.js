@@ -1,9 +1,8 @@
 const { ObjectId, Timestamp } = require("mongodb");
 const mongoose = require("mongoose");
+const config = require("../config");
 
-mongoose.connect(
-  "mongodb+srv://Mohak:yXcov2Wtwx7ikj1n@cluster0.1divz.mongodb.net/Cluster0?retryWrites=true&w=majority"
-);
+// mongoose.connect(config.db.uri);
 
 const File_Schema = new mongoose.Schema({
   name: {
