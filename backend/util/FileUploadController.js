@@ -21,7 +21,7 @@ const Upload_File = async (req, res) => {
       name: req.body.name,
       userID: user._id,
       Category_ID: "test",
-      File_ID: result.key,
+      S3_ID: result.key,
     });
     console.log("File uploaded successfully");
     res.json({ data: "success!" });
@@ -35,11 +35,11 @@ const Upload_File = async (req, res) => {
 
 const Delete_File = async (req, res) => {
   try {
-    const key = req.params.key;
-    File.findOne({ name: key })
+    const ID = req.params.s3id;
+    File.findOne({ S3_ID: ID })
       .then(async (file) => {
-        await DeleteFile(file.File_ID);
-        await File.deleteOne({ name: key });
+        await DeleteFile(file.S3_ID);
+        await File.deleteOne({ S3_ID: ID });
         res.send("File successfully deleted");
       })
       .catch((e) => {
@@ -54,10 +54,9 @@ const Delete_File = async (req, res) => {
 
 const Update_file_name = async (req, res) => {
   try {
-    const key = req.params.key;
+    const ID = req.params.s3id;
     const updated_key = req.body.updated_key;
-    console.log(key, updated_key);
-    File.findOne({ name: key })
+    File.findOne({ S3_ID: ID })
       .then(async (file) => {
         Object.assign(file, { name: updated_key });
         file.save();
@@ -74,11 +73,11 @@ const Update_file_name = async (req, res) => {
 
 const Update_file = async (req, res) => {
   try {
-    const key = req.params.key;
+    const ID = req.params.s3id;
     const updated_file = req.file;
-    File.findOne({ name: key })
+    File.findOne({ S3_ID: ID })
       .then(async (file) => {
-        await DeleteFile(key);
+        await DeleteFile(file.S3_ID);
         const result = await uploadFile(updated_file);
         console.log(result);
         await unlinkFile(updated_file.path);
@@ -86,9 +85,9 @@ const Update_file = async (req, res) => {
           name: req.body.updated_file_name,
           userID: req.user._id,
           Category_ID: req.body.Category_ID,
-          File_ID: result.key,
+          S3_ID: result.key,
         });
-        await File.deleteOne({ name: key });
+        await File.deleteOne({ S3_ID: ID });
         console.log("New File uploaded successfully");
         res.json({ data: "success!" });
       })
@@ -107,7 +106,7 @@ const Display_File = async (req, res) => {
     const key = req.params.key;
     File.findOne({ name: key })
       .then(async (file) => {
-        const readStream = getFileStream(file.File_ID);
+        const readStream = getFileStream(file.S3_ID);
         readStream.pipe(res);
       })
       .catch(() => {
@@ -125,7 +124,7 @@ const delete_category_file = async (req, res) => {
     await File.find({ Category_ID: category_id })
       .then(async (files) => {
         files.forEach(async (file) => {
-          await DeleteFile(file.File_ID);
+          await DeleteFile(file.S3_ID);
           await File.deleteOne({ name: file.name });
         });
         res.send("Category File successfully deleted");
@@ -137,6 +136,17 @@ const delete_category_file = async (req, res) => {
   }
 };
 
+const search_file = async (req, res) => {
+  try {
+    const Name = req.params.name;
+    await File.find({ name: Name }).then(async (file) => {
+      res.json(file);
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(400).json({ error: " Error" });
+  }
+};
 module.exports = {
   Upload_File,
   Delete_File,
@@ -144,4 +154,5 @@ module.exports = {
   Update_file_name,
   Update_file,
   delete_category_file,
+  search_file,
 };
