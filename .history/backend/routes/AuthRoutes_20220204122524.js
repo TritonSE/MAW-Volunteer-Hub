@@ -41,23 +41,16 @@ router.post("/login", async (req, res, next) => {
   })(req, res, next);
 });
 
-router.put("/:id", (req,res)=>{
-  if (user.admin === true){
-    try{
-        User.findById(req.params.id).then((user) => {
-                Object.assign(user, {admin : true})
-                user.save()
-        })
-    } catch{
-        res.status(404).send({error: "user not found"});
-    }
-  }
-});
-
-router.put("/edit", (req, res, next) => {
-  editUser(req.body, req.user)
+router.get("/auth/:user_id", (req, res, next) => {
+  getUser(req.params.user_id)
     .then((user) => {
-      res.status(200).json({ user });
+      res.json({ 
+        name: req.name,
+        email: req.email,
+        profilePicture: req.profilePicture,
+        roles: req.roles,
+        joinDate: req.joinDate,
+      });
     })
     .catch((err) => {
       next(err);

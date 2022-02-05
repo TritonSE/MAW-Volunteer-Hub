@@ -13,16 +13,14 @@ router.get("/secure", (req, res, next) => {
   });
 });
 
-router.get("/admin", (req, res, next) => {
+router.get("/admin", async (req, res, next) => {
   console.log(req.query.admin);
   if (req.query.admin){
     console.log("go through with route");
     const r = UserModel.find({ admin: req.query.admin });
-    console.log("r");
     console.log(r);
-    /*console.log(r);
     return res.status(200).json({});
-    UserModel.find({ admin: req.query.admin })
+   /* UserModel.find({ admin: req.query.admin })
     .then((user) => {
       console.log(user);
       return res.json({ user });

@@ -14,23 +14,14 @@ router.get("/secure", (req, res, next) => {
 });
 
 router.get("/admin", (req, res, next) => {
-  console.log(req.query.admin);
+  console.log(req.query);
   if (req.query.admin){
-    console.log("go through with route");
-    const r = UserModel.find({ admin: req.query.admin });
-    console.log("r");
-    console.log(r);
-    /*console.log(r);
-    return res.status(200).json({});
-    UserModel.find({ admin: req.query.admin })
-    .then((user) => {
-      console.log(user);
-      return res.json({ user });
-    }).catch(() => {
-      console.log("CATCH");
-    })*/
+    const users = await UserModel.find({ admin: req.query.admin }).then((user) => {
+      res.json(user);
+    });
+
   }
-  else {
+  else{
     return res.status(400).json({error: 'Malformed Input' });
   }
 });

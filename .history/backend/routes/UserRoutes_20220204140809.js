@@ -14,23 +14,12 @@ router.get("/secure", (req, res, next) => {
 });
 
 router.get("/admin", (req, res, next) => {
-  console.log(req.query.admin);
-  if (req.query.admin){
-    console.log("go through with route");
-    const r = UserModel.find({ admin: req.query.admin });
-    console.log("r");
-    console.log(r);
-    /*console.log(r);
-    return res.status(200).json({});
-    UserModel.find({ admin: req.query.admin })
-    .then((user) => {
-      console.log(user);
-      return res.json({ user });
-    }).catch(() => {
-      console.log("CATCH");
-    })*/
+  if (req.params.admin === true || req.params.admin === false){
+    UserModel.find({ admin: req.params.admin }).then((user) => {
+    res.json(user);
+    });
   }
-  else {
+  else{
     return res.status(400).json({error: 'Malformed Input' });
   }
 });
@@ -51,15 +40,6 @@ router.get("/user_id", (req, res, next) => {
     });
 });
 
-router.get("/trial", (req, res, next) => {
-  getUsers(req.query)
-    .then((users) => {
-      res.status(200).json({ users });
-    })
-    .catch((err) => {
-      next(err);
-    });
-}); 
 
 router.get("/id", (req, res) => {
   User.find({user_id: req.params.user_id}, {"name" : 1, "_id": 0, "email": 1, "profilePicture": 1, "roles": 1, "joinDate": 1}).then((user)=>{

@@ -17,12 +17,10 @@ router.get("/admin", (req, res, next) => {
   console.log(req.query.admin);
   if (req.query.admin){
     console.log("go through with route");
-    const r = UserModel.find({ admin: req.query.admin });
-    console.log("r");
+    const r = UserModel.find({ email: "sfgupta@ucsd.edu" });
     console.log(r);
-    /*console.log(r);
-    return res.status(200).json({});
-    UserModel.find({ admin: req.query.admin })
+    return res.status(200).json({ r });
+   /* UserModel.find({ admin: req.query.admin })
     .then((user) => {
       console.log(user);
       return res.json({ user });

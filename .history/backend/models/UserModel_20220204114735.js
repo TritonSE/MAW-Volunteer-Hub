@@ -27,7 +27,11 @@ const UserSchema = new Schema({
     default: false,
   },
   // to make sure the user is a part of make-a-wish
-  name: {
+  firstName: {
+    type: String,
+    //  required : true
+  },
+  lastName: {
     type: String,
     //  required : true
   },
@@ -62,7 +66,7 @@ const UserSchema = new Schema({
     // required: true
   },
   joinDate: {
-    type: Date,
+    type: [Integer],
     // required: true
   },
 });

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://shreyagupta:Crue14furr@cluster0.cea9v.mongodb.net/Cluster0?retryWrites=true&w=majority");
+mongoose.connect("mongodb+srv://shreyagupta:Crue14furr@cluster0.cea9v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
 // const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcrypt");
 
@@ -27,7 +27,11 @@ const UserSchema = new Schema({
     default: false,
   },
   // to make sure the user is a part of make-a-wish
-  name: {
+  firstName: {
+    type: String,
+    //  required : true
+  },
+  lastName: {
     type: String,
     //  required : true
   },
@@ -59,10 +63,6 @@ const UserSchema = new Schema({
   },
   roles: {
     type: [String],
-    // required: true
-  },
-  joinDate: {
-    type: Date,
     // required: true
   },
 });
