@@ -1,14 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { PAGES } from "../constants/pages";
 import { SITE_PAGES } from "../constants/links";
 import "../styles/NavMenuMobile.css";
+import Search from "./Search";
 
 function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
+  const [mobileSearch, setMobileSearch] = useState(false);
+
   return (
     <div className="nav-menu-mobile">
+      {/* { mobileSearch == true ? (
+        <div/>
+      )
+      : (
+          <div/>
+      )} */}
+
       <div className="search-mobile">
-        <button type="button" className="search-button-mobile">
+        <button
+          type="button"
+          className="search-button-mobile"
+          onClick={() => setMobileSearch((prevState) => !prevState)}
+        >
           <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon-mobile" />
         </button>
       </div>
