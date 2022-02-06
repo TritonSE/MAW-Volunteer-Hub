@@ -66,6 +66,7 @@
     min-height: 0vh;
     height: 62px;
     background: var(--blue-gradient);
+    box-shadow: none;
   }
 
   .side_nav_links {
@@ -82,6 +83,8 @@
     font-size: 15px;
     line-height: 18px;
     background-color: rgba(255, 0, 0, 0);
+
+    margin: 15px 5px 15px 5px;
   }
 
   .side_nav_display {
