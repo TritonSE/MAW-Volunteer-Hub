@@ -52,13 +52,15 @@
   z-index: 999;
   background: rgba(0, 0, 0, 0.3) !important;
 }
-.ReactModal__Content:not(.search-results) {
+.ReactModal__Content.wishgranting_react_modal {
+  position: absolute;
   width: 466px;
   height: 278px;
   left: calc(50vw - (466px / 2)) !important;
   top: calc(50vh - (278px / 2)) !important;
   padding-top: 21px !important;
   padding-left: 25px !important;
+  padding-right: 25px !important;
 }
 .ReactModal__Content {
   border: none !important;
