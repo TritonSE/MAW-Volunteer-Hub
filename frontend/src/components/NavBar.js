@@ -1,4 +1,3 @@
-/* eslint no-restricted-globals: "off" */
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
@@ -19,7 +18,7 @@ const PAGES = {
 */
 function NavBar() {
   const [dropdown, setDropdown] = useState(false);
-  const [active, setActive] = useState(location.pathname.split("/")[1]);
+  const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
     () =>
@@ -90,7 +89,7 @@ function NavBar() {
               </NavLink>
               <NavLink
                 className="signout-link"
-                to={SITE_PAGES.LOGIN}
+                to={SITE_PAGES.SIGNOUT}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 <span>Sign Out</span>

@@ -1,4 +1,3 @@
-/* eslint no-restricted-globals: "off" */
 import React, { useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import ScrollContainer from "react-indiana-drag-scroll";
@@ -18,7 +17,7 @@ function SideNav({ tabs, getContext }) {
     let out = 0;
     // tabs.findIndex() causes React to throw an error
     tabs.forEach((tab, ind) => {
-      if (location.pathname.indexOf(tab.tab_route) > -1) {
+      if (history.location.pathname.indexOf(tab.tab_route) > -1) {
         out = ind;
       }
     });
