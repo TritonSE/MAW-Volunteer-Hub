@@ -12,6 +12,8 @@ function AssignBtn({ label }) {
         return "btn_wGranter";
       case "Meeter":
         return "btn_meeter";
+      case "Allow Access":
+        return "btn_access";
     }
     return "btn_none";
   }

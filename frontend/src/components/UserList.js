@@ -72,24 +72,29 @@ function UserList({ tableHeaders, userData }) {
         </th>
       );
     }
+
+    // Uncomment lines (82 and 85) and (94 and 97) to get sorting to work for the middle and end headers
     // End of the header
     if (index === columns.length - 1) {
       return (
         <th
           className="people_table_header_end"
-          {...column.getHeaderProps(column.getSortByToggleProps())}
+          // {...column.getHeaderProps(column.getSortByToggleProps())}
         >
           {column.render("Header")}
-          <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span>
+          {/* <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span> */}
         </th>
       );
     }
     // Header elements in the middle
 
     return (
-      <th className="people_table_header" {...column.getHeaderProps(column.getSortByToggleProps())}>
+      <th
+        className="people_table_header"
+        // {...column.getHeaderProps(column.getSortByToggleProps())}
+      >
         {column.render("Header")}
-        <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span>
+        {/* <span className="sort_toggle">{getArrowImage(column.isSorted, column.isSortedDesc)}</span> */}
       </th>
     );
   };
