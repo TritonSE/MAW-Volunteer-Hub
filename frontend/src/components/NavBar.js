@@ -36,7 +36,9 @@ function NavBar() {
 
         {/* Container for search bar and account menu */}
         <li className="search-and-profile">
-          <Search />
+          <div className="desktopSearchBarComponent">
+            <Search />
+          </div>
           <NavMenuMobile desktopDropdown={dropdown} setDesktopDropdown={setDropdown} />
 
           <div className="profile-container">

@@ -2,19 +2,29 @@
   display: none;
 }
 
+.logo-container-mobile {
+  width: 104px;
+  height: 28px;
+  margin-top: 3px;
+}
+
 .searchbar-icon-mobile {
   width: 32px;
   height: 32px;
 }
 
-.dropdown-button-mobile {
+.search-button-mobile {
   background-color: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
 }
 
-.search-button-mobile {
+.mobileSearchBarComponent {
+  align-self: center;
+}
+
+.dropdown-button-mobile {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -85,7 +95,13 @@
 .page-links-mobile {
   color: var(--white);
   text-decoration: none;
-  margin: 13px 32px 0px 0px;
+  margin: 26px 32px 0px 32px;
+}
+
+.underline-mobile {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
 }
 
 .view-profile-link-mobile,
@@ -93,6 +109,7 @@
   display: flex;
   color: var(--white);
   text-decoration: none;
+  margin: 32px 0px 0px 32px;
 }
 
 .signout-icon-mobile {
@@ -118,8 +135,20 @@
 }
 
 @media only screen and (max-width: 475px) {
+  .nav-menu-mobile {
+    flex: 1;
+    justify-content: space-between;
+  }
   .search-mobile {
-    display: block;
+    display: flex;
     align-self: center;
+    flex: 1;
+    justify-content: space-between;
+  }
+}
+
+@media only screen and (min-width: 475px) {
+  .mobileSearchBarComponent {
+    display: none;
   }
 }

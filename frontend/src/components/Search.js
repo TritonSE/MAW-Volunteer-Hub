@@ -22,12 +22,14 @@ const allFiles = [
 Modal.setAppElement(document.getElementById("#root"));
 
 /*
-    Search component, which opens a search modal and allows searching of files by keyword. 
+    Search component, which opens a search modal and allows searching of files by keyword.
+    - extraAction: extra setState to perform, since search can be opened from both desktop and mobile
+    - closeModal: whenever search modal is closed, also set the mobile search state to false
 */
 
-function Search() {
+function Search({ extraAction = false, closeModal }) {
   const [input, setInput] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const [showResults, setShowResults] = useState(extraAction);
   const [filteredFiles, setFilteredFiles] = useState([]);
 
   // const [allFiles, setAllFiles] = useState([]);
@@ -39,6 +41,11 @@ function Search() {
   useEffect(() => {
     // get all files
   }, []);
+
+  const handleClose = () => {
+    setShowResults((prevState) => !prevState);
+    if (extraAction) closeModal((prevState) => !prevState);
+  };
 
   return (
     <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -57,16 +64,12 @@ function Search() {
 
       <Modal
         isOpen={showResults}
-        onRequestClose={() => setShowResults((prevState) => !prevState)}
+        onRequestClose={handleClose}
         className="search-results"
         overlayClassName="search-results-overlay"
       >
         <div className="results-container">
-          <button
-            className="close-btn"
-            onClick={() => setShowResults((prevState) => !prevState)}
-            type="button"
-          >
+          <button className="close-btn" onClick={handleClose} type="button">
             <img
               src="/img/search_exit_icon.svg"
               alt="Close Search Results"

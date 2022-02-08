@@ -10,22 +10,29 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
 
   return (
     <div className="nav-menu-mobile">
-      {/* { mobileSearch == true ? (
-        <div/>
-      )
-      : (
-          <div/>
-      )} */}
+      {mobileSearch === true ? (
+        <div className="mobileSearchBarComponent">
+          <Search extraAction closeModal={setMobileSearch} />
+        </div>
+      ) : (
+        <div className="search-mobile">
+          <div className="logo-container-mobile">
+            <NavLink to={SITE_PAGES.MANAGE}>
+              <img src="/img/maw_logo.png" alt="Make-A-Wish logo" className="maw-logo" />
+            </NavLink>
+          </div>
 
-      <div className="search-mobile">
-        <button
-          type="button"
-          className="search-button-mobile"
-          onClick={() => setMobileSearch((prevState) => !prevState)}
-        >
-          <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon-mobile" />
-        </button>
-      </div>
+          <div>
+            <button
+              type="button"
+              className="search-button-mobile"
+              onClick={() => setMobileSearch((prevState) => !prevState)}
+            >
+              <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon-mobile" />
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="dropdown-icon-mobile">
         <button
@@ -86,7 +93,11 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
             onClick={() => setDesktopDropdown((prevState) => !prevState)}
           >
             <span>Sign Out</span>
-            <img src="/img/signout_icon.svg" alt="Sign out icon" className="signout-icon-mobile" />
+            <img
+              src="/img/signout_icon_white.svg"
+              alt="Sign out icon"
+              className="signout-icon-mobile"
+            />
           </NavLink>
         </div>
       )}

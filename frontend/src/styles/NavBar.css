@@ -55,6 +55,10 @@
 
 /* Search and profile styles */
 
+.desktopSearchBarComponent {
+  display: flex;
+}
+
 .search-and-profile {
   display: flex;
   flex-direction: row;
@@ -153,5 +157,21 @@
   }
   .profile-dropdown {
     display: none;
+  }
+}
+
+@media only screen and (max-width: 475px) {
+  .desktopSearchBarComponent {
+    display: none;
+  }
+  .navlist {
+    justify-content: unset;
+    flex: 1;
+  }
+  .logo-container {
+    display: none;
+  }
+  .search-and-profile {
+    flex: 1;
   }
 }
