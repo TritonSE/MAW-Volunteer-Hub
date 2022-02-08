@@ -145,7 +145,7 @@ function ManagePage() {
   // ];
   return (
     <div>
-      <div style={{ background: "#f7f7f7" }}>
+      <div style={{ background: "#f7f7f7", overflowX: "auto" }}>
         {/* <SideNav tabs={tabs} /> */}
         <UserList tableHeaders={headers} userData={userData} />
       </div>
