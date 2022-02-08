@@ -50,6 +50,55 @@ function ManagePage() {
       // Completed: 2,
       // Start: "June 2020",
     },
+    {
+      Name: "Person 1",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 2",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 3",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 4",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 5",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 6",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Person 7",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
   ];
 
   const headers = [
