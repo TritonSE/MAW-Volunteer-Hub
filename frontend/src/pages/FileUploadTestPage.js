@@ -12,7 +12,7 @@ async function postFile({ file, name }) {
 
   const result = await axios.post(
     // "http://localhost:3000/file/upload?secret_token=abc", // invalid secret token
-    "http://localhost:3000/file/upload?secret_token=" + DEBUG_TOKEN,
+    "http://localhost:3000/file/Upload?secret_token=" + DEBUG_TOKEN,
     formData,
     {
       headers: { "Content-Type": "multipart/form-data" },
@@ -22,7 +22,7 @@ async function postFile({ file, name }) {
 }
 
 function ProfilePage() {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
   const [name, setName] = useState("");
 
   const submit = async (event) => {
@@ -38,12 +38,13 @@ function ProfilePage() {
   const loadFile = async () => {
     const loadname = document.getElementById("show-textbox").value;
     window.open(
-      `http://localhost:3000/file/display/${encodeURIComponent(
+      `http://localhost:3000/file/Display/${encodeURIComponent(
         loadname
       )}?secret_token=${DEBUG_TOKEN}`
     );
   };
 
+  /*
   const updateFilename = async () => {
     const old_name = document.getElementById("update-filename-old").value;
     const new_name = document.getElementById("update-filename-new").value;
@@ -52,7 +53,7 @@ function ProfilePage() {
     formData.append("key", old_name);
     formData.append("updated_key", new_name);
     const result = await axios.patch(
-      `http://localhost:3000/file/update/${encodeURIComponent(
+      `http://localhost:3000/file/Update/${encodeURIComponent(
         old_name
       )}?secret_token=${DEBUG_TOKEN}`,
       `updated_key=${encodeURIComponent(new_name)}`,
@@ -75,8 +76,31 @@ function ProfilePage() {
     formData.append("updated_file_name", newFilename);
     formData.append("Category_ID", "test");
     const result = await axios.post(
-      `http://localhost:3000/file/update_file/${encodeURIComponent(
+      `http://localhost:3000/file/Update/${encodeURIComponent(
         filename
+      )}?secret_token=${DEBUG_TOKEN}`,
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
+    console.log(result);
+  };
+  */
+
+  const update_submit = async (e) => {
+    e.preventDefault();
+
+    const old_name = document.getElementById("update-filename").value;
+    const new_name = document.getElementById("update-newfilename").value;
+
+    const formData = new FormData();
+    if (file) formData.append("file", file);
+    if (new_name.trim() !== "") formData.append("updated_file_name", new_name);
+
+    const result = await axios.patch(
+      `http://localhost:3000/file/Update/${encodeURIComponent(
+        old_name
       )}?secret_token=${DEBUG_TOKEN}`,
       formData,
       {
@@ -90,7 +114,7 @@ function ProfilePage() {
     const deletename = document.getElementById("delete-filename").value;
 
     const result = await axios.delete(
-      `http://localhost:3000/file/delete/${encodeURIComponent(
+      `http://localhost:3000/file/Delete/${encodeURIComponent(
         deletename
       )}?secret_token=${DEBUG_TOKEN}`
     );
@@ -101,7 +125,7 @@ function ProfilePage() {
     const deletename = document.getElementById("delete-category").value;
 
     const result = await axios.delete(
-      `http://localhost:3000/file/delete_category/${encodeURIComponent(
+      `http://localhost:3000/file/Deletecat/${encodeURIComponent(
         deletename
       )}?secret_token=${DEBUG_TOKEN}`
     );
@@ -133,17 +157,10 @@ function ProfilePage() {
         load
       </button>
       <br />
-      <h1>Update Filename</h1>
-      <input type="text" id="update-filename-old" placeholder="Old name" />
-      <input type="text" id="update-filename-new" placeholder="New name" />
-      <button type="button" onClick={() => updateFilename()}>
-        Update
-      </button>
-      <br />
-      <h1>Update File</h1>
+      <h1>Update</h1>
       <form onSubmit={update_submit}>
-        <input type="text" placeholder="Filename" id="update_file-filename" />
-        <input type="text" placeholder="New filename" id="update_file-newfilename" />
+        <input type="text" placeholder="Filename" id="update-filename" />
+        <input type="text" placeholder="New filename" id="update-newfilename" />
         <br />
         <br />
         <input onChange={fileSelected} type="file" />

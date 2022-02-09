@@ -6,31 +6,28 @@ const multer = require("multer");
 const upload = multer({ dest: "server_uploads/" });
 // const req = require("express/lib/request");
 const {
-  Upload_File,
-  Delete_File,
-  Display_File,
-  Update_file,
-  Update_file_name,
-  delete_category_file,
-  search_file,
+  UploadFile,
+  Delete,
+  DisplayFile,
+  UpdateFile,
+  DeleteCatFile,
+  SearchFile,
 } = require("../util/FileUploadController");
 
 router.get("/", (req, res) => {
   res.render("index");
 });
 
-router.post("/upload", upload.single("file"), Upload_File);
+router.post("/Upload", upload.single("file"), UploadFile);
 
-router.get("/display/:key", Display_File);
+router.get("/Display/:ID", DisplayFile);
 
-router.delete("/delete/:s3id", Delete_File);
+router.delete("/Delete/:ID", Delete);
 
-router.patch("/update/:s3id", Update_file_name);
+router.patch("/Update/:ID", upload.single("file"), UpdateFile);
 
-router.post("/update_file/:s3id", upload.single("file"), Update_file);
+router.delete("/Deletecat/:category_id", DeleteCatFile);
 
-router.delete("/delete_category/:category_id", delete_category_file);
-
-router.get("/search/:name", search_file);
+router.get("/Search/:name", SearchFile);
 
 module.exports = router;
