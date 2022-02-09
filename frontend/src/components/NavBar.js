@@ -34,7 +34,7 @@ function NavBar() {
           </div>
         </li>
 
-        {/* Container for search bar and account menu */}
+        {/* Container for search bar and account menu, and the mobile NavBar display */}
         <li className="search-and-profile">
           <div className="desktopSearchBarComponent">
             <Search />

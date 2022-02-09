@@ -10,6 +10,8 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
 
   return (
     <div className="nav-menu-mobile">
+      {/* If mobile search is pressed, display Search component with added state,
+      otherwise, display the logo, single search icon, and menu */}
       {mobileSearch === true ? (
         <div className="mobileSearchBarComponent">
           <Search extraAction closeModal={setMobileSearch} />

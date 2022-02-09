@@ -27,7 +27,7 @@ Modal.setAppElement(document.getElementById("#root"));
     - closeModal: whenever search modal is closed, also set the mobile search state to false
 */
 
-function Search({ extraAction = false, closeModal }) {
+function Search({ extraAction = false, closeModal = () => {} }) {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(extraAction);
   const [filteredFiles, setFilteredFiles] = useState([]);
@@ -62,6 +62,9 @@ function Search({ extraAction = false, closeModal }) {
         <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
       </button>
 
+      {/* Pop-up search modal with either (a) no results (b) filtered files or (c) all files,
+      displaying the files using the FileEntry component
+      */}
       <Modal
         isOpen={showResults}
         onRequestClose={handleClose}

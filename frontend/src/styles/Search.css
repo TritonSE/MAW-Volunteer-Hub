@@ -71,6 +71,8 @@
   flex-direction: column;
 }
 
+/* Search results & icons styles */
+
 .close-btn {
   background-color: transparent;
   border: transparent;
