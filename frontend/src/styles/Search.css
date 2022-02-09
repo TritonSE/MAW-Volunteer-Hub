@@ -136,7 +136,10 @@
   media queries for responsive display desktop/mobile
 */
 
-/* @media only screen and (max-width: 795px) {
-  // make search modal box be size of screen & shrink down accordingly
+@media only screen and (max-width: 795px) {
+  .search-results,
+  .results-container,
+  .show-results {
+    width: 100%;
+  }
 }
-*/
