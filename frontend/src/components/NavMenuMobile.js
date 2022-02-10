@@ -1,12 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { PAGES } from "../constants/pages";
 import { SITE_PAGES } from "../constants/links";
+import { PAGES } from "../constants/pages";
 import "../styles/NavMenuMobile.css";
 import Search from "./Search";
+import history from "../history";
 
+/*
+  Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
+*/
 function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
   const [mobileSearch, setMobileSearch] = useState(false);
+
+  const [active, setActive] = useState(history.location.pathname.split("/")[1]);
+
+  useEffect(
+    () =>
+      history.listen((e) => {
+        setActive(e.location.pathname.split("/")[1]);
+      }),
+    []
+  );
 
   return (
     <div className="nav-menu-mobile">
@@ -70,8 +84,9 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
             {Object.entries(PAGES).map(([page, route]) => (
               <NavLink
                 key={route}
-                className="page-links-mobile"
-                activeClassName="underline-mobile"
+                className={`page-links-mobile ${
+                  active.trim() !== "" && route.indexOf(active) > -1 ? "underline-mobile" : ""
+                }`}
                 to={route}
                 onClick={() => setDesktopDropdown((prevState) => !prevState)}
               >

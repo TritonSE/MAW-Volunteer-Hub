@@ -155,7 +155,8 @@
   .profile-container {
     display: none;
   }
-  .profile-dropdown {
+  .profile-dropdown,
+  .profile-dropdown-overlay {
     display: none;
   }
 }

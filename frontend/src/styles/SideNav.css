@@ -8,8 +8,8 @@
   flex-direction: column;
   position: relative;
   align-items: center;
+  min-height: 100vh;
   background-color: white;
-  height: 100%;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -35,33 +35,67 @@
   border-radius: 8px;
 
   margin: 40px 20px 40px 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .side_nav_selected {
-  left: 17.39%;
-  right: 16.96%;
-  top: 36%;
-  bottom: 34.67%;
-
-  width: 190px;
-  height: 59px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-
-  text-align: center;
-  color: #0057b8;
-
   background-color: rgba(0, 87, 184, 0.1);
-  border-width: 0px;
-  border-radius: 8px;
-
-  margin: 40px 20px 40px 20px;
 }
 
 .side_nav_links:hover {
   background-color: rgba(0, 87, 184, 0.1);
   cursor: pointer;
+}
+
+.side_nav_display {
+  width: calc(100vw - 190px);
+}
+
+@media only screen and (max-width: 550px) {
+  .side_nav_layout {
+    flex-direction: column;
+  }
+
+  .side_nav_buttons {
+    display: flex;
+    flex-direction: row;
+    min-height: 0vh;
+    height: 62px;
+    background: var(--blue-gradient);
+    box-shadow: none;
+  }
+
+  .side_nav_links {
+    left: 11.76%;
+    right: 11.76%;
+    top: 23.53%;
+    bottom: 23.53%;
+    color: white;
+    min-width: 145px;
+    height: 40px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 18px;
+    background-color: rgba(255, 0, 0, 0);
+
+    margin: 15px 5px 15px 5px;
+  }
+
+  .side_nav_display {
+    width: 100vw;
+  }
+
+  .side_nav_selected {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .side_nav_links:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
 }

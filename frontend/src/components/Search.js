@@ -29,7 +29,7 @@ Modal.setAppElement(document.getElementById("#root"));
 
 function Search({ extraAction = false, closeModal = () => {} }) {
   const [input, setInput] = useState("");
-  const [showResults, setShowResults] = useState(extraAction);
+  const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
 
   // const [allFiles, setAllFiles] = useState([]);

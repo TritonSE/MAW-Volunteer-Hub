@@ -2,8 +2,7 @@
  * STANDARD FILELISTING
  */
 .filelisting {
-  /* width: calc(100% - (10px * 2)); */
-  width: 80%;
+  width: calc(100% - (10px * 2));
   height: 45px;
   display: flex;
   align-items: center;
@@ -11,7 +10,6 @@
   padding-left: 10px;
   padding-right: 10px;
   margin-bottom: 15px;
-  margin-left: 10px;
   border-radius: 8px;
   background: rgba(187, 188, 188, 0.2);
 

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import Search from "./Search";
+import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
 
@@ -13,6 +14,15 @@ import NavMenuMobile from "./NavMenuMobile";
 */
 function NavBar() {
   const [dropdown, setDropdown] = useState(false);
+  const [active, setActive] = useState(history.location.pathname.split("/")[1]);
+
+  useEffect(
+    () =>
+      history.listen((e) => {
+        setActive(e.location.pathname.split("/")[1]);
+      }),
+    []
+  );
 
   return (
     <nav className="container">
@@ -27,7 +37,13 @@ function NavBar() {
 
           <div className="pages-container">
             {Object.entries(PAGES).map(([page, route]) => (
-              <NavLink key={route} className="page-links" activeClassName="underline" to={route}>
+              <NavLink
+                key={route}
+                className={`page-links ${
+                  active.trim() !== "" && route.indexOf(active) > -1 ? "underline" : ""
+                }`}
+                to={route}
+              >
                 {page}
               </NavLink>
             ))}
@@ -72,7 +88,7 @@ function NavBar() {
               </NavLink>
               <NavLink
                 className="signout-link"
-                to={SITE_PAGES.LOGIN}
+                to={SITE_PAGES.SIGNOUT}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 <span>Sign Out</span>

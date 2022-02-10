@@ -5,6 +5,7 @@
   align-items: center;
   font-family: Lato;
   font-weight: 400;
+  z-index: 1000;
 }
 
 .search-input {
@@ -15,7 +16,6 @@
   font-size: 14px;
   border: 0px;
   border-radius: 3px 0px 0px 3px;
-  z-index: 101;
   font-family: "Lato", sans-serif;
 }
 
@@ -48,7 +48,6 @@
   padding-top: 10px;
   padding-bottom: 10px;
   margin-top: 73px;
-  z-index: 100;
   font-family: "Lato", sans-serif;
 }
 
@@ -63,7 +62,6 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.15);
-  z-index: 100;
 }
 
 .results-container {
@@ -139,7 +137,8 @@
 @media only screen and (max-width: 795px) {
   .search-results,
   .results-container,
-  .show-results {
+  .show-results,
+  .no-results {
     width: 100%;
   }
 }
