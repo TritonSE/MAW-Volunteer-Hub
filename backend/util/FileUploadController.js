@@ -9,7 +9,7 @@ const File = require("../models/File_model");
 
 const unlinkFile = util.promisify(fs.unlink);
 
-const { uploadFile, getFileStream, DeleteFile } = require("./S3Util");
+const { uploadFile, getFileStream, deleteFileAWS } = require("./S3Util");
 
 const UploadFile = async (req, res) => {
   try {
@@ -31,23 +31,23 @@ const UploadFile = async (req, res) => {
   }
 };
 
-const Delete = async (req, res) => {
-  try {
-    const ID = req.params.ID;
-    File.findById(ID)
-      .then(async (file) => {
-        await DeleteFile(file.S3_ID);
-        await File.deleteOne({ S3_ID: ID });
-        res.send("File successfully deleted");
-      })
-      .catch((e) => {
+const DeleteFile = async (req, res) => {
+  const ID = req.params.ID;
+  File.findById(ID)
+    .then(async (file) => {
+      try {
+        await deleteFileAWS(file.S3_ID);
+      } catch (e) {
         console.log(e);
-        res.status(500).json({ error: "Error, file does not exist" });
-      });
-  } catch (e) {
-    console.log(e);
-    res.status(400).json({ error: "Error, cannot delete file" });
-  }
+        res.status(500).json({ error: "Internal Error. Could not upload file to AWS" });
+      }
+      await File.deleteOne({ _id: ID });
+      res.send("File successfully deleted");
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(400).json({ error: "Error, file with provided id does not exist" });
+    });
 };
 
 const UpdateFile = async (req, res) => {
@@ -58,7 +58,7 @@ const UpdateFile = async (req, res) => {
       .then(async (fileobj) => {
         if (req.file && req.body.updated_file_name) {
           try {
-            await DeleteFile(fileobj.S3_ID);
+            await deleteFileAWS(fileobj.S3_ID);
             const result = await uploadFile(updated_file);
             Object.assign(fileobj, { S3_ID: result.key, name: req.body.updated_file_name });
             fileobj.save();
@@ -68,7 +68,7 @@ const UpdateFile = async (req, res) => {
           }
         } else if (req.file) {
           try {
-            await DeleteFile(fileobj.S3_ID);
+            await deleteFileAWS(fileobj.S3_ID);
             const result = await uploadFile(updated_file);
             Object.assign(fileobj, { S3_ID: result.key }); // so that UpdatedAt changes
             fileobj.save();
@@ -115,13 +115,13 @@ const DisplayFile = async (req, res) => {
   }
 };
 
-const DeleteCatFile = async (req, res) => {
+const DeleteCategory = async (req, res) => {
   try {
     const category_id = req.params.category_id;
     await File.find({ Category_ID: category_id })
       .then(async (files) => {
         files.forEach(async (file) => {
-          await DeleteFile(file.S3_ID);
+          await deleteFileAWS(file.S3_ID);
           await File.deleteOne({ name: file.name });
         });
         res.send("Category File successfully deleted");
@@ -146,9 +146,9 @@ const SearchFile = async (req, res) => {
 };
 module.exports = {
   UploadFile,
-  Delete,
+  DeleteFile,
   DisplayFile,
   UpdateFile,
-  DeleteCatFile,
+  DeleteCategory,
   SearchFile,
 };

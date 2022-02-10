@@ -1,29 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import axios from "axios";
-
-const DEBUG_TOKEN =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxZjg1MGZjMTQ3MmM1ZDA2MWFiNDZhZiIsImVtYWlsIjoidGVzdEBlbWFpbC5jb20ifSwiaWF0IjoxNjQ0MDA3ODMxfQ.z1EIWevtvEW09mUss8yPN64UtLvqNWUZbzffYl0f9vQ";
+import { token_get } from "../auth";
 
 async function postFile({ file, name }) {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("name", name);
+  const jwt = await token_get();
 
-  const result = await axios.post(
-    // "http://localhost:3000/file/upload?secret_token=abc", // invalid secret token
-    "http://localhost:3000/file/Upload?secret_token=" + DEBUG_TOKEN,
-    formData,
-    {
-      headers: { "Content-Type": "multipart/form-data" },
-    }
-  );
+  const result = await axios.post("http://localhost:3000/file/Upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `bearer ${jwt}`,
+    },
+  });
   return result.data;
 }
 
 function ProfilePage() {
   const [file, setFile] = useState(null);
+  const [file2, setFile2] = useState(null);
   const [name, setName] = useState("");
+  const [jwt, setJWT] = useState("");
+
+  // fetch token on page load
+  useEffect(async () => {
+    const retrievedJWT = await token_get();
+    setJWT(retrievedJWT);
+  }, []);
 
   const submit = async (event) => {
     event.preventDefault();
@@ -35,6 +40,11 @@ function ProfilePage() {
     setFile(f);
   };
 
+  const fileSelected2 = (event) => {
+    const f = event.target.files[0];
+    setFile2(f);
+  };
+
   const loadFile = async () => {
     const loadname = document.getElementById("show-textbox").value;
 
@@ -42,7 +52,7 @@ function ProfilePage() {
       `http://localhost:3000/file/Display/${encodeURIComponent(loadname)}`,
       {
         headers: {
-          Authorization: `bearer ${DEBUG_TOKEN}`,
+          Authorization: `bearer ${jwt}`,
         },
       }
     );
@@ -120,16 +130,17 @@ function ProfilePage() {
     const new_name = document.getElementById("update-newfilename").value;
 
     const formData = new FormData();
-    if (file) formData.append("file", file);
+    if (file2) formData.append("file", file2);
     if (new_name.trim() !== "") formData.append("updated_file_name", new_name);
 
     const result = await axios.patch(
-      `http://localhost:3000/file/Update/${encodeURIComponent(
-        old_name
-      )}?secret_token=${DEBUG_TOKEN}`,
+      `http://localhost:3000/file/Update/${encodeURIComponent(old_name)}`,
       formData,
       {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `bearer ${jwt}`,
+        },
       }
     );
     console.log(result);
@@ -139,9 +150,12 @@ function ProfilePage() {
     const deletename = document.getElementById("delete-filename").value;
 
     const result = await axios.delete(
-      `http://localhost:3000/file/Delete/${encodeURIComponent(
-        deletename
-      )}?secret_token=${DEBUG_TOKEN}`
+      `http://localhost:3000/file/Delete/${encodeURIComponent(deletename)}?secret_token=${jwt}`,
+      {
+        headers: {
+          Authorization: `bearer ${jwt}`,
+        },
+      }
     );
     console.log(result);
   };
@@ -150,9 +164,12 @@ function ProfilePage() {
     const deletename = document.getElementById("delete-category").value;
 
     const result = await axios.delete(
-      `http://localhost:3000/file/Deletecat/${encodeURIComponent(
-        deletename
-      )}?secret_token=${DEBUG_TOKEN}`
+      `http://localhost:3000/file/Deletecat/${encodeURIComponent(deletename)}?secret_token=${jwt}`,
+      {
+        headers: {
+          Authorization: `bearer ${jwt}`,
+        },
+      }
     );
     console.log(result);
   };
@@ -188,7 +205,7 @@ function ProfilePage() {
         <input type="text" placeholder="New filename" id="update-newfilename" />
         <br />
         <br />
-        <input onChange={fileSelected} type="file" />
+        <input onChange={fileSelected2} type="file" />
         <br />
         <br />
         <button type="submit">Submit</button>

@@ -7,10 +7,10 @@ const upload = multer({ dest: "server_uploads/" });
 // const req = require("express/lib/request");
 const {
   UploadFile,
-  Delete,
+  DeleteFile,
   DisplayFile,
   UpdateFile,
-  DeleteCatFile,
+  DeleteCategory,
   SearchFile,
 } = require("../util/FileUploadController");
 
@@ -22,11 +22,11 @@ router.post("/Upload", upload.single("file"), UploadFile);
 
 router.get("/Display/:ID", DisplayFile);
 
-router.delete("/Delete/:ID", Delete);
+router.delete("/Delete/:ID", DeleteFile);
 
 router.patch("/Update/:ID", upload.single("file"), UpdateFile);
 
-router.delete("/Deletecat/:category_id", DeleteCatFile);
+router.delete("/Deletecat/:category_id", DeleteCategory);
 
 router.get("/Search/:name", SearchFile);
 
