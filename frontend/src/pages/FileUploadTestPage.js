@@ -20,6 +20,7 @@ async function postFile({ file, name }) {
 
 function ProfilePage() {
   const [file, setFile] = useState(null);
+  const [file2, setFile2] = useState(null);
   const [name, setName] = useState("");
   const [jwt, setJWT] = useState("");
 
@@ -37,6 +38,11 @@ function ProfilePage() {
   const fileSelected = (event) => {
     const f = event.target.files[0];
     setFile(f);
+  };
+
+  const fileSelected2 = (event) => {
+    const f = event.target.files[0];
+    setFile2(f);
   };
 
   const loadFile = async () => {
@@ -108,7 +114,7 @@ function ProfilePage() {
     const new_name = document.getElementById("update-newfilename").value;
 
     const formData = new FormData();
-    if (file) formData.append("file", file);
+    if (file2) formData.append("file", file2);
     if (new_name.trim() !== "") formData.append("updated_file_name", new_name);
 
     const result = await axios.patch(
@@ -183,7 +189,7 @@ function ProfilePage() {
         <input type="text" placeholder="New filename" id="update-newfilename" />
         <br />
         <br />
-        <input onChange={fileSelected} type="file" />
+        <input onChange={fileSelected2} type="file" />
         <br />
         <br />
         <button type="submit">Submit</button>

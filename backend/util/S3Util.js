@@ -44,7 +44,7 @@ function getFileStream(fileKey) {
 
 // delete file from s3
 
-function DeleteFile(fileKey) {
+function deleteFileAWS(fileKey) {
   const fileParams = {
     Key: fileKey,
     Bucket: bucketName,
@@ -53,4 +53,4 @@ function DeleteFile(fileKey) {
   return s3.deleteObject(fileParams).promise();
 }
 
-module.exports = { uploadFile, DeleteFile, getFileStream };
+module.exports = { uploadFile, deleteFileAWS, getFileStream };
