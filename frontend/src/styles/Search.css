@@ -5,7 +5,6 @@
   align-items: center;
   font-family: Lato;
   font-weight: 400;
-  z-index: 1000;
 }
 
 .search-input {
@@ -17,6 +16,7 @@
   border: 0px;
   border-radius: 3px 0px 0px 3px;
   font-family: "Lato", sans-serif;
+  z-index: 1000;
 }
 
 .search-button {

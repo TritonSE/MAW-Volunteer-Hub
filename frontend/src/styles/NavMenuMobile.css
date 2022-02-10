@@ -28,7 +28,6 @@
 
 .mobileSearchBarComponent {
   align-self: center;
-  z-index: 1000;
 }
 
 .dropdown-button-mobile {
@@ -58,6 +57,7 @@
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
+  z-index: 1001;
 }
 
 .logo-and-exit-mobile {

@@ -27,9 +27,9 @@ Modal.setAppElement(document.getElementById("#root"));
     - closeModal: whenever search modal is closed, also set the mobile search state to false
 */
 
-function Search({ extraAction = false, closeModal = () => {} }) {
+function Search({ extraAction = false, setMobileSearch = () => {} }) {
   const [input, setInput] = useState("");
-  const [showResults, setShowResults] = useState(false);
+  const [showResults, setShowResults] = useState(extraAction);
   const [filteredFiles, setFilteredFiles] = useState([]);
 
   // const [allFiles, setAllFiles] = useState([]);
@@ -44,7 +44,7 @@ function Search({ extraAction = false, closeModal = () => {} }) {
 
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
-    if (extraAction) closeModal((prevState) => !prevState);
+    if (extraAction) setMobileSearch((prevState) => !prevState);
   };
 
   return (
