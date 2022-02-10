@@ -51,13 +51,12 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 105;
   background: linear-gradient(91.79deg, #5286c0 0.19%, #0057b8 100%);
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
-  z-index: 1001;
+  z-index: 1000;
 }
 
 .logo-and-exit-mobile {
