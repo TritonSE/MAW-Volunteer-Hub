@@ -16,7 +16,7 @@
   border: 0px;
   border-radius: 3px 0px 0px 3px;
   font-family: "Lato", sans-serif;
-  z-index: 1000;
+  z-index: 900;
 }
 
 .search-button {

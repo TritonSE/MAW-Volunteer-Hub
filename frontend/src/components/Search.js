@@ -27,9 +27,9 @@ Modal.setAppElement(document.getElementById("#root"));
     - closeModal: whenever search modal is closed, also set the mobile search state to false
 */
 
-function Search({ extraAction = false, setMobileSearch = () => {} }) {
+function Search({ setMobileSearch = () => {} }) {
   const [input, setInput] = useState("");
-  const [showResults, setShowResults] = useState(extraAction);
+  const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
 
   // const [allFiles, setAllFiles] = useState([]);
@@ -44,7 +44,11 @@ function Search({ extraAction = false, setMobileSearch = () => {} }) {
 
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
-    if (extraAction) setMobileSearch((prevState) => !prevState);
+    setMobileSearch((prevState) => !prevState);
+  };
+
+  const handleOpen = () => {
+    setShowResults((prevState) => !prevState);
   };
 
   return (
@@ -54,11 +58,7 @@ function Search({ extraAction = false, setMobileSearch = () => {} }) {
         placeholder="Search all files..."
         onChange={(e) => setInput(e.target.value)}
       />
-      <button
-        className="search-button"
-        type="submit"
-        onClick={() => setShowResults((prevState) => !prevState)}
-      >
+      <button className="search-button" type="submit" onClick={handleOpen}>
         <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
       </button>
 

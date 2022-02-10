@@ -28,7 +28,7 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
       otherwise, display the logo, single search icon, and menu */}
       {mobileSearch === true ? (
         <div className="mobileSearchBarComponent">
-          <Search extraAction setMobileSearch={setMobileSearch} />
+          <Search setMobileSearch={setMobileSearch} />
         </div>
       ) : (
         <div className="search-mobile">
