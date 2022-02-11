@@ -18,13 +18,11 @@ router.get("/admin", (req, res, next) => {
   if (req.query.admin){
     try{
       UserModel.find({ admin: req.query.admin })
-      .then( (user) => res.status(200));
-
-    } catch (e){
+    .then((user) => {res.status(200));
+    }catch (e){
       console.log("error");
       console.log(e);
-      next(e);
-
+      next e;
     }
     /*console.log("go through with route");
     const r = UserModel.find({ admin: req.query.admin });
@@ -42,8 +40,7 @@ router.get("/admin", (req, res, next) => {
   }
   else {
     return res.status(400).json({error: 'Malformed Input' });
-  */
-  }
+  }*/
 });
 
 router.get("/user_id", (req, res, next) => {

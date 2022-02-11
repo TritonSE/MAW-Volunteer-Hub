@@ -16,17 +16,7 @@ router.get("/secure", (req, res, next) => {
 router.get("/admin", (req, res, next) => {
   console.log(req.query.admin);
   if (req.query.admin){
-    try{
-      UserModel.find({ admin: req.query.admin })
-      .then( (user) => res.status(200));
-
-    } catch (e){
-      console.log("error");
-      console.log(e);
-      next(e);
-
-    }
-    /*console.log("go through with route");
+    console.log("go through with route");
     const r = UserModel.find({ admin: req.query.admin });
     console.log("r");
     console.log(r);
@@ -38,11 +28,10 @@ router.get("/admin", (req, res, next) => {
       return res.json({ user });
     }).catch(() => {
       console.log("CATCH");
-    })
+    })*/
   }
   else {
     return res.status(400).json({error: 'Malformed Input' });
-  */
   }
 });
 
