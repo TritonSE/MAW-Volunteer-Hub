@@ -1,7 +1,6 @@
 import React from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import UserList from "../components/UserList";
-import SideNav from "../components/SideNav";
 import AssignBtn from "../components/AssignBtn";
 
 function ButtonContainer({ btnLabels }) {
