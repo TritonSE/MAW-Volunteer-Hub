@@ -47,36 +47,38 @@ function ProfilePage() {
 
   const loadFile = async () => {
     const loadname = document.getElementById("show-textbox").value;
-
-    const result = await axios.get(
-      `http://localhost:3000/file/Display/${encodeURIComponent(loadname)}`,
-      {
-        headers: {
-          Authorization: `bearer ${jwt}`,
-        },
-      }
+    window.open(
+      `http://localhost:3000/file/Display/${encodeURIComponent(loadname)}?secret_token=${jwt}`
     );
+    // const result = await axios.get(
+    //   `http://localhost:3000/file/Display/${encodeURIComponent(loadname)}`,
+    //   {
+    //     headers: {
+    //       Authorization: `bearer ${jwt}`,
+    //     },
+    //   }
+    // );
+    // console.log(result);
+    // const data = typeof result.data === "string" ? result.data : JSON.stringify(result.data);
 
-    const data = typeof result.data === "string" ? result.data : JSON.stringify(result.data);
+    // /*
+    //  * TODO: This is a very crude way of detecting PDFs.
+    //  *   MIME type detection should be done server-side
+    //  *   and put in the Content-Type header, but this works
+    //  *   temporarily.
+    //  */
+    // const type = (() => {
+    //   if (data.substring(0, 4) === "%PDF") return "application/pdf";
 
-    /*
-     * TODO: This is a very crude way of detecting PDFs.
-     *   MIME type detection should be done server-side
-     *   and put in the Content-Type header, but this works
-     *   temporarily.
-     */
-    const type = (() => {
-      if (data.substring(0, 4) === "%PDF") return "application/pdf";
+    //   return result.headers["content-type"] ?? "text/plain";
+    // })();
 
-      return result.headers["content-type"] ?? "text/plain";
-    })();
-
-    const url = window.URL.createObjectURL(
-      new Blob([data], {
-        type,
-      })
-    );
-    window.open(url);
+    // const url = window.URL.createObjectURL(
+    //   new Blob([data], {
+    //     type,
+    //   })
+    // );
+    // window.open(url);
   };
 
   /*
