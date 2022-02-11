@@ -6,7 +6,7 @@ import AssignBtn from "../components/AssignBtn";
 
 function ButtonContainer({ btnLabels }) {
   return (
-    <ScrollContainer className="assign_btn_container">
+    <ScrollContainer className="assign_btn_container" vertical={false}>
       {btnLabels.map((label) => (
         <AssignBtn label={label} key={Math.random()} />
       ))}

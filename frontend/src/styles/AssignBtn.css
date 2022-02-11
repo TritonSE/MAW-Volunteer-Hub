@@ -10,7 +10,6 @@
   font-weight: normal;
   font-size: 14px;
   line-height: 17px;
-  /* identical to box height */
 
   max-height: 31px;
   text-align: center;
@@ -32,30 +31,7 @@
 }
 
 .btn_access {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  min-width: 105px;
-  margin-right: 10px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-  /* identical to box height */
-
-  max-height: 31px;
-  text-align: center;
-
-  color: #ffffff;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-
+  min-width: 115px;
   background: #0057b8;
   border: 1px solid #ffffff;
   box-sizing: border-box;
@@ -65,68 +41,27 @@
 }
 
 .btn_aGreeter {
-  padding: 7px 16px;
-  max-height: 31px;
   min-width: 135px;
-  margin-right: 10px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-
+  color: black;
   background: #ffffff;
   border: 1px solid #ffb549;
-  box-sizing: border-box;
   box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
-  border-radius: 20px;
 }
 
 .btn_wGranter {
-  padding: 7px 16px;
-  max-height: 31px;
   min-width: 120px;
-  margin-right: 10px;
-
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-
+  color: black;
   background: #ffffff;
   border: 1px solid #00bab3;
-  box-sizing: border-box;
   box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
-  border-radius: 20px;
 }
 
 .btn_meeter {
-  padding: 7px 16px;
-  max-height: 31px;
-  min-width: 120px;
-  margin-right: 10px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-
+  min-width: 80px;
   background: #ffffff;
+  color: black;
   border: 1px solid #8dc8e8;
-  box-sizing: border-box;
   box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
-  border-radius: 20px;
 }
 
 .assign_btn_container {
