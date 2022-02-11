@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 
 // const UserModel = require("./models/model");
 
-mongoose.connect("mongodb+srv://shreyagupta:Crue14furr@cluster0.cea9v.mongodb.net/Cluster0?retryWrites=true&w=majority", {
+mongoose.connect("mongodb://127.0.0.1:27017/MAWDB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

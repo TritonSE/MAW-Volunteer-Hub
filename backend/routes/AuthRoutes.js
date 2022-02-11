@@ -41,27 +41,9 @@ router.post("/login", async (req, res, next) => {
   })(req, res, next);
 });
 
-router.put("/:id", (req,res)=>{
-  if (user.admin === true){
-    try{
-        User.findById(req.params.id).then((user) => {
-                Object.assign(user, {admin : true})
-                user.save()
-        })
-    } catch{
-        res.status(404).send({error: "user not found"});
-    }
-  }
-});
-
-router.put("/edit", (req, res, next) => {
-  editUser(req.body, req.user)
-    .then((user) => {
-      res.status(200).json({ user });
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
+// Token validation route
+router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) =>
+  res.json({ valid: Boolean(req.user) })
+);
 
 module.exports = router;
