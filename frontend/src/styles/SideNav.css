@@ -1,6 +1,8 @@
 .side_nav_layout {
   display: flex;
   flex-direction: row;
+  background-color: white;
+  height: 100vh;
 }
 
 .side_nav_buttons {
@@ -63,8 +65,7 @@
   .side_nav_buttons {
     display: flex;
     flex-direction: row;
-    min-height: 0vh;
-    height: 62px;
+    min-height: 62px;
     background: var(--blue-gradient);
     box-shadow: none;
   }
