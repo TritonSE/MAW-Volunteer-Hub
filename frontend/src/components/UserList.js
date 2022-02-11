@@ -99,53 +99,15 @@ function UserList({ tableHeaders, userData }) {
     );
   };
 
-  const getCell = (cell, colIndex, rowIndex) => {
+  // Returns the suffix of a cell's className depending on the column index
+  const getCellTitle = (colIndex) => {
     if (colIndex === 0) {
-      return (
-        <td
-          {...cell.getCellProps()}
-          style={
-            rowIndex % 2 === 0
-              ? { background: "white" }
-              : { background: "rgba(187, 188, 188, 0.2)" }
-          }
-          className="people_table_data_start"
-          key={Math.random()}
-        >
-          {cell.render("Cell")}
-        </td>
-      );
+      return "_start";
     }
-
     if (colIndex === columns.length - 1) {
-      return (
-        <td
-          {...cell.getCellProps()}
-          style={
-            rowIndex % 2 === 0
-              ? { background: "white" }
-              : { background: "rgba(187, 188, 188, 0.2)" }
-          }
-          className="people_table_data_end"
-          key={Math.random()}
-        >
-          {cell.render("Cell")}
-        </td>
-      );
+      return "_end";
     }
-
-    return (
-      <td
-        {...cell.getCellProps()}
-        style={
-          rowIndex % 2 === 0 ? { background: "white" } : { background: "rgba(187, 188, 188, 0.2)" }
-        }
-        className="people_table_data"
-        key={Math.random()}
-      >
-        {cell.render("Cell")}
-      </td>
-    );
+    return "";
   };
 
   return (
@@ -158,11 +120,19 @@ function UserList({ tableHeaders, userData }) {
         ))}
       </thead>
       <tbody {...getTableBodyProps()}>
-        {rows.map((row, rowIndex) => {
+        {rows.map((row) => {
           prepareRow(row);
           return (
             <tr {...row.getRowProps()} key={Math.random()}>
-              {row.cells.map((cell, colIndex) => getCell(cell, colIndex, rowIndex))}
+              {row.cells.map((cell, colIndex) => (
+                <td
+                  {...cell.getCellProps()}
+                  className={`people_table_data${getCellTitle(colIndex)}`}
+                  key={Math.random()}
+                >
+                  {cell.render("Cell")}
+                </td>
+              ))}
             </tr>
           );
         })}

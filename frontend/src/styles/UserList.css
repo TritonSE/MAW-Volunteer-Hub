@@ -73,7 +73,7 @@ tbody tr {
 }
 
 .people_table_data {
-  min-width: 220px;
+  width: 210px;
   height: 62px;
   text-align: center;
 
@@ -85,7 +85,7 @@ tbody tr {
 }
 
 .people_table_data_start {
-  min-width: 200px;
+  width: 210px;
   height: 62px;
 
   text-align: left;
@@ -102,6 +102,7 @@ tbody tr {
 
 .people_table_data_end {
   height: 62px;
+  width: 210px;
 
   text-align: center;
   border-radius: 0px 8px 8px 0px;
@@ -115,4 +116,10 @@ tbody tr {
 
 .sort_toggle {
   margin-left: 10px;
+}
+
+tr:nth-child(2n) .people_table_data_start,
+tr:nth-child(2n) .people_table_data,
+tr:nth-child(2n) .people_table_data_end {
+  background: rgba(187, 188, 188, 0.2);
 }
