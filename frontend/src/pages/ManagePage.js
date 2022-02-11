@@ -18,29 +18,29 @@ function ManagePage() {
     {
       Name: "Gibby Gibson",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Completed: 3,
-      Start: "May 2017",
+      // Completed: 3,
+      // Start: "May 2017",
     },
     {
       Name: "Carly Shay",
-      // Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Roles: [<ButtonContainer btnLabels={["Airport Greeter", "Wish Granter"]} />],
-      Completed: 1,
-      Start: "Feb 2019",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Airport Greeter", "Wish Granter"]} />],
+      // Completed: 1,
+      // Start: "Feb 2019",
     },
     {
       Name: "Freddie Benson",
-      // Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Roles: [<ButtonContainer btnLabels={["Wish Granter", "Meeter"]} />],
-      Completed: 2,
-      Start: "June 2016",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Meeter"]} />],
+      // Completed: 2,
+      // Start: "June 2016",
     },
     {
       Name: "Bob Bob",
-      // Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Roles: [<ButtonContainer btnLabels={["Wish Granter"]} />],
-      Completed: 2,
-      Start: "May 2020",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter"]} />],
+      // Completed: 2,
+      // Start: "May 2020",
     },
     {
       Name: "Bob Rob",
@@ -106,30 +106,30 @@ function ManagePage() {
       accessor: "Name",
     },
     // Replace the following three rows with the commented out rows for the full table
-    // {
-    //   Header: "",
-    //   accessor: "Roles",
-    // },
-    // {
-    //   Header: "",
-    //   accessor: "empty",
-    // },
-    // {
-    //   Header: "",
-    //   accessor: "empty1",
-    // },
     {
-      Header: "Roles",
+      Header: "",
       accessor: "Roles",
     },
     {
-      Header: "Assignments Completed",
-      accessor: "Completed",
+      Header: "",
+      accessor: "empty",
     },
     {
-      Header: "Volunteer Since",
-      accessor: "Start",
+      Header: "",
+      accessor: "empty1",
     },
+    // {
+    //   Header: "Roles",
+    //   accessor: "Roles",
+    // },
+    // {
+    //   Header: "Assignments Completed",
+    //   accessor: "Completed",
+    // },
+    // {
+    //   Header: "Volunteer Since",
+    //   accessor: "Start",
+    // },
   ];
 
   // const tabs = [
