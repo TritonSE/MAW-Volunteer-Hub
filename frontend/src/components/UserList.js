@@ -18,7 +18,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
   };
 
   return (
-    <form className="user_search_bar">
+    <div className="user_search_bar">
       <input
         className="user_search_input"
         value={searchVal || ""}
@@ -39,7 +39,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
       >
         <img src="img/searchbar.svg" alt="search" />
       </button>
-    </form>
+    </div>
   );
 }
 
