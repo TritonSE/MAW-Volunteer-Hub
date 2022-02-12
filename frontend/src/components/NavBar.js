@@ -13,12 +13,27 @@ import NavMenuMobile from "./NavMenuMobile";
     Also contains the file search bar and the account menu to go to the profile page or sign out.
 */
 function NavBar() {
+  // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
-  const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
+  /* 
+    States for the search bar 
+    -showResults: whether the search results modal is displayed or not
+    -input: text that user inputs into the search bar
+    -filterdFiles: list of files filtered by input
+
+    Storing states in main NavBar component since there are 2 instances of Search:
+    1 for the desktop view and 1 for the mobile view
+
+    Have to pass these states into the Search in this file, which is the desktop search instance  &
+    NavMenuMobile, which contains the mobile Search instance so that the Search Bar input, results,
+    and modal are consistent & responsive across both views.
+  */
   const [showResults, setShowResults] = useState(false);
   const [input, setInput] = useState("");
   const [filteredFiles, setFilteredFiles] = useState([]);
+
+  const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
     () =>

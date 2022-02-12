@@ -8,6 +8,9 @@ import history from "../history";
 
 /*
   Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
+  Contains the states passed into it from the NavBar, to pass into the Search Bar.
+  -desktopDropdown: whether the profile/menu icon dropdown was open in the desktop view
+  -setDesktopDropdown: toggle the profile/menu icon dropdown 
 */
 function NavMenuMobile({
   showResults,

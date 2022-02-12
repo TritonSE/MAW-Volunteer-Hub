@@ -22,11 +22,19 @@ const allFiles = [
 Modal.setAppElement(document.getElementById("#root"));
 
 /*
-    Search component, which opens a search modal and allows searching of files by keyword.
+    Search component, which allows searching of files by keyword and opens up a modal with the 
+    results. Component is displayed under different conditions for the mobile & desktop view.
 
+    -showResults: if the modal is currently active in the site
+    -setShowResults: toggle the modal
+    -input: the current user input
+    -setInput: set the user input when it changes
+    -filteredFiles: the current filtered files
+    -setFilteredFiles: set the filtered files when it changes
 */
 
 function Search({ showResults, setShowResults, input, setInput, filteredFiles, setFilteredFiles }) {
+  // re-filter files when user input changes
   useEffect(() => {
     setFilteredFiles(allFiles.filter((f) => f["name"].toLowerCase().includes(input.toLowerCase())));
   }, [input]);
@@ -37,6 +45,7 @@ function Search({ showResults, setShowResults, input, setInput, filteredFiles, s
 
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
+    // setInput(""); // clear input after search?
   };
 
   const handleOpen = () => {
