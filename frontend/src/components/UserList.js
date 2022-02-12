@@ -49,6 +49,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
  * @returns
  */
 function UserList({ tableHeaders, userData }) {
+  const [showAdmin, setShowAdmin] = useState(false);
   /**
    * userData should be formated as such:
    * const userData = [
@@ -61,6 +62,7 @@ function UserList({ tableHeaders, userData }) {
    *    },
    * ]
    */
+
   const data = React.useMemo(() => userData, []);
 
   /**
@@ -73,8 +75,6 @@ function UserList({ tableHeaders, userData }) {
    * ]
    */
   const columns = React.useMemo(() => tableHeaders, []);
-
-  const [showAdmin, setShowAdmin] = useState(false);
 
   const {
     getTableProps,
@@ -119,16 +119,25 @@ function UserList({ tableHeaders, userData }) {
   };
 
   // Determine if a row should be displayed based on which tab the table is on.
-  const separateAdmin = (rowIndex) => {
-    // If the user at rowIndex in userData is an admin, and we're on the admin page
-    if (userData[rowIndex].Admin && showAdmin) {
+  // Uses the name of the user to check to see if the user is an admin.
+  // NOTE: This could be problematic if users have the same name. Emails should work though.
+  const separateAdmin = (userName) => {
+    let isAdmin = false;
+
+    for (let i = 0; i < userData.length; i++) {
+      if (userData[i].Name === userName) {
+        isAdmin = userData[i].Admin;
+      }
+    }
+
+    if (isAdmin && showAdmin) {
       return true;
     }
 
-    // If the user at rowIndex in userData is not an admin, and we're showing regular users.
-    if (!userData[rowIndex].Admin && !showAdmin) {
+    if (!isAdmin && !showAdmin) {
       return true;
     }
+
     return false;
   };
 
@@ -191,9 +200,9 @@ function UserList({ tableHeaders, userData }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row, rowIndex) => {
+          {rows.map((row) => {
             prepareRow(row);
-            return separateAdmin(rowIndex) ? (
+            return separateAdmin(row.values.Name) ? (
               <tr {...row.getRowProps()} key={Math.random()}>
                 {row.cells.map((cell, colIndex) => (
                   <td

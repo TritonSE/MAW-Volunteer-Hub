@@ -191,3 +191,7 @@ tr:nth-child(2n) .people_table_data_end {
   font-size: 24px;
   line-height: 29px;
 }
+
+.btn_table_control:hover {
+  cursor: pointer;
+}

@@ -16,14 +16,14 @@ function ButtonContainer({ btnLabels }) {
 function ManagePage() {
   const userData = [
     {
-      Name: "Gibby Gibson",
+      Name: "Admin 1 (Carly)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: true,
       // Completed: 3,
       // Start: "May 2017",
     },
     {
-      Name: "Carly Shay",
+      Name: "Admin 2 (Gibson)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: true,
       // Roles: [<ButtonContainer btnLabels={["Airport Greeter", "Wish Granter"]} />],
@@ -31,15 +31,15 @@ function ManagePage() {
       // Start: "Feb 2019",
     },
     {
-      Name: "Freddie Benson",
+      Name: "Admin 3 (Freddie)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Admin: false,
+      Admin: true,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Meeter"]} />],
       // Completed: 2,
       // Start: "June 2016",
     },
     {
-      Name: "Bob Bob",
+      Name: "Admin 4 (Bob)",
       Admin: true,
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       // Roles: [<ButtonContainer btnLabels={["Wish Granter"]} />],
@@ -47,7 +47,7 @@ function ManagePage() {
       // Start: "May 2020",
     },
     {
-      Name: "Bob Rob",
+      Name: "Volunteer 1 (Bob)",
       Admin: false,
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
@@ -55,7 +55,7 @@ function ManagePage() {
       // Start: "June 2020",
     },
     {
-      Name: "Person 1",
+      Name: "Volunteer 2 (Rob)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
@@ -63,7 +63,7 @@ function ManagePage() {
       // Start: "June 2020",
     },
     {
-      Name: "Person 2",
+      Name: "Volunteer 3 (Freddie)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
@@ -71,7 +71,7 @@ function ManagePage() {
       // Start: "June 2020",
     },
     {
-      Name: "Person 3",
+      Name: "Volunteer 4 (Rib)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
@@ -79,7 +79,7 @@ function ManagePage() {
       // Start: "June 2020",
     },
     {
-      Name: "Person 4",
+      Name: "Volunteer 5 (Pete)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
@@ -87,23 +87,7 @@ function ManagePage() {
       // Start: "June 2020",
     },
     {
-      Name: "Person 5",
-      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Admin: false,
-      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
-      // Completed: 2,
-      // Start: "June 2020",
-    },
-    {
-      Name: "Person 6",
-      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
-      Admin: false,
-      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
-      // Completed: 2,
-      // Start: "June 2020",
-    },
-    {
-      Name: "Person 7",
+      Name: "Volunteer 6 (Alice)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
