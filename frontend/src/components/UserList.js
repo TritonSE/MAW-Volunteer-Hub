@@ -57,6 +57,7 @@ function UserList({ tableHeaders, userData }) {
    *        Roles: []             // Contains user's roles via AssignBtn components
    *        Completed: 0          // Number of assignments completed
    *        Start: "Date"         // Day volunter started
+   *        Admin: {bool}         // True: is admin; False: not admin
    *    },
    * ]
    */
@@ -72,6 +73,8 @@ function UserList({ tableHeaders, userData }) {
    * ]
    */
   const columns = React.useMemo(() => tableHeaders, []);
+
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const {
     getTableProps,
@@ -115,21 +118,55 @@ function UserList({ tableHeaders, userData }) {
     return "";
   };
 
+  // Determine if a row should be displayed based on which tab the table is on.
+  const separateAdmin = (rowIndex) => {
+    // If the user at rowIndex in userData is an admin, and we're on the admin page
+    if (userData[rowIndex].Admin && showAdmin) {
+      return true;
+    }
+
+    // If the user at rowIndex in userData is not an admin, and we're showing regular users.
+    if (!userData[rowIndex].Admin && !showAdmin) {
+      return true;
+    }
+    return false;
+  };
+
   return (
     <div>
-      <table>
-        <thead>
-          <tr>
-            <th colSpan={visibleColumns.length}>
-              <GlobalFilter
-                preGlobalFilteredRows={preGlobalFilteredRows}
-                globalFilter={globalFilter}
-                setGlobalFilter={setGlobalFilter}
-              />
-            </th>
-          </tr>
-        </thead>
-      </table>
+      <div className="people_table_controls">
+        <div className="table_btn_container">
+          <button
+            type="button"
+            className="btn_table_control"
+            style={!showAdmin ? { color: "#0057b8" } : {}}
+            onClick={() => setShowAdmin(false)}
+          >
+            Volunteers
+          </button>
+          <button
+            type="button"
+            className="btn_table_control"
+            style={showAdmin ? { color: "#0057b8" } : {}}
+            onClick={() => setShowAdmin(true)}
+          >
+            Admin
+          </button>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan={visibleColumns.length}>
+                <GlobalFilter
+                  preGlobalFilteredRows={preGlobalFilteredRows}
+                  globalFilter={globalFilter}
+                  setGlobalFilter={setGlobalFilter}
+                />
+              </th>
+            </tr>
+          </thead>
+        </table>
+      </div>
 
       <table className="people_table" {...getTableProps()}>
         <thead>
@@ -154,9 +191,9 @@ function UserList({ tableHeaders, userData }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row, rowIndex) => {
             prepareRow(row);
-            return (
+            return separateAdmin(rowIndex) ? (
               <tr {...row.getRowProps()} key={Math.random()}>
                 {row.cells.map((cell, colIndex) => (
                   <td
@@ -168,7 +205,7 @@ function UserList({ tableHeaders, userData }) {
                   </td>
                 ))}
               </tr>
-            );
+            ) : null;
           })}
         </tbody>
       </table>
