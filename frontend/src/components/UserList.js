@@ -1,7 +1,34 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
-import { useTable, useSortBy } from "react-table";
+import { useTable, useSortBy, useGlobalFilter, useAsyncDebounce } from "react-table";
 import "../styles/UserList.css";
+
+// Define a default UI for filtering
+function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
+  const count = preGlobalFilteredRows.length;
+  const [value, setValue] = React.useState(globalFilter);
+  const onChange = useAsyncDebounce((d_value) => {
+    setGlobalFilter(d_value || undefined);
+  }, 200);
+
+  return (
+    <span>
+      Search:{" "}
+      <input
+        value={value || ""}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value);
+        }}
+        placeholder={`${count} records...`}
+        style={{
+          fontSize: "1.1rem",
+          border: "0",
+        }}
+      />
+    </span>
+  );
+}
 
 /**
  * @param {Array} tableHeaders Array containing header objects with corresponding accessors
@@ -33,11 +60,22 @@ function UserList({ tableHeaders, userData }) {
    */
   const columns = React.useMemo(() => tableHeaders, []);
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: { globalFilter },
+    visibleColumns,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+  } = useTable(
     {
       columns,
       data,
     },
+    useGlobalFilter,
     useSortBy
   );
 
@@ -66,6 +104,15 @@ function UserList({ tableHeaders, userData }) {
 
   return (
     <table className="people_table" {...getTableProps()}>
+      <tr>
+        <th colSpan={visibleColumns.length} className="user_search_bar">
+          <GlobalFilter
+            preGlobalFilteredRows={preGlobalFilteredRows}
+            globalFilter={globalFilter}
+            setGlobalFilter={setGlobalFilter}
+          />
+        </th>
+      </tr>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
