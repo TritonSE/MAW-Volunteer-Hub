@@ -1,32 +1,45 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import React, { useState } from "react";
 import { useTable, useSortBy, useGlobalFilter, useAsyncDebounce } from "react-table";
 import "../styles/UserList.css";
 
 // Define a default UI for filtering
-function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
-  const count = preGlobalFilteredRows.length;
-  const [value, setValue] = React.useState(globalFilter);
+function GlobalFilter({ globalFilter, setGlobalFilter }) {
+  const [searchVal, setSearchVal] = useState(globalFilter);
   const onChange = useAsyncDebounce((d_value) => {
     setGlobalFilter(d_value || undefined);
   }, 200);
 
+  // Allows the enter key to be used to start a search
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      onChange(searchVal);
+    }
+  };
+
   return (
-    <span>
-      Search:{" "}
+    <form className="user_search_bar">
       <input
-        value={value || ""}
+        className="user_search_input"
+        value={searchVal || ""}
         onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value);
+          setSearchVal(e.target.value);
         }}
-        placeholder={`${count} records...`}
-        style={{
-          fontSize: "1.1rem",
-          border: "0",
+        onKeyPress={(e) => {
+          handleKeyPress(e);
         }}
+        placeholder="Search by name"
       />
-    </span>
+      <button
+        className="user_search_button"
+        type="button"
+        onClick={() => {
+          onChange(searchVal);
+        }}
+      >
+        <img src="img/searchbar.svg" alt="search" />
+      </button>
+    </form>
   );
 }
 
@@ -103,56 +116,63 @@ function UserList({ tableHeaders, userData }) {
   };
 
   return (
-    <table className="people_table" {...getTableProps()}>
-      <tr>
-        <th colSpan={visibleColumns.length} className="user_search_bar">
-          <GlobalFilter
-            preGlobalFilteredRows={preGlobalFilteredRows}
-            globalFilter={globalFilter}
-            setGlobalFilter={setGlobalFilter}
-          />
-        </th>
-      </tr>
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column, colIndex) => (
-              <th
-                className={`people_table_header${getColTitle(colIndex)}`}
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                key={Math.random()}
-              >
-                {column.render("Header")}
-                {/* This ternary operator should be removed to allow sorting for all columns */}
-                {colIndex === 0 ? (
-                  <span className="sort_toggle">
-                    {getArrowImage(column.isSorted, column.isSortedDesc)}
-                  </span>
-                ) : null}
-              </th>
-            ))}
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th colSpan={visibleColumns.length}>
+              <GlobalFilter
+                preGlobalFilteredRows={preGlobalFilteredRows}
+                globalFilter={globalFilter}
+                setGlobalFilter={setGlobalFilter}
+              />
+            </th>
           </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()} key={Math.random()}>
-              {row.cells.map((cell, colIndex) => (
-                <td
-                  {...cell.getCellProps()}
-                  className={`people_table_data${getColTitle(colIndex)}`}
+        </thead>
+      </table>
+
+      <table className="people_table" {...getTableProps()}>
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column, colIndex) => (
+                <th
+                  className={`people_table_header${getColTitle(colIndex)}`}
+                  {...column.getHeaderProps(column.getSortByToggleProps())}
                   key={Math.random()}
                 >
-                  {cell.render("Cell")}
-                </td>
+                  {column.render("Header")}
+                  {/* This ternary operator should be removed to allow sorting for all columns */}
+                  {colIndex === 0 ? (
+                    <span className="sort_toggle">
+                      {getArrowImage(column.isSorted, column.isSortedDesc)}
+                    </span>
+                  ) : null}
+                </th>
               ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()} key={Math.random()}>
+                {row.cells.map((cell, colIndex) => (
+                  <td
+                    {...cell.getCellProps()}
+                    className={`people_table_data${getColTitle(colIndex)}`}
+                    key={Math.random()}
+                  >
+                    {cell.render("Cell")}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
