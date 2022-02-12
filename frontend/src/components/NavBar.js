@@ -16,6 +16,10 @@ function NavBar() {
   const [dropdown, setDropdown] = useState(false);
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
+  const [showResults, setShowResults] = useState(false);
+  const [input, setInput] = useState("");
+  const [filteredFiles, setFilteredFiles] = useState([]);
+
   useEffect(
     () =>
       history.listen((e) => {
@@ -53,9 +57,25 @@ function NavBar() {
         {/* Container for search bar and account menu, and the mobile NavBar display */}
         <li className="search-and-profile">
           <div className="desktopSearchBarComponent">
-            <Search />
+            <Search
+              showResults={showResults}
+              setShowResults={setShowResults}
+              input={input}
+              setInput={setInput}
+              filteredFiles={filteredFiles}
+              setFilteredFiles={setFilteredFiles}
+            />
           </div>
-          <NavMenuMobile desktopDropdown={dropdown} setDesktopDropdown={setDropdown} />
+          <NavMenuMobile
+            showResults={showResults}
+            setShowResults={setShowResults}
+            input={input}
+            setInput={setInput}
+            filteredFiles={filteredFiles}
+            setFilteredFiles={setFilteredFiles}
+            desktopDropdown={dropdown}
+            setDesktopDropdown={setDropdown}
+          />
 
           <div className="profile-container">
             <div className="profile-icon">

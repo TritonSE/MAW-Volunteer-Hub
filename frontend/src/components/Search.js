@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Modal from "react-modal";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
@@ -23,17 +23,10 @@ Modal.setAppElement(document.getElementById("#root"));
 
 /*
     Search component, which opens a search modal and allows searching of files by keyword.
-    - extraAction: extra setState to perform, since search can be opened from both desktop and mobile
-    - closeModal: whenever search modal is closed, also set the mobile search state to false
+
 */
 
-function Search({ setMobileSearch = () => {} }) {
-  const [input, setInput] = useState("");
-  const [showResults, setShowResults] = useState(false);
-  const [filteredFiles, setFilteredFiles] = useState([]);
-
-  // const [allFiles, setAllFiles] = useState([]);
-
+function Search({ showResults, setShowResults, input, setInput, filteredFiles, setFilteredFiles }) {
   useEffect(() => {
     setFilteredFiles(allFiles.filter((f) => f["name"].toLowerCase().includes(input.toLowerCase())));
   }, [input]);
@@ -44,7 +37,6 @@ function Search({ setMobileSearch = () => {} }) {
 
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
-    setMobileSearch((prevState) => !prevState);
   };
 
   const handleOpen = () => {
@@ -56,6 +48,7 @@ function Search({ setMobileSearch = () => {} }) {
       <input
         className="search-input"
         placeholder="Search all files..."
+        value={input}
         onChange={(e) => setInput(e.target.value)}
       />
       <button className="search-button" type="submit" onClick={handleOpen}>

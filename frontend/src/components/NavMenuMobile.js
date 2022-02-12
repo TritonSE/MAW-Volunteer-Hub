@@ -9,9 +9,16 @@ import history from "../history";
 /*
   Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
 */
-function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
-  const [mobileSearch, setMobileSearch] = useState(false);
-
+function NavMenuMobile({
+  showResults,
+  setShowResults,
+  input,
+  setInput,
+  filteredFiles,
+  setFilteredFiles,
+  desktopDropdown,
+  setDesktopDropdown,
+}) {
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
@@ -26,9 +33,16 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
     <div className="nav-menu-mobile">
       {/* If mobile search is pressed, display Search component with added state,
       otherwise, display the logo, single search icon, and menu */}
-      {mobileSearch === true ? (
+      {showResults === true ? (
         <div className="mobileSearchBarComponent">
-          <Search setMobileSearch={setMobileSearch} />
+          <Search
+            showResults={showResults}
+            setShowResults={setShowResults}
+            input={input}
+            setInput={setInput}
+            filteredFiles={filteredFiles}
+            setFilteredFiles={setFilteredFiles}
+          />
         </div>
       ) : (
         <div className="search-mobile">
@@ -42,7 +56,7 @@ function NavMenuMobile({ desktopDropdown, setDesktopDropdown }) {
             <button
               type="button"
               className="search-button-mobile"
-              onClick={() => setMobileSearch((prevState) => !prevState)}
+              onClick={() => setShowResults((prevState) => !prevState)}
             >
               <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon-mobile" />
             </button>
