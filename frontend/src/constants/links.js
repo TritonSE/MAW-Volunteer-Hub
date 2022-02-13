@@ -29,4 +29,8 @@ const SIDENAV_ROUTES = [
   "wish-reveal-celebration",
   "wish-closeout",
 ];
-export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES };
+
+const MANAGE_STEPS = ["People"];
+
+const MANAGE_ROUTES = ["people"];
+export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };

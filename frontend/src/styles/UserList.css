@@ -172,7 +172,9 @@ tr:nth-child(2n) .people_table_data_end {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 900px;
+  width: 100vw - 200px;
+  margin-top: 50px;
+  margin-bottom: 30px;
 }
 
 .table_btn_container {
@@ -188,7 +190,7 @@ tr:nth-child(2n) .people_table_data_end {
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
+  font-size: 28px;
   line-height: 29px;
 }
 
