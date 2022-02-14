@@ -6,6 +6,7 @@
 const fs = require("fs");
 const util = require("util");
 const File = require("../models/File_model");
+const Category = require("../models/Category_model");
 
 const unlinkFile = util.promisify(fs.unlink);
 
@@ -17,12 +18,16 @@ const UploadFile = async (req, res) => {
     const user = req.user;
     const result = await uploadFile(file);
     await unlinkFile(file.path);
-    await File.create({
+    const sent = await File.create({
       name: req.body.name,
       userID: user._id,
-      Category_ID: "test",
+      Category_ID: req.body.category_id, // category ID from here
       S3_ID: result.key,
     });
+    await Category.findById(sent.Category_ID) // changed here to append
+      .then(async (category) => {
+        category.Files.push(sent._id);
+      });
     console.log("File uploaded successfully");
     res.json({ data: "success!" });
   } catch (e) {
