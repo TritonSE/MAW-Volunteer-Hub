@@ -33,12 +33,11 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
       <button
         className="user_search_button"
         type="button"
+        aria-label="Search"
         onClick={() => {
           onChange(searchVal);
         }}
-      >
-        <img src="img/searchbar.svg" alt="search" />
-      </button>
+      />
     </div>
   );
 }
@@ -142,7 +141,7 @@ function UserList({ tableHeaders, userData }) {
   };
 
   return (
-    <div>
+    <div className="user_list_layout">
       <div className="people_table_controls">
         <div className="table_btn_container">
           <button

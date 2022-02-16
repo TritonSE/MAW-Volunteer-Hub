@@ -18,6 +18,7 @@ import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
 
 import UserList from "./components/UserList";
+import UserLink from "./components/UserLink";
 import AssignBtn from "./components/AssignBtn";
 
 function ProtectedRoute({ isAuth, setIsAuth }) {
@@ -130,6 +131,54 @@ function getUserData() {
     },
     {
       Name: "Volunteer 6 (Alice)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 7 (Carlos)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 8 (David)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 9 (Erin)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 10 (Frank)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 11 (Grace)",
+      Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
+      Admin: false,
+      // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
+      // Completed: 2,
+      // Start: "June 2020",
+    },
+    {
+      Name: "Volunteer 12 (Hank)",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Roles: [<ButtonContainer btnLabels={["Wish Granter", "Airport Greeter"]} />],
