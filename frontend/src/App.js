@@ -76,7 +76,8 @@ function getUserData() {
 
   adminNames.map((name, ind) =>
     users.push({
-      Name: "Admin " + (ind + 1) + " (" + name + ")",
+      NameString: "Admin " + (ind + 1) + " (" + name + ")",
+      Name: [<UserLink userName={"Admin " + (ind + 1) + " (" + name + ")"} />],
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: true,
       // Completed: ind * Math.random(),
@@ -86,7 +87,8 @@ function getUserData() {
 
   volunteerNames.map((name, ind) =>
     users.push({
-      Name: "Volunteer " + (ind + 1) + " (" + name + ")",
+      NameString: "Volunteer " + (ind + 1) + " (" + name + ")",
+      Name: [<UserLink userName={"Volunteer " + (ind + 1) + " (" + name + ")"} />],
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       // Completed: ind * Math.random(),

@@ -1,0 +1,13 @@
+.user_list_name_btn {
+  border: 0px;
+  background-color: transparent;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.user_list_name_btn:hover {
+  cursor: pointer;
+}

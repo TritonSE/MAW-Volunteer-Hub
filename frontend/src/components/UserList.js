@@ -124,7 +124,7 @@ function UserList({ tableHeaders, userData }) {
     let isAdmin = false;
 
     for (let i = 0; i < userData.length; i++) {
-      if (userData[i].Name === userName) {
+      if (userData[i].NameString === userName) {
         isAdmin = userData[i].Admin;
       }
     }
@@ -201,7 +201,7 @@ function UserList({ tableHeaders, userData }) {
         <tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
-            return separateAdmin(row.values.Name) ? (
+            return separateAdmin(row.original.NameString) ? (
               <tr {...row.getRowProps()} key={Math.random()}>
                 {row.cells.map((cell, colIndex) => (
                   <td
