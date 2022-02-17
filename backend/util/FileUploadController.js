@@ -3,6 +3,7 @@
 // @github https://github.com/Sam-Meech-Ward/image-upload-s3
 // @author Mohak Vaswani
 
+const { promise } = require("bcrypt/promises");
 const fs = require("fs");
 const util = require("util");
 const File = require("../models/File_model");
@@ -50,54 +51,6 @@ const DeleteFile = async (req, res) => {
     });
 };
 
-const UpdateFile = async (req, res) => {
-  try {
-    const ID = req.params.ID;
-    const updated_file = req.file;
-    File.findById(ID)
-      .then(async (fileobj) => {
-        if (req.file && req.body.updated_file_name) {
-          try {
-            await deleteFileAWS(fileobj.S3_ID);
-            const result = await uploadFile(updated_file);
-            Object.assign(fileobj, { S3_ID: result.key, name: req.body.updated_file_name });
-            fileobj.save();
-          } catch (e) {
-            console.log(e);
-            res.status(400).json({ error: "Cannot update file details" });
-          }
-        } else if (req.file) {
-          try {
-            await deleteFileAWS(fileobj.S3_ID);
-            const result = await uploadFile(updated_file);
-            Object.assign(fileobj, { S3_ID: result.key }); // so that UpdatedAt changes
-            fileobj.save();
-          } catch (e) {
-            console.log(e);
-            res.status(400).json({ error: "Cannot update file" });
-          }
-        } else if (req.body.updated_file_name) {
-          try {
-            Object.assign(fileobj, { name: req.body.updated_file_name });
-            fileobj.save();
-          } catch (e) {
-            console.log(e);
-            res.status(400).json({ error: "Cannot update file name" });
-          }
-        } else {
-          res.status(400).json({ error: "please enter an input" });
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        res.status(500).json({ error: "Error, Old file does not exist, please uplode new" });
-      });
-  } catch (e) {
-    console.log(e);
-    res.status(400).json({ error: "Error, cannot updated file" });
-  }
-};
-
 const DisplayFile = async (req, res) => {
   try {
     const ID = req.params.ID;
@@ -118,18 +71,44 @@ const DisplayFile = async (req, res) => {
 const DeleteCategory = async (req, res) => {
   try {
     const category_id = req.params.category_id;
-    await File.find({ Category_ID: category_id })
-      .then(async (files) => {
-        files.forEach(async (file) => {
+    await File.find({ Category_ID: category_id }).then(async (files) => {
+      Promise.all(
+        files.map(async (file) => {
           await deleteFileAWS(file.S3_ID);
           await File.deleteOne({ name: file.name });
-        });
-        res.send("Category File successfully deleted");
-      })
-      .catch((e) => console.log(e));
+        })
+      ).catch(() => res.status(500).json({ error: "Failed to delete files" }));
+    });
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: " Error, cannot delete category files" });
+  }
+};
+
+const UpdateFile = async (req, res) => {
+  try {
+    const ID = req.params.ID;
+    const updated_file = req.file;
+    File.findById(ID).then(async (fileobj) => {
+      const options = {};
+      if (req.file) {
+        try {
+          await deleteFileAWS(fileobj.S3_ID);
+          const result = await uploadFile(updated_file);
+          options.S3_ID = result.key;
+        } catch {
+          res.status(400).json({ error: "Could not upload new file" });
+        }
+      }
+      if (req.body.updated_file_name) {
+        options.name = req.body.updated_file_name;
+      }
+      Object.assign(fileobj, options);
+      fileobj.save().catch(() => res.status(500).json({ error: "Could not update file" }));
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: "Error, cannot updated file" });
   }
 };
 
