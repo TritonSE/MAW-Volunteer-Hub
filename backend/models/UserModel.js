@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
-// const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
-const config = require("../config");
-
-// mongoose.connect(config.db.uri);
 
 const { Schema } = mongoose;
 
@@ -30,32 +27,26 @@ const UserSchema = new Schema({
   // to make sure the user is a part of make-a-wish
   firstName: {
     type: String,
-    //  required : true
+    required: true,
   },
   lastName: {
     type: String,
-    //  required : true
+    required: true,
   },
   profilePicture: {
     type: String,
-    //  required : false
   },
-  /* email: {
-        type: Email,
-        required: true,
-    }, */
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   admin: {
     type: Boolean,
     default: false,
-    //  required : true
   },
   active: {
     type: Boolean,
-    // required: true,
     default: false,
   },
   password: {
@@ -64,7 +55,6 @@ const UserSchema = new Schema({
   },
   roles: {
     type: [String],
-    // required: true
   },
 });
 
@@ -77,11 +67,10 @@ UserSchema.pre("save", async function (next) {
 });
 
 UserSchema.methods.isValidPassword = async function (password) {
-  const user = this;
-  const compare = await bcrypt.compare(password, user.password);
-
-  return compare;
+  return bcrypt.compare(password, this.password);
 };
+
+UserSchema.plugin(uniqueValidator);
 
 const UserModel = mongoose.model("user", UserSchema);
 

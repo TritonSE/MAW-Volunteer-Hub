@@ -6,7 +6,7 @@
 const fs = require("fs");
 const util = require("util");
 const File = require("../models/File_model");
-const Category = require("../models/Category_model");
+const CategorySchema = require("../models/Category_model");
 
 const unlinkFile = util.promisify(fs.unlink);
 
@@ -24,7 +24,7 @@ const UploadFile = async (req, res) => {
       Category_ID: req.body.category_id, // category ID from here
       S3_ID: result.key,
     });
-    await Category.findById(sent.Category_ID) // changed here to append
+    await CategorySchema.findById(sent.Category_ID) // changed here to append
       .then(async (category) => {
         category.Files.push(sent._id);
       });
@@ -120,18 +120,23 @@ const DisplayFile = async (req, res) => {
   }
 };
 
-const DeleteCategory = async (req, res) => {
+const DeleteCategory = async (req, res, next) => {
   try {
     const category_id = req.params.category_id;
-    await File.find({ Category_ID: category_id })
-      .then(async (files) => {
-        files.forEach(async (file) => {
-          await deleteFileAWS(file.S3_ID);
-          await File.deleteOne({ name: file.name });
-        });
-        res.send("Category File successfully deleted");
-      })
-      .catch((e) => console.log(e));
+    const category = await CategorySchema.findById(category_id);
+    console.log(category);
+    if (category.Files && category.Files.length !== 0) {
+      await File.find({ Category_ID: category_id })
+        .then(async (files) => {
+          files.forEach(async (file) => {
+            await deleteFileAWS(file.S3_ID);
+            await File.deleteOne({ name: file.name });
+          });
+          res.send("Category File successfully deleted");
+          next();
+        })
+        .catch((e) => console.log(e));
+    } else next();
   } catch (e) {
     console.log(e);
     res.status(400).json({ error: " Error, cannot delete category files" });

@@ -1,35 +1,131 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useOutletContext } from "react-router-dom";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
+import {
+  api_category_all,
+  api_category_create,
+  api_category_delete,
+  api_file_upload,
+  api_category_update,
+  api_file_update,
+  api_file_delete,
+} from "../auth";
 import "../styles/WishGrantingPage.css";
 
 Modal.setAppElement("#root");
 
-function WishStep({ stepName }) {
-  const [categories, setCategories] = useOutletContext();
-
-  const [addFileModal, setAddFileModal] = useState(false);
-  const [editFileModal, setEditFileModal] = useState(false);
-  const [addCategoryModal, setAddCategoryModal] = useState(false);
-  const [editCategoryModal, setEditCategoryModal] = useState(false);
-  const [deleteFileModal, setDeleteFileModal] = useState(false);
-  const [deleteCategoryModal, setDeleteCategoryModal] = useState(false);
+function WishStep({ index, stepName }) {
+  /**
+   * STATE
+   */
+  const [categories, setCategories] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVariant, setModalVariant] = useState({});
   const [activeListing, setActiveListing] = useState(null);
   const [name, setName] = useState("");
   const [fileContents, setFileContents] = useState("");
 
+  const rerender = useOutletContext();
+
+  /**
+   * MODAL VARIANTS
+   */
+  const modal_variants = {
+    add_file: {
+      title: "Add File",
+      name: {
+        title: "File Name",
+        placeholder: "Type file name here",
+      },
+      has_upload: true,
+      action_button: {
+        title: "Add",
+        on_click: async (args) =>
+          api_file_upload(args.fileContents, args.name, args.activeListing._id),
+      },
+    },
+    edit_file: {
+      title: "Edit File",
+      name: {
+        title: "File Name",
+        placeholder: "Type file name here",
+      },
+      has_upload: true,
+      action_button: {
+        title: "Update",
+        on_click: async (args) => api_file_update(args.activeListing._id),
+      },
+    },
+    delete_file: {
+      title: " ",
+      style: { height: "202px" },
+      name: false,
+      has_upload: false,
+      action_button: false,
+      center: {
+        title: "Are you sure you want to delete this file?",
+        action_button: {
+          title: "Delete",
+          on_click: async (args) => api_file_delete(args.activeListing._id),
+        },
+      },
+    },
+
+    add_category: {
+      title: "Add Category",
+      name: {
+        title: "Category Name",
+        placeholder: "Type category title here",
+      },
+      has_upload: false,
+      action_button: {
+        title: "Add",
+        on_click: async (args) => api_category_create(args.name, stepName),
+      },
+    },
+    edit_category: {
+      title: "Edit Category",
+      name: {
+        title: "Category Name",
+        placeholder: "Type category title here",
+      },
+      has_upload: false,
+      action_button: {
+        title: "Update",
+        on_click: async (args) => api_category_update(args.activeListing._id, args.name),
+      },
+    },
+    delete_category: {
+      title: " ",
+      style: { height: "202px" },
+      name: false,
+      has_upload: false,
+      action_button: false,
+      center: {
+        title: (
+          <div>
+            Are you sure you want to delete this category?
+            <br />
+            All files under this category will also be deleted.
+          </div>
+        ),
+        action_button: {
+          title: "Delete",
+          on_click: async (args) => api_category_delete(args.activeListing._id),
+        },
+      },
+    },
+  };
+
+  /**
+   * UTILITY FUNCTIONS
+   */
   function file_upload(e) {
     if (e.target.files.length === 0) return;
 
-    const file = e.target.files[0];
-    setName(file.name);
-
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      setFileContents(reader.result);
-    };
+    setFileContents(e.target.files[0]);
+    setName(e.target.files[0].name);
   }
   function download_file(file) {
     const a = document.createElement("a");
@@ -43,128 +139,70 @@ function WishStep({ stepName }) {
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
   }
+  function show_modal(variant, new_name = "", new_activeListing = null) {
+    setModalVariant(variant);
+    setName(new_name);
+    setActiveListing(new_activeListing);
+    setModalOpen(true);
+  }
+  async function hide_modal() {
+    const res = await api_category_all(stepName);
+    if (res) setCategories(res);
+    setModalOpen(false);
+    setName("");
+    setActiveListing(null);
+  }
+  function validate() {
+    /* TODO */
+    return true;
+  }
 
-  /*
-   * Modal wrappers
+  /**
+   * HOOK
    */
-  function add_category() {
-    if (name.trim() === "") return;
+  useEffect(hide_modal, [rerender]);
 
-    categories.push({ id: Math.random(), name, files: [] });
-    setName("");
-    setAddCategoryModal(false);
-    setCategories(categories);
-  }
-  function edit_category() {
-    if (name.trim() === "") return;
-
-    activeListing.name = name;
-    setName("");
-    setEditCategoryModal(false);
-    setCategories(categories);
-  }
-  function delete_category() {
-    categories.splice(categories.indexOf(activeListing), 1);
-    setDeleteCategoryModal(false);
-    setCategories(categories);
-  }
-  function add_file() {
-    if (name.trim() === "") return;
-
-    activeListing.files.push({
-      id: Math.random(),
-      name,
-      contents: fileContents,
-    });
-    setName("");
-    setFileContents("");
-    setAddFileModal(false);
-    setCategories(categories);
-  }
-  function edit_file() {
-    if (name.trim() === "") return;
-
-    activeListing.name = name;
-    setName("");
-    setEditFileModal(false);
-    setCategories(categories);
-  }
-  function delete_file() {
-    activeListing.cat.files.splice(activeListing.find, 1);
-    setDeleteFileModal(false);
-    setCategories(categories);
-  }
-
-  /*
-   * Util for <style> tag injection
-   * https://stackoverflow.com/questions/7627000/javascript-convert-string-to-safe-class-name-for-css
+  /**
+   * RENDER
    */
-  function make_safe(unsafe) {
-    return unsafe.replace(/[^a-z0-9]/g, (s) => {
-      const c = s.charCodeAt(0);
-      if (c === 32) return "-";
-      if (c >= 65 && c <= 90) return "_" + s.toLowerCase();
-      return "__" + ("000" + c.toString(16)).slice(-4);
-    });
-  }
-
   return (
     <div className="wishgranting">
       <div className="wishgranting_header">
-        <h1 className="wishgranting_title">{stepName}</h1>
+        <h1 className="wishgranting_title">
+          Step {index}: {stepName}
+        </h1>
       </div>
       <br />
       <div className="wishgranting_categories">
         <FileListing
           name="New category"
           className="wishgranting_newcategory"
-          onClick={() => {
-            setAddCategoryModal(true);
-            setName("");
-          }}
+          onClick={() => show_modal(modal_variants.add_category)}
           leftButtonOverride={
             <FileButton
               description="Add category"
               image="/img/wishgranting_plus.svg"
-              onClick={() => add_category()}
+              onClick={() => show_modal(modal_variants.add_category)}
             />
           }
         />
-        {categories.map((cat, ind) => (
+        {categories.map((cat) => (
           <FileCategory
             name={cat.name}
-            key={cat.id + cat.name}
-            id={`category_${ind}_${make_safe(cat.name)}_${cat.files.length}_${make_safe(stepName)}`}
+            key={cat._id + cat.name}
+            id={`category_${cat._id}`}
             onDownloadFile={() => {}}
-            onAddFile={() => {
-              setAddFileModal(true);
-              setActiveListing(cat);
-              setName("");
-            }}
-            onEditCategory={() => {
-              setEditCategoryModal(true);
-              setActiveListing(cat);
-              setName(cat.name);
-            }}
-            onDeleteCategory={() => {
-              setDeleteCategoryModal(true);
-              setActiveListing(cat);
-            }}
+            onAddFile={() => show_modal(modal_variants.add_file, "", cat)}
+            onEditCategory={() => show_modal(modal_variants.edit_category, cat.name, cat)}
+            onDeleteCategory={() => show_modal(modal_variants.delete_category, "", cat)}
           >
-            {cat.files.map((f, find) => (
+            {cat.Files.map((f, find) => (
               <FileEntry
                 name={f.name}
                 key={f.id + f.name}
                 onDownloadFile={() => download_file(f)}
-                onEditFile={() => {
-                  setEditFileModal(true);
-                  setActiveListing(f);
-                  setName(f.name);
-                }}
-                onDeleteFile={() => {
-                  setDeleteFileModal(true);
-                  setActiveListing({ cat, find });
-                }}
+                onEditFile={() => show_modal(modal_variants.edit_file, f.name, f)}
+                onDeleteFile={() => show_modal(modal_variants.delete_file, "", { cat, find })}
               />
             ))}
           </FileCategory>
@@ -172,235 +210,92 @@ function WishStep({ stepName }) {
       </div>
       <br />
       <Modal
-        isOpen={addFileModal}
-        onRequestClose={() => setAddFileModal(false)}
-        contentLabel="Add File"
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        contentLabel={modalVariant.title}
+        style={{ content: modalVariant.style ?? {} }}
         className="wishgranting_react_modal"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
-            <h3>Add File</h3>
+            <h3>{modalVariant.title}</h3>
             <button
               type="button"
               className="wishgranting_modal_close"
-              onClick={() => setAddFileModal(false)}
+              onClick={() => setModalOpen(false)}
             >
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="wishgranting_modal_label">File Name</div>
-          <input
-            type="text"
-            id="wishgranting_addfile_filename"
-            placeholder="Type file name here"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <br />
-          <br />
-          <div className="wishgranting_modal_label">Upload File</div>
-          <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
-        </div>
-        <div className="wishgranting_modal_bottom">
-          <button type="button" className="wishgranting_modal_button primary" onClick={add_file}>
-            Add
-          </button>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={editFileModal}
-        onRequestClose={() => setEditFileModal(false)}
-        contentLabel="Edit File"
-        className="wishgranting_react_modal"
-      >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3>Edit File</h3>
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setEditFileModal(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          </div>
-          <div className="wishgranting_modal_label">File Name</div>
-          <input
-            type="text"
-            id="wishgranting_addfile_filename"
-            placeholder="Type file name here"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <br />
-          <br />
-          <div className="wishgranting_modal_label">Upload File</div>
-          <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
-        </div>
-        <div className="wishgranting_modal_bottom">
-          <button type="button" className="wishgranting_modal_button primary" onClick={edit_file}>
-            Update
-          </button>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={addCategoryModal}
-        onRequestClose={() => setAddCategoryModal(false)}
-        contentLabel="Add Category"
-        className="wishgranting_react_modal"
-      >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3>Add Category</h3>
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setAddCategoryModal(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          </div>
-          <div className="wishgranting_modal_label">Category Name</div>
-          <input
-            type="text"
-            id="wishgranting_addfile_filename"
-            placeholder="Type category title here"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="wishgranting_modal_bottom">
-          <button
-            type="button"
-            className="wishgranting_modal_button primary"
-            onClick={add_category}
-          >
-            Add
-          </button>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={editCategoryModal}
-        onRequestClose={() => setEditCategoryModal(false)}
-        contentLabel="Edit Category"
-        className="wishgranting_react_modal"
-      >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3>Edit Category</h3>
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setEditCategoryModal(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          </div>
-          <div className="wishgranting_modal_label">Category Name</div>
-          <input
-            type="text"
-            id="wishgranting_addfile_filename"
-            placeholder="Type category title here"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div className="wishgranting_modal_bottom">
-          <button
-            type="button"
-            className="wishgranting_modal_button primary"
-            onClick={edit_category}
-          >
-            Update
-          </button>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={deleteFileModal}
-        onRequestClose={() => setDeleteFileModal(false)}
-        contentLabel="Delete File"
-        className="wishgranting_react_modal"
-        style={{ content: { height: "202px" } }}
-      >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3> </h3>
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setDeleteFileModal(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          </div>
-          <div className="wishgranting_modal_center halfheight column">
-            <div className="wishgranting_modal_center">
-              Are you sure you want to delete this file?
-            </div>
+          <div className={modalVariant.name ? "" : "hidden"}>
+            <div className="wishgranting_modal_label">{(modalVariant.name ?? {}).title}</div>
+            <input
+              type="text"
+              id="wishgranting_addfile_filename"
+              placeholder={(modalVariant.name ?? {}).placeholder}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
             <br />
-            <div className="wishgranting_modal_center thin">
-              <button
-                type="button"
-                className="wishgranting_modal_button"
-                onClick={() => setDeleteFileModal(false)}
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="wishgranting_modal_button error"
-                onClick={delete_file}
-              >
-                Delete
-              </button>
-            </div>
+            <br />
           </div>
-        </div>
-      </Modal>
-      <Modal
-        isOpen={deleteCategoryModal}
-        onRequestClose={() => setDeleteCategoryModal(false)}
-        contentLabel="Delete Category"
-        className="wishgranting_react_modal"
-        style={{ content: { height: "202px" } }}
-      >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3> </h3>
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setDeleteCategoryModal(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          </div>
-          <div className="wishgranting_modal_center halfheight">
-            <div className="wishgranting_modal_center column">
-              <div className="wishgranting_modal_center">
-                Are you sure you want to delete this category?
-                <br />
-                All files under this category will also be deleted.
-              </div>
+          {modalVariant.has_upload ? (
+            <>
+              <div className="wishgranting_modal_label">Upload File</div>
+              <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
+            </>
+          ) : null}
+          {modalVariant.center ? (
+            <div className="wishgranting_modal_center halfheight column">
+              <div className="wishgranting_modal_center">{modalVariant.center.title}</div>
               <br />
               <div className="wishgranting_modal_center thin">
                 <button
                   type="button"
                   className="wishgranting_modal_button"
-                  onClick={() => setDeleteCategoryModal(false)}
+                  onClick={() => setModalOpen(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="button"
                   className="wishgranting_modal_button error"
-                  onClick={delete_category}
+                  onClick={async () => {
+                    if (validate()) {
+                      await modalVariant.center.action_button.on_click({
+                        name,
+                        activeListing,
+                        fileContents,
+                      });
+                      hide_modal();
+                    }
+                  }}
                 >
-                  Delete
+                  {modalVariant.center.action_button.title}
                 </button>
               </div>
             </div>
-          </div>
+          ) : null}
+          {modalVariant.action_button ? (
+            <div className="wishgranting_modal_bottom">
+              <button
+                type="button"
+                className="wishgranting_modal_button primary"
+                onClick={async () => {
+                  if (validate()) {
+                    await modalVariant.action_button.on_click({
+                      name,
+                      activeListing,
+                      fileContents,
+                    });
+                    hide_modal();
+                  }
+                }}
+              >
+                {modalVariant.action_button.title}
+              </button>
+            </div>
+          ) : null}
         </div>
       </Modal>
     </div>

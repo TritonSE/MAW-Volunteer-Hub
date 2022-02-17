@@ -101,6 +101,9 @@
   border-radius: 3px;
   font-size: 14px;
 }
+.wishgranting_modal input[type="file"] {
+  font-family: "Lato", sans-serif;
+}
 .wishgranting_modal input[type="file"]::file-selector-button {
   width: 103px;
   height: 26px;

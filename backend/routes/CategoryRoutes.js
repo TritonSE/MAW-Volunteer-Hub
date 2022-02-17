@@ -1,35 +1,57 @@
 const express = require("express");
-const CategorySchema = require("../models/Category_model");
+
+const File = require("../models/FileModel");
+const Category = require("../models/CategoryModel");
+const validate = require("../util/ParamValidator");
+const { deleteFileAWS } = require("../util/S3Util");
 
 const router = express.Router();
-const { DeleteCategory } = require("../util/FileUploadController");
 
-router.get("/all/:Parent", async (req, res) => {
-  const Parent = req.params.Parent;
-  await CategorySchema.find({ parent: Parent }).then((files) => {
-    files.forEach((element) => {
-      res.send(element);
-    });
-  });
+router.get("/all/:parent", validate([], ["parent"]), (req, res) => {
+  Category.find({ parent: req.params.parent })
+    .then((files) => res.json(files))
+    .catch(() => res.status(500).json({ error: true }));
 });
 
-router.get("/Category/one/:id", (req, res) => {
-  const catID = req.params.id;
-  CategorySchema.findById(catID).then(async (category) => {
-    res.send(category);
-  });
+router.get("/one/:id", validate([], ["id"]), (req, res) => {
+  Category.findById(req.params.id)
+    .then((category) => res.json(category))
+    .catch(() => res.status(500).json({ error: true }));
 });
 
-router.delete("/delete/:category_ID", DeleteCategory, (req, res) => {
-  CategorySchema.findByIdAndDeletes(req.params.category_ID);
+router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
+  File.findById(req.params.id)
+    .then((files) =>
+      Promise.all(
+        files.map((file) =>
+          Promise.all([deleteFileAWS(file.S3_ID), File.deleteOne({ name: file.name })])
+        )
+      )
+    )
+    .then(() => Category.findByIdAndDelete(req.params.id))
+    .then(() => res.json({ success: true }))
+    .catch(() => res.status(500).json({ error: true }));
 });
 
-router.post("/create", (req, res) => {
-  const user = req.user;
-  CategorySchema.create({
-    name: req.body.categoryname,
+router.post("/create", validate(["name", "parent"]), (req, res) => {
+  Category.create({
+    name: req.body.name,
     parent: req.body.parent,
-    User_ID: user._id,
+    User_ID: req.user._id,
     Files: [],
-  });
+  })
+    .then(() => res.json({ success: true }))
+    .catch(() => res.status(500).json({ error: true }));
 });
+
+router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
+  Category.findById(req.params.id)
+    .then((category) => {
+      Object.assign(category, { name: req.body.updated_name });
+      category.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(() => res.status(500).json({ error: true }));
+});
+
+module.exports = router;
