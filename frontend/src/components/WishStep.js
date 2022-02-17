@@ -10,6 +10,7 @@ import {
   api_category_update,
   api_file_update,
   api_file_delete,
+  api_file_display,
 } from "../auth";
 import "../styles/WishGrantingPage.css";
 
@@ -41,9 +42,9 @@ function WishStep({ index, stepName }) {
       has_upload: true,
       action_button: {
         title: "Add",
-        on_click: async (args) =>
-          api_file_upload(args.fileContents, args.name, args.activeListing._id),
       },
+      on_submit: async (args) =>
+        api_file_upload(args.fileContents, args.name, args.activeListing._id),
     },
     edit_file: {
       title: "Edit File",
@@ -54,8 +55,9 @@ function WishStep({ index, stepName }) {
       has_upload: true,
       action_button: {
         title: "Update",
-        on_click: async (args) => api_file_update(args.activeListing._id),
       },
+      on_submit: async (args) =>
+        api_file_update(args.activeListing._id, args.fileContents, args.name),
     },
     delete_file: {
       title: " ",
@@ -67,9 +69,9 @@ function WishStep({ index, stepName }) {
         title: "Are you sure you want to delete this file?",
         action_button: {
           title: "Delete",
-          on_click: async (args) => api_file_delete(args.activeListing._id),
         },
       },
+      on_submit: async (args) => api_file_delete(args.activeListing._id),
     },
 
     add_category: {
@@ -81,8 +83,8 @@ function WishStep({ index, stepName }) {
       has_upload: false,
       action_button: {
         title: "Add",
-        on_click: async (args) => api_category_create(args.name, stepName),
       },
+      on_submit: async (args) => api_category_create(args.name, stepName),
     },
     edit_category: {
       title: "Edit Category",
@@ -93,8 +95,8 @@ function WishStep({ index, stepName }) {
       has_upload: false,
       action_button: {
         title: "Update",
-        on_click: async (args) => api_category_update(args.activeListing._id, args.name),
       },
+      on_submit: async (args) => api_category_update(args.activeListing._id, args.name),
     },
     delete_category: {
       title: " ",
@@ -112,9 +114,9 @@ function WishStep({ index, stepName }) {
         ),
         action_button: {
           title: "Delete",
-          on_click: async (args) => api_category_delete(args.activeListing._id),
         },
       },
+      on_submit: async (args) => api_category_delete(args.activeListing._id),
     },
   };
 
@@ -127,17 +129,21 @@ function WishStep({ index, stepName }) {
     setFileContents(e.target.files[0]);
     setName(e.target.files[0].name);
   }
-  function download_file(file) {
-    const a = document.createElement("a");
-    document.body.appendChild(a);
-    a.style = "display: none";
+  async function download_file(file) {
+    const res = await api_file_display(file._id);
+    if (res && !res.error) {
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.style = "display: none";
 
-    const url = window.URL.createObjectURL(new Blob([file.contents], { type: "text/plain" }));
-    a.href = url;
-    a.download = file.name;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
+      const url = window.URL.createObjectURL(res);
+      a.href = url;
+      a.download = file.name;
+      window.open(url);
+      // a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
     setModalVariant(variant);
@@ -196,13 +202,13 @@ function WishStep({ index, stepName }) {
             onEditCategory={() => show_modal(modal_variants.edit_category, cat.name, cat)}
             onDeleteCategory={() => show_modal(modal_variants.delete_category, "", cat)}
           >
-            {cat.Files.map((f, find) => (
+            {cat.Files.map((f) => (
               <FileEntry
                 name={f.name}
-                key={f.id + f.name}
+                key={f._id + f.name}
                 onDownloadFile={() => download_file(f)}
                 onEditFile={() => show_modal(modal_variants.edit_file, f.name, f)}
-                onDeleteFile={() => show_modal(modal_variants.delete_file, "", { cat, find })}
+                onDeleteFile={() => show_modal(modal_variants.delete_file, "", f)}
               />
             ))}
           </FileCategory>
@@ -227,75 +233,64 @@ function WishStep({ index, stepName }) {
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <div className={modalVariant.name ? "" : "hidden"}>
-            <div className="wishgranting_modal_label">{(modalVariant.name ?? {}).title}</div>
-            <input
-              type="text"
-              id="wishgranting_addfile_filename"
-              placeholder={(modalVariant.name ?? {}).placeholder}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <br />
-            <br />
-          </div>
-          {modalVariant.has_upload ? (
-            <>
-              <div className="wishgranting_modal_label">Upload File</div>
-              <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
-            </>
-          ) : null}
-          {modalVariant.center ? (
-            <div className="wishgranting_modal_center halfheight column">
-              <div className="wishgranting_modal_center">{modalVariant.center.title}</div>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (validate()) {
+                await modalVariant.on_submit({
+                  name,
+                  activeListing,
+                  fileContents,
+                });
+                hide_modal();
+              }
+            }}
+          >
+            <input type="submit" hidden /> {/* Form submits on enter key */}
+            <div className={modalVariant.name ? "" : "hidden"}>
+              <div className="wishgranting_modal_label">{(modalVariant.name ?? {}).title}</div>
+              <input
+                type="text"
+                id="wishgranting_addfile_filename"
+                placeholder={(modalVariant.name ?? {}).placeholder}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <br />
-              <div className="wishgranting_modal_center thin">
-                <button
-                  type="button"
-                  className="wishgranting_modal_button"
-                  onClick={() => setModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className="wishgranting_modal_button error"
-                  onClick={async () => {
-                    if (validate()) {
-                      await modalVariant.center.action_button.on_click({
-                        name,
-                        activeListing,
-                        fileContents,
-                      });
-                      hide_modal();
-                    }
-                  }}
-                >
-                  {modalVariant.center.action_button.title}
+              <br />
+            </div>
+            {modalVariant.has_upload ? (
+              <>
+                <div className="wishgranting_modal_label">Upload File</div>
+                <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
+              </>
+            ) : null}
+            {modalVariant.center ? (
+              <div className="wishgranting_modal_center halfheight column">
+                <div className="wishgranting_modal_center">{modalVariant.center.title}</div>
+                <br />
+                <div className="wishgranting_modal_center thin">
+                  <button
+                    type="button"
+                    className="wishgranting_modal_button"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="wishgranting_modal_button error">
+                    {modalVariant.center.action_button.title}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {modalVariant.action_button ? (
+              <div className="wishgranting_modal_bottom">
+                <button type="submit" className="wishgranting_modal_button primary">
+                  {modalVariant.action_button.title}
                 </button>
               </div>
-            </div>
-          ) : null}
-          {modalVariant.action_button ? (
-            <div className="wishgranting_modal_bottom">
-              <button
-                type="button"
-                className="wishgranting_modal_button primary"
-                onClick={async () => {
-                  if (validate()) {
-                    await modalVariant.action_button.on_click({
-                      name,
-                      activeListing,
-                      fileContents,
-                    });
-                    hide_modal();
-                  }
-                }}
-              >
-                {modalVariant.action_button.title}
-              </button>
-            </div>
-          ) : null}
+            ) : null}
+          </form>
         </div>
       </Modal>
     </div>

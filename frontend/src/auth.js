@@ -19,13 +19,11 @@ function token_clear() {
 }
 
 /**
- * GENERAL API CALL UTIL
+ * GENERAL API CALL UTILS
  */
 async function api_call(
   endpoint,
-  data = {},
-  method = "POST",
-  type = "application/x-www-form-urlencoded"
+  { data = null, method = "POST", type = "application/x-www-form-urlencoded", blob = false } = {}
 ) {
   const options = {
     method,
@@ -44,7 +42,7 @@ async function api_call(
 
   try {
     const res = await fetch(endpoint, options);
-    return await res.json();
+    return await (blob ? res.blob() : res.json());
   } catch {
     return null;
   }
@@ -64,12 +62,12 @@ async function api_validtoken() {
  * LOGIN/SIGNUP
  */
 async function api_login({ email, password }) {
-  const res = await api_call(API_ENDPOINTS.LOGIN, { email, password });
+  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
   return (res ?? {}).token;
 }
 
 async function api_signup({ name, email, password }) {
-  const res = await api_call(API_ENDPOINTS.SIGNUP, { name, email, password });
+  const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
   return res && !res.error;
 }
 
@@ -77,27 +75,30 @@ async function api_signup({ name, email, password }) {
  * FILES
  */
 async function api_file_upload(file, name, category) {
-  const res = await api_call(
-    API_ENDPOINTS.FILE_UPLOAD,
-    { file, name, category },
-    "POST",
-    "multipart/form-data"
-  );
+  const res = await api_call(API_ENDPOINTS.FILE_UPLOAD, {
+    data: { file, name, category },
+    method: "POST",
+    type: "multipart/form-data",
+  });
   return res && !res.error;
 }
 
 async function api_file_display(id) {
-  const res = await api_call(API_ENDPOINTS.FILE_DISPLAY, { id }, "GET");
-  return res && !res.error;
+  const res = await api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, { method: "GET", blob: true });
+  return res;
 }
 
 async function api_file_delete(id) {
-  const res = await api_call(API_ENDPOINTS.FILE_DELETE, { id }, "DELETE");
+  const res = await api_call(`${API_ENDPOINTS.FILE_DELETE}/${id}`, { method: "DELETE" });
   return res && !res.error;
 }
 
-async function api_file_update(id) {
-  const res = await api_call(API_ENDPOINTS.FILE_UPDATE, { id }, "PATCH", "multipart/form-data");
+async function api_file_update(id, file, name) {
+  const res = await api_call(`${API_ENDPOINTS.FILE_UPDATE}/${id}`, {
+    data: { file, updated_file_name: name },
+    method: "PATCH",
+    type: "multipart/form-data",
+  });
   return res && !res.error;
 }
 
@@ -105,34 +106,35 @@ async function api_file_update(id) {
  * CATEGORIES
  */
 async function api_category_delete(category) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_DELETE}/${category}`, null, "DELETE");
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_DELETE}/${category}`, { method: "DELETE" });
   return res && !res.error;
 }
 
 async function api_category_all(parent) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ALL}/${parent}`, null, "GET");
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ALL}/${parent}`, { method: "GET" });
   return res;
 }
 
 async function api_category_one(category) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, null, "GET");
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, { method: "GET" });
   return res;
 }
 
 async function api_category_create(name, parent) {
   const res = await api_call(API_ENDPOINTS.CATEGORY_CREATE, {
-    name,
-    parent,
+    data: {
+      name,
+      parent,
+    },
   });
   return res && !res.error;
 }
 
 async function api_category_update(category, name) {
-  const res = await api_call(
-    `${API_ENDPOINTS.CATEGORY_UPDATE}/${category}`,
-    { updated_name: name },
-    "PATCH"
-  );
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_UPDATE}/${category}`, {
+    data: { updated_name: name },
+    method: "PATCH",
+  });
   return res && !res.error;
 }
 

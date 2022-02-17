@@ -20,14 +20,15 @@ router.get("/one/:id", validate([], ["id"]), (req, res) => {
 });
 
 router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
-  File.findById(req.params.id)
-    .then((files) =>
+  Category.findById(req.params.id)
+    .then((category) => {
       Promise.all(
-        files.map((file) =>
-          Promise.all([deleteFileAWS(file.S3_ID), File.deleteOne({ name: file.name })])
-        )
-      )
-    )
+        category.Files.map((file) => [
+          deleteFileAWS(file.S3_ID),
+          File.deleteOne({ name: file.name }),
+        ]).flat()
+      );
+    })
     .then(() => Category.findByIdAndDelete(req.params.id))
     .then(() => res.json({ success: true }))
     .catch(() => res.status(500).json({ error: true }));
@@ -48,7 +49,7 @@ router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
   Category.findById(req.params.id)
     .then((category) => {
       Object.assign(category, { name: req.body.updated_name });
-      category.save();
+      return category.save();
     })
     .then(() => res.json({ success: true }))
     .catch(() => res.status(500).json({ error: true }));

@@ -33,7 +33,7 @@ app.use("/category", passport.authenticate("jwt", { session: false }), categoryR
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  console.error("Error caught");
+  console.error("Error caught on URL " + req.url);
   next(createError(404));
 });
 
