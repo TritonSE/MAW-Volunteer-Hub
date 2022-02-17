@@ -115,7 +115,7 @@ const UpdateFile = async (req, res) => {
 const SearchFile = async (req, res) => {
   try {
     const Name = req.params.name;
-    await File.find({ name: Name }).then(async (file) => {
+    File.find({ name: Name }).then(async (file) => {
       res.json(file);
     });
   } catch (e) {
