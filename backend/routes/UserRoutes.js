@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose');
 
 const router = express.Router();
 
@@ -36,22 +37,30 @@ router.get("/users", (req, res, next) => {
     }
   } else {
     // prevent route from hanging if no query param passed in
-    res.status(400).send("No query param passed in to admin route");
+    res.status(400).send("No query param passed in to users route");
   }
 });
 
 // Get user by id - Will return an object with only the user profile information
-router.get("/id", (req, res, next) => {
-  UserModel.findOne(
-    { _id: req.query._id },
-    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1 }
-  )
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      next(err);
-    });
+router.get("/:id", (req, res, next) => {
+  // check if there is an id param and that it is a valid id
+  if(!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).send("Invalid user id passed into user route");
+  }
+
+  UserModel.findById(
+    req.params.id,
+    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1 },
+    function (err, user) {
+      if(err) { next(err); }
+      
+      if(!user) { // checks if a user was found with id
+        res.status(404).send("No user found with provided id");
+      } else {
+        res.status(200).json(user);
+      }
+    }
+  );
 });
 
 // helper function-- retrieves JWT token then parses it to get user id of logged in user
