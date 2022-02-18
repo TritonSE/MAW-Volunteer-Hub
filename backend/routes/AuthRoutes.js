@@ -19,21 +19,23 @@ router.post("/login", (req, res, next) => {
   passport.authenticate("login", (err, user) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occurred.");
-
-        return next(error);
+        res.json({ error: "Failed to log in" });
+        return;
       }
 
       req.login(user, { session: false }, (error) => {
-        if (error) return next(error);
+        if (error) {
+          res.json({ error });
+          return;
+        }
 
         const body = { _id: user._id, email: user.email }; // sign is admin into this body
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
-        return res.json({ token });
+        res.json({ token });
       });
     } catch (error) {
-      return next(error);
+      res.json({ error });
     }
   })(req, res, next);
 });

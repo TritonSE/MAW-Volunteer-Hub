@@ -11,7 +11,6 @@ mongoose.connect(config.db.uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-mongoose.set("useCreateIndex", true);
 mongoose.connection.on("error", (error) => console.log(error));
 mongoose.Promise = global.Promise;
 
