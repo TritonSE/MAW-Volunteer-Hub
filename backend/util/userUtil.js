@@ -1,7 +1,6 @@
-
 const Buffer = require("buffer/").Buffer;
-const AUTH_HEADER = "authorization";
 
+const AUTH_HEADER = "authorization";
 
 // This file is from the source code of PassportJS
 const re = /(\S+)\s+(\S+)/;
@@ -28,10 +27,7 @@ function idOfCurrentUser(req) {
   return userId;
 }
 
-
 module.exports = {
-    idOfCurrentUser,
-    parse: parseAuthHeader,
-}; 
-
-
+  idOfCurrentUser,
+  parse: parseAuthHeader,
+};
