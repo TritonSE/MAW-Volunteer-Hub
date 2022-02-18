@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
-import {
-  api_file_search,
-  api_file_all,
-  api_file_display,
-  api_file_delete,
-  // api_file_update,
-} from "../auth";
+import { api_file_display } from "../auth";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
+import ModalVariants from "./ModalVariants";
+import FileStructure from "./FileStructure";
 
 Modal.setAppElement(document.getElementById("#root"));
 
@@ -20,17 +16,16 @@ function Search() {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
+  const [structure, getStructure] = useContext(FileStructure);
 
-  async function do_filter() {
-    if (input.trim() === "") {
-      const res = await api_file_all();
-      if (res && !res.error) setFilteredFiles(res);
-    } else {
-      const res = await api_file_search(input);
-      if (res && !res.error) setFilteredFiles(res);
-    }
-  }
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVariant, setModalVariant] = useState("add_file");
+  const [name, setName] = useState("");
+  const [activeListing, setActiveListing] = useState();
 
+  /**
+   * UTILITY FUNCTIONS
+   */
   async function display_file(file) {
     const res = await api_file_display(file._id);
     if (res && !res.error) {
@@ -39,26 +34,54 @@ function Search() {
       window.URL.revokeObjectURL(url);
     }
   }
+  function show_modal(variant, new_name = "", new_activeListing = null) {
+    setModalVariant(variant);
+    setName(new_name);
+    setActiveListing(new_activeListing);
+    setModalOpen(true);
+  }
+  async function hide_modal() {
+    getStructure();
+    setModalOpen(false);
+    setName("");
+    setActiveListing(null);
+  }
 
-  useEffect(do_filter, []);
+  /**
+   * HOOKS
+   */
+  useEffect(hide_modal, []);
   useEffect(() => {
-    if (showResults) do_filter();
+    if (showResults) hide_modal();
   }, [showResults]);
+  useEffect(() => {
+    const arr = [];
+    Object.entries(structure).forEach(([_tab, categories]) => {
+      categories.forEach((cat) => {
+        cat.Files.forEach((file) => {
+          if (file.name.indexOf(input) > -1) arr.push(file);
+        });
+      });
+    });
+    setFilteredFiles(arr);
+  }, [structure]);
 
   return (
-    <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
-      <input
-        className="search-input"
-        placeholder="Search all files..."
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <button
-        className="search-button"
-        type="submit"
-        onClick={() => setShowResults((prevState) => !prevState)}
-      >
-        <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
-      </button>
+    <>
+      <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
+        <input
+          className="search-input"
+          placeholder="Search all files..."
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <button
+          className="search-button"
+          type="submit"
+          onClick={() => setShowResults((prevState) => !prevState)}
+        >
+          <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
+        </button>
+      </form>
 
       <Modal
         isOpen={showResults}
@@ -95,7 +118,7 @@ function Search() {
                   ""
                 ) : (
                   <>
-                    with keyword <q>{input}</q>
+                    &nbsp;with keyword <q>{input}</q>
                   </>
                 )}
               </p>
@@ -105,16 +128,27 @@ function Search() {
                   name={val.name}
                   searchModal
                   onDownloadFile={() => display_file(val)}
-                  onEditFile={() => {}}
-                  onDeleteFile={() => api_file_delete(val._id)}
+                  onEditFile={() => show_modal("edit_file", val.name, val)}
+                  onDeleteFile={() => show_modal("delete_file", "", val)}
                 />
               ))}
             </div>
           )}
         </div>
       </Modal>
-    </form>
+
+      <ModalVariants
+        modalVariant={modalVariant}
+        open={modalOpen}
+        setOpen={setModalOpen}
+        name={name}
+        setName={setName}
+        activeListing={activeListing}
+        onClose={() => hide_modal()}
+      />
+    </>
   );
 }
 
 export default Search;
+/* TODO: Create a context provider that gives every sub-component the list of categories and files, with conditional rerendering on API calls */

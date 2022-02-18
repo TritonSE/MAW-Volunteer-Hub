@@ -121,7 +121,9 @@ async function api_category_delete(category) {
 }
 
 async function api_category_all(parent) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ALL}/${parent}`, { method: "GET" });
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ALL}${parent ? "/" + parent : ""}`, {
+    method: "GET",
+  });
   return res;
 }
 

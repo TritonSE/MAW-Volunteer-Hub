@@ -34,7 +34,7 @@ router.post("/upload", upload.single("file"), validate(["name", "category"]), (r
       return category.save();
     })
     .then(() => res.json({ success: true }))
-    .catch(() => res.status(500).json({ error: true }));
+    .catch((e) => res.status(500).json({ error: e.toString() }));
 });
 
 router.get("/display/:id", validate([], ["id"]), (req, res) => {
@@ -49,7 +49,7 @@ router.get("/display/:id", validate([], ["id"]), (req, res) => {
       else res.set("Content-Type", mime.lookup(file.name));
       stream.pipe(res);
     })
-    .catch(() => res.status(500).json({ error: true }));
+    .catch((e) => res.status(500).json({ error: e.toString() }));
 });
 
 router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
@@ -71,10 +71,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
       return cat.save();
     })
     .then(() => res.json({ success: true }))
-    .catch((e) => {
-      console.log(e);
-      res.status(500).json({ error: true });
-    });
+    .catch((e) => res.status(500).json({ error: e.toString() }));
 });
 
 router.patch(
@@ -104,20 +101,20 @@ router.patch(
         return category.save();
       })
       .then(() => res.json({ success: true }))
-      .catch(() => res.status(500).json({ error: true }));
+      .catch((e) => res.status(500).json({ error: e.toString() }));
   }
 );
 
 router.get("/search/:name", validate([], ["name"]), (req, res) => {
   File.find({ name: req.params.name })
     .then((file) => res.json(file))
-    .catch(() => res.status(500).json({ error: true }));
+    .catch((e) => res.status(500).json({ error: e.toString() }));
 });
 
-router.get("/all", validate([], []), (req, res) => {
+router.get("/all", (_req, res) => {
   File.find()
     .then((file) => res.json(file))
-    .catch(() => res.status(500).json({ error: true }));
+    .catch((e) => res.status(500).json({ error: e.toString() }));
 });
 
 module.exports = router;

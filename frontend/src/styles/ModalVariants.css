@@ -1,0 +1,109 @@
+.ReactModal__Overlay {
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.3) !important;
+}
+.ReactModal__Content.wishgranting_react_modal {
+  position: absolute;
+  width: 466px;
+  height: 278px;
+  left: calc(50vw - (466px / 2)) !important;
+  top: calc(50vh - (278px / 2)) !important;
+  padding-top: 21px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  border: none !important;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px !important;
+  box-sizing: border-box;
+}
+.wishgranting_modal {
+  font-family: "Lato", sans-serif;
+}
+.wishgranting_modal h3 {
+  margin: 0;
+}
+.wishgranting_modal_close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+.wishgranting_modal_label {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+.wishgranting_modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.wishgranting_modal input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+}
+.wishgranting_modal input[type="file"] {
+  font-family: "Lato", sans-serif;
+}
+.wishgranting_modal input[type="file"]::file-selector-button {
+  width: 103px;
+  height: 26px;
+  background: white;
+  font-family: "Lato", sans-serif;
+  border-radius: 3px;
+  border: 1px solid black;
+  cursor: pointer;
+}
+.wishgranting_modal input[type="file"]::after {
+  display: none;
+}
+
+.wishgranting_modal_bottom {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+}
+
+.wishgranting_modal_button {
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
+  border: 1px solid black;
+  background: white;
+}
+.wishgranting_modal_button.primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+.wishgranting_modal_button.error {
+  background: #ff797d;
+  color: white;
+  border: none;
+}
+
+.wishgranting_modal_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wishgranting_modal_center.halfheight {
+  height: calc(202px / 2);
+}
+.wishgranting_modal_center.column {
+  flex-direction: column;
+}
+.wishgranting_modal_center.thin {
+  width: 245px;
+  justify-content: space-between;
+}

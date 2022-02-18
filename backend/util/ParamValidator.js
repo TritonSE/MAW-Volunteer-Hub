@@ -9,14 +9,14 @@ module.exports =
   (req, res, next) => {
     const body_valid = body_params.every((p) => {
       if (!req.body[p] || req.body[p].trim() === "") {
-        res.status(400).json({ error: true });
+        res.status(400).json({ error: `"${p}" missing from body` });
         return false;
       }
       return true;
     });
     const params_valid = query_params.every((p) => {
       if (!req.params[p] || req.params[p].trim() === "") {
-        res.status(400).json({ error: true });
+        res.status(400).json({ error: `"${p}" missing from params` });
         return false;
       }
       return true;

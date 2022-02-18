@@ -4,7 +4,7 @@ const router = express.Router();
 const { UserModel } = require("../models/UserModel");
 
 // temporary secure route, accessed with /users/
-router.get("/secure", (req, res, next) =>
+router.get("/secure", (req, res) =>
   res.json({
     message: "You made it to the secure route",
     user: req.user,
@@ -12,7 +12,7 @@ router.get("/secure", (req, res, next) =>
   })
 );
 
-router.get("/users/:admin", (req, res, next) => {
+router.get("/users/:admin", (req, res) => {
   if (req.params.admin === true || req.params.admin === false) {
     const users = UserModel.find({ admin: req.params.admin });
     return res.json(users);
