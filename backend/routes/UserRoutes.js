@@ -23,16 +23,20 @@ router.get("/secure", (req, res, next) =>
   })
 );
 
-router.get("/admin", (req, res, next) => {
-  console.log(req.query.admin);
+router.get("/users", (req, res, next) => {
+  // console.log(req.query?.admin);
   if (req.query.admin) {
     try {
-      UserModel.find({ admin: req.query.admin }).then((user) => res.status(200));
+      UserModel.find({ admin: req.query.admin })
+      .then((users) => res.status(200).json({users})); // return users found
     } catch (e) {
       console.log("error");
       console.log(e);
       next(e);
     }
+  } else {
+    // prevent route from hanging if no query param passed in
+    res.status(400).send("No query param passed in to admin route");
   }
 });
 
