@@ -45,11 +45,12 @@ function Search({ showResults, setShowResults, input, setInput, filteredFiles, s
 
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
-    // setInput(""); // clear input after search?
   };
 
   const handleOpen = () => {
-    setShowResults((prevState) => !prevState);
+    if (!showResults) {
+      setShowResults((prevState) => !prevState);
+    }
   };
 
   return (

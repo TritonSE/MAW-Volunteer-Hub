@@ -162,7 +162,7 @@
 }
 
 /* For navbar mobile (spacing) */
-@media only screen and (max-width: 475px) {
+@media only screen and (max-width: 490px) {
   .desktopSearchBarComponent {
     display: none;
   }

@@ -5,6 +5,7 @@
   align-items: center;
   font-family: Lato;
   font-weight: 400;
+  z-index: 1000;
 }
 
 .search-input {
@@ -16,7 +17,6 @@
   border: 0px;
   border-radius: 3px 0px 0px 3px;
   font-family: "Lato", sans-serif;
-  z-index: 1000;
 }
 
 .search-button {
@@ -135,7 +135,11 @@
 */
 
 @media only screen and (max-width: 795px) {
-  .search-results,
+  .search-results {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 100%;
+  }
   .results-container,
   .show-results,
   .no-results {

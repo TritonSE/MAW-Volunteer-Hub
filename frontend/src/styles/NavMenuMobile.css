@@ -62,9 +62,7 @@
 .logo-and-exit-mobile {
   display: flex;
   justify-content: space-between;
-  padding-top: 22px;
-  padding-left: 33px;
-  padding-right: 32px;
+  padding: 22px 45px 0px 26px;
 }
 
 .exit-dropdown-mobile {
@@ -81,7 +79,7 @@
 
 .separator-mobile {
   width: 90%;
-  height: 0px;
+  background-color: rgba(255, 255, 255, 0.2);
   left: 32px;
   top: 16px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -137,7 +135,7 @@
 }
 
 /* For navbar menu styles (spacing) */
-@media only screen and (max-width: 475px) {
+@media only screen and (max-width: 490px) {
   .nav-menu-mobile {
     flex: 1;
     justify-content: space-between;
@@ -151,7 +149,7 @@
 }
 
 /* Hide mobile navbar search component when screen is big enough */
-@media only screen and (min-width: 475px) {
+@media only screen and (min-width: 490px) {
   .mobileSearchBarComponent {
     display: none;
   }
