@@ -1,20 +1,15 @@
-//This file is from the source code of PassportJS
-'use strict';
+// This file is from the source code of PassportJS
 
-var re = /(\S+)\s+(\S+)/;
-
-
+const re = /(\S+)\s+(\S+)/;
 
 function parseAuthHeader(hdrValue) {
-    if (typeof hdrValue !== 'string') {
-        return null;
-    }
-    var matches = hdrValue.match(re);
-    return matches && { scheme: matches[1], value: matches[2] };
+  if (typeof hdrValue !== "string") {
+    return null;
+  }
+  const matches = hdrValue.match(re);
+  return matches && { scheme: matches[1], value: matches[2] };
 }
 
-
-
 module.exports = {
-    parse: parseAuthHeader
+  parse: parseAuthHeader,
 };
