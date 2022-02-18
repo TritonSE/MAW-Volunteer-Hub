@@ -6,8 +6,9 @@ import {
   api_category_all,
   api_category_create,
   api_category_delete,
-  api_file_upload,
   api_category_update,
+  api_category_download,
+  api_file_upload,
   api_file_update,
   api_file_delete,
   api_file_display,
@@ -132,17 +133,22 @@ function WishStep({ index, stepName }) {
   async function download_file(file) {
     const res = await api_file_display(file._id);
     if (res && !res.error) {
-      const a = document.createElement("a");
-      document.body.appendChild(a);
-      a.style = "display: none";
-
       const url = window.URL.createObjectURL(res);
-      a.href = url;
-      a.download = file.name;
       window.open(url);
-      // a.click();
       window.URL.revokeObjectURL(url);
+    }
+  }
+  async function download_all_files(cat) {
+    const res = await api_category_download(cat._id);
+    if (res && !res.error) {
+      const a = document.createElement("a");
+      const url = window.URL.createObjectURL(res);
+      a.download = cat.name;
+      a.href = url;
+      document.body.appendChild(a);
+      a.click();
       document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
@@ -197,7 +203,7 @@ function WishStep({ index, stepName }) {
             name={cat.name}
             key={cat._id + cat.name}
             id={`category_${cat._id}`}
-            onDownloadFile={() => {}}
+            onDownloadFile={() => download_all_files(cat)}
             onAddFile={() => show_modal(modal_variants.add_file, "", cat)}
             onEditCategory={() => show_modal(modal_variants.edit_category, cat.name, cat)}
             onDeleteCategory={() => show_modal(modal_variants.delete_category, "", cat)}

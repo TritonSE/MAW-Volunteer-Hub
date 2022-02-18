@@ -102,6 +102,16 @@ async function api_file_update(id, file, name) {
   return res && !res.error;
 }
 
+async function api_file_search(name) {
+  const res = await api_call(`${API_ENDPOINTS.FILE_SEARCH}/${name}`, { method: "GET" });
+  return res;
+}
+
+async function api_file_all() {
+  const res = await api_call(`${API_ENDPOINTS.FILE_ALL}`, { method: "GET" });
+  return res;
+}
+
 /**
  * CATEGORIES
  */
@@ -138,6 +148,14 @@ async function api_category_update(category, name) {
   return res && !res.error;
 }
 
+async function api_category_download(id) {
+  const res = await api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
+    method: "GET",
+    blob: true,
+  });
+  return res;
+}
+
 export {
   token_get,
   token_set,
@@ -149,9 +167,12 @@ export {
   api_file_display,
   api_file_delete,
   api_file_update,
+  api_file_search,
+  api_file_all,
   api_category_delete,
   api_category_all,
   api_category_one,
   api_category_create,
   api_category_update,
+  api_category_download,
 };

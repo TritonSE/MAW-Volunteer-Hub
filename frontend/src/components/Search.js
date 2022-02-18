@@ -1,23 +1,14 @@
-/* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
+import {
+  api_file_search,
+  api_file_all,
+  api_file_display,
+  api_file_delete,
+  // api_file_update,
+} from "../auth";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
-
-const allFiles = [
-  {
-    id: "file_1",
-    name: "MAW File",
-  },
-  {
-    id: "file_2",
-    name: "TSE File",
-  },
-  {
-    id: "file_3",
-    name: "Testing",
-  },
-];
 
 Modal.setAppElement(document.getElementById("#root"));
 
@@ -30,15 +21,29 @@ function Search() {
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
 
-  // const [allFiles, setAllFiles] = useState([]);
+  async function do_filter() {
+    if (input.trim() === "") {
+      const res = await api_file_all();
+      if (res && !res.error) setFilteredFiles(res);
+    } else {
+      const res = await api_file_search(input);
+      if (res && !res.error) setFilteredFiles(res);
+    }
+  }
 
-  useEffect(() => {
-    setFilteredFiles(allFiles.filter((f) => f["name"].toLowerCase().includes(input.toLowerCase())));
-  }, [input]);
+  async function display_file(file) {
+    const res = await api_file_display(file._id);
+    if (res && !res.error) {
+      const url = window.URL.createObjectURL(res);
+      window.open(url);
+      window.URL.revokeObjectURL(url);
+    }
+  }
 
+  useEffect(do_filter, []);
   useEffect(() => {
-    // get all files
-  }, []);
+    if (showResults) do_filter();
+  }, [showResults]);
 
   return (
     <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -74,14 +79,7 @@ function Search() {
             />
           </button>
 
-          {input === "" ? (
-            <div className="show-results">
-              <p className="files-title">All files</p>
-              {allFiles.map((val) => (
-                <FileEntry key={val.id} name={val.name} searchModal />
-              ))}
-            </div>
-          ) : filteredFiles.length === 0 ? (
+          {filteredFiles.length === 0 ? (
             <div className="no-results">
               <img src="/img/sad_face.svg" alt="Sad Face" className="sad-face" />
               <p style={{ fontSize: "18px", marginBottom: "14px", marginTop: 0 }}>
@@ -92,10 +90,24 @@ function Search() {
           ) : (
             <div className="show-results">
               <p className="files-title">
-                All files with keyword <q>{input}</q>
+                All files
+                {input === "" ? (
+                  ""
+                ) : (
+                  <>
+                    with keyword <q>{input}</q>
+                  </>
+                )}
               </p>
               {filteredFiles.map((val) => (
-                <FileEntry key={val.id} name={val.name} searchModal />
+                <FileEntry
+                  key={val._id}
+                  name={val.name}
+                  searchModal
+                  onDownloadFile={() => display_file(val)}
+                  onEditFile={() => {}}
+                  onDeleteFile={() => api_file_delete(val._id)}
+                />
               ))}
             </div>
           )}

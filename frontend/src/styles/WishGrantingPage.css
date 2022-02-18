@@ -61,8 +61,6 @@
   padding-top: 21px !important;
   padding-left: 25px !important;
   padding-right: 25px !important;
-}
-.ReactModal__Content {
   border: none !important;
   background: white;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);

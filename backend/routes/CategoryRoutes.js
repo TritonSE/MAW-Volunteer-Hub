@@ -1,9 +1,10 @@
 const express = require("express");
+const Archiver = require("archiver");
 
 const File = require("../models/FileModel");
 const Category = require("../models/CategoryModel");
 const validate = require("../util/ParamValidator");
-const { deleteFileAWS } = require("../util/S3Util");
+const { deleteFileAWS, getFileStream } = require("../util/S3Util");
 
 const router = express.Router();
 
@@ -53,6 +54,24 @@ router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
     })
     .then(() => res.json({ success: true }))
     .catch(() => res.status(500).json({ error: true }));
+});
+
+router.get("/download/:id", validate([], ["id"]), (req, res) => {
+  Category.findById(req.params.id)
+    .then((category) => {
+      res.set("Content-Type", "application/zip");
+
+      const archive = Archiver("zip");
+      archive.pipe(res);
+      category.Files.forEach((file) =>
+        archive.append(getFileStream(file.S3_ID), { name: file.name })
+      );
+      archive.finalize();
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(500).json({ error: true });
+    });
 });
 
 module.exports = router;

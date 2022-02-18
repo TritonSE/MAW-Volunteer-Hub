@@ -1,12 +1,13 @@
 const express = require("express");
 const multer = require("multer");
 const fs = require("fs").promises;
+const mime = require("mime-types");
 
 let ft = import("file-type").then((module) => {
   ft = module;
 });
 
-const { uploadFile, getFileStream, deleteFileAWS, getContentType } = require("../util/S3Util");
+const { uploadFile, getFileStream, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
 const validate = require("../util/ParamValidator");
@@ -40,12 +41,15 @@ router.get("/display/:id", validate([], ["id"]), (req, res) => {
   File.findById(req.params.id)
     .then((file) => {
       const stream = getFileStream(file.S3_ID);
+      return Promise.all([file, ft.fileTypeFromStream(stream)]);
+    })
+    .then(([file, type]) => {
+      const stream = getFileStream(file.S3_ID);
+      if (type && type.mime) res.set("Content-Type", type.mime);
+      else res.set("Content-Type", mime.lookup(file.name));
       stream.pipe(res);
     })
-    .catch((e) => {
-      console.log(e);
-      res.status(500).json({ error: true });
-    });
+    .catch(() => res.status(500).json({ error: true }));
 });
 
 router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
@@ -106,6 +110,12 @@ router.patch(
 
 router.get("/search/:name", validate([], ["name"]), (req, res) => {
   File.find({ name: req.params.name })
+    .then((file) => res.json(file))
+    .catch(() => res.status(500).json({ error: true }));
+});
+
+router.get("/all", validate([], []), (req, res) => {
+  File.find()
     .then((file) => res.json(file))
     .catch(() => res.status(500).json({ error: true }));
 });
