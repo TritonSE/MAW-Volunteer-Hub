@@ -59,7 +59,7 @@ function Search() {
     Object.entries(structure).forEach(([_tab, categories]) => {
       categories.forEach((cat) => {
         cat.Files.forEach((file) => {
-          if (file.name.indexOf(input) > -1) arr.push(file);
+          if (file.name.toLowerCase().indexOf(input.toLowerCase()) > -1) arr.push(file);
         });
       });
     });
@@ -151,4 +151,3 @@ function Search() {
 }
 
 export default Search;
-/* TODO: Create a context provider that gives every sub-component the list of categories and files, with conditional rerendering on API calls */
