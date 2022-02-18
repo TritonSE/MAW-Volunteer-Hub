@@ -3,17 +3,8 @@ const mongoose = require('mongoose');
 
 const router = express.Router();
 
-const Buffer = require("buffer/").Buffer;
-
-const url = require("url");
-const auth_hdr = require("./auth_header");
-
-const AUTH_HEADER = "authorization";
-const LEGACY_AUTH_SCHEME = "JWT";
-const BEARER_AUTH_SCHEME = "bearer";
-
 const UserModel = require("../models/UserModel");
-
+const { idOfCurrentUser } = require("../util/userUtil");
 // temporary secure route, accessed with /users/
 
 router.get("/secure", (req, res, next) =>
@@ -23,6 +14,34 @@ router.get("/secure", (req, res, next) =>
     token: req.query.secret_token,
   })
 );
+
+function validateIdParam(req, res) {
+  if(!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
+    res.status(400).send("Invalid user id passed into user route");
+  }
+}
+// if current user is not an admin, then sends a 401 unauthorized
+async function checkCurrentUserIsAdmin(req, res, next) {
+  const currentUserId = idOfCurrentUser(req);
+  const users = await UserModel.findById(currentUserId, { admin: 1 }, 
+    function(err, user) {
+      if(err) { next(err); }
+
+      if(!user) {
+        res.status(500).send("JWT expired");
+      } else if(!user.admin) {
+        res.status(401).send("Current user is not an admin");
+      } else {
+        next();
+      }
+    }
+  );
+}
+
+
+
+
+
 
 router.get("/users", (req, res, next) => {
   // console.log(req.query?.admin);
@@ -41,19 +60,18 @@ router.get("/users", (req, res, next) => {
   }
 });
 
+
 // Get user by id - Will return an object with only the user profile information
 router.get("/:id", (req, res, next) => {
   // check if there is an id param and that it is a valid id
-  if(!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).send("Invalid user id passed into user route");
-  }
+  validateIdParam(req, res);
 
   UserModel.findById(
     req.params.id,
     { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1 },
     function (err, user) {
       if(err) { next(err); }
-      
+
       if(!user) { // checks if a user was found with id
         res.status(404).send("No user found with provided id");
       } else {
@@ -63,67 +81,69 @@ router.get("/:id", (req, res, next) => {
   );
 });
 
-// helper function-- retrieves JWT token then parses it to get user id of logged in user
-// modifed PassportJS's fromAuthHeaderWithScheme function
-function idOfCurrentUser(req) {
-  // retreives JWT token
-  // var token;
-  const auth_params = auth_hdr.parse(req.headers[AUTH_HEADER]);
-  const token = auth_params.value;
-  // parses JWT Token
-  const base64Payload = token.split(".")[1];
-  const payload = Buffer.from(base64Payload, "base64");
-  const answer = JSON.parse(payload.toString());
-  const userId = answer["user"]["_id"];
-  return userId;
-}
-
 // finds user by id then verifies user
-router.put("/VerifybyId", (req, res, next) => {
-  UserModel.findOneAndUpdate({ _id: req.query._id }, { verified: true })
-    .then((user) => {
-      res.json(user);
-    })
-    .catch((err) => {
-      next(err);
-    });
+router.put("/verify/:id", (req, res, next) => {
+  validateIdParam(req, res);
+
+  checkCurrentUserIsAdmin(req, res, 
+    () => {
+      UserModel.findByIdAndUpdate(req.params.id, { verified: true })
+      .then((user) => res.status(200).send())
+      .catch((err) => {
+        next(err);
+      });
+    }
+  );
 });
 
 // finds user by id then updates user to admin (can only be done byan admin)
-router.put("/AdminbyId", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  const users = await UserModel.findById(userId).select("admin");
-  const isAdmin = users["admin"];
+router.put("/promoteadmin/:id", async (req, res, next) => {
+  validateIdParam(req);
 
-  if (isAdmin === true) {
+  checkCurrentUserIsAdmin(req, res,
+    () => {
+      UserModel.findByIdAndUpdate(req.params.id, { admin: true })
+      .then((user) => res.status(200).send())
+      .catch((err) => {
+        next(err);
+      });
+    }
+  );
+});
+
+// edits user information
+// can only be done by an admin or a logged-in user if they are the same as the user who's info is being editted)
+router.put("/edit/:id", async (req, res, next) => {
+  validateIdParam(req);
+  const userId = idOfCurrentUser(req);
+
+  // we only want the user to be able to update these pieces of their profile
+  const sanitizedBody = {
+    name: req.body.name,
+    email: req.body.email,
+    profilePicture: req.body.profilePicture
+  }
+
+  // function that updates user info based on sanitized body
+  const updateInfo = () => {
     try {
-      UserModel.findOneAndUpdate({ _id: req.query._id }, { admin: true }).then((user) => {
-        res.json(user);
+      UserModel.findByIdAndUpdate({ _id: req.params.id }, { $set: sanitizedBody }).then((user) => {
+        if(user) {
+          res.status(200).json(user);
+        } else {
+          res.status(400).send();
+        }
       });
     } catch (err) {
       next(err);
     }
   }
-});
-
-// edits user information
-// can only be done by an admin or a logged-in user if they are the same as the user who's info is being editted)
-router.put("/edits", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  console.log(userId);
-  console.log(req.query._id);
-  console.log(userId === req.query._id);
-  const users = await UserModel.findById(userId).select("admin");
-  const isAdmin = users["admin"];
-  console.log(isAdmin);
-  if (isAdmin === true || userId === req.query._id) {
-    try {
-      UserModel.findByIdAndUpdate({ _id: req.query._id }, { $set: req.body }).then((user) => {
-        res.json(user);
-      });
-    } catch (err) {
-      next(err);
-    }
+  
+  // if user is current user, or if current user is an admin
+  if(userId == req.params.id) {
+    updateInfo();
+  } else {
+    checkCurrentUserIsAdmin(req, res, updateInfo);
   }
 });
 
