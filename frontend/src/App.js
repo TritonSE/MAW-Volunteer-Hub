@@ -19,6 +19,7 @@ import WishStep from "./components/WishStep";
 
 import UserList from "./components/UserList";
 import UserLink from "./components/UserLink";
+import UserCardList from "./components/UserCardList";
 import AssignBtn from "./components/AssignBtn";
 
 function ProtectedRoute({ isAuth, setIsAuth }) {
@@ -80,8 +81,8 @@ function getUserData() {
       Name: [<UserLink userName={"Admin " + (ind + 1) + " (" + name + ")"} />],
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: true,
-      // Completed: ind * Math.random(),
-      // Start: "May 2017",
+      Completed: ind,
+      Start: "May 2017",
     })
   );
 
@@ -91,8 +92,8 @@ function getUserData() {
       Name: [<UserLink userName={"Volunteer " + (ind + 1) + " (" + name + ")"} />],
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
-      // Completed: ind * Math.random(),
-      // Start: "May 2017",
+      Completed: ind,
+      Start: "May 2017",
     })
   );
   return users;
@@ -135,6 +136,22 @@ const headers = [
 function App() {
   const [isAuth, setIsAuth] = useState(false);
 
+  // Returns the width of the window
+  function getWindowWidth() {
+    const { innerWidth: width } = window;
+    return width;
+  }
+  const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+
+  // Updates the windowWidth variable if the window is resized
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(getWindowWidth());
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <Routes>
       {/* Log In Page */}
@@ -171,7 +188,13 @@ function App() {
               exact
               key={name}
               path={MANAGE_ROUTES[ind]}
-              element={<UserList tableHeaders={headers} userData={userData} />}
+              element={
+                windowWidth > 550 ? (
+                  <UserList tableHeaders={headers} userData={userData} />
+                ) : (
+                  <UserCardList userData={userData} />
+                )
+              }
             />
           ))}
         </Route>

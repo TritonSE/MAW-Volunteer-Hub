@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/UserLink.css";
 
+// Handles any actions that should take place when a user's name in the userlist is clicked.
 function UserLink({ userName }) {
   const handleNameClicked = () => {
     alert(userName + " was clicked");
