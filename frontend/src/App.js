@@ -18,9 +18,10 @@ import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
 
 import UserList from "./components/UserList";
-import UserLink from "./components/UserLink";
 import UserCardList from "./components/UserCardList";
 import AssignBtn from "./components/AssignBtn";
+
+import "./App.css";
 
 function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
@@ -77,8 +78,7 @@ function getUserData() {
 
   adminNames.map((name, ind) =>
     users.push({
-      NameString: "Admin " + (ind + 1) + " (" + name + ")",
-      Name: [<UserLink userName={"Admin " + (ind + 1) + " (" + name + ")"} />],
+      Name: "Admin " + (ind + 1) + " (" + name + ")",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: true,
       Completed: ind,
@@ -88,8 +88,7 @@ function getUserData() {
 
   volunteerNames.map((name, ind) =>
     users.push({
-      NameString: "Volunteer " + (ind + 1) + " (" + name + ")",
-      Name: [<UserLink userName={"Volunteer " + (ind + 1) + " (" + name + ")"} />],
+      Name: "Volunteer " + (ind + 1) + " (" + name + ")",
       Roles: [<ButtonContainer btnLabels={["Allow Access"]} />],
       Admin: false,
       Completed: ind,
@@ -105,6 +104,11 @@ const headers = [
   {
     Header: "Name",
     accessor: "Name",
+    Cell: (e) => (
+      <a className="user_link" href="/">
+        {e.value}
+      </a>
+    ),
   },
   // Replace the following three rows with the commented out rows for the full table
   {
