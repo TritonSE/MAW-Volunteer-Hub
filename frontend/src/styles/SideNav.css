@@ -2,7 +2,8 @@
   display: flex;
   flex-direction: row;
   background-color: white;
-  height: 100vh;
+  /* height: 100vh; */
+  height: 89vh;
 }
 
 .side_nav_buttons {
@@ -10,7 +11,8 @@
   flex-direction: column;
   position: relative;
   align-items: center;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  height: 89vh;
   background-color: white;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
 }
@@ -55,6 +57,12 @@
 
 .side_nav_display {
   width: calc(100vw - 190px);
+}
+
+@media only screen and (max-width: 1400px) {
+  .side_nav_links {
+    width: 175px;
+  }
 }
 
 @media only screen and (max-width: 550px) {
