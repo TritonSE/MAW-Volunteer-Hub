@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   background-color: white;
-  /* height: 100vh; */
   height: 89vh;
 }
 
@@ -11,7 +10,6 @@
   flex-direction: column;
   position: relative;
   align-items: center;
-  /* min-height: 100vh; */
   height: 89vh;
   background-color: white;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
@@ -74,6 +72,7 @@
     display: flex;
     flex-direction: row;
     min-height: 62px;
+    max-height: 63px;
     background: var(--blue-gradient);
     box-shadow: none;
   }

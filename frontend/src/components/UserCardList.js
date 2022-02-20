@@ -2,10 +2,21 @@ import React, { useState } from "react";
 import "../styles/UserCardList.css";
 
 function UserCard({ user }) {
+  const handleNameClick = () => {
+    alert(user.Name + " was clicked");
+  };
+
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
-        <div className="card_item_top">{user.Name}</div>
+        <button
+          className="card_item_top"
+          aria-label="user_profile"
+          type="button"
+          onClick={() => handleNameClick()}
+        >
+          {user.Name}
+        </button>
         <div className="card_item_bottom">Assignments Completed: {user.Completed}</div>
       </div>
       <div className="card_col">
@@ -23,7 +34,7 @@ function UserCardList({ userData }) {
     let isAdmin = false;
 
     for (let i = 0; i < userData.length; i++) {
-      if (userData[i].NameString === userName) {
+      if (userData[i].Name === userName) {
         isAdmin = userData[i].Admin;
       }
     }
@@ -72,7 +83,7 @@ function UserCardList({ userData }) {
       </div>
       <div className="card_list">
         {userData.map((user) =>
-          separateAdmin(user.NameString) ? <UserCard user={user} key={Math.random()} /> : null
+          separateAdmin(user.Name) ? <UserCard user={user} key={Math.random()} /> : null
         )}
       </div>
     </div>

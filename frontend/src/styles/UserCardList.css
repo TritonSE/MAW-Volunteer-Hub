@@ -5,6 +5,11 @@
   align-items: center;
 }
 
+.card_list {
+  height: calc(100vh - 250px);
+  overflow: scroll;
+}
+
 .user_toggle {
   display: flex;
   flex-direction: row;
@@ -82,9 +87,16 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  border: 0px;
+  background: transparent;
+  font-size: 20px;
 
-  width: 150px;
+  width: 200px;
   min-height: 35px;
+}
+
+.card_item_top:hover {
+  cursor: pointer;
 }
 
 .card_item_bottom {
@@ -95,6 +107,6 @@
   margin-top: 10px;
   margin-bottom: 10px;
 
-  font-size: 12px;
+  font-size: 14px;
   line-height: 14px;
 }
