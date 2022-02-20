@@ -27,9 +27,45 @@ function UserCard({ user }) {
   );
 }
 
-function UserCardList({ userData }) {
-  const [showAdmin, setShowAdmin] = useState(false);
+function UserCardSearch({ search }) {
+  const [searchVal, setSearchVal] = useState("");
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      search(searchVal);
+    }
+  };
+  return (
+    <div className="mobile_user_search_bar">
+      <input
+        className="mobile_user_search_input"
+        value={searchVal || ""}
+        onChange={(e) => {
+          setSearchVal(e.target.value);
+        }}
+        onKeyPress={(e) => {
+          handleKeyPress(e);
+        }}
+        placeholder="Search by name"
+      />
+      <button
+        className="user_search_button"
+        type="button"
+        aria-label="Search"
+        onClick={() => {
+          search(searchVal);
+        }}
+      />
+    </div>
+  );
+}
+
+function UserCardList({ userData }) {
+  // TODO: Implement Fuzzy search with Fuse.js
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [searchUsers, setSearchUser] = useState("");
+
+  // Separates admins from volunteers
   const separateAdmin = (userName) => {
     let isAdmin = false;
 
@@ -48,6 +84,20 @@ function UserCardList({ userData }) {
     }
 
     return false;
+  };
+
+  // Determine if a user should be displayed.
+  // Mainly considers the name search variable stored in searchUsers
+  const displayUser = (userName) => {
+    if (searchUsers !== "") {
+      if (separateAdmin(userName) && userName === searchUsers) {
+        return true;
+      }
+
+      return false;
+    }
+
+    return separateAdmin(userName);
   };
 
   const getButtonHeader = (ind) => {
@@ -81,9 +131,10 @@ function UserCardList({ userData }) {
           Deactivated
         </button>
       </div>
+      <UserCardSearch search={setSearchUser} />
       <div className="card_list">
         {userData.map((user) =>
-          separateAdmin(user.Name) ? <UserCard user={user} key={Math.random()} /> : null
+          displayUser(user.Name) ? <UserCard user={user} key={Math.random()} /> : null
         )}
       </div>
     </div>

@@ -6,7 +6,7 @@
 }
 
 .card_list {
-  height: calc(100vh - 250px);
+  height: calc(100vh - 300px);
   overflow: scroll;
 }
 
@@ -109,4 +109,19 @@
 
   font-size: 14px;
   line-height: 14px;
+}
+
+.mobile_user_search_bar {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.mobile_user_search_input {
+  position: relative;
+  left: -45px;
+  border-radius: 3px 0px 0px 3px;
+  border-width: 1px;
+  padding-left: 5px;
 }
