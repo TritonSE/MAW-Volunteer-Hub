@@ -28,6 +28,7 @@
 
 .mobileSearchBarComponent {
   align-self: center;
+  z-index: 1000;
 }
 
 .dropdown-button-mobile {
