@@ -5,15 +5,6 @@ const router = express.Router();
 
 const UserModel = require("../models/UserModel");
 const { idOfCurrentUser } = require("../util/userUtil");
-// temporary secure route, accessed with /users/
-
-router.get("/secure", (req, res, next) =>
-  res.json({
-    message: "You made it to the secure route",
-    user: req.user,
-    token: req.query.secret_token,
-  })
-);
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
