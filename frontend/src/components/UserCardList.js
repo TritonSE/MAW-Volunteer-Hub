@@ -90,7 +90,7 @@ function UserCardList({ userData }) {
   // Mainly considers the name search variable stored in searchUsers
   const displayUser = (userName) => {
     if (searchUsers !== "") {
-      if (separateAdmin(userName) && userName === searchUsers) {
+      if (separateAdmin(userName) && userName.toLowerCase().includes(searchUsers.toLowerCase())) {
         return true;
       }
 
