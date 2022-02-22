@@ -110,39 +110,25 @@ router.put("/edit/:id", async (req, res, next) => {
   // we only want the user to be able to update these pieces of their profile
   const sanitizedBody = {};
   if (req.body.name) sanitizedBody.name = req.body.name;
-  if (req.body.email) {
-    // email cannot be the same as anyone elses besides current user's
-    try {
-      // check if there exists a user with this email, fail if the user found is not the user being changed
-      const user = await UserModel.findOne({ email: req.body.email });
-      const foundId = user?._id;
-      const settingId = req.params.id;
-      if (user && foundId + "" !== settingId) {
-        res.status(400).json("Invalid email, this email has already been taken");
-        return;
-      }
-    } catch (err) {
-      next(err);
-      return;
-    }
-    sanitizedBody.email = req.body.email;
-  }
+  if (req.body.email) sanitizedBody.email = req.body.email;
   if (req.body.profilePicture) sanitizedBody.profilePicture = req.body.profilePicture;
 
   // function that updates user info based on sanitized body
   const updateInfo = () => {
     try {
-      UserModel.findByIdAndUpdate(
-        { _id: req.params.id },
-        { $set: sanitizedBody },
-        { new: true }
-      ).then((user) => {
-        if (user) {
-          res.status(200).json(user);
-        } else {
-          res.status(400).send();
-        }
-      });
+      UserModel.findByIdAndUpdate({ _id: req.params.id }, { $set: sanitizedBody }, { new: true })
+        .then((user) => {
+          if (user) {
+            res.status(200).json(user);
+          } else {
+            res.status(400).send();
+          }
+        })
+        .catch((err) => {
+          if (err.keyPattern.email === 1) {
+            res.status(400).json("This email is already taken");
+          }
+        });
     } catch (err) {
       next(err);
     }
