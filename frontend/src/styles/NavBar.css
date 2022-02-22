@@ -11,7 +11,7 @@
 
 .navlist {
   margin: 0;
-  overflow: scroll;
+  overflow: hidden;
   padding: 0;
   list-style-type: none;
   display: flex;
@@ -55,6 +55,10 @@
 
 /* Search and profile styles */
 
+.desktopSearchBarComponent {
+  display: flex;
+}
+
 .search-and-profile {
   display: flex;
   flex-direction: row;
@@ -62,7 +66,7 @@
 
 .profile-container {
   width: 59px;
-  margin-left: 15vw;
+  margin-left: 40px;
 }
 
 .profile-icon {
@@ -138,7 +142,7 @@
   align-items: center;
 }
 
-/* Media queries for responsive display */
+/* Media queries for responsive display desktop/mobile */
 
 /* 
     Breakpoint 1: 795px
@@ -147,5 +151,29 @@
 @media only screen and (max-width: 795px) {
   .pages-container {
     display: none;
+  }
+  .profile-container {
+    display: none;
+  }
+  .profile-dropdown,
+  .profile-dropdown-overlay {
+    display: none;
+  }
+}
+
+/* For navbar mobile (spacing) */
+@media only screen and (max-width: 490px) {
+  .desktopSearchBarComponent {
+    display: none;
+  }
+  .navlist {
+    justify-content: unset;
+    flex: 1;
+  }
+  .logo-container {
+    display: none;
+  }
+  .search-and-profile {
+    flex: 1;
   }
 }
