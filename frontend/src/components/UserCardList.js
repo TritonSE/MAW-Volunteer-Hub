@@ -36,26 +36,28 @@ function UserCardSearch({ search }) {
     }
   };
   return (
-    <div className="mobile_user_search_bar">
-      <input
-        className="mobile_user_search_input"
-        value={searchVal || ""}
-        onChange={(e) => {
-          setSearchVal(e.target.value);
-        }}
-        onKeyPress={(e) => {
-          handleKeyPress(e);
-        }}
-        placeholder="Search by name"
-      />
-      <button
-        className="user_search_button"
-        type="button"
-        aria-label="Search"
-        onClick={() => {
-          search(searchVal);
-        }}
-      />
+    <div className="search_bar_container">
+      <div className="mobile_user_search_bar">
+        <input
+          className="mobile_user_search_input"
+          value={searchVal || ""}
+          onChange={(e) => {
+            setSearchVal(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            handleKeyPress(e);
+          }}
+          placeholder="Search by name"
+        />
+        <button
+          className="user_search_button"
+          type="button"
+          aria-label="Search"
+          onClick={() => {
+            search(searchVal);
+          }}
+        />
+      </div>
     </div>
   );
 }

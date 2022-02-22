@@ -12,7 +12,6 @@
 
 .user_toggle {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   width: calc(100vw - 70px);
   height: 40px;
@@ -56,10 +55,9 @@
 
 .user_card {
   display: flex;
-  flex-direction: row;
   justify-content: space-evenly;
 
-  width: calc(100vw - 30px);
+  width: calc(100vw - 50px);
   height: 65px;
   margin-bottom: 10px;
   padding-top: 20px;
@@ -113,15 +111,42 @@
 
 .mobile_user_search_bar {
   display: flex;
-  flex-direction: row;
   margin-top: 10px;
   margin-bottom: 15px;
 }
 
 .mobile_user_search_input {
-  position: relative;
-  left: -45px;
   border-radius: 3px 0px 0px 3px;
   border-width: 1px;
   padding-left: 5px;
+  width: 300px;
+  margin-left: 50px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+}
+
+.mobile_user_search_input:focus {
+  font-weight: normal;
+  border: 3px lightblue;
+}
+
+.search_bar_container {
+  display: flex;
+  justify-content: center;
+  width: 80vw;
+}
+
+@media only screen and (max-width: 476px) {
+  .card_item_top {
+    font-size: 18px;
+
+    width: 150px;
+    min-height: 35px;
+  }
+
+  .card_item_bottom {
+    font-size: 12px;
+  }
 }
