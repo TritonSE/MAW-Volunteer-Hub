@@ -9,14 +9,17 @@ const { idOfCurrentUser } = require("../util/userUtil");
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
     res.status(400).send("Invalid user id passed into user route");
+    return true;
   }
+  return false;
 }
 // if current user is not an admin, then sends a 401 unauthorized
-async function checkCurrentUserIsAdmin(req, res, next) {
+function checkCurrentUserIsAdmin(req, res, next) {
   const currentUserId = idOfCurrentUser(req);
   UserModel.findById(currentUserId, { admin: 1 }, (err, user) => {
     if (err) {
       next(err);
+      return;
     }
 
     if (!user) {
@@ -30,13 +33,10 @@ async function checkCurrentUserIsAdmin(req, res, next) {
 }
 
 router.get("/users", (req, res, next) => {
-  // console.log(req.query?.admin);
   if (req.query.admin) {
     try {
       UserModel.find({ admin: req.query.admin }).then((users) => res.status(200).json({ users })); // return users found
     } catch (e) {
-      console.log("error");
-      console.log(e);
       next(e);
     }
   } else {
@@ -48,7 +48,9 @@ router.get("/users", (req, res, next) => {
 // Get user by id - Will return an object with only the user profile information
 router.get("/:id", (req, res, next) => {
   // check if there is an id param and that it is a valid id
-  validateIdParam(req, res);
+  if (validateIdParam(req, res)) {
+    return;
+  }
 
   UserModel.findById(
     req.params.id,
@@ -70,7 +72,9 @@ router.get("/:id", (req, res, next) => {
 
 // finds user by id then verifies user
 router.put("/verify/:id", (req, res, next) => {
-  validateIdParam(req, res);
+  if (validateIdParam(req, res)) {
+    return;
+  }
 
   checkCurrentUserIsAdmin(req, res, () => {
     UserModel.findByIdAndUpdate(req.params.id, { verified: true })
@@ -83,7 +87,9 @@ router.put("/verify/:id", (req, res, next) => {
 
 // finds user by id then updates user to admin (can only be done byan admin)
 router.put("/promoteadmin/:id", async (req, res, next) => {
-  validateIdParam(req);
+  if (validateIdParam(req, res)) {
+    return;
+  }
 
   checkCurrentUserIsAdmin(req, res, () => {
     UserModel.findByIdAndUpdate(req.params.id, { admin: true })
@@ -97,20 +103,40 @@ router.put("/promoteadmin/:id", async (req, res, next) => {
 // edits user information
 // can only be done by an admin or a logged-in user if they are the same as the user who's info is being editted)
 router.put("/edit/:id", async (req, res, next) => {
-  validateIdParam(req);
+  if (validateIdParam(req, res)) {
+    return;
+  }
   const userId = idOfCurrentUser(req);
-
   // we only want the user to be able to update these pieces of their profile
-  const sanitizedBody = {
-    name: req.body.name,
-    email: req.body.email,
-    profilePicture: req.body.profilePicture,
-  };
+  const sanitizedBody = {};
+  if (req.body.name) sanitizedBody.name = req.body.name;
+  if (req.body.email) {
+    // email cannot be the same as anyone elses besides current user's
+    try {
+      // check if there exists a user with this email, fail if the user found is not the user being changed
+      const user = await UserModel.findOne({ email: req.body.email });
+      const foundId = user?._id;
+      const settingId = req.params.id;
+      if (user && foundId + "" !== settingId) {
+        res.status(400).json("Invalid email, this email has already been taken");
+        return;
+      }
+    } catch (err) {
+      next(err);
+      return;
+    }
+    sanitizedBody.email = req.body.email;
+  }
+  if (req.body.profilePicture) sanitizedBody.profilePicture = req.body.profilePicture;
 
   // function that updates user info based on sanitized body
   const updateInfo = () => {
     try {
-      UserModel.findByIdAndUpdate({ _id: req.params.id }, { $set: sanitizedBody }).then((user) => {
+      UserModel.findByIdAndUpdate(
+        { _id: req.params.id },
+        { $set: sanitizedBody },
+        { new: true }
+      ).then((user) => {
         if (user) {
           res.status(200).json(user);
         } else {
