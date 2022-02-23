@@ -18,6 +18,7 @@
   box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
   padding-left: 40px;
   padding-right: 40px;
+  padding-top: 10px;
   padding-bottom: 10px;
   margin-bottom: 10px;
 }
@@ -141,6 +142,8 @@
 @media only screen and (max-width: 476px) {
   .card_item_top {
     font-size: 18px;
+    white-space: nowrap;
+    overflow: scroll;
 
     width: 150px;
     min-height: 35px;

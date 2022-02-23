@@ -63,7 +63,6 @@ function UserCardSearch({ search }) {
 }
 
 function UserCardList({ userData }) {
-  // TODO: Implement Fuzzy search with Fuse.js
   const [showAdmin, setShowAdmin] = useState(false);
   const [searchUsers, setSearchUser] = useState("");
 
