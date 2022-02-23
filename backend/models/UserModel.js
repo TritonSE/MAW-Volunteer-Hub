@@ -27,11 +27,7 @@ const UserSchema = new Schema({
     default: false,
   },
   // to make sure the user is a part of make-a-wish
-  firstName: {
-    type: String,
-    //  required : true
-  },
-  lastName: {
+  name: {
     type: String,
     //  required : true
   },
@@ -46,6 +42,7 @@ const UserSchema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   admin: {
     type: Boolean,
@@ -63,6 +60,10 @@ const UserSchema = new Schema({
   },
   roles: {
     type: [String],
+    // required: true
+  },
+  joinDate: {
+    type: Date,
     // required: true
   },
 });
