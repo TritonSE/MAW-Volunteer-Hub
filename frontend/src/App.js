@@ -16,6 +16,7 @@ import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
+import FileUploadTestPage from "./pages/FileUploadTestPage";
 
 import UserList from "./components/UserList";
 import UserCardList from "./components/UserCardList";
@@ -236,7 +237,7 @@ function App() {
           path="*"
           element={
             <PageLayout>
-              <Custom404Page />
+              <FileUploadTestPage />
             </PageLayout>
           }
         />

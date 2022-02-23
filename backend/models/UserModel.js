@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-
-mongoose.connect("mongodb://127.0.0.1:27017/MAWDB");
 // const uniqueValidator = require('mongoose-unique-validator');
 const bcrypt = require("bcrypt");
+
+// mongoose.connect(config.db.uri);
 
 const { Schema } = mongoose;
 
