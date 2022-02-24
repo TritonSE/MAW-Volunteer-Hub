@@ -5,10 +5,10 @@
 import React from "react";
 import NavBar from "./NavBar";
 
-export default function PageLayout({ children }) {
+export default function PageLayout({ isAdmin, children }) {
   return (
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
-      <NavBar />
+      <NavBar isAdmin={isAdmin} />
       {children}
     </div>
   );

@@ -52,11 +52,11 @@ async function api_validtoken() {
   if (!token_get()) return false;
 
   const res = await api_call(API_ENDPOINTS.TOKEN);
-  return res && res.valid;
+  return res;
 }
 async function api_login({ email, password }) {
   const res = await api_call(API_ENDPOINTS.LOGIN, { email, password });
-  return (res ?? {}).token;
+  return res;
 }
 
 async function api_signup({ name, email, password }) {

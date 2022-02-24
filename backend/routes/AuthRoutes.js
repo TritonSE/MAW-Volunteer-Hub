@@ -4,6 +4,8 @@ const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+const UserModel = require("../models/UserModel");
+
 const router = express.Router();
 
 // Sign up route
@@ -33,7 +35,7 @@ router.post("/login", async (req, res, next) => {
         const body = { _id: user._id, email: user.email }; // sign is admin into this body
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
-        return res.json({ token });
+        return res.json({ token, admin: user.admin });
       });
     } catch (error) {
       return next(error);
@@ -42,8 +44,11 @@ router.post("/login", async (req, res, next) => {
 });
 
 // Token validation route
-router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) =>
-  res.json({ valid: Boolean(req.user) })
-);
+router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {
+  UserModel.findById((req.user ?? {})._id, (err, user) => {
+    if (err) res.json({ valid: false, admin: false });
+    else res.json({ valid: Boolean(req.user), admin: user.admin });
+  });
+});
 
 module.exports = router;

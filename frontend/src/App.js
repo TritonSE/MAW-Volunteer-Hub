@@ -9,21 +9,39 @@ import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
-import FileUploadTestPage from "./pages/FileUploadTestPage";
 
-function ProtectedRoute({ isAuth, setIsAuth }) {
+function ProtectedRoute({
+  isAuth,
+  setIsAuth,
+  isAdmin,
+  setIsAdmin,
+
+  needsAdmin = false,
+  dest = SITE_PAGES.LOGIN,
+  children = null,
+  useChildren = false,
+  doCheck = true,
+} = {}) {
   const [hasFired, setHasFired] = useState(false);
 
-  useEffect(async () => {
-    setIsAuth(await api_validtoken());
-    setHasFired(true);
-  }, []);
+  if (doCheck) {
+    useEffect(async () => {
+      const res = (await api_validtoken()) ?? { valid: false, admin: false };
+      setIsAuth(res.valid);
+      setIsAdmin(res.admin);
+      setHasFired(true);
+    }, []);
+  } else {
+    useEffect(() => {
+      setHasFired(true);
+    }, [isAuth, isAdmin]);
+  }
 
-  if (!isAuth) {
-    if (hasFired) return <Navigate to={SITE_PAGES.LOGIN} />;
+  if (!isAuth || (!isAdmin && needsAdmin)) {
+    if (hasFired) return <Navigate to={dest} />;
     return null;
   }
-  return <Outlet />;
+  return useChildren ? children : <Outlet />;
 }
 
 function SignoutHelper({ setIsAuth }) {
@@ -37,19 +55,35 @@ function SignoutHelper({ setIsAuth }) {
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   return (
     <Routes>
       {/* Log In Page */}
-      <Route exact path={SITE_PAGES.LOGIN} element={<LoginPage setIsAuth={setIsAuth} />} />
+      <Route
+        exact
+        path={SITE_PAGES.LOGIN}
+        element={<LoginPage setIsAuth={setIsAuth} setIsAdmin={setIsAdmin} />}
+      />
 
-      <Route exact path="/" element={<ProtectedRoute isAuth={isAuth} setIsAuth={setIsAuth} />}>
+      <Route
+        exact
+        path="/"
+        element={
+          <ProtectedRoute
+            isAuth={isAuth}
+            setIsAuth={setIsAuth}
+            isAdmin={isAdmin}
+            setIsAdmin={setIsAdmin}
+          />
+        }
+      >
         {/* Profile Page */}
         <Route
           exact
           path={SITE_PAGES.PROFILE}
           element={
-            <PageLayout>
+            <PageLayout isAdmin={isAdmin}>
               <ProfilePage />
             </PageLayout>
           }
@@ -59,9 +93,18 @@ function App() {
           exact
           path={SITE_PAGES.MANAGE}
           element={
-            <PageLayout>
-              <ManagePage />
-            </PageLayout>
+            <ProtectedRoute
+              isAuth={isAuth}
+              isAdmin={isAdmin}
+              needsAdmin
+              dest={SITE_PAGES.WISH_GRANTING}
+              useChildren
+              doCheck={false}
+            >
+              <PageLayout isAdmin={isAdmin}>
+                <ManagePage />
+              </PageLayout>
+            </ProtectedRoute>
           }
         />
         {/* Redirect to Manage Page, only when authenticated */}
@@ -70,7 +113,7 @@ function App() {
         <Route
           path={SITE_PAGES.WISH_GRANTING}
           element={
-            <PageLayout>
+            <PageLayout isAdmin={isAdmin}>
               <WishGrantingPage />
             </PageLayout>
           }
@@ -85,7 +128,7 @@ function App() {
               exact
               key={name}
               path={SIDENAV_ROUTES[ind]}
-              element={<WishStep stepName={`Step ${ind + 1}: ${name}`} />}
+              element={<WishStep index={ind + 1} stepName={name} />}
             />
           ))}
         </Route>
@@ -97,8 +140,8 @@ function App() {
         <Route
           path="*"
           element={
-            <PageLayout>
-              <FileUploadTestPage />
+            <PageLayout isAdmin={isAdmin}>
+              <Custom404Page />
             </PageLayout>
           }
         />
