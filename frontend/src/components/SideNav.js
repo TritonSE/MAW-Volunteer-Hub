@@ -68,7 +68,9 @@ function SideNav({ tabs, getContext, manage }) {
             onClick={() => setSelected(tab_id)}
           >
             {tab.tab_name}
-            {manage && tab_id === compute_route_tab() ? <div className="arrow" /> : null}
+            {manage && tab_id === compute_route_tab() && windowWidth < 550 ? (
+              <div className="arrow" />
+            ) : null}
           </Link>
         ))}
       </ScrollContainer>
