@@ -9,7 +9,15 @@ import FileStructure from "./FileStructure";
 Modal.setAppElement(document.getElementById("#root"));
 
 /*
-    Search component, which opens a search modal and allows searching of files by keyword. 
+    Search component, which allows searching of files by keyword and opens up a modal with the 
+    results. Component is displayed under different conditions for the mobile & desktop view.
+
+    -showResults: if the modal is currently active in the site
+    -setShowResults: toggle the modal
+    -input: the current user input
+    -setInput: set the user input when it changes
+    -filteredFiles: the current filtered files
+    -setFilteredFiles: set the filtered files when it changes 
 */
 
 function Search() {
@@ -66,6 +74,10 @@ function Search() {
     setFilteredFiles(arr);
   }, [structure]);
 
+  const handleClose = () => {
+    setShowResults((prevState) => !prevState);
+  };
+
   return (
     <>
       <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -74,27 +86,22 @@ function Search() {
           placeholder="Search all files..."
           onChange={(e) => setInput(e.target.value)}
         />
-        <button
-          className="search-button"
-          type="submit"
-          onClick={() => setShowResults((prevState) => !prevState)}
-        >
+        <button className="search-button" type="submit" onClick={() => setShowResults(true)}>
           <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
         </button>
       </form>
 
+      {/* Pop-up search modal with either (a) no results (b) filtered files or (c) all files,
+      displaying the files using the FileEntry component
+      */}
       <Modal
         isOpen={showResults}
-        onRequestClose={() => setShowResults((prevState) => !prevState)}
+        onRequestClose={handleClose}
         className="search-results"
         overlayClassName="search-results-overlay"
       >
         <div className="results-container">
-          <button
-            className="close-btn"
-            onClick={() => setShowResults((prevState) => !prevState)}
-            type="button"
-          >
+          <button className="close-btn" onClick={handleClose} type="button">
             <img
               src="/img/search_exit_icon.svg"
               alt="Close Search Results"

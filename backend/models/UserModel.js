@@ -25,13 +25,9 @@ const UserSchema = new Schema({
     default: false,
   },
   // to make sure the user is a part of make-a-wish
-  firstName: {
+  name: {
     type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
+    // required: true,
   },
   profilePicture: {
     type: String,
@@ -55,6 +51,10 @@ const UserSchema = new Schema({
   },
   roles: {
     type: [String],
+  },
+  joinDate: {
+    type: Date,
+    // required: true
   },
 });
 

@@ -1,23 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
-import { SITE_PAGES, SIDENAV_ROUTES } from "../constants/links";
+import { SITE_PAGES } from "../constants/links";
+import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
-
-// Pages to display in the NavBar. If adding more pages, adjust Page Links media query in NavBar.css
-const PAGES = {
-  "Wish Granting": `${SITE_PAGES.WISH_GRANTING}/${SIDENAV_ROUTES[0]}`,
-  Manage: SITE_PAGES.MANAGE,
-};
+import NavMenuMobile from "./NavMenuMobile";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.
 */
 function NavBar() {
+  // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
+
+  /* 
+    States for the search bar 
+    -showResults: whether the search results modal is displayed or not
+    -input: text that user inputs into the search bar
+    -filterdFiles: list of files filtered by input
+
+    Storing states in main NavBar component since there are 2 instances of Search:
+    1 for the desktop view and 1 for the mobile view
+
+    Have to pass these states into the Search in this file, which is the desktop search instance  &
+    NavMenuMobile, which contains the mobile Search instance so that the Search Bar input, results,
+    and modal are consistent & responsive across both views.
+  */
+  const [showResults, setShowResults] = useState(false);
+  const [input, setInput] = useState("");
+  const [filteredFiles, setFilteredFiles] = useState([]);
+
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
@@ -54,9 +69,28 @@ function NavBar() {
           </div>
         </li>
 
-        {/* Container for search bar and account menu */}
+        {/* Container for search bar and account menu, and the mobile NavBar display */}
         <li className="search-and-profile">
-          <Search />
+          <div className="desktopSearchBarComponent">
+            <Search
+              showResults={showResults}
+              setShowResults={setShowResults}
+              input={input}
+              setInput={setInput}
+              filteredFiles={filteredFiles}
+              setFilteredFiles={setFilteredFiles}
+            />
+          </div>
+          <NavMenuMobile
+            showResults={showResults}
+            setShowResults={setShowResults}
+            input={input}
+            setInput={setInput}
+            filteredFiles={filteredFiles}
+            setFilteredFiles={setFilteredFiles}
+            desktopDropdown={dropdown}
+            setDesktopDropdown={setDropdown}
+          />
 
           <div className="profile-container">
             <div className="profile-icon">
