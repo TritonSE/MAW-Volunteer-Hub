@@ -14,7 +14,7 @@ function token_get() {
 }
 function token_set(token, remember = true) {
   if (remember) localStorage.setItem("token", token);
-  else sessionStorage.setItem("token", true);
+  else sessionStorage.setItem("token", token);
 }
 function token_clear() {
   sessionStorage.removeItem("token");
