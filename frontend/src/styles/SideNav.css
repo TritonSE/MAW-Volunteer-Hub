@@ -56,6 +56,7 @@
 
 .side_nav_display {
   width: calc(100vw - 190px);
+  overflow: scroll;
 }
 
 .arrow {
