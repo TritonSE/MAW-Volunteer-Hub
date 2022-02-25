@@ -10,7 +10,7 @@ let ft = import("file-type").then((module) => {
 const { uploadFile, getFileStream, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
-const validate = require("../util/ParamValidator");
+const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 const upload = multer({ dest: "server_uploads/" });
@@ -34,7 +34,7 @@ router.post("/upload", upload.single("file"), validate(["name", "category"]), (r
       return category.save();
     })
     .then(() => res.json({ success: true }))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.get("/display/:id", validate([], ["id"]), (req, res) => {
@@ -49,7 +49,7 @@ router.get("/display/:id", validate([], ["id"]), (req, res) => {
       else res.set("Content-Type", mime.lookup(file.name));
       stream.pipe(res);
     })
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
@@ -71,7 +71,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
       return cat.save();
     })
     .then(() => res.json({ success: true }))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.patch(
@@ -101,20 +101,20 @@ router.patch(
         return category.save();
       })
       .then(() => res.json({ success: true }))
-      .catch((e) => res.status(500).json({ error: e.toString() }));
+      .catch(errorHandler(res));
   }
 );
 
 router.get("/search/:name", validate([], ["name"]), (req, res) => {
   File.find({ name: req.params.name })
     .then((file) => res.json(file))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.get("/all", (_req, res) => {
   File.find()
     .then((file) => res.json(file))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 module.exports = router;
