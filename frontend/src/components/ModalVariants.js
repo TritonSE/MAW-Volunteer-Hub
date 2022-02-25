@@ -83,7 +83,7 @@ function ModalVariants({
       action_button: {
         title: "Add",
       },
-      on_submit: async (args) => api_category_create(args.name, categoryParent),
+      on_submit: async (args) => api_category_create(args.name, args.categoryParent),
     },
     edit_category: {
       title: "Edit Category",
@@ -161,6 +161,7 @@ function ModalVariants({
                 name,
                 activeListing,
                 fileContents,
+                categoryParent,
               });
               onClose();
             }
