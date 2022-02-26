@@ -56,7 +56,6 @@
 
 .side_nav_display {
   width: calc(100vw - 190px);
-  overflow: scroll;
 }
 
 .arrow {
@@ -73,7 +72,7 @@
   }
 }
 
-@media only screen and (max-width: 550px) {
+@media only screen and (max-width: 850px) {
   .side_nav_layout {
     flex-direction: column;
   }

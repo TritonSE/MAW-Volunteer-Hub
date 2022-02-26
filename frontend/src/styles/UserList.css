@@ -1,7 +1,7 @@
 /* Styles taken from Figma */
 tbody {
   display: block;
-  height: calc(100vh - 360px);
+  height: calc(100vh - 280px);
   overflow-y: scroll;
 }
 
@@ -14,10 +14,11 @@ tbody tr {
 .user_list_layout {
   display: flex;
   flex-direction: column;
+  overflow: scroll;
 }
 
 .people_table {
-  height: calc(100vh - 360px);
+  height: calc(100vh - 280px);
 
   border-radius: 15px;
   border: 20px solid white;
@@ -189,7 +190,7 @@ tr:nth-child(2n) .people_table_data_end {
   margin: 10px;
 }
 
-@media only screen and (max-width: 890px) {
+@media only screen and (max-width: 1000px) {
   .people_table_controls {
     flex-direction: column;
     align-items: center;
@@ -199,6 +200,18 @@ tr:nth-child(2n) .people_table_data_end {
     /* This is a temporary alignment. Will need to be changed 
        when the category filter bar is added in later versions*/
     padding-left: 125px;
+  }
+
+  tbody,
+  .people_table {
+    height: calc(100vh - 360px);
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  tbody,
+  .people_table {
+    height: calc(100vh - 380px);
   }
 }
 

@@ -10,7 +10,7 @@ function ManagePage() {
 
   return (
     <div>
-      <div style={{ background: "#f7f7f7", overflowX: "auto" }}>
+      <div style={{ background: "#f7f7f7" }}>
         <SideNav tabs={tabs} manage />
       </div>
     </div>

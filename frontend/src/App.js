@@ -194,7 +194,7 @@ function App() {
               key={name}
               path={MANAGE_ROUTES[ind]}
               element={
-                windowWidth > 550 ? (
+                windowWidth > 650 ? (
                   <UserList tableHeaders={headers} userData={userData} />
                 ) : (
                   <UserCardList userData={userData} />
