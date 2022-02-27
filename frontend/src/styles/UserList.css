@@ -1,7 +1,7 @@
 /* Styles taken from Figma */
 tbody {
   display: block;
-  height: calc(100vh - 280px);
+  height: calc(100vh - 300px);
   overflow-y: scroll;
 }
 
@@ -18,7 +18,7 @@ tbody tr {
 }
 
 .people_table {
-  height: calc(100vh - 280px);
+  height: calc(100vh - 300px);
 
   border-radius: 15px;
   border: 20px solid white;
@@ -204,7 +204,7 @@ tr:nth-child(2n) .people_table_data_end {
 
   tbody,
   .people_table {
-    height: calc(100vh - 360px);
+    height: calc(100vh - 340px);
   }
 }
 

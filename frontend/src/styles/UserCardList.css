@@ -7,7 +7,7 @@
 
 .card_list {
   height: calc(100vh - 300px);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .user_toggle {

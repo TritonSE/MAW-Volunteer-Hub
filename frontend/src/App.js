@@ -140,18 +140,12 @@ const headers = [
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
-
-  // Returns the width of the window
-  function getWindowWidth() {
-    const { innerWidth: width } = window;
-    return width;
-  }
-  const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   // Updates the windowWidth variable if the window is resized
   useEffect(() => {
     function handleResize() {
-      setWindowWidth(getWindowWidth());
+      setWindowWidth(window.innerWidth);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

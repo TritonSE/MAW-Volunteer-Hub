@@ -8,7 +8,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
   const [searchVal, setSearchVal] = useState(globalFilter);
   const onChange = useAsyncDebounce((d_value) => {
     setGlobalFilter(d_value || undefined);
-  }, 200);
+  }, 100);
 
   // Allows the enter key to be used to start a search
   const handleKeyPress = (e) => {
@@ -121,13 +121,7 @@ function UserList({ tableHeaders, userData }) {
   // Uses the name of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
   const separateAdmin = (userName) => {
-    let isAdmin = false;
-
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i].Name === userName) {
-        isAdmin = userData[i].Admin;
-      }
-    }
+    const isAdmin = userData.some((user) => user.Name === userName && user.Admin);
 
     if (isAdmin && showAdmin) {
       return true;
@@ -179,7 +173,7 @@ function UserList({ tableHeaders, userData }) {
       <table className="people_table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
+            <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
               {headerGroup.headers.map((column, colIndex) => (
                 <th
                   className={`people_table_header${getColTitle(colIndex)}`}
