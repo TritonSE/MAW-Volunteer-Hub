@@ -123,7 +123,7 @@ function NavMenuMobile({
           </NavLink>
           <NavLink
             className="signout-link-mobile"
-            to={SITE_PAGES.LOGIN}
+            to={SITE_PAGES.SIGNOUT}
             onClick={() => setDesktopDropdown((prevState) => !prevState)}
           >
             <span>Sign Out</span>

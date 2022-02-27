@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 const router = express.Router();
+const upload = multer({ dest: "server_uploads/" });
 
 const UserModel = require("../models/UserModel");
+const { uploadFile, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { idOfCurrentUser } = require("../util/userUtil");
+const { errorHandler } = require("../util/RouteUtils");
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -46,7 +50,7 @@ router.get("/users", (req, res, next) => {
 });
 
 // Get user by id - Will return an object with only the user profile information
-router.get("/:id", (req, res, next) => {
+router.get("/info/:id", (req, res, next) => {
   // check if there is an id param and that it is a valid id
   if (validateIdParam(req, res)) {
     return;
@@ -140,6 +144,47 @@ router.put("/edit/:id", async (req, res, next) => {
   } else {
     checkCurrentUserIsAdmin(req, res, updateInfo);
   }
+});
+
+/**
+ * PROFILE PICTURES
+ */
+router.get("/pfp/:id?", (req, res) => {
+  UserModel.findById(req.params.id ?? req.user._id)
+    .then((user) => {
+      res.set("Content-Type", "image/png");
+      if (!user.profilePicture) {
+        res.write(user.defaultProfilePicture, "binary");
+        res.end(null, "binary");
+      } else {
+        const stream = getFileStream(user.profilePicture);
+        stream.pipe(res);
+      }
+    })
+    .catch(errorHandler(res));
+});
+
+router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
+  // TODO: Validate file, transform it, convert it, etc.
+  //   Also -- this is a bit weird, but it works and
+  //   doesn't have any race conditions.
+  Promise.all([uploadFile(req.file, "pfp/"), UserModel.findById(req.user._id)])
+    .then(([result, user]) =>
+      Promise.all([result, user, user.profilePicture ? deleteFileAWS(user.profilePicture) : null])
+    )
+    .then(([result, user]) =>
+      // TODO: Why doesn't .save() work?  Same as signup, investigate
+      UserModel.updateOne(
+        { email: user.email },
+        {
+          $set: {
+            profilePicture: result.key,
+          },
+        }
+      )
+    )
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res));
 });
 
 module.exports = router;

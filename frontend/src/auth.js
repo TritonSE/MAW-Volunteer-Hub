@@ -4,21 +4,6 @@
 import { API_ENDPOINTS } from "./constants/links";
 
 /**
- * TOKEN UTILITIES
- */
-function token_get() {
-  return sessionStorage.getItem("token") ?? localStorage.getItem("token");
-}
-function token_set(token, remember = false) {
-  if (remember) localStorage.setItem("token", token);
-  else sessionStorage.setItem("token", token);
-}
-function token_clear() {
-  sessionStorage.removeItem("token");
-  localStorage.removeItem("token");
-}
-
-/**
  * GENERAL API CALL UTILS
  */
 async function api_call(
@@ -27,9 +12,7 @@ async function api_call(
 ) {
   const options = {
     method,
-    headers: {
-      Authorization: "bearer " + token_get(),
-    },
+    headers: {},
   };
   if (type === "application/x-www-form-urlencoded") {
     options.headers["Content-Type"] = type;
@@ -52,8 +35,6 @@ async function api_call(
  * TOKEN VALIDATION
  */
 async function api_validtoken() {
-  if (!token_get()) return false;
-
   const res = await api_call(API_ENDPOINTS.TOKEN);
   return res && res.valid;
 }
@@ -61,13 +42,18 @@ async function api_validtoken() {
 /**
  * LOGIN/SIGNUP
  */
-async function api_login({ email, password }) {
-  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
-  return (res ?? {}).token;
+async function api_login({ email, password, remember }) {
+  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } });
+  return (res ?? {}).success;
 }
 
 async function api_signup({ name, email, password }) {
   const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
+  return res && !res.error;
+}
+
+async function api_signout() {
+  const res = await api_call(API_ENDPOINTS.SIGNOUT);
   return res && !res.error;
 }
 
@@ -158,13 +144,23 @@ async function api_category_download(id) {
   return res;
 }
 
+/**
+ * PROFILE PICTURES
+ */
+async function api_pfp_upload(pfp) {
+  const res = await api_call(API_ENDPOINTS.PFP_UPLOAD, {
+    data: { pfp },
+    method: "POST",
+    type: "multipart/form-data",
+  });
+  return res;
+}
+
 export {
-  token_get,
-  token_set,
-  token_clear,
   api_validtoken,
   api_login,
   api_signup,
+  api_signout,
   api_file_upload,
   api_file_display,
   api_file_delete,
@@ -177,4 +173,5 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
+  api_pfp_upload,
 };

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { token_set, api_login, api_signup } from "../auth";
+import { api_login, api_signup } from "../auth";
 import { SITE_PAGES } from "../constants/links";
 import "../index.css";
 import "../styles/LoginPage.css";
@@ -66,10 +66,7 @@ function LoginPage({ setIsAuth }) {
         setSuccessState(success);
         setIsAuth(success);
 
-        if (success) {
-          token_set(res, doRemember);
-          navigate(SITE_PAGES.HOME);
-        }
+        if (success) navigate(SITE_PAGES.HOME);
       } else {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes
@@ -119,6 +116,7 @@ function LoginPage({ setIsAuth }) {
               <input
                 type="checkbox"
                 id="remember"
+                name="remember"
                 checked={doRemember}
                 onChange={(e) => setDoRemember(e.target.checked)}
               />

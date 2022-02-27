@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, createRef } from "react";
 import Modal from "react-modal";
+
+import { API_ENDPOINTS } from "../constants/links";
+import { api_pfp_upload } from "../auth";
 
 import "../styles/ProfilePage.css";
 
@@ -8,6 +11,10 @@ Modal.setAppElement(document.getElementById("root"));
 function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [cacheBreaker, setCacheBreaker] = useState(new Date().getTime());
+
+  // TODO: Refs are never usually required, there's almost always a better way
+  const pfp_ref = createRef();
 
   const user = {
     full_name: "Carly Shay",
@@ -16,15 +23,32 @@ function ProfilePage() {
     profilePicture: "",
   };
 
+  function open_pfp() {
+    pfp_ref.current.click();
+  }
+
+  async function upload_pfp(e) {
+    if (e.target.files.length === 0) return;
+
+    const res = await api_pfp_upload(e.target.files[0]);
+    if (res && res.success) {
+      setCacheBreaker(new Date().getTime());
+    }
+  }
+
   return (
     <div className="profile-page">
       <section className="header-section">
         <div className="profile-image">
           <img
-            src="https://www.pinclipart.com/picdir/big/372-3725108_user-profile-avatar-scalable-vector-graphics-icon-woman.png"
+            key={cacheBreaker}
+            src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
             alt={`${user.full_name}'s Profile`}
           />
-          <button type="button">+</button>
+          <input ref={pfp_ref} className="hidden" type="file" onChange={upload_pfp} hidden />
+          <button type="button" onClick={open_pfp}>
+            +
+          </button>
         </div>
         <div className="profile-header-info">
           <h1>{user.full_name}</h1>
