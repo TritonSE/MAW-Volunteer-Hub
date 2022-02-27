@@ -12,6 +12,7 @@ function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [cacheBreaker, setCacheBreaker] = useState(new Date().getTime());
+  const [opacity, setOpacity] = useState(1);
 
   // TODO: Refs are never usually required, there's almost always a better way
   const pfp_ref = createRef();
@@ -30,9 +31,12 @@ function ProfilePage() {
   async function upload_pfp(e) {
     if (e.target.files.length === 0) return;
 
+    setOpacity(0.5);
+
     const res = await api_pfp_upload(e.target.files[0]);
     if (res && res.success) {
       setCacheBreaker(new Date().getTime());
+      setOpacity(1);
     }
   }
 
@@ -44,6 +48,7 @@ function ProfilePage() {
             key={cacheBreaker}
             src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
             alt={`${user.full_name}'s Profile`}
+            style={{ opacity, transition: "opacity 0.3s" }}
           />
           <input ref={pfp_ref} className="hidden" type="file" onChange={upload_pfp} hidden />
           <button type="button" onClick={open_pfp}>

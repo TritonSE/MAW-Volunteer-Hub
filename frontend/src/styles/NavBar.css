@@ -88,6 +88,7 @@
 .account-icon {
   width: 37px;
   height: 37px;
+  border-radius: 20px;
 }
 
 .arrow-button {

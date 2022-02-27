@@ -25,7 +25,7 @@ const categoryRoutes = require("./routes/CategoryRoutes");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser("TOP_SECRET"));
+app.use(cookieParser(config.auth.cookie_secret));
 
 app.use("/auth", authRoutes); // authentication routes are not JWT protected
 app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes); // all user routes are JWT protected

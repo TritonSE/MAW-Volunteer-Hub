@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
-import { SITE_PAGES } from "../constants/links";
+import { SITE_PAGES, API_ENDPOINTS } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import history from "../history";
@@ -95,7 +95,11 @@ function NavBar() {
           <div className="profile-container">
             <div className="profile-icon">
               <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
-                <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon" />
+                <img
+                  src={`${API_ENDPOINTS.PFP_GET}?${Date.now()}`}
+                  alt="Profile Icon"
+                  className="account-icon"
+                />
               </NavLink>
               <button
                 className="arrow-button"

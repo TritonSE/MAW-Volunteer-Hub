@@ -5,27 +5,30 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/UserModel");
-const { validate } = require("../util/RouteUtils");
+const { validate, errorHandler } = require("../util/RouteUtils");
 const { pfp_generate } = require("../util/ProfilePictures");
 
 const router = express.Router();
 
 // Sign up route
 router.post("/signup", passport.authenticate("signup", { session: false }), (req, res) => {
-  User.updateOne(
-    { email: req.user.email },
+  User.findByIdAndUpdate(
+    req.user._id,
     {
       $set: {
         name: req.body.name,
         defaultProfilePicture: pfp_generate(req.body.name, true),
       },
-    }
-  ).then(() =>
-    res.json({
-      message: "Signup successful",
-      user: req.user,
-    })
-  );
+    },
+    { useFindAndModify: false }
+  )
+    .then(() =>
+      res.json({
+        message: "Signup successful",
+        user: req.user,
+      })
+    )
+    .catch(errorHandler(res, false));
 });
 
 // Log In route

@@ -34,10 +34,13 @@ const validate =
  * A simple error handler that prints the
  *   error to the screen if in development.
  */
-const errorHandler = (res) => (e) => {
-  if (process.env.NODE_ENV === "dev") console.error(e);
-  res.status(500).json({ error: e.toString() });
-};
+const errorHandler =
+  (res, full_error = true) =>
+  (e) => {
+    if (process.env.NODE_ENV === "dev") console.error(e);
+    if (full_error) res.status(500).json({ error: e.toString() });
+    else res.status(401).json({ error: "Access denied" });
+  };
 
 module.exports = {
   validate,

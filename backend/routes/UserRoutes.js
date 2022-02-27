@@ -1,14 +1,24 @@
+const fs = require("fs").promises;
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const im = require("imagemagick");
+const util = require("util");
 
 const router = express.Router();
-const upload = multer({ dest: "server_uploads/" });
 
 const UserModel = require("../models/UserModel");
 const { uploadFile, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { idOfCurrentUser } = require("../util/userUtil");
 const { errorHandler } = require("../util/RouteUtils");
+const { pfp_generate } = require("../util/ProfilePictures");
+const config = require("../config");
+
+const upload = multer({
+  dest: "server_uploads/",
+  fileFilter: (req, file, cb) => cb(null, file.mimetype.indexOf("image") > -1),
+  limits: { fileSize: config.amazons3.max_file_size, files: 1 },
+});
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -154,7 +164,15 @@ router.get("/pfp/:id?", (req, res) => {
     .then((user) => {
       res.set("Content-Type", "image/png");
       if (!user.profilePicture) {
-        res.write(user.defaultProfilePicture, "binary");
+        let buf = user.defaultProfilePicture;
+        if (!buf) {
+          buf = pfp_generate(user.name, true);
+          Object.assign(user, {
+            defaultProfilePicture: buf,
+          });
+          user.save();
+        }
+        res.write(buf, "binary");
         res.end(null, "binary");
       } else {
         const stream = getFileStream(user.profilePicture);
@@ -165,24 +183,38 @@ router.get("/pfp/:id?", (req, res) => {
 });
 
 router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
-  // TODO: Validate file, transform it, convert it, etc.
-  //   Also -- this is a bit weird, but it works and
-  //   doesn't have any race conditions.
-  Promise.all([uploadFile(req.file, "pfp/"), UserModel.findById(req.user._id)])
-    .then(([result, user]) =>
-      Promise.all([result, user, user.profilePicture ? deleteFileAWS(user.profilePicture) : null])
+  util
+    .promisify(im.convert)([
+      req.file.path,
+      "-resize",
+      "400x400^",
+      "-quality",
+      "85",
+      `${req.file.path}.png`,
+    ])
+    .then(() =>
+      Promise.all([
+        UserModel.findById(req.user._id),
+        uploadFile({
+          path: `${req.file.path}.png`,
+          filename: `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+        }),
+      ])
     )
-    .then(([result, user]) =>
-      // TODO: Why doesn't .save() work?  Same as signup, investigate
-      UserModel.updateOne(
-        { email: user.email },
-        {
-          $set: {
-            profilePicture: result.key,
-          },
-        }
-      )
-    )
+    .then(([user, result]) => {
+      const old = user.profilePicture;
+
+      Object.assign(user, {
+        profilePicture: result.key,
+      });
+
+      return Promise.all([
+        user.save(),
+        old ? deleteFileAWS(old) : null,
+        fs.unlink(req.file.path),
+        fs.unlink(`${req.file.path}.png`),
+      ]);
+    })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res));
 });
