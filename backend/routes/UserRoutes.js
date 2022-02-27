@@ -4,12 +4,11 @@ const router = express.Router();
 
 const Buffer = require("buffer/").Buffer;
 
-const url = require("url");
+const bcrypt = require("bcrypt");
 const auth_hdr = require("./auth_header");
 
 const AUTH_HEADER = "authorization";
-const LEGACY_AUTH_SCHEME = "JWT";
-const BEARER_AUTH_SCHEME = "bearer";
+
 
 const UserModel = require("../models/UserModel");
 
@@ -91,6 +90,59 @@ router.put("/AdminbyId", async (req, res, next) => {
       next(err);
     }
   }
+  else{
+    try {
+      throw new Error('non-admin user')
+    } catch (err) {
+      next(err)
+    }
+  }
+});
+
+// finds user by id then deletes user (can only be done by an admin)
+router.delete("/DeleteUser", async (req, res, next) => {
+  const userId = idOfCurrentUser(req);
+  const users = await UserModel.findById(userId).select("admin");
+  const isAdmin = users["admin"];
+
+  if (isAdmin === true) {
+    try {
+      UserModel.deleteOne({ _id: req.query._id }).then((user) => {
+        res.json(user);
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  else{
+    try {
+      throw new Error('non-admin user')
+    } catch (err) {
+      next(err)
+    }
+  }
+});
+
+// Update password route if the user id is the same as the current user's jwt id   
+router.put("/updatePassword", async (req, res, next) => {
+  const userId = idOfCurrentUser(req);
+  const queryPassword = await bcrypt.hash(req.query.password , 10);
+  if (userId === req.query._id) {
+    try {
+      UserModel.findOneAndUpdate({ password: queryPassword }).then((user) => {
+        res.json(user);
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+  else{
+    try {
+      throw new Error('non-admin user')
+    } catch (err) {
+      next(err)
+    }
+  }
 });
 
 // edits user information
@@ -110,6 +162,13 @@ router.put("/edits", async (req, res, next) => {
       });
     } catch (err) {
       next(err);
+    }
+  }
+  else{
+    try {
+      throw new Error('non-admin user')
+    } catch (err) {
+      next(err)
     }
   }
 });
