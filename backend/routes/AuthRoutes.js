@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
-const { pfp_generate } = require("../util/ProfilePictures");
+// const { pfp_generate } = require("../util/ProfilePictures");
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.post("/signup", passport.authenticate("signup", { session: false }), (req
     {
       $set: {
         name: req.body.name,
-        defaultProfilePicture: pfp_generate(req.body.name, true),
+        // defaultProfilePicture: pfp_generate(req.body.name, true),
       },
     },
     { useFindAndModify: false }

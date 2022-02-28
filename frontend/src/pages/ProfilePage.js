@@ -15,6 +15,7 @@ function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
+  const [pfpErrorModalOpen, setPFPErrorModalOpen] = useState(false);
   const [cacheBreaker, setCacheBreaker] = useContext(CacheBreaker);
   const [opacity, setOpacity] = useState(1);
   const [crop, setCrop] = useState({ aspect: 1 });
@@ -39,6 +40,12 @@ function ProfilePage() {
   function prepare_pfp(e) {
     if (e.target.files.length === 0) return;
 
+    if (e.target.files[0].size > 1.6e7) {
+      // 16 MB, same as multer on backend
+      setPFPErrorModalOpen("File is too large, max is 16 MB.");
+      return;
+    }
+
     setFile(e.target.files[0]);
 
     const reader = new FileReader();
@@ -62,10 +69,12 @@ function ProfilePage() {
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
       setCacheBreaker(cacheBreaker + 1);
-      setOpacity(1);
-      setPFPModalOpen(false);
-      setCrop({ aspect: 1 });
+    } else {
+      setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
+    setOpacity(1);
+    setPFPModalOpen(false);
+    setCrop({ aspect: 1 });
   }
 
   return (
@@ -93,7 +102,8 @@ function ProfilePage() {
             }}
             contentLabel="Change profile picture"
           >
-            {/* TODO: This modal overlaps with the searchbar */}
+            {/* TODO: This modal overlaps with the searchbar at small sizes */}
+            <h1 className="modal-title-crop">Crop Profile Picture</h1>
             <ReactCrop
               src={upImg}
               crop={crop}
@@ -109,6 +119,24 @@ function ProfilePage() {
               onClick={do_upload}
             >
               Upload
+            </button>
+          </Modal>
+          <Modal
+            className="profile-page-modal"
+            overlayClassName="profile-page-modal-overlay"
+            isOpen={Boolean(pfpErrorModalOpen)}
+            onRequestClose={() => setPFPErrorModalOpen(false)}
+            contentLabel="Profile picture error"
+          >
+            <h1 className="modal-title-crop">Error:</h1>
+            <span>{pfpErrorModalOpen}</span>
+            <br />
+            <button
+              type="button"
+              className="modal-button button-primary button-nomargin"
+              onClick={() => setPFPErrorModalOpen(false)}
+            >
+              Okay
             </button>
           </Modal>
         </div>
