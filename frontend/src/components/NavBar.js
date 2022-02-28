@@ -43,6 +43,8 @@ function NavBar() {
     []
   );
 
+  // const user = localStorage.getItem("user_id");
+
   return (
     <nav className="container">
       <ul className="navlist">

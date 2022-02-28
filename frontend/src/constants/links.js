@@ -27,6 +27,8 @@ const API_ENDPOINTS = {
   CATEGORY_CREATE: "/category/create",
   CATEGORY_UPDATE: "/category/edit",
   CATEGORY_DOWNLOAD: "/category/download",
+
+  USER: "/user",
 };
 
 const SIDENAV_STEPS = [

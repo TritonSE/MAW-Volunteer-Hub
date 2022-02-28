@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { token_clear, api_validtoken } from "./auth";
+import { token_clear, api_validtoken, token_get } from "./auth";
 import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -46,7 +46,7 @@ function App() {
         {/* Profile Page */}
         <Route
           exact
-          path={SITE_PAGES.PROFILE}
+          path={`${SITE_PAGES.PROFILE}/:id`}
           element={
             <PageLayout>
               <ProfilePage />

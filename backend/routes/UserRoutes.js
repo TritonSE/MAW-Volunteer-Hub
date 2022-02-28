@@ -54,7 +54,7 @@ router.get("/:id", (req, res, next) => {
 
   UserModel.findById(
     req.params.id,
-    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1 },
+    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1, createdAt: 1 },
     (err, user) => {
       if (err) {
         next(err);

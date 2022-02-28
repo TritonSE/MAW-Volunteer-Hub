@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-
+import { useNavigate } from "react-router-dom";
+import { api_user, token_get } from "../auth";
+import { SITE_PAGES } from "../constants/links";
+import history from "../history";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
@@ -9,12 +12,30 @@ function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const user = {
-    full_name: "Carly Shay",
-    email: "carlyshay@gmail.com",
-    join_date: "June 2019",
-    profilePicture: "",
-  };
+  const [user, setUser] = useState({});
+
+  const [active, setActive] = useState(history.location.pathname.split("/profile/")[1]);
+
+  // const navigate = useNavigate();
+
+  async function getUser(id) {
+    const res = await api_user(id);
+    // if (res === null) navigate();
+    return res;
+  }
+
+  useEffect(async () => {
+    const res = await getUser(active);
+    setUser(res);
+  }, []);
+
+  useEffect(
+    () =>
+      history.listen((e) => {
+        setActive(e.location.pathname.split("/profile/")[1]);
+      }),
+    []
+  );
 
   return (
     <div className="profile-page">
@@ -22,13 +43,16 @@ function ProfilePage() {
         <div className="profile-image">
           <img
             src="https://www.pinclipart.com/picdir/big/372-3725108_user-profile-avatar-scalable-vector-graphics-icon-woman.png"
-            alt={`${user.full_name}'s Profile`}
+            alt={`${user.name}'s Profile`}
           />
           <button type="button">+</button>
         </div>
         <div className="profile-header-info">
-          <h1>{user.full_name}</h1>
-          <h2>Joined {user.join_date}</h2>
+          <h1>{user.name}</h1>
+          <h2>
+            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+            {new Date(user.createdAt).getFullYear()}
+          </h2>
           <br />
           <p>{user.email}</p>
         </div>
