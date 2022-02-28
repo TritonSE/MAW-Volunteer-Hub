@@ -13,6 +13,20 @@ const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
   TOKEN: "/auth/token",
+
+  FILE_UPLOAD: "/file/upload",
+  FILE_DISPLAY: "/file/display",
+  FILE_DELETE: "/file/delete",
+  FILE_UPDATE: "/file/update",
+  FILE_SEARCH: "/file/search",
+  FILE_ALL: "/file/all",
+
+  CATEGORY_ALL: "/category/all",
+  CATEGORY_ONE: "/category/one",
+  CATEGORY_DELETE: "/category/delete",
+  CATEGORY_CREATE: "/category/create",
+  CATEGORY_UPDATE: "/category/edit",
+  CATEGORY_DOWNLOAD: "/category/download",
 };
 
 const SIDENAV_STEPS = [

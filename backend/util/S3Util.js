@@ -53,4 +53,13 @@ function deleteFileAWS(fileKey) {
   return s3.deleteObject(fileParams).promise();
 }
 
-module.exports = { uploadFile, deleteFileAWS, getFileStream };
+function Download(fileKey) {
+  const fileParams = {
+    Key: fileKey,
+    Bucket: bucketName,
+  };
+
+  return s3.getObject(fileParams).promise();
+}
+
+module.exports = { uploadFile, deleteFileAWS, getFileStream, Download };
