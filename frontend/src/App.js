@@ -9,7 +9,6 @@ import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
-import FileUploadTestPage from "./pages/FileUploadTestPage";
 
 function ProtectedRoute({ isAuth, setIsAuth }) {
   const [hasFired, setHasFired] = useState(false);
@@ -85,7 +84,7 @@ function App() {
               exact
               key={name}
               path={SIDENAV_ROUTES[ind]}
-              element={<WishStep stepName={`Step ${ind + 1}: ${name}`} />}
+              element={<WishStep index={ind + 1} stepName={name} />}
             />
           ))}
         </Route>
@@ -98,7 +97,7 @@ function App() {
           path="*"
           element={
             <PageLayout>
-              <FileUploadTestPage />
+              <Custom404Page />
             </PageLayout>
           }
         />

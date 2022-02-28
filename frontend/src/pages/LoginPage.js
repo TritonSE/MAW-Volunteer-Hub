@@ -67,7 +67,7 @@ function LoginPage({ setIsAuth }) {
         setIsAuth(success);
 
         if (success) {
-          token_set(res);
+          token_set(res, doRemember);
           navigate(SITE_PAGES.HOME);
         }
       } else {
