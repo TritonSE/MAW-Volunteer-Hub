@@ -1,8 +1,9 @@
-import React, { useState, createRef } from "react";
+import React, { useState, useContext, createRef } from "react";
 import Modal from "react-modal";
 
 import { API_ENDPOINTS } from "../constants/links";
 import { api_pfp_upload } from "../auth";
+import { CacheBreaker } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
 
@@ -11,7 +12,7 @@ Modal.setAppElement(document.getElementById("root"));
 function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [cacheBreaker, setCacheBreaker] = useState(new Date().getTime());
+  const [cacheBreaker, setCacheBreaker] = useContext(CacheBreaker);
   const [opacity, setOpacity] = useState(1);
 
   // TODO: Refs are never usually required, there's almost always a better way
@@ -35,7 +36,7 @@ function ProfilePage() {
 
     const res = await api_pfp_upload(e.target.files[0]);
     if (res && res.success) {
-      setCacheBreaker(new Date().getTime());
+      setCacheBreaker(cacheBreaker + 1);
       setOpacity(1);
     }
   }

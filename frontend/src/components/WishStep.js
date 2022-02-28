@@ -4,7 +4,7 @@ import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import { api_category_download, api_file_display } from "../auth";
 import ModalVariants from "./ModalVariants";
 import "../styles/WishGrantingPage.css";
-import FileStructure from "./FileStructure";
+import { FileStructure } from "./Contexts";
 
 function WishStep({ index, stepName }) {
   /**

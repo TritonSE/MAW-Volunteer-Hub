@@ -5,7 +5,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { api_category_all } from "../auth";
 import NavBar from "./NavBar";
-import FileStructure from "./FileStructure";
+import { FileStructure, CacheBreaker } from "./Contexts";
 
 export default function PageLayout({ children }) {
   const [structure, setStructure] = useState({});
@@ -18,12 +18,15 @@ export default function PageLayout({ children }) {
   useEffect(() => get_structure(), []);
 
   const memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
+  const breaker = useState(0);
 
   return (
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
       <FileStructure.Provider value={memo}>
-        <NavBar />
-        {children}
+        <CacheBreaker.Provider value={breaker}>
+          <NavBar />
+          {children}
+        </CacheBreaker.Provider>
       </FileStructure.Provider>
     </div>
   );

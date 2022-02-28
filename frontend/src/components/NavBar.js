@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES, API_ENDPOINTS } from "../constants/links";
@@ -7,6 +7,7 @@ import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
+import { CacheBreaker } from "./Contexts";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
@@ -32,6 +33,8 @@ function NavBar() {
   const [showResults, setShowResults] = useState(false);
   const [input, setInput] = useState("");
   const [filteredFiles, setFilteredFiles] = useState([]);
+
+  const [cacheBreaker, _setCacheBreaker] = useContext(CacheBreaker);
 
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
@@ -96,7 +99,7 @@ function NavBar() {
             <div className="profile-icon">
               <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
                 <img
-                  src={`${API_ENDPOINTS.PFP_GET}?${Date.now()}`}
+                  src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
                   alt="Profile Icon"
                   className="account-icon"
                 />
