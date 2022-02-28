@@ -183,9 +183,13 @@ router.get("/pfp/:id?", (req, res) => {
 });
 
 router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
+  const crop = JSON.parse(req.body.crop);
+
   util
     .promisify(im.convert)([
       req.file.path,
+      "-crop",
+      `${crop.width}x${crop.height}+${crop.x}+${crop.y}`,
       "-resize",
       "400x400^",
       "-quality",

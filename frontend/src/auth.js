@@ -147,9 +147,9 @@ async function api_category_download(id) {
 /**
  * PROFILE PICTURES
  */
-async function api_pfp_upload(pfp) {
+async function api_pfp_upload(pfp, crop) {
   const res = await api_call(API_ENDPOINTS.PFP_UPLOAD, {
-    data: { pfp },
+    data: { pfp, crop },
     method: "POST",
     type: "multipart/form-data",
   });
