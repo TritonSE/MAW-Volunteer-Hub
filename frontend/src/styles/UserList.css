@@ -158,6 +158,11 @@ tr:nth-child(2n) .people_table_data_end {
   .people_table {
     height: calc(100vh - 380px);
   }
+  .people_table_controls {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 25px;
+  }
 }
 
 .table_btn_container {
