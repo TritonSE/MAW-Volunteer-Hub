@@ -1,4 +1,4 @@
-import React, { useState, useContext, createRef } from "react";
+import React, { useState, useContext } from "react";
 import ReactCrop from "react-image-crop";
 import Modal from "react-modal";
 import "react-image-crop/dist/ReactCrop.css";
@@ -23,9 +23,6 @@ function ProfilePage() {
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
 
-  // TODO: Refs are never usually required, there's almost always a better way
-  const pfp_ref = createRef();
-
   const user = {
     full_name: "Carly Shay",
     email: "carlyshay@gmail.com",
@@ -33,16 +30,21 @@ function ProfilePage() {
     profilePicture: "",
   };
 
-  function open_pfp() {
-    pfp_ref.current.click();
-  }
-
   function prepare_pfp(e) {
     if (e.target.files.length === 0) return;
 
+    // accept="image/*" on the <input> should prevent this
+    //   from ever executing
+    if (e.target.files[0].type.indexOf("image") === -1) {
+      setPFPErrorModalOpen("File is not an image (.jpg, .png, .gif, etc.).");
+      return;
+    }
+
+    // 16 MB maximum, same as multer on backend
     if (e.target.files[0].size > 1.6e7) {
-      // 16 MB, same as multer on backend
-      setPFPErrorModalOpen("File is too large, max is 16 MB.");
+      setPFPErrorModalOpen(
+        `File is too large (${Math.round(e.target.files[0].size / 1e6)} MB), maximum is 16 MB.`
+      );
       return;
     }
 
@@ -87,9 +89,18 @@ function ProfilePage() {
             alt={`${user.full_name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
-          <input ref={pfp_ref} className="hidden" type="file" onChange={prepare_pfp} hidden />
-          <button type="button" onClick={open_pfp}>
-            +
+          <button type="button">
+            <label htmlFor="pfp_input">
+              +
+              <input
+                id="pfp_input"
+                className="hidden"
+                type="file"
+                accept="image/*"
+                onChange={prepare_pfp}
+                hidden
+              />
+            </label>
           </button>
 
           <Modal
@@ -102,7 +113,6 @@ function ProfilePage() {
             }}
             contentLabel="Change profile picture"
           >
-            {/* TODO: This modal overlaps with the searchbar at small sizes */}
             <h1 className="modal-title-crop">Crop Profile Picture</h1>
             <ReactCrop
               src={upImg}

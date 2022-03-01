@@ -12,7 +12,7 @@ import "../styles/SideNav.css";
  *                      tab_content: {jsx component that will be rendered on the right-hand side of the screen}
  *                     }
  */
-function SideNav({ tabs, getContext, manage }) {
+function SideNav({ tabs, manage }) {
   function compute_route_tab() {
     let out = 0;
     // tabs.findIndex() causes React to throw an error
@@ -68,9 +68,7 @@ function SideNav({ tabs, getContext, manage }) {
           </Link>
         ))}
       </ScrollContainer>
-      <div className="side_nav_display">
-        {manage ? <Outlet /> : <Outlet context={getContext(tabs[selected], selected)} />}
-      </div>
+      <div className="side_nav_display">{manage ? <Outlet /> : <Outlet context={selected} />}</div>
     </div>
   );
 }

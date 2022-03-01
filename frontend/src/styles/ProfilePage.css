@@ -36,8 +36,21 @@
   font-size: 28px;
   color: var(--primary-blue);
 }
+.profile-image > button label {
+  width: 34px;
+  height: 34px;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  line-height: 34px;
+  border-radius: 50%;
+}
 .profile-image > button:hover {
   background: var(--background-grey);
+  cursor: pointer;
+}
+.profile-image > button label:hover {
   cursor: pointer;
 }
 
