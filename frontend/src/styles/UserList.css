@@ -16,21 +16,27 @@ tbody tr {
   flex-direction: column;
   overflow: scroll;
 }
-
-.people_table {
-  height: calc(100vh - 300px);
-
-  border-radius: 15px;
+.table-container {
+  box-sizing: content-box;
+  margin: 0 30px 10px;
+  overflow-x: auto;
   border: 20px solid white;
-
+  border-radius: 15px;
   background-color: white;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  border-spacing: 0;
-  overflow-x: scroll;
-  margin-left: 5%;
-  margin-right: 5%;
-}
 
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+}
+.people_table {
+  height: calc(100vh - 300px);
+  width: 100% !important;
+  border-spacing: 0;
+
+  font-size: 18px;
+  line-height: 22px;
+}
 .people_table_header {
   height: 51px;
   width: 225px;
@@ -40,93 +46,32 @@ tbody tr {
 
   background: rgba(0, 87, 184, 0.1);
   box-sizing: border-box;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
 }
-
-.people_table_header_start {
-  width: 200px;
-  height: 51px;
-
-  text-align: start;
-  padding-left: 50px;
-
-  background: rgba(0, 87, 184, 0.1);
-  box-sizing: border-box;
+.people_table_header.start {
+  width: 200px !important;
   border-radius: 11px 0px 0px 11px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
 }
-
-.people_table_header_end {
-  height: 51px;
-  width: 200px;
-
-  text-align: start;
-  padding-left: 50px;
-
-  background: rgba(0, 87, 184, 0.1);
-  box-sizing: border-box;
+.people_table_header.end {
   border-radius: 0px 11px 11px 0px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
+  width: 200px;
 }
 
 .people_table_data {
-  min-width: 200px;
-  width: 210px;
+  width: 200px;
   height: 62px;
   text-align: center;
 
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
   line-height: 17px;
 }
-
-.people_table_data_start {
-  min-width: 200px;
-  width: 210px;
-  height: 62px;
-
+.people_table_data.start {
   text-align: left;
   padding-left: 50px;
   border-radius: 8px 0px 0px 8px;
-
-  font-family: Lato;
-  box-sizing: border-box;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
 }
-
-.people_table_data_end {
-  min-width: 200px;
-  height: 62px;
-  width: 210px;
-
-  text-align: center;
+.people_table_data.end {
+  flex: 1;
   border-radius: 0px 8px 8px 0px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
 }
 
 .sort_toggle {

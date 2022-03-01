@@ -120,10 +120,10 @@ const headers = [
     Header: "",
     accessor: "empty",
   },
-  {
-    Header: "",
-    accessor: "empty1",
-  },
+  // {
+  //   Header: "",
+  //   accessor: "empty1",
+  // },
   // {
   //   Header: "Roles",
   //   accessor: "Roles",

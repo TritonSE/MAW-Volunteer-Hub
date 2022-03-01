@@ -109,10 +109,10 @@ function UserList({ tableHeaders, userData }) {
   // Returns the suffix of a cell's/header's className depending on the column index
   const getColTitle = (colIndex) => {
     if (colIndex === 0) {
-      return "_start";
+      return "start";
     }
     if (colIndex === columns.length - 1) {
-      return "_end";
+      return "end";
     }
     return "";
   };
@@ -169,48 +169,49 @@ function UserList({ tableHeaders, userData }) {
           </thead>
         </table>
       </div>
-
-      <table className="people_table" {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
-              {headerGroup.headers.map((column, colIndex) => (
-                <th
-                  className={`people_table_header${getColTitle(colIndex)}`}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  key={Math.random()}
-                >
-                  {column.render("Header")}
-                  {/* This ternary operator should be removed to allow sorting for all columns */}
-                  {colIndex === 0 ? (
-                    <span className="sort_toggle">
-                      {getArrowImage(column.isSorted, column.isSortedDesc)}
-                    </span>
-                  ) : null}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return separateAdmin(row.original.Name) ? (
-              <tr {...row.getRowProps()} key={Math.random()}>
-                {row.cells.map((cell, colIndex) => (
-                  <td
-                    {...cell.getCellProps()}
-                    className={`people_table_data${getColTitle(colIndex)}`}
+      <div className="table-container">
+        <table className="people_table" {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
+                {headerGroup.headers.map((column, colIndex) => (
+                  <th
+                    className={`people_table_header ${getColTitle(colIndex)}`}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
                     key={Math.random()}
                   >
-                    {cell.render("Cell")}
-                  </td>
+                    {column.render("Header")}
+                    {/* This ternary operator should be removed to allow sorting for all columns */}
+                    {colIndex === 0 ? (
+                      <span className="sort_toggle">
+                        {getArrowImage(column.isSorted, column.isSortedDesc)}
+                      </span>
+                    ) : null}
+                  </th>
                 ))}
               </tr>
-            ) : null;
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return separateAdmin(row.original.Name) ? (
+                <tr {...row.getRowProps()} key={Math.random()}>
+                  {row.cells.map((cell, colIndex) => (
+                    <td
+                      {...cell.getCellProps()}
+                      className={`people_table_data ${getColTitle(colIndex)}`}
+                      key={Math.random()}
+                    >
+                      {cell.render("Cell")}
+                    </td>
+                  ))}
+                </tr>
+              ) : null;
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
