@@ -119,7 +119,7 @@ function NavBar() {
             >
               <NavLink
                 className="view-profile-link"
-                to={`${SITE_PAGES.PROFILE}/${userid}`} // `${SITE_PAGES.PROFILE}/${userid}`
+                to={`${SITE_PAGES.PROFILE}/${userid}`}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 View your profile

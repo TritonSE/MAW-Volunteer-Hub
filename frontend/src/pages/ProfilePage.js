@@ -12,6 +12,7 @@ function ProfilePage() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [user, setUser] = useState({});
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const [active, setActive] = useState(history.location.pathname.split("/profile/")[1]);
 
@@ -25,8 +26,10 @@ function ProfilePage() {
 
   useEffect(async () => {
     const res = await getUser(active);
-    setUser(res);
-  }, []);
+    setUser(res.user);
+    console.log(res.sameUser);
+    setIsCurrentUser(res.sameUser);
+  }, [active]);
 
   useEffect(
     () =>
@@ -71,6 +74,8 @@ function ProfilePage() {
             Delete Profile
           </button>
         </div>
+
+        <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div>
       </section>
 
       {/* Change Password and Delete Profile Modals */}
