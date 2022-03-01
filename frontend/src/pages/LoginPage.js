@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { token_set, api_login, api_signup } from "../auth";
+import { token_set, api_login, api_signup, uid_set } from "../auth";
 import { SITE_PAGES } from "../constants/links";
 import "../index.css";
 import "../styles/LoginPage.css";
@@ -67,7 +67,8 @@ function LoginPage({ setIsAuth }) {
         setIsAuth(success);
 
         if (success) {
-          token_set(res, doRemember);
+          token_set(res.token, doRemember);
+          uid_set(res.uid, doRemember);
           navigate(SITE_PAGES.HOME);
         }
       } else {

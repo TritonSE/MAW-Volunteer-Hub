@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { token_clear, api_validtoken, token_get } from "./auth";
+import { token_clear, api_validtoken, uid_clear } from "./auth";
 import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -28,6 +28,7 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
 function SignoutHelper({ setIsAuth }) {
   useEffect(() => {
     token_clear();
+    uid_clear();
     setIsAuth(false);
   }, []);
 

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { api_user, token_get } from "../auth";
-import { SITE_PAGES } from "../constants/links";
+import { api_user } from "../auth";
 import history from "../history";
 import "../styles/ProfilePage.css";
 
@@ -16,11 +15,11 @@ function ProfilePage() {
 
   const [active, setActive] = useState(history.location.pathname.split("/profile/")[1]);
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   async function getUser(id) {
     const res = await api_user(id);
-    // if (res === null) navigate();
+    if (res === null) navigate("/user-not-found");
     return res;
   }
 

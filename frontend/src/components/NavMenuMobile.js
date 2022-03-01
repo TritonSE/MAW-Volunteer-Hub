@@ -116,7 +116,7 @@ function NavMenuMobile({
 
           <NavLink
             className="view-profile-link-mobile"
-            to={SITE_PAGES.PROFILE}
+            to={SITE_PAGES.PROFILE} // `${SITE_PAGES.PROFILE}/621c744555d91cd73f9a2638`
             onClick={() => setDesktopDropdown((prevState) => !prevState)}
           >
             View your profile

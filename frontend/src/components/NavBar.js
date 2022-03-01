@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
+import { uid_get } from "../auth";
 import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import history from "../history";
@@ -43,7 +44,7 @@ function NavBar() {
     []
   );
 
-  // const user = localStorage.getItem("user_id");
+  const userid = uid_get();
 
   return (
     <nav className="container">
@@ -118,7 +119,7 @@ function NavBar() {
             >
               <NavLink
                 className="view-profile-link"
-                to={SITE_PAGES.PROFILE}
+                to={`${SITE_PAGES.PROFILE}/${userid}`} // `${SITE_PAGES.PROFILE}/${userid}`
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 View your profile
