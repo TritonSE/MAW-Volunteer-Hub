@@ -11,7 +11,6 @@ const UserModel = require("../models/UserModel");
 const { uploadFile, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { idOfCurrentUser } = require("../util/userUtil");
 const { errorHandler } = require("../util/RouteUtils");
-// const { pfp_generate } = require("../util/ProfilePictures");
 const config = require("../config");
 
 const upload = multer({
@@ -164,18 +163,6 @@ router.get("/pfp/:id?", (req, res) => {
     .then((user) => {
       res.set("Content-Type", "image/png");
       if (!user.profilePicture) {
-        /*
-        let buf = user.defaultProfilePicture;
-        if (!buf) {
-          buf = pfp_generate(user.name, true);
-          Object.assign(user, {
-            defaultProfilePicture: buf,
-          });
-          user.save();
-        }
-        res.write(buf, "binary");
-        res.end(null, "binary");
-        */
         res.redirect("/img/no_profile_pic.svg");
       } else {
         const stream = getFileStream(user.profilePicture);
