@@ -60,7 +60,7 @@ function LoginPage({ setIsAuth }) {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res);
+      const success = isLogin ? Boolean(res.token) : Boolean(res);
 
       if (isLogin) {
         setSuccessState(success);

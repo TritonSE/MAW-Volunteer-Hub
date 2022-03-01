@@ -13,6 +13,7 @@ function ProfilePage() {
 
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
 
   const [active, setActive] = useState(history.location.pathname.split("/profile/")[1]);
 
@@ -27,7 +28,7 @@ function ProfilePage() {
   useEffect(async () => {
     const res = await getUser(active);
     setUser(res.user);
-    console.log(res.sameUser);
+    // console.log(res.sameUser);
     setIsCurrentUser(res.sameUser);
   }, [active]);
 
@@ -59,23 +60,26 @@ function ProfilePage() {
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          <button
-            type="button"
-            className="change-password-button"
-            onClick={() => setPassModalOpen(true)}
-          >
-            Change Password
-          </button>
-          <button
-            type="button"
-            className="delete-account-button"
-            onClick={() => setDeleteModalOpen(true)}
-          >
-            Delete Profile
-          </button>
+          {isCurrentUser && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setPassModalOpen(true)}
+            >
+              Change Password
+            </button>
+          )}
+          {true && (
+            <button
+              type="button"
+              className="delete-account-button"
+              onClick={() => setDeleteModalOpen(true)}
+            >
+              Delete Profile
+            </button>
+          )}
         </div>
-
-        <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div>
+        {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
       {/* Change Password and Delete Profile Modals */}
@@ -125,7 +129,7 @@ function ProfilePage() {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger " type="button">
+          <button className="modal-button small button-danger" type="button">
             Delete
           </button>
         </div>
