@@ -7,36 +7,35 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 // Sign up route
-router.post(
-  "/signup",
-  passport.authenticate("signup", { session: false }),
-  async (req, res, next) =>
-    res.json({
-      message: "Signup successful",
-      user: req.user,
-    })
+router.post("/signup", passport.authenticate("signup", { session: false }), (req, res) =>
+  res.json({
+    message: "Signup successful",
+    user: req.user,
+  })
 );
 
 // Log In route
-router.post("/login", async (req, res, next) => {
-  passport.authenticate("login", async (err, user, info) => {
+router.post("/login", (req, res, next) => {
+  passport.authenticate("login", (err, user) => {
     try {
       if (err || !user) {
-        const error = new Error("An error occurred.");
-
-        return next(error);
+        res.json({ error: "Failed to log in" });
+        return;
       }
 
-      req.login(user, { session: false }, async (error) => {
-        if (error) return next(error);
+      req.login(user, { session: false }, (error) => {
+        if (error) {
+          res.json({ error });
+          return;
+        }
 
         const body = { _id: user._id, email: user.email }; // sign is admin into this body
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
-        return res.json({ token });
+        res.json({ token });
       });
     } catch (error) {
-      return next(error);
+      res.json({ error });
     }
   })(req, res, next);
 });

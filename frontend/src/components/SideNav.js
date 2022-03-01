@@ -24,15 +24,9 @@ function SideNav({ tabs, getContext, manage }) {
     return out;
   }
 
-  // Returns the width of the window
-  function getWindowWidth() {
-    const { innerWidth: width } = window;
-    return width;
-  }
-
   // This helps determine which tab in the side nav bar should be highlighted.
   const [selected, setSelected] = useState(compute_route_tab());
-  const [windowWidth, setWindowWidth] = useState(getWindowWidth());
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   useEffect(
     () =>
@@ -45,7 +39,7 @@ function SideNav({ tabs, getContext, manage }) {
   // Updates the windowWidth variable if the window is resized
   useEffect(() => {
     function handleResize() {
-      setWindowWidth(getWindowWidth());
+      setWindowWidth(window.innerWidth);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
