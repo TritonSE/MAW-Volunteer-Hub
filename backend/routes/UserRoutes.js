@@ -52,8 +52,6 @@ router.get("/:id", (req, res, next) => {
     return;
   }
 
-  const currentUserId = idOfCurrentUser(req);
-
   UserModel.findById(
     req.params.id,
     { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1, createdAt: 1 },
@@ -66,6 +64,7 @@ router.get("/:id", (req, res, next) => {
         // checks if a user was found with id
         res.status(404).send("No user found with provided id");
       } else {
+        const currentUserId = idOfCurrentUser(req);
         const sameUser = currentUserId === req.params.id;
         res.status(200).json({ user, sameUser });
       }
