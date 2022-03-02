@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/AssignBtn.css";
 
-function AssignBtn({ label }) {
+function AssignBtn({ label, onClick }) {
   function btnType() {
     switch (label) {
       case "Assign Role":
@@ -17,8 +17,9 @@ function AssignBtn({ label }) {
     }
     return "btn_assign btn_none";
   }
+
   return (
-    <button type="button" className={btnType()}>
+    <button type="button" className={btnType()} onClick={() => onClick}>
       {label}
     </button>
   );

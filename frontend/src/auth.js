@@ -158,6 +158,13 @@ async function api_category_download(id) {
   return res;
 }
 
+async function api_get_users() {
+  const res = await api_call("user/users", {
+    method: "GET",
+  });
+  return res;
+}
+
 export {
   token_get,
   token_set,
@@ -177,4 +184,5 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
+  api_get_users,
 };
