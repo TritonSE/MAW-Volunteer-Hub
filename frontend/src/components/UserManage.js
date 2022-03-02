@@ -3,12 +3,12 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
-import { api_get_users } from "../auth";
+import { api_get_users, api_get_single_user } from "../auth";
 
 async function getUsers() {
   try {
     const res = await api_get_users();
-    console.log(res);
+    return res;
   } catch {
     console.log("Couldn't access users");
   }
@@ -17,7 +17,6 @@ async function getUsers() {
 // NOTE: This is just a temporary implementation for the MVP
 async function getUserData() {
   const backendUsers = await getUsers();
-  console.log(backendUsers);
 
   const adminNames = ["Carly", "Gibson", "Freddie", "Bob"];
   const volunteerNames = [
@@ -65,7 +64,7 @@ async function getUserData() {
       Start: "May 2017",
     })
   );
-  return users;
+  return backendUsers;
 }
 
 // const userData = getUserData();
@@ -140,7 +139,12 @@ export default function UserManage() {
 
   useEffect(async () => {
     const data = await getUserData();
-    setUserData(data);
+    setUserData(data.users);
+    console.log(data.users);
+    data.users.map((user) => {
+      const res = api_get_single_user(user._id);
+      console.log(res);
+    })
   }, []);
   if (!userData) {
     return <div>Data could not be fetched!!!</div>;

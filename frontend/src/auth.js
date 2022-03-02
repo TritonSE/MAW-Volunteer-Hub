@@ -159,9 +159,16 @@ async function api_category_download(id) {
 }
 
 async function api_get_users() {
-  const res = await api_call("user/users", {
+  const res = await api_call("/user/users", {
     method: "GET",
   });
+  return res;
+}
+
+async function api_get_single_user(id) {
+  const res = await api_call(`/user/${id}`, {
+    method: "GET",
+  })
   return res;
 }
 
@@ -185,4 +192,5 @@ export {
   api_category_update,
   api_category_download,
   api_get_users,
+  api_get_single_user,
 };

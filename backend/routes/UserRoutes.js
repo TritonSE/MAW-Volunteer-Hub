@@ -33,9 +33,9 @@ function checkCurrentUserIsAdmin(req, res, next) {
 }
 
 router.get("/users", (req, res, next) => {
-  if (req.query.admin) {
+  if (true) {
     try {
-      UserModel.find({ admin: req.query.admin }).then((users) => res.status(200).json({ users })); // return users found
+      UserModel.find().then((users) => res.status(200).json({ users })); // return users found
     } catch (e) {
       next(e);
     }
