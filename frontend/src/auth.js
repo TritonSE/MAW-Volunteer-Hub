@@ -62,7 +62,7 @@ async function api_validtoken() {
  * LOGIN/SIGNUP
  */
 async function api_login({ email, password }) {
-  const res = await api_call(API_ENDPOINTS.LOGIN, { email, password });
+  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
   return res;
 }
 
