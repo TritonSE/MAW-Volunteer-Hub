@@ -38,12 +38,12 @@ function VerifyButtonCell({
 }) {
   // const [isOpen, setIsOpen] = useState(false);
   const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
-
   useEffect(() => {
     setIsVerifiedState(initialVerified);
   }, [initialVerified]);
 
   function handleVerifyUser() {
+    console.log({ index, id });
     updateMyData(index, id, true);
 
     setIsVerifiedState(true);
@@ -162,7 +162,12 @@ export default function UserManage() {
           handleConfirmationModal={handleConfirmationModal}
         />
       ) : (
-        <UserCardList userData={userData} />
+        <UserCardList
+          userData={userData}
+          VerifyButtonCell={VerifyButtonCell}
+          updateMyData={updateMyData}
+          handleConfirmationModal={handleConfirmationModal}
+        />
       )}
       <Modal
         isOpen={modalState.isOpen}

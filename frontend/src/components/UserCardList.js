@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import "../styles/UserCardList.css";
 
-function UserCard({ user }) {
-  const handleNameClick = () => {
-    alert(user.Name + " was clicked");
-  };
-
+function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
-        <button
+        <a
           className="card_item_top"
           aria-label="user_profile"
-          type="button"
-          onClick={() => handleNameClick()}
+          target="blank_"
+          href={`/profile/${user._id}`}
         >
-          {user.email}
-        </button>
-        <div className="card_item_bottom">Assignments Completed: {user.Completed}</div>
+          {user.name}
+        </a>
+        <div className="card_item_bottom">Assignments Completed: {user.completed ?? "N/A"}</div>
       </div>
       <div className="card_col">
-        <div className="card_item_top">{user.roles}</div>
-        <div className="card_item_bottom">Volunteer Start: {user.Start}</div>
+        {/* <div className="card_item_top">{user.roles}</div> */}
+        <VerifyButtonCell
+          row={{ index: row }}
+          column={{ id: "verified" }}
+          handleConfirmationModal={handleConfirmationModal}
+          updateMyData={updateMyData}
+          isVerified={user.verified}
+          name={user.name}
+        />
+        <div className="card_item_bottom">Volunteer Start: {user.start ?? "N/A"}</div>
       </div>
     </div>
   );
@@ -62,10 +66,10 @@ function UserCardSearch({ search }) {
   );
 }
 
-function UserCardList({ userData }) {
+function UserCardList({ userData, ...props }) {
   const [showAdmin, setShowAdmin] = useState(false);
   const [searchUsers, setSearchUser] = useState("");
-
+  console.log(userData);
   // Separates admins from volunteers
   const separateAdmin = (id) => {
     let isAdmin = false;
@@ -134,8 +138,11 @@ function UserCardList({ userData }) {
       </div>
       <UserCardSearch search={setSearchUser} />
       <div className="card_list">
-        {userData.map((user) =>
-          displayUser(user._id, user.email) ? <UserCard user={user} key={Math.random()} /> : null
+        {userData.map(
+          (user, i) =>
+            displayUser(user._id, user.email) && (
+              <UserCard user={user} key={Math.random()} row={i} {...props} />
+            )
         )}
       </div>
     </div>
