@@ -19,7 +19,7 @@ function AssignBtn({ label, onClick }) {
   }
 
   return (
-    <button type="button" className={btnType()} onClick={() => onClick}>
+    <button type="button" className={btnType()} onClick={() => onClick()}>
       {label}
     </button>
   );

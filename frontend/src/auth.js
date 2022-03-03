@@ -165,10 +165,10 @@ async function api_get_users() {
   return res;
 }
 
-async function api_get_single_user(id) {
-  const res = await api_call(`/user/${id}`, {
-    method: "GET",
-  })
+async function api_verify_user(id) {
+  const res = await api_call(`/user/verify/${id}`, {
+    method: "PUT",
+  });
   return res;
 }
 
@@ -192,5 +192,5 @@ export {
   api_category_update,
   api_category_download,
   api_get_users,
-  api_get_single_user,
+  api_verify_user,
 };

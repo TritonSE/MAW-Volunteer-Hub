@@ -118,10 +118,10 @@ function UserList({ tableHeaders, userData }) {
   };
 
   // Determine if a row should be displayed based on which tab the table is on.
-  // Uses the name of the user to check to see if the user is an admin.
+  // Uses the id of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
-  const separateAdmin = (userName) => {
-    const isAdmin = userData.some((user) => user.Name === userName && user.Admin);
+  const separateAdmin = (id) => {
+    const isAdmin = userData.some((user) => user._id === id && user.admin);
 
     if (isAdmin && showAdmin) {
       return true;
@@ -195,7 +195,7 @@ function UserList({ tableHeaders, userData }) {
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
-              return separateAdmin(row.original.Name) ? (
+              return separateAdmin(row.original._id) ? (
                 <tr {...row.getRowProps()} key={Math.random()}>
                   {row.cells.map((cell, colIndex) => (
                     <td

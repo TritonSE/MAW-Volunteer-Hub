@@ -3,7 +3,7 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
-import { api_get_users, api_get_single_user } from "../auth";
+import { api_get_users, api_verify_user } from "../auth";
 
 async function getUsers() {
   try {
@@ -12,6 +12,7 @@ async function getUsers() {
   } catch {
     console.log("Couldn't access users");
   }
+  return "";
 }
 
 // NOTE: This is just a temporary implementation for the MVP
@@ -72,7 +73,7 @@ async function getUserData() {
 const headers = [
   {
     Header: "Name",
-    accessor: "Name",
+    accessor: "email",
     Cell: (e) => (
       <a className="user_link" href="/">
         {e.value}
@@ -82,7 +83,7 @@ const headers = [
   // Replace the following three rows with the commented out rows for the full table
   {
     Header: "",
-    accessor: "Roles",
+    accessor: "roles",
   },
   {
     Header: "",
@@ -106,19 +107,20 @@ const headers = [
   // },
 ];
 
-function ButtonContainer({ btnLabels, userName }) {
+function ButtonContainer({ btnLabels, id }) {
   const [labels, setLabels] = useState(btnLabels);
 
   function handleRoleBtnClick() {
     if (labels.length === 1 && labels[0] === "Allow Access") {
       setLabels(["Assign Role"]);
+      api_verify_user(id);
     }
   }
 
   return (
     <ScrollContainer className="assign_btn_container" vertical={false}>
       {labels.map((label) => (
-        <AssignBtn label={label} key={userName} onClick={handleRoleBtnClick()} />
+        <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick()} />
       ))}
     </ScrollContainer>
   );
@@ -137,15 +139,31 @@ export default function UserManage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Change the plain text for roles into ButtonContainers
+  function convertToAssignBtn(users) {
+    for (let i = 0; i < users.length; i++) {
+      if (users[i].roles.length === 0) {
+        users[i].roles = [
+          <ButtonContainer
+            btnLabels={users[i].verified ? ["Assign Role"] : ["Allow Access"]}
+            id={users[i]._id}
+          />,
+        ];
+      } else {
+        users[i].roles = [<ButtonContainer btnLabel={users[i].roles} id={users[i]._id} />];
+      }
+    }
+    return users;
+  }
+
+  // Get user data from backend
   useEffect(async () => {
     const data = await getUserData();
-    setUserData(data.users);
-    console.log(data.users);
-    data.users.map((user) => {
-      const res = api_get_single_user(user._id);
-      console.log(res);
-    })
+    const convertedData = convertToAssignBtn(data.users);
+    setUserData(convertedData);
+    console.log(convertedData);
   }, []);
+
   if (!userData) {
     return <div>Data could not be fetched!!!</div>;
   }

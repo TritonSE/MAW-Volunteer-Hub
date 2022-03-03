@@ -33,16 +33,11 @@ function checkCurrentUserIsAdmin(req, res, next) {
 }
 
 router.get("/users", (req, res, next) => {
-  if (true) {
-    try {
-      UserModel.find().then((users) => res.status(200).json({ users })); // return users found
-    } catch (e) {
-      next(e);
-    }
-  } else {
-    // prevent route from hanging if no query param passed in
-    res.status(400).send("No query param passed in to users route");
-  }
+  checkCurrentUserIsAdmin(req, res, () => {
+    UserModel.find()
+      .then((users) => res.status(200).json({ users }))
+      .catch((e) => res.status(400).send("An error occurred fetching users"));
+  });
 });
 
 // Get user by id - Will return an object with only the user profile information
