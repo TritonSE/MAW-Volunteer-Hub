@@ -1,7 +1,7 @@
 /* Styles taken from Figma */
 tbody {
   display: block;
-  height: 511px;
+  height: calc(100vh - 300px);
   overflow-y: scroll;
 }
 
@@ -11,107 +11,67 @@ tbody tr {
   width: 100%;
 }
 
-.people_table {
-  height: 511px;
-
-  border-radius: 15px;
+.user_list_layout {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+}
+.table-container {
+  box-sizing: content-box;
+  margin: 0 30px 10px;
+  overflow-x: auto;
   border: 20px solid white;
+  border-radius: 15px;
   background-color: white;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
-  border-spacing: 0;
-}
 
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+}
+.people_table {
+  height: calc(100vh - 300px);
+  width: 100% !important;
+  border-spacing: 0;
+
+  font-size: 18px;
+  line-height: 22px;
+}
 .people_table_header {
   height: 51px;
+  width: 225px;
 
   text-align: start;
-  padding-left: 50px;
+  padding-left: 30px;
 
   background: rgba(0, 87, 184, 0.1);
   box-sizing: border-box;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
 }
-
-.people_table_header_start {
-  min-width: 200px;
-  height: 51px;
-
-  text-align: start;
-  padding-left: 50px;
-
-  background: rgba(0, 87, 184, 0.1);
-  box-sizing: border-box;
+.people_table_header.start {
+  width: 200px !important;
   border-radius: 11px 0px 0px 11px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
 }
-
-.people_table_header_end {
-  height: 51px;
-
-  text-align: start;
-  padding-left: 50px;
-
-  background: rgba(0, 87, 184, 0.1);
-  box-sizing: border-box;
+.people_table_header.end {
   border-radius: 0px 11px 11px 0px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
+  width: 200px;
 }
 
 .people_table_data {
-  width: 210px;
+  width: 200px;
   height: 62px;
   text-align: center;
 
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
   line-height: 17px;
 }
-
-.people_table_data_start {
-  width: 210px;
-  height: 62px;
-
+.people_table_data.start {
   text-align: left;
   padding-left: 50px;
   border-radius: 8px 0px 0px 8px;
-
-  font-family: Lato;
-  box-sizing: border-box;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
 }
-
-.people_table_data_end {
-  height: 62px;
-  width: 210px;
-
-  text-align: center;
+.people_table_data.end {
+  flex: 1;
   border-radius: 0px 8px 8px 0px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
 }
 
 .sort_toggle {
@@ -122,4 +82,106 @@ tr:nth-child(2n) .people_table_data_start,
 tr:nth-child(2n) .people_table_data,
 tr:nth-child(2n) .people_table_data_end {
   background: rgba(187, 188, 188, 0.2);
+}
+
+.user_search_bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.user_search_button {
+  position: relative;
+  left: -50px;
+  background: #1a68bf;
+  width: 53px;
+  height: 30px;
+  border-radius: 0px 3px 3px 0px;
+  border-width: 0px;
+  background-image: url("../../public/img/searchbar.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.user_search_button:hover {
+  cursor: pointer;
+}
+
+.user_search_input {
+  border: 1px solid #000000;
+  height: 26px;
+  width: 230px;
+  border-radius: 3px 0px 0px 3px;
+  padding-left: 10px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.user_search_input:focus {
+  font-weight: normal;
+}
+
+.people_table_controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100vw - 200px;
+  margin: 10px;
+}
+
+@media only screen and (max-width: 1000px) {
+  .people_table_controls {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 25px;
+  }
+  .user_search_bar {
+    /* This is a temporary alignment. Will need to be changed 
+       when the category filter bar is added in later versions*/
+    padding-left: 125px;
+  }
+
+  tbody,
+  .people_table {
+    height: calc(100vh - 340px);
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  tbody,
+  .people_table {
+    height: calc(100vh - 380px);
+  }
+  .people_table_controls {
+    flex-direction: row;
+    align-items: center;
+    margin-top: 25px;
+  }
+}
+
+.table_btn_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.btn_table_control {
+  background-color: transparent;
+  border: 0px;
+  margin-left: 50px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 28px;
+  line-height: 29px;
+}
+
+.btn_table_control:hover {
+  cursor: pointer;
 }

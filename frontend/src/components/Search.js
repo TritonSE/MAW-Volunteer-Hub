@@ -77,7 +77,10 @@ function Search() {
   const handleClose = () => {
     setShowResults((prevState) => !prevState);
   };
-
+  const handleSearchSubmit = () => {
+    getStructure();
+    setShowResults(true);
+  };
   return (
     <>
       <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -86,7 +89,7 @@ function Search() {
           placeholder="Search all files..."
           onChange={(e) => setInput(e.target.value)}
         />
-        <button className="search-button" type="submit" onClick={() => setShowResults(true)}>
+        <button className="search-button" type="submit" onClick={() => handleSearchSubmit()}>
           <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
         </button>
       </form>

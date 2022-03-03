@@ -36,6 +36,7 @@
   border: none;
   cursor: pointer;
   padding: 0;
+  height: 40px;
 }
 
 .hamburger-mobile {

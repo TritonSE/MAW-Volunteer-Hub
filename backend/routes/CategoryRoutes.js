@@ -3,7 +3,7 @@ const Archiver = require("archiver");
 
 const File = require("../models/FileModel");
 const Category = require("../models/CategoryModel");
-const validate = require("../util/ParamValidator");
+const { validate, errorHandler } = require("../util/RouteUtils");
 const { deleteFileAWS, getFileStream } = require("../util/S3Util");
 
 const router = express.Router();
@@ -18,19 +18,19 @@ router.get("/all", (_req, res) => {
         }, {})
       )
     )
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.get("/all/:parent", validate([], ["parent"]), (req, res) => {
   Category.find({ parent: req.params.parent })
     .then((files) => res.json(files))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.get("/one/:id", validate([], ["id"]), (req, res) => {
   Category.findById(req.params.id)
     .then((category) => res.json(category))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
@@ -45,7 +45,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
     })
     .then(() => Category.findByIdAndDelete(req.params.id))
     .then(() => res.json({ success: true }))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.post("/create", validate(["name", "parent"]), (req, res) => {
@@ -56,7 +56,7 @@ router.post("/create", validate(["name", "parent"]), (req, res) => {
     Files: [],
   })
     .then(() => res.json({ success: true }))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
@@ -66,7 +66,7 @@ router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
       return category.save();
     })
     .then(() => res.json({ success: true }))
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 router.get("/download/:id", validate([], ["id"]), (req, res) => {
@@ -81,7 +81,7 @@ router.get("/download/:id", validate([], ["id"]), (req, res) => {
       );
       archive.finalize();
     })
-    .catch((e) => res.status(500).json({ error: e.toString() }));
+    .catch(errorHandler(res));
 });
 
 module.exports = router;
