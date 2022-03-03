@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import ScrollContainer from "react-indiana-drag-scroll";
-import { token_clear, api_validtoken, token_get } from "./auth";
+import { token_clear, api_validtoken } from "./auth";
 import {
   SITE_PAGES,
   SIDENAV_STEPS,
@@ -16,10 +15,6 @@ import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
-
-import UserList from "./components/UserList";
-import UserCardList from "./components/UserCardList";
-import AssignBtn from "./components/AssignBtn";
 
 import "./App.css";
 
@@ -53,16 +48,6 @@ function SignoutHelper({ setIsAuth }) {
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  // Updates the windowWidth variable if the window is resized
-  useEffect(() => {
-    function handleResize() {
-      setWindowWidth(window.innerWidth);
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   return (
     <Routes>

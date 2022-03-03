@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Modal from "react-modal";
 import ScrollContainer from "react-indiana-drag-scroll";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
 import { api_get_users, api_verify_user } from "../auth";
+
+import "../styles/UserManage.css";
 
 async function getUsers() {
   try {
@@ -107,22 +110,34 @@ const headers = [
   // },
 ];
 
-function ButtonContainer({ btnLabels, id }) {
+function ButtonContainer({ btnLabels, id, userName }) {
   const [labels, setLabels] = useState(btnLabels);
+  const [isOpen, setIsOpen] = useState(false);
 
   function handleRoleBtnClick() {
     if (labels.length === 1 && labels[0] === "Allow Access") {
       setLabels(["Assign Role"]);
       api_verify_user(id);
+      setIsOpen(true);
     }
   }
 
   return (
-    <ScrollContainer className="assign_btn_container" vertical={false}>
-      {labels.map((label) => (
-        <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick()} />
-      ))}
-    </ScrollContainer>
+    <div>
+      <ScrollContainer className="assign_btn_container" vertical={false}>
+        {labels.map((label) => (
+          <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick()} />
+        ))}
+      </ScrollContainer>
+      <Modal isOpen={isOpen} contentLabel="Account Access" className="access_notification">
+        <div className="notification_contents">
+          `&quot;`{userName}`&quot;` has been given access.
+          <button type="button" className="confirmation_btn" onClick={() => setIsOpen(false)}>
+            Okay
+          </button>
+        </div>
+      </Modal>
+    </div>
   );
 }
 
@@ -147,10 +162,13 @@ export default function UserManage() {
           <ButtonContainer
             btnLabels={users[i].verified ? ["Assign Role"] : ["Allow Access"]}
             id={users[i]._id}
+            userName={users[i].email}
           />,
         ];
       } else {
-        users[i].roles = [<ButtonContainer btnLabel={users[i].roles} id={users[i]._id} />];
+        users[i].roles = [
+          <ButtonContainer btnLabel={users[i].roles} id={users[i]._id} userName={users[i].email} />,
+        ];
       }
     }
     return users;
@@ -161,7 +179,6 @@ export default function UserManage() {
     const data = await getUserData();
     const convertedData = convertToAssignBtn(data.users);
     setUserData(convertedData);
-    console.log(convertedData);
   }, []);
 
   if (!userData) {
