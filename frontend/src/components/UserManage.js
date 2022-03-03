@@ -131,7 +131,7 @@ function ButtonContainer({ btnLabels, id, userName }) {
       </ScrollContainer>
       <Modal isOpen={isOpen} contentLabel="Account Access" className="access_notification">
         <div className="notification_contents">
-          `&quot;`{userName}`&quot;` has been given access.
+          &quot;{userName}&quot; has been given access.
           <button type="button" className="confirmation_btn" onClick={() => setIsOpen(false)}>
             Okay
           </button>

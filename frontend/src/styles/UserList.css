@@ -131,7 +131,7 @@ tr:nth-child(2n) .people_table_data_end {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100vw - 200px;
+  width: calc(100vw - 200px);
   margin: 10px;
 }
 
@@ -162,6 +162,15 @@ tr:nth-child(2n) .people_table_data_end {
     flex-direction: row;
     align-items: center;
     margin-top: 25px;
+  }
+  .user_search_bar {
+    padding-left: 100px;
+  }
+}
+
+@media only screen and (max-width: 725px) {
+  .user_search_bar {
+    padding-left: 40px;
   }
 }
 
