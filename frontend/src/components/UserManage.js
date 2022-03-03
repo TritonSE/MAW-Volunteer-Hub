@@ -110,7 +110,7 @@ const headers = [
   // },
 ];
 
-function ButtonContainer({ btnLabels, id, userName }) {
+function ButtonContainer({ btnLabels, id, userName, updateLocal }) {
   const [labels, setLabels] = useState(btnLabels);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -119,6 +119,7 @@ function ButtonContainer({ btnLabels, id, userName }) {
       setLabels(["Assign Role"]);
       api_verify_user(id);
       setIsOpen(true);
+      updateLocal(id);
     }
   }
 
@@ -144,6 +145,7 @@ function ButtonContainer({ btnLabels, id, userName }) {
 export default function UserManage() {
   const [userData, setUserData] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  // const [status, setStatus] = useState(false);
 
   // Updates the windowWidth variable if the window is resized
   useEffect(() => {
@@ -154,6 +156,15 @@ export default function UserManage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const updateLocal = (id) => {
+    console.log(userData);
+    for (let i = 0; i < userData.length; i++) {
+      if (userData[i]._id === id) {
+        userData[i].roles = ["Assign Role"];
+      }
+    }
+  };
+
   // Change the plain text for roles into ButtonContainers
   function convertToAssignBtn(users) {
     for (let i = 0; i < users.length; i++) {
@@ -163,11 +174,17 @@ export default function UserManage() {
             btnLabels={users[i].verified ? ["Assign Role"] : ["Allow Access"]}
             id={users[i]._id}
             userName={users[i].email}
+            updateLocal={() => updateLocal()}
           />,
         ];
       } else {
         users[i].roles = [
-          <ButtonContainer btnLabel={users[i].roles} id={users[i]._id} userName={users[i].email} />,
+          <ButtonContainer
+            btnLabel={users[i].roles}
+            id={users[i]._id}
+            userName={users[i].email}
+            updateLocal={() => updateLocal()}
+          />,
         ];
       }
     }
@@ -179,6 +196,8 @@ export default function UserManage() {
     const data = await getUserData();
     const convertedData = convertToAssignBtn(data.users);
     setUserData(convertedData);
+    console.log(userData);
+    console.log(convertedData);
   }, []);
 
   if (!userData) {
