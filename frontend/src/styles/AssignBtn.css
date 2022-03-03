@@ -30,6 +30,10 @@
   padding: 7px 16px;
 }
 
+.btn_assign:hover {
+  cursor: pointer;
+}
+
 .btn_access {
   min-width: 115px;
   background: #0057b8;

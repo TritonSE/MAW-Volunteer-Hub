@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row;
   background-color: white;
-  height: 100vh;
+  height: calc(100vh - 73px);
 }
 
 .side_nav_buttons {
@@ -10,7 +10,6 @@
   flex-direction: column;
   position: relative;
   align-items: center;
-  min-height: 100vh;
   background-color: white;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
 }
@@ -39,6 +38,7 @@
   margin: 40px 20px 40px 20px;
 
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-decoration: none;
@@ -57,7 +57,21 @@
   width: calc(100vw - 190px);
 }
 
-@media only screen and (max-width: 550px) {
+.arrow {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+  position: absolute;
+  top: 59px;
+}
+
+@media only screen and (max-width: 1400px) {
+  .side_nav_links {
+    width: 175px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
   .side_nav_layout {
     flex-direction: column;
   }
@@ -66,6 +80,7 @@
     display: flex;
     flex-direction: row;
     min-height: 62px;
+    max-height: 63px;
     background: var(--blue-gradient);
     box-shadow: none;
   }
@@ -76,16 +91,19 @@
     top: 23.53%;
     bottom: 23.53%;
     color: white;
-    min-width: 145px;
+    white-space: nowrap;
+    width: fit-content;
     height: 40px;
     font-family: Lato;
     font-style: normal;
     font-weight: normal;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 18px;
     background-color: rgba(255, 0, 0, 0);
 
-    margin: 15px 5px 15px 5px;
+    padding-right: 20px;
+    padding-left: 20px;
+    margin: 5px 15px 5px 15px;
   }
 
   .side_nav_display {
