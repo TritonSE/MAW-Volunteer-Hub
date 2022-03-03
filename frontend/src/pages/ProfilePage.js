@@ -53,6 +53,7 @@ function ProfilePage() {
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
     reader.onload = () => {
+      setCacheBreaker(true);
       setPFPModalOpen(true);
       setUpImg(reader.result);
     };
@@ -70,7 +71,7 @@ function ProfilePage() {
 
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
-      setCacheBreaker(cacheBreaker + 1);
+      setCacheBreaker(false);
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
@@ -84,8 +85,7 @@ function ProfilePage() {
       <section className="header-section">
         <div className="profile-image">
           <img
-            key={cacheBreaker}
-            src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
+            src={`${API_ENDPOINTS.PFP_GET}?cacheBreaker=${cacheBreaker}`}
             alt={`${user.full_name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
@@ -118,6 +118,10 @@ function ProfilePage() {
               src={upImg}
               crop={crop}
               minWidth={10}
+              ruleOfThirds={true}
+              imageStyle={{
+                maxHeight: "calc(100vh - 171px)"
+              }}
               onImageLoaded={(img) => setImgRef(img)}
               onChange={(c) => setCrop(c)}
               onComplete={(c) => setCrop(c)}

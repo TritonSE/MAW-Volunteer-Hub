@@ -161,12 +161,21 @@ router.put("/edit/:id", async (req, res, next) => {
 router.get("/pfp/:id?", (req, res) => {
   UserModel.findById(req.params.id ?? req.user._id)
     .then((user) => {
-      res.set("Content-Type", "image/png");
-      if (!user.profilePicture) {
-        res.redirect("/img/no_profile_pic.svg");
+      if(!req.query || !req.query.lastModified){
+        let new_url = req.originalUrl;
+        new_url += (!req.query || Object.keys(req.query).length === 0 ? "?" : "&");
+        new_url += `lastModified=${user.profilePictureModified.getTime()}`;
+        res.set("Cache-Control", "max-age=0");
+        res.redirect(new_url);
       } else {
-        const stream = getFileStream(user.profilePicture);
-        stream.pipe(res);
+        res.set("Content-Type", "image/png");
+        res.set("Cache-Control", "max-age=604800"); // Cache is valid for 7 days
+        if (!user.profilePicture) {
+          res.redirect("/img/no_profile_pic.svg");
+        } else {
+          const stream = getFileStream(user.profilePicture);
+          stream.pipe(res);
+        }
       }
     })
     .catch(errorHandler(res));
@@ -200,6 +209,7 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
 
       Object.assign(user, {
         profilePicture: result.key,
+        profilePictureModified: new Date(),
       });
 
       return Promise.all([

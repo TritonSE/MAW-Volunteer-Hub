@@ -42,8 +42,7 @@
   display: block;
   position: absolute;
   top: 0;
-  left: 0;
-  line-height: 34px;
+  left: -0.5px;
   border-radius: 50%;
 }
 .profile-image > button:hover {

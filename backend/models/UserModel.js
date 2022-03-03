@@ -38,6 +38,10 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  profilePictureModified: {
+    type: Date,
+    default: new Date(0),
+  },
   email: {
     type: String,
     required: true,

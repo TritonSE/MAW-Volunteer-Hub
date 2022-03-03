@@ -34,7 +34,7 @@ function NavBar() {
   const [input, setInput] = useState("");
   const [filteredFiles, setFilteredFiles] = useState([]);
 
-  const [cacheBreaker, _setCacheBreaker] = useContext(CacheBreaker);
+  const [cacheBreaker] = useContext(CacheBreaker);
 
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
@@ -99,7 +99,7 @@ function NavBar() {
             <div className="profile-icon">
               <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
                 <img
-                  src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
+                  src={`${API_ENDPOINTS.PFP_GET}?cacheBreaker=${cacheBreaker}`}
                   alt="Profile Icon"
                   className="account-icon"
                 />

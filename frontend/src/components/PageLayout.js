@@ -18,7 +18,7 @@ export default function PageLayout({ children }) {
   useEffect(() => get_structure(), []);
 
   const memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
-  const breaker = useState(0);
+  const breaker = useState(false);
 
   return (
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
