@@ -29,8 +29,14 @@ const UserSchema = new Schema({
     type: String,
     // required: true,
   },
+  /*
+  defaultProfilePicture: {
+    type: Buffer,
+  },
+  */
   profilePicture: {
     type: String,
+    default: null,
   },
   email: {
     type: String,

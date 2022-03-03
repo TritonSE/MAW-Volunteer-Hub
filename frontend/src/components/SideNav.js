@@ -12,7 +12,7 @@ import "../styles/SideNav.css";
  *                      tab_content: {jsx component that will be rendered on the right-hand side of the screen}
  *                     }
  */
-function SideNav({ tabs }) {
+function SideNav({ tabs, manage }) {
   function compute_route_tab() {
     let out = 0;
     // tabs.findIndex() causes React to throw an error
@@ -62,12 +62,13 @@ function SideNav({ tabs }) {
             onClick={() => setSelected(tab_id)}
           >
             {tab.tab_name}
+            {manage && tab_id === compute_route_tab() && windowWidth < 650 ? (
+              <div className="arrow" />
+            ) : null}
           </Link>
         ))}
       </ScrollContainer>
-      <div className="side_nav_display">
-        <Outlet context={selected} />
-      </div>
+      <div className="side_nav_display">{manage ? <Outlet /> : <Outlet context={selected} />}</div>
     </div>
   );
 }

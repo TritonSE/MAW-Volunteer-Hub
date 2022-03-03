@@ -4,7 +4,7 @@ import { api_file_display } from "../auth";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
 import ModalVariants from "./ModalVariants";
-import FileStructure from "./FileStructure";
+import { FileStructure } from "./Contexts";
 
 Modal.setAppElement(document.getElementById("#root"));
 

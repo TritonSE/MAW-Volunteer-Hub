@@ -1,34 +1,27 @@
 const express = require("express");
-const multer = require("multer");
-const fs = require("fs").promises;
 const mime = require("mime-types");
 
 let ft = import("file-type").then((module) => {
   ft = module;
 });
 
-const { uploadFile, getFileStream, deleteFileAWS } = require("../util/S3Util");
+const { upload, getFileStream, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
-const upload = multer({ dest: "server_uploads/" });
 
 router.post("/upload", upload.single("file"), validate(["name", "category"]), (req, res) => {
-  uploadFile(req.file)
-    .then((result) =>
-      Promise.all([
-        Category.findById(req.body.category),
-        File.create({
-          name: req.body.name,
-          userID: req.user._id,
-          Category_ID: req.body.category,
-          S3_ID: result.key,
-        }),
-        fs.unlink(req.file.path),
-      ])
-    )
+  Promise.all([
+    Category.findById(req.body.category),
+    File.create({
+      name: req.body.name,
+      userID: req.user._id,
+      Category_ID: req.body.category,
+      S3_ID: req.file.key,
+    }),
+  ])
     .then(([category, file]) => {
       category.Files.push(file);
       return category.save();
@@ -81,18 +74,19 @@ router.patch(
   (req, res) => {
     File.findById(req.params.id)
       .then((file) => {
-        const arr = [file];
-        if (req.file) {
-          arr.push(uploadFile(req.file), deleteFileAWS(file.S3_ID));
-        }
-        return Promise.all(arr);
-      })
-      .then(([file, result]) => {
+        const old = file.S3_ID;
+
         Object.assign(file, {
-          S3_ID: result ? result.key : file.S3_ID,
+          S3_ID: req.file ? req.file.key : old,
           name: req.body.updated_file_name ?? file.name,
         });
-        return Promise.all([file, Category.findById(file.Category_ID), file.save()]);
+
+        return Promise.all([
+          file,
+          Category.findById(file.Category_ID),
+          file.save(),
+          req.file ? deleteFileAWS(old) : null,
+        ]);
       })
       .then(([file, category]) => {
         const arr = category.Files.slice();

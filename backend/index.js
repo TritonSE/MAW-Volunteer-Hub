@@ -3,6 +3,7 @@ const createError = require("http-errors");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const config = require("./config");
 // const UserModel = require("./models/model");
 // const CategorySchema = require("./models/Category_model")
@@ -24,6 +25,7 @@ const categoryRoutes = require("./routes/CategoryRoutes");
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser(config.auth.cookie_secret));
 
 app.use("/auth", authRoutes); // authentication routes are not JWT protected
 app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes); // all user routes are JWT protected

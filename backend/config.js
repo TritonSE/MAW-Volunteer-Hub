@@ -8,6 +8,7 @@ module.exports = {
   auth: {
     // register_secret: process.env.REGISTER_SECRET || "tritonse",
     jwt_secret: process.env.JWT_SECRET || "super secret",
+    cookie_secret: process.env.COOKIE_SECRET || "very very secret",
   },
   db: {
     uri: process.env.MONGO_URI || "mongodb://localhost:27017/MAWDB",
@@ -17,5 +18,6 @@ module.exports = {
     bucket_region: process.env.AWS_BUCKET_REGION || "",
     access_key: process.env.AWS_ACCESS_KEY || "",
     secret_key: process.env.AWS_SECRET_KEY || "",
+    max_file_size: 1.6e7, // 16 MB
   },
 };

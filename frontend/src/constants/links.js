@@ -12,6 +12,7 @@ const SITE_PAGES = {
 const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  SIGNOUT: "/auth/signout",
   TOKEN: "/auth/token",
 
   FILE_UPLOAD: "/file/upload",
@@ -27,6 +28,9 @@ const API_ENDPOINTS = {
   CATEGORY_CREATE: "/category/create",
   CATEGORY_UPDATE: "/category/edit",
   CATEGORY_DOWNLOAD: "/category/download",
+
+  PFP_GET: "/user/pfp",
+  PFP_UPLOAD: "/user/pfp/upload",
 };
 
 const SIDENAV_STEPS = [
@@ -43,4 +47,8 @@ const SIDENAV_ROUTES = [
   "wish-reveal-celebration",
   "wish-closeout",
 ];
-export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES };
+
+const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
+
+const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };

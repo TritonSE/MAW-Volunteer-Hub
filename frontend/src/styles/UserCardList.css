@@ -1,0 +1,155 @@
+.user_mobile_display,
+.card_list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card_list {
+  height: calc(100vh - 300px);
+  overflow-y: scroll;
+}
+
+.user_toggle {
+  display: flex;
+  justify-content: space-between;
+  width: calc(100vw - 70px);
+  height: 40px;
+  box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.toggle_btn {
+  background-color: transparent;
+  border: 0px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+
+  color: #75787b;
+}
+
+.toggle_btn_selected {
+  background-color: transparent;
+  border: 0px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+
+  border-bottom: 1px solid #000;
+  color: #0057b8;
+}
+
+.user_toggle button:hover {
+  cursor: pointer;
+}
+
+.user_card {
+  display: flex;
+  justify-content: space-evenly;
+
+  width: calc(100vw - 50px);
+  height: 65px;
+  margin-bottom: 10px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+
+  background: rgba(187, 188, 188, 0.2);
+  border-radius: 8px;
+  color: #101010;
+}
+
+.card_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 10px;
+}
+
+.card_item_top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0px;
+  background: transparent;
+  font-size: 20px;
+
+  width: 200px;
+  min-height: 35px;
+}
+
+.card_item_top:hover {
+  cursor: pointer;
+}
+
+.card_item_bottom {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  height: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.mobile_user_search_bar {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 15px;
+}
+
+.mobile_user_search_input {
+  border-radius: 3px 0px 0px 3px;
+  border-width: 1px;
+  padding-left: 5px;
+  width: 300px;
+  margin-left: 50px;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
+}
+
+.mobile_user_search_input:focus {
+  font-weight: normal;
+  border: 3px lightblue;
+}
+
+.search_bar_container {
+  display: flex;
+  justify-content: center;
+  width: 80vw;
+}
+
+@media only screen and (max-width: 476px) {
+  .card_item_top {
+    font-size: 18px;
+    white-space: nowrap;
+    overflow: scroll;
+
+    width: 150px;
+    min-height: 35px;
+  }
+
+  .card_item_bottom {
+    font-size: 12px;
+  }
+}

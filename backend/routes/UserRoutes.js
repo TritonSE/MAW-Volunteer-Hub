@@ -1,10 +1,23 @@
+const fs = require("fs").promises;
 const express = require("express");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const im = require("imagemagick");
+const util = require("util");
 
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
+const { uploadFile, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { idOfCurrentUser } = require("../util/userUtil");
+const { errorHandler } = require("../util/RouteUtils");
+const config = require("../config");
+
+const upload = multer({
+  dest: "server_uploads/",
+  fileFilter: (req, file, cb) => cb(null, file.mimetype.indexOf("image") > -1),
+  limits: { fileSize: config.amazons3.max_file_size, files: 1 },
+});
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -46,7 +59,7 @@ router.get("/users", (req, res, next) => {
 });
 
 // Get user by id - Will return an object with only the user profile information
-router.get("/:id", (req, res, next) => {
+router.get("/info/:id", (req, res, next) => {
   // check if there is an id param and that it is a valid id
   if (validateIdParam(req, res)) {
     return;
@@ -140,6 +153,64 @@ router.put("/edit/:id", async (req, res, next) => {
   } else {
     checkCurrentUserIsAdmin(req, res, updateInfo);
   }
+});
+
+/**
+ * PROFILE PICTURES
+ */
+router.get("/pfp/:id?", (req, res) => {
+  UserModel.findById(req.params.id ?? req.user._id)
+    .then((user) => {
+      res.set("Content-Type", "image/png");
+      if (!user.profilePicture) {
+        res.redirect("/img/no_profile_pic.svg");
+      } else {
+        const stream = getFileStream(user.profilePicture);
+        stream.pipe(res);
+      }
+    })
+    .catch(errorHandler(res));
+});
+
+router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
+  const crop = JSON.parse(req.body.crop);
+
+  util
+    .promisify(im.convert)([
+      req.file.path,
+      "-crop",
+      `${crop.width}x${crop.height}+${crop.x}+${crop.y}`,
+      "-resize",
+      "400x400^",
+      "-quality",
+      "85",
+      `${req.file.path}.png`,
+    ])
+    .then(() =>
+      Promise.all([
+        UserModel.findById(req.user._id),
+        uploadFile({
+          path: `${req.file.path}.png`,
+          filename: `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+        }),
+      ])
+    )
+    .then(([user, result]) => {
+      const old = user.profilePicture;
+
+      Object.assign(user, {
+        profilePicture: result.key,
+      });
+
+      return Promise.all([
+        user.save(),
+        old ? deleteFileAWS(old) : null,
+        fs.unlink(req.file.path),
+        fs.unlink(`${req.file.path}.png`),
+      ]);
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res));
 });
 
 module.exports = router;
