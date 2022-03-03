@@ -19,21 +19,6 @@ function token_clear() {
 }
 
 /**
- * USER ID UTILITIES
- */
-function uid_get() {
-  return sessionStorage.getItem("uid") ?? localStorage.getItem("uid");
-}
-function uid_set(uid, remember = false) {
-  if (remember) localStorage.setItem("uid", uid);
-  else sessionStorage.setItem("uid", uid);
-}
-function uid_clear() {
-  sessionStorage.removeItem("uid");
-  localStorage.removeItem("uid");
-}
-
-/**
  * GENERAL API CALL UTILS
  */
 async function api_call(
@@ -185,9 +170,6 @@ export {
   token_get,
   token_set,
   token_clear,
-  uid_get,
-  uid_set,
-  uid_clear,
   api_validtoken,
   api_login,
   api_signup,

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
-import { uid_get } from "../auth";
 import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import history from "../history";
@@ -43,8 +42,6 @@ function NavBar() {
       }),
     []
   );
-
-  const userid = uid_get();
 
   return (
     <nav className="container">
@@ -97,7 +94,7 @@ function NavBar() {
 
           <div className="profile-container">
             <div className="profile-icon">
-              <NavLink className="account-button" to={`${SITE_PAGES.PROFILE}/${userid}`}>
+              <NavLink className="account-button" to={`${SITE_PAGES.PROFILE}/`}>
                 <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon" />
               </NavLink>
               <button
@@ -119,7 +116,7 @@ function NavBar() {
             >
               <NavLink
                 className="view-profile-link"
-                to={`${SITE_PAGES.PROFILE}/${userid}`}
+                to={`${SITE_PAGES.PROFILE}/`}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 View your profile

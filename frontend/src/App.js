@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { token_clear, api_validtoken, uid_clear } from "./auth";
+import { token_clear, api_validtoken } from "./auth";
 import { SITE_PAGES, SIDENAV_STEPS, SIDENAV_ROUTES } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -28,7 +28,6 @@ function ProtectedRoute({ isAuth, setIsAuth }) {
 function SignoutHelper({ setIsAuth }) {
   useEffect(() => {
     token_clear();
-    uid_clear();
     setIsAuth(false);
   }, []);
 
@@ -37,7 +36,6 @@ function SignoutHelper({ setIsAuth }) {
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
-
   return (
     <Routes>
       {/* Log In Page */}
@@ -46,8 +44,16 @@ function App() {
       <Route exact path="/" element={<ProtectedRoute isAuth={isAuth} setIsAuth={setIsAuth} />}>
         {/* Profile Page */}
         <Route
-          exact
           path={`${SITE_PAGES.PROFILE}/:id`}
+          element={
+            <PageLayout>
+              <ProfilePage />
+            </PageLayout>
+          }
+        />
+        <Route
+          exact
+          path={`${SITE_PAGES.PROFILE}`}
           element={
             <PageLayout>
               <ProfilePage />

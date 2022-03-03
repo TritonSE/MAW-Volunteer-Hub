@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import { PAGES } from "../constants/pages";
-import { uid_get } from "../auth";
 import "../styles/NavMenuMobile.css";
 import Search from "./Search";
 import history from "../history";
@@ -32,8 +31,6 @@ function NavMenuMobile({
       }),
     []
   );
-
-  const userid = uid_get();
 
   return (
     <div className="nav-menu-mobile">
@@ -119,7 +116,7 @@ function NavMenuMobile({
 
           <NavLink
             className="view-profile-link-mobile"
-            to={`${SITE_PAGES.PROFILE}/${userid}`}
+            to={`${SITE_PAGES.PROFILE}/`}
             onClick={() => setDesktopDropdown((prevState) => !prevState)}
           >
             View your profile
