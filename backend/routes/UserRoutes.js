@@ -46,14 +46,14 @@ router.get("/users", (req, res, next) => {
 });
 
 // Get user by id - Will return an object with only the user profile information
-router.get("/:id", (req, res, next) => {
-  // check if there is an id param and that it is a valid id
-  if (validateIdParam(req, res)) {
+// if no id provided, returns information for current user
+router.get("/:id?", (req, res, next) => {
+  if (req.params.id && validateIdParam(req, res)) {
     return;
   }
 
   UserModel.findById(
-    req.params.id,
+    req.params.id ?? req.user._id,
     { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1, createdAt: 1 },
     (err, user) => {
       if (err) {
