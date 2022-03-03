@@ -21,62 +21,68 @@ async function getUsers() {
 // NOTE: This is just a temporary implementation for the MVP
 async function getUserData() {
   const backendUsers = await getUsers();
-
-  const adminNames = ["Carly", "Gibson", "Freddie", "Bob"];
-  const volunteerNames = [
-    "Bob",
-    "Rob",
-    "Freddie",
-    "Rib",
-    "Pete",
-    "Alice",
-    "Carlos",
-    "David",
-    "Erin",
-    "Frank",
-    "Hank",
-    "Grace",
-  ];
-  const users = [];
-
-  adminNames.map((name, ind) =>
-    users.push({
-      Name: "Admin " + (ind + 1) + " (" + name + ")",
-      Roles: [
-        <ButtonContainer
-          btnLabels={["Allow Access"]}
-          userName={"Admin " + (ind + 1) + " (" + name + ")"}
-        />,
-      ],
-      Admin: true,
-      Completed: ind,
-      Start: "May 2017",
-    })
-  );
-
-  volunteerNames.map((name, ind) =>
-    users.push({
-      Name: "Volunteer " + (ind + 1) + " (" + name + ")",
-      Roles: [
-        <ButtonContainer
-          btnLabels={["Allow Access"]}
-          userName={"Volunteer " + (ind + 1) + " (" + name + ")"}
-        />,
-      ],
-      Admin: false,
-      Completed: ind,
-      Start: "May 2017",
-    })
-  );
   return backendUsers;
 }
 
 // const userData = getUserData();
 
+function VerifyButtonCell({
+  isVerified: initialVerified,
+  row: { index },
+  column: { id },
+  updateMyData,
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
+
+  useEffect(() => {
+    setIsVerifiedState(initialVerified);
+  }, [initialVerified]);
+
+  function handleVerifyUser() {
+    updateMyData(index, id, true);
+
+    setIsVerifiedState(true);
+  }
+  console.log(isVerifiedState);
+  function handleRoleBtnClick(label) {
+    if (label === "Allow Access") {
+      setIsOpen(true);
+      setIsVerifiedState(true);
+      // setUserData(null);
+      // updateLocal(id, userData, setUserData);
+    }
+  }
+  if (!isVerifiedState) {
+    return (
+      <>
+        <ScrollContainer className="assign_btn_container" vertical={false}>
+          <AssignBtn label="Allow Access" key={Math.random()} onClick={() => handleVerifyUser()} />
+        </ScrollContainer>
+        <Modal isOpen={isOpen} contentLabel="Account Access" className="access_notification">
+          <div className="notification_contents">
+            User has been given access.
+            <button type="button" className="confirmation_btn" onClick={() => setIsOpen(false)}>
+              Okay
+            </button>
+          </div>
+        </Modal>
+      </>
+    );
+  }
+  return (
+    <ScrollContainer className="assign_btn_container" vertical={false}>
+      {/* {buttonLabels.map((label) => (
+          <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick(label)} />
+        ))} */}
+    </ScrollContainer>
+  );
+}
+
 const headers = [
   {
     Header: "Name",
-    accessor: "email",
+    accessor: "name",
     Cell: (e) => (
       <a className="user_link" href="/">
         {e.value}
@@ -86,66 +92,18 @@ const headers = [
   // Replace the following three rows with the commented out rows for the full table
   {
     Header: "",
-    accessor: "roles",
+    accessor: "verified",
+    Cell: (props) => <VerifyButtonCell {...props} isVerified={props.value} />,
   },
   {
     Header: "",
     accessor: "empty",
   },
-  // {
-  //   Header: "",
-  //   accessor: "empty1",
-  // },
-  // {
-  //   Header: "Roles",
-  //   accessor: "Roles",
-  // },
-  // {
-  //   Header: "Assignments Completed",
-  //   accessor: "Completed",
-  // },
-  // {
-  //   Header: "Volunteer Since",
-  //   accessor: "Start",
-  // },
 ];
-
-function ButtonContainer({ btnLabels, id, userName, updateLocal }) {
-  const [labels, setLabels] = useState(btnLabels);
-  const [isOpen, setIsOpen] = useState(false);
-
-  function handleRoleBtnClick() {
-    if (labels.length === 1 && labels[0] === "Allow Access") {
-      setLabels(["Assign Role"]);
-      api_verify_user(id);
-      setIsOpen(true);
-      updateLocal(id);
-    }
-  }
-
-  return (
-    <div>
-      <ScrollContainer className="assign_btn_container" vertical={false}>
-        {labels.map((label) => (
-          <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick()} />
-        ))}
-      </ScrollContainer>
-      <Modal isOpen={isOpen} contentLabel="Account Access" className="access_notification">
-        <div className="notification_contents">
-          &quot;{userName}&quot; has been given access.
-          <button type="button" className="confirmation_btn" onClick={() => setIsOpen(false)}>
-            Okay
-          </button>
-        </div>
-      </Modal>
-    </div>
-  );
-}
 
 export default function UserManage() {
   const [userData, setUserData] = useState(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  // const [status, setStatus] = useState(false);
 
   // Updates the windowWidth variable if the window is resized
   useEffect(() => {
@@ -156,49 +114,30 @@ export default function UserManage() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const updateLocal = (id) => {
-    console.log(userData);
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i]._id === id) {
-        userData[i].roles = ["Assign Role"];
-      }
-    }
-  };
-
-  // Change the plain text for roles into ButtonContainers
-  function convertToAssignBtn(users) {
-    for (let i = 0; i < users.length; i++) {
-      if (users[i].roles.length === 0) {
-        users[i].roles = [
-          <ButtonContainer
-            btnLabels={users[i].verified ? ["Assign Role"] : ["Allow Access"]}
-            id={users[i]._id}
-            userName={users[i].email}
-            updateLocal={() => updateLocal()}
-          />,
-        ];
-      } else {
-        users[i].roles = [
-          <ButtonContainer
-            btnLabel={users[i].roles}
-            id={users[i]._id}
-            userName={users[i].email}
-            updateLocal={() => updateLocal()}
-          />,
-        ];
-      }
-    }
-    return users;
-  }
-
   // Get user data from backend
   useEffect(async () => {
     const data = await getUserData();
-    const convertedData = convertToAssignBtn(data.users);
-    setUserData(convertedData);
-    console.log(userData);
-    console.log(convertedData);
+    setUserData(data.users);
   }, []);
+
+  const updateMyData = (rowIndex, columnId, value) => {
+    // We also turn on the flag to not reset the page
+    setUserData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          // verify user here
+          api_verify_user(row._id).catch((err) => {
+            window.reload();
+          });
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          };
+        }
+        return row;
+      })
+    );
+  };
 
   if (!userData) {
     return <div>Data could not be fetched!!!</div>;
@@ -206,7 +145,7 @@ export default function UserManage() {
   return (
     <div>
       {windowWidth > 650 ? (
-        <UserList tableHeaders={headers} userData={userData} />
+        <UserList tableHeaders={headers} userData={userData} updateMyData={updateMyData} />
       ) : (
         <UserCardList userData={userData} />
       )}

@@ -45,9 +45,10 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
 /**
  * @param {Array} tableHeaders Array containing header objects with corresponding accessors
  * @param {Array} userData Array containing user information to be displayed
+ * @param {function} updateMyData function for updating user data
  * @returns
  */
-function UserList({ tableHeaders, userData }) {
+function UserList({ tableHeaders, userData, updateMyData }) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
    * userData should be formated as such:
@@ -62,7 +63,7 @@ function UserList({ tableHeaders, userData }) {
    * ]
    */
 
-  const data = React.useMemo(() => userData, []);
+  const data = React.useMemo(() => userData, [userData]);
 
   /**
    * tableHeaders should be formatted as such:
@@ -89,11 +90,11 @@ function UserList({ tableHeaders, userData }) {
     {
       columns,
       data,
+      updateMyData, // will be available in cell render
     },
     useGlobalFilter,
     useSortBy
   );
-
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
       if (direction) {
