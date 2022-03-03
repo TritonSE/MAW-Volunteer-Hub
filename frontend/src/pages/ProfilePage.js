@@ -15,21 +15,17 @@ function ProfilePage() {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
 
-  const [active, setActive] = useState(history.location.pathname.split("/profile/")[1]);
+  const [active, setActive] = useState(history.location.pathname.split("/profile/")[1] ?? "");
 
   const navigate = useNavigate();
 
-  async function getUser(id) {
-    const res = await api_user(id);
-    if (res === null) navigate("/user-not-found");
-    return res;
-  }
-
   useEffect(async () => {
-    const res = await getUser(active);
-    setUser(res.user);
-    // console.log(res.sameUser);
-    setIsCurrentUser(res.sameUser);
+    const res = await api_user(active);
+    if (!res || !res.user) navigate("/user-not-found");
+    else {
+      setUser(res.user);
+      setIsCurrentUser(res.sameUser);
+    }
   }, [active]);
 
   useEffect(

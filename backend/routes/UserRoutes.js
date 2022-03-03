@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
-const { idOfCurrentUser } = require("../util/userUtil");
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -15,7 +14,7 @@ function validateIdParam(req, res) {
 }
 // if current user is not an admin, then sends a 401 unauthorized
 function checkCurrentUserIsAdmin(req, res, next) {
-  const currentUserId = idOfCurrentUser(req);
+  const currentUserId = res.body._id;
   UserModel.findById(currentUserId, { admin: 1 }, (err, user) => {
     if (err) {
       next(err);
@@ -64,7 +63,7 @@ router.get("/:id?", (req, res, next) => {
         // checks if a user was found with id
         res.status(404).send("No user found with provided id");
       } else {
-        const currentUserId = idOfCurrentUser(req);
+        const currentUserId = req.user._id;
         const sameUser = currentUserId === req.params.id;
         res.status(200).json({ user, sameUser });
       }
@@ -108,7 +107,7 @@ router.put("/edit/:id", async (req, res, next) => {
   if (validateIdParam(req, res)) {
     return;
   }
-  const userId = idOfCurrentUser(req);
+  const userId = req.user._id;
   // we only want the user to be able to update these pieces of their profile
   const sanitizedBody = {};
   if (req.body.name) sanitizedBody.name = req.body.name;
