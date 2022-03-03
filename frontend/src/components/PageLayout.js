@@ -24,7 +24,7 @@ export default function PageLayout({ isAdmin, children }) {
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
       <FileStructure.Provider value={memo}>
         <CacheBreaker.Provider value={breaker}>
-          <NavBar isAdmin={isAdmin}/>
+          <NavBar isAdmin={isAdmin} />
           {children}
         </CacheBreaker.Provider>
       </FileStructure.Provider>

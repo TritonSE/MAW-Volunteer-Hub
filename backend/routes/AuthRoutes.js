@@ -55,7 +55,7 @@ router.post("/login", validate(["email", "password", "remember"], [], false), (r
           cookie_opts.expires = exp;
         }
         res.cookie("token", token, cookie_opts);
-        res.json({ success: true, admin: user.admin  });
+        res.json({ success: true, admin: user.admin });
       });
     } catch (error) {
       res.json({ error });

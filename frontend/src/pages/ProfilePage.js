@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import ReactCrop from "react-image-crop";
 import Modal from "react-modal";
-import history from "../history";
 import { useNavigate } from "react-router-dom";
+import history from "../history";
 
 import { API_ENDPOINTS } from "../constants/links";
 import { api_pfp_upload, api_user } from "../auth";

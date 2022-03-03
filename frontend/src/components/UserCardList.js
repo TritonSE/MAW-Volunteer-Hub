@@ -15,12 +15,12 @@ function UserCard({ user }) {
           type="button"
           onClick={() => handleNameClick()}
         >
-          {user.Name}
+          {user.email}
         </button>
         <div className="card_item_bottom">Assignments Completed: {user.Completed}</div>
       </div>
       <div className="card_col">
-        <div className="card_item_top">{user.Roles}</div>
+        <div className="card_item_top">{user.roles}</div>
         <div className="card_item_bottom">Volunteer Start: {user.Start}</div>
       </div>
     </div>
@@ -67,12 +67,12 @@ function UserCardList({ userData }) {
   const [searchUsers, setSearchUser] = useState("");
 
   // Separates admins from volunteers
-  const separateAdmin = (userName) => {
+  const separateAdmin = (id) => {
     let isAdmin = false;
 
     for (let i = 0; i < userData.length; i++) {
-      if (userData[i].Name === userName) {
-        isAdmin = userData[i].Admin;
+      if (userData[i]._id === id) {
+        isAdmin = userData[i].admin;
       }
     }
 
@@ -89,16 +89,16 @@ function UserCardList({ userData }) {
 
   // Determine if a user should be displayed.
   // Mainly considers the name search variable stored in searchUsers
-  const displayUser = (userName) => {
+  const displayUser = (id, email) => {
     if (searchUsers !== "") {
-      if (separateAdmin(userName) && userName.toLowerCase().includes(searchUsers.toLowerCase())) {
+      if (separateAdmin(id) && email.toLowerCase().includes(searchUsers.toLowerCase())) {
         return true;
       }
 
       return false;
     }
 
-    return separateAdmin(userName);
+    return separateAdmin(id);
   };
 
   const getButtonHeader = (ind) => {
@@ -135,7 +135,7 @@ function UserCardList({ userData }) {
       <UserCardSearch search={setSearchUser} />
       <div className="card_list">
         {userData.map((user) =>
-          displayUser(user.Name) ? <UserCard user={user} key={Math.random()} /> : null
+          displayUser(user._id, user.email) ? <UserCard user={user} key={Math.random()} /> : null
         )}
       </div>
     </div>

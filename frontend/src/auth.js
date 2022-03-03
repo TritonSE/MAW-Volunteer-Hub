@@ -26,7 +26,8 @@ async function api_call(
   try {
     const res = await fetch(endpoint, options);
     return await (blob ? res.blob() : res.json());
-  } catch {
+  } catch (e) {
+    console.log(e);
     return null;
   }
 }
@@ -162,6 +163,19 @@ async function api_user(id) {
   const res = await api_call(`${API_ENDPOINTS.USER}/info/${id}`, { method: "GET" });
   return res;
 }
+async function api_get_users() {
+  const res = await api_call("/user/users", {
+    method: "GET",
+  });
+  return res;
+}
+
+async function api_verify_user(id) {
+  const res = await api_call(`/user/verify/${id}`, {
+    method: "PUT",
+  });
+  return res;
+}
 
 export {
   api_validtoken,
@@ -182,4 +196,6 @@ export {
   api_category_download,
   api_pfp_upload,
   api_user,
+  api_get_users,
+  api_verify_user,
 };
