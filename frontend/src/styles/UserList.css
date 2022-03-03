@@ -2,7 +2,7 @@
 tbody {
   display: block;
   height: calc(100vh - 300px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 thead,
@@ -14,7 +14,7 @@ tbody tr {
 .user_list_layout {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
 }
 .table-container {
   box-sizing: content-box;
@@ -131,7 +131,7 @@ tr:nth-child(2n) .people_table_data_end {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: calc(100vw - 200px);
+  flex: 1;
   margin: 10px;
 }
 

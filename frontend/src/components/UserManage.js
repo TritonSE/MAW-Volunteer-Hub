@@ -44,7 +44,6 @@ function VerifyButtonCell({
 
     setIsVerifiedState(true);
   }
-  console.log(isVerifiedState);
   function handleRoleBtnClick(label) {
     if (label === "Allow Access") {
       setIsOpen(true);
@@ -83,11 +82,13 @@ const headers = [
   {
     Header: "Name",
     accessor: "name",
-    Cell: (e) => (
-      <a className="user_link" href="/">
-        {e.value}
-      </a>
-    ),
+    Cell: ({row, value}) => {
+      return (
+        <a className="user_link" target="_blank" href={`/profile/${row.original._id}`}>
+          {value}
+        </a>
+      )
+    },
   },
   // Replace the following three rows with the commented out rows for the full table
   {
