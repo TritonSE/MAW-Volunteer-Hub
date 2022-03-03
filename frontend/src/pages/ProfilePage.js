@@ -118,9 +118,9 @@ function ProfilePage() {
               src={upImg}
               crop={crop}
               minWidth={10}
-              ruleOfThirds={true}
+              ruleOfThirds
               imageStyle={{
-                maxHeight: "calc(100vh - 171px)"
+                maxHeight: "calc(100vh - 171px)",
               }}
               onImageLoaded={(img) => setImgRef(img)}
               onChange={(c) => setCrop(c)}

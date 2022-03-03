@@ -161,9 +161,9 @@ router.put("/edit/:id", async (req, res, next) => {
 router.get("/pfp/:id?", (req, res) => {
   UserModel.findById(req.params.id ?? req.user._id)
     .then((user) => {
-      if(!req.query || !req.query.lastModified){
+      if (!req.query || !req.query.lastModified) {
         let new_url = req.originalUrl;
-        new_url += (!req.query || Object.keys(req.query).length === 0 ? "?" : "&");
+        new_url += !req.query || Object.keys(req.query).length === 0 ? "?" : "&";
         new_url += `lastModified=${user.profilePictureModified.getTime()}`;
         res.set("Cache-Control", "max-age=0");
         res.redirect(new_url);
