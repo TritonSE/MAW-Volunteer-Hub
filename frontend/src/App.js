@@ -191,8 +191,16 @@ function App() {
       >
         {/* Profile Page */}
         <Route
+          path={`${SITE_PAGES.PROFILE}:id`}
+          element={
+            <PageLayout>
+              <ProfilePage />
+            </PageLayout>
+          }
+        />
+        <Route
           exact
-          path={SITE_PAGES.PROFILE}
+          path={`${SITE_PAGES.PROFILE}`}
           element={
             <PageLayout isAdmin={isAdmin}>
               <ProfilePage />

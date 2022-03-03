@@ -1,13 +1,15 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ReactCrop from "react-image-crop";
 import Modal from "react-modal";
-import "react-image-crop/dist/ReactCrop.css";
+import history from "../history";
+import { useNavigate } from "react-router-dom";
 
 import { API_ENDPOINTS } from "../constants/links";
-import { api_pfp_upload } from "../auth";
+import { api_pfp_upload, api_user } from "../auth";
 import { CacheBreaker } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
+import "react-image-crop/dist/ReactCrop.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
@@ -23,12 +25,30 @@ function ProfilePage() {
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
 
-  const user = {
-    full_name: "Carly Shay",
-    email: "carlyshay@gmail.com",
-    join_date: "June 2019",
-    profilePicture: "",
-  };
+  const [user, setUser] = useState({});
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
+
+  const [active, setActive] = useState(history.location.pathname.split("/profile/")[1] ?? "");
+
+  const navigate = useNavigate();
+
+  useEffect(async () => {
+    const res = await api_user(active);
+    if (!res || !res.user) navigate("/user-not-found");
+    else {
+      setUser(res.user);
+      setIsCurrentUser(res.sameUser);
+    }
+  }, [active]);
+
+  useEffect(
+    () =>
+      history.listen((e) => {
+        setActive(e.location.pathname.split("/profile/")[1]);
+      }),
+    []
+  );
 
   function prepare_pfp(e) {
     if (e.target.files.length === 0) return;
@@ -86,7 +106,7 @@ function ProfilePage() {
           <img
             key={cacheBreaker}
             src={`${API_ENDPOINTS.PFP_GET}?${cacheBreaker}`}
-            alt={`${user.full_name}'s Profile`}
+            alt={`${user.name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
           <button type="button">
@@ -151,27 +171,35 @@ function ProfilePage() {
           </Modal>
         </div>
         <div className="profile-header-info">
-          <h1>{user.full_name}</h1>
-          <h2>Joined {user.join_date}</h2>
+          <h1>{user.name}</h1>
+          <h2>
+            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+            {new Date(user.createdAt).getFullYear()}
+          </h2>
           <br />
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          <button
-            type="button"
-            className="change-password-button"
-            onClick={() => setPassModalOpen(true)}
-          >
-            Change Password
-          </button>
-          <button
-            type="button"
-            className="delete-account-button"
-            onClick={() => setDeleteModalOpen(true)}
-          >
-            Delete Profile
-          </button>
+          {isCurrentUser && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setPassModalOpen(true)}
+            >
+              Change Password
+            </button>
+          )}
+          {true && (
+            <button
+              type="button"
+              className="delete-account-button"
+              onClick={() => setDeleteModalOpen(true)}
+            >
+              Delete Profile
+            </button>
+          )}
         </div>
+        {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
       {/* Change Password and Delete Profile Modals */}
@@ -221,7 +249,7 @@ function ProfilePage() {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger " type="button">
+          <button className="modal-button small button-danger" type="button">
             Delete
           </button>
         </div>

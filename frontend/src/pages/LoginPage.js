@@ -60,6 +60,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
+      console.log(res);
       const success = Boolean(res && !res.error);
 
       if (isLogin) {
@@ -68,7 +69,6 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
 
         if (success) {
           setIsAdmin(res.admin);
-          token_set(res.token, doRemember);
           navigate(SITE_PAGES.HOME);
         }
       } else {

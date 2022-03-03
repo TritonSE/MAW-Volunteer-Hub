@@ -3,7 +3,7 @@ const SITE_PAGES = {
   HOME: "/",
   LOGIN: "/login",
   WISH_GRANTING: "/wish-granting",
-  PROFILE: "/profile",
+  PROFILE: "/profile/",
   MANAGE: "/manage",
 
   SIGNOUT: "/signout",
@@ -31,6 +31,7 @@ const API_ENDPOINTS = {
 
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
+  USER: "/user",
 };
 
 const SIDENAV_STEPS = [

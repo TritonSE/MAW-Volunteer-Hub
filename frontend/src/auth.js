@@ -155,6 +155,13 @@ async function api_pfp_upload(pfp, crop) {
   });
   return res;
 }
+/**
+ * USER
+ */
+async function api_user(id) {
+  const res = await api_call(`${API_ENDPOINTS.USER}/info/${id}`, { method: "GET" });
+  return res;
+}
 
 export {
   api_validtoken,
@@ -174,4 +181,5 @@ export {
   api_category_update,
   api_category_download,
   api_pfp_upload,
+  api_user,
 };

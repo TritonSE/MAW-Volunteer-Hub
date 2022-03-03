@@ -126,7 +126,7 @@ function NavBar({ isAdmin }) {
             >
               <NavLink
                 className="view-profile-link"
-                to={SITE_PAGES.PROFILE}
+                to={`${SITE_PAGES.PROFILE}/`}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 View your profile
