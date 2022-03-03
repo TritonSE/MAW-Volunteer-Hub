@@ -14,7 +14,7 @@ tbody tr {
 .user_list_layout {
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow: auto;
 }
 .table-container {
   box-sizing: content-box;

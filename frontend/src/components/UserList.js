@@ -48,7 +48,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
  * @param {function} updateMyData function for updating user data
  * @returns
  */
-function UserList({ tableHeaders, userData, updateMyData }) {
+function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModal }) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
    * userData should be formated as such:
@@ -91,6 +91,7 @@ function UserList({ tableHeaders, userData, updateMyData }) {
       columns,
       data,
       updateMyData, // will be available in cell render
+      handleConfirmationModal, // for showing confirm modal
     },
     useGlobalFilter,
     useSortBy
