@@ -64,7 +64,7 @@ router.get("/:id?", (req, res, next) => {
         res.status(404).send("No user found with provided id");
       } else {
         const currentUserId = req.user._id;
-        const sameUser = currentUserId === req.params.id ?? req.user._id;
+        const sameUser = currentUserId === (req.params.id ?? req.user._id);
         res.status(200).json({ user, sameUser });
       }
     }

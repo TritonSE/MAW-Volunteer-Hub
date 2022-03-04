@@ -7,7 +7,7 @@ import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage() {
+function ProfilePage({ isAdmin }) {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -24,6 +24,7 @@ function ProfilePage() {
     if (!res || !res.user) navigate("/user-not-found");
     else {
       setUser(res.user);
+      console.log(res.sameUser);
       setIsCurrentUser(res.sameUser);
     }
   }, [id]);
@@ -57,7 +58,7 @@ function ProfilePage() {
               Change Password
             </button>
           )}
-          {true && (
+          {isAdmin && (
             <button
               type="button"
               className="delete-account-button"

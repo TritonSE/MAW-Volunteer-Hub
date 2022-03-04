@@ -199,8 +199,8 @@ function App() {
             </PageLayout>
           }
         >
-          <Route path=":id" element={<ProfilePage />} />
-          <Route path={SITE_PAGES.PROFILE} element={<ProfilePage />} />
+          <Route path=":id" element={<ProfilePage isAdmin={isAdmin} />} />
+          <Route path={SITE_PAGES.PROFILE} element={<ProfilePage isAdmin={isAdmin} />} />
         </Route>
         {/* Manage Page */}
         <Route
