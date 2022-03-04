@@ -71,7 +71,7 @@ function ProfilePage() {
 
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
-      setCacheBreaker(false);
+      setCacheBreaker(cacheBreaker + 1);
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
