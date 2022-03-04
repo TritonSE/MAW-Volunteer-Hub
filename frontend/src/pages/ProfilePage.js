@@ -53,7 +53,6 @@ function ProfilePage() {
     const reader = new FileReader();
     reader.readAsDataURL(e.target.files[0]);
     reader.onload = () => {
-      setCacheBreaker(true);
       setPFPModalOpen(true);
       setUpImg(reader.result);
     };
