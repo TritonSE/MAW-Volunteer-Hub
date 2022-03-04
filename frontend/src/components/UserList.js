@@ -51,6 +51,7 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
 function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModal }) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
+   * NOTE: This format only applies for the hard-coded user information used for V1
    * userData should be formated as such:
    * const userData = [
    *    {

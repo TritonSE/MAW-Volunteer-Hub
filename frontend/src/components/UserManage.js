@@ -10,23 +10,16 @@ import "../styles/UserManage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
+// Get user data from backend
 async function getUsers() {
   try {
     const res = await api_get_users();
     return res;
   } catch {
-    console.log("Couldn't access users");
+    console.error("Couldn't access users");
   }
   return "";
 }
-
-// NOTE: This is just a temporary implementation for the MVP
-async function getUserData() {
-  const backendUsers = await getUsers();
-  return backendUsers;
-}
-
-// const userData = getUserData();
 
 function VerifyButtonCell({
   isVerified: initialVerified,
@@ -36,28 +29,29 @@ function VerifyButtonCell({
   updateMyData,
   handleConfirmationModal,
 }) {
-  // const [isOpen, setIsOpen] = useState(false);
   const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
+
   useEffect(() => {
     setIsVerifiedState(initialVerified);
   }, [initialVerified]);
 
   function handleVerifyUser() {
-    console.log({ index, id });
+    // console.log({ index, id });
     updateMyData(index, id, true);
-
     setIsVerifiedState(true);
   }
+
   function handleRoleBtnClick(label) {
     if (label === "Allow Access") {
       // setIsOpen(true);
       handleConfirmationModal({ name: userName, isOpen: true });
-      setIsVerifiedState(true);
       handleVerifyUser();
+      // setIsVerifiedState(true);
       // setUserData(null);
       // updateLocal(id, userData, setUserData);
     }
   }
+
   if (!isVerifiedState) {
     return (
       <ScrollContainer className="assign_btn_container" vertical={false}>
@@ -123,7 +117,7 @@ export default function UserManage() {
 
   // Get user data from backend
   useEffect(async () => {
-    const data = await getUserData();
+    const data = await getUsers();
     setUserData(data.users);
   }, []);
 
@@ -149,6 +143,7 @@ export default function UserManage() {
   const handleConfirmationModal = ({ name, isOpen }) => {
     setModalState({ name, isOpen });
   };
+
   if (!userData) {
     return <div>Data could not be fetched!!!</div>;
   }

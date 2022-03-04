@@ -69,7 +69,6 @@ function UserCardSearch({ search }) {
 function UserCardList({ userData, ...props }) {
   const [showAdmin, setShowAdmin] = useState(false);
   const [searchUsers, setSearchUser] = useState("");
-  console.log(userData);
   // Separates admins from volunteers
   const separateAdmin = (id) => {
     let isAdmin = false;
