@@ -50,6 +50,16 @@ function uploadFile(file) {
   return s3.upload(uploadParams).promise();
 }
 
+function uploadFileStream(stream, name) {
+  const uploadParams = {
+    Bucket: bucketName,
+    Body: stream,
+    Key: name,
+  };
+
+  return s3.upload(uploadParams).promise();
+}
+
 // downloads a file from s3
 function getFileStream(fileKey) {
   const downloadParams = {
@@ -80,4 +90,4 @@ function Download(fileKey) {
   return s3.getObject(fileParams).promise();
 }
 
-module.exports = { upload, uploadFile, deleteFileAWS, getFileStream, Download };
+module.exports = { upload, uploadFile, uploadFileStream, deleteFileAWS, getFileStream, Download };

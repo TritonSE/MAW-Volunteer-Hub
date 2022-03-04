@@ -2,13 +2,12 @@ const fs = require("fs").promises;
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
-const im = require("imagemagick");
-const util = require("util");
+const sharp = require("sharp");
 
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
-const { uploadFile, deleteFileAWS, getFileStream } = require("../util/S3Util");
+const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { idOfCurrentUser } = require("../util/userUtil");
 const { errorHandler } = require("../util/RouteUtils");
 const config = require("../config");
@@ -184,26 +183,27 @@ router.get("/pfp/:id?", (req, res) => {
 router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
   const crop = JSON.parse(req.body.crop);
 
-  util
-    .promisify(im.convert)([
-      req.file.path,
-      "-crop",
-      `${crop.width}x${crop.height}+${crop.x}+${crop.y}`,
-      "-resize",
-      "400x400^",
-      "-quality",
-      "85",
-      `${req.file.path}.png`,
-    ])
-    .then(() =>
-      Promise.all([
-        UserModel.findById(req.user._id),
-        uploadFile({
-          path: `${req.file.path}.png`,
-          filename: `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`,
-        }),
-      ])
-    )
+  let compressor = sharp(req.file.path);
+  if (crop.width !== 0 && crop.height !== 0 && crop.x !== 0 && crop.y !== 0) {
+    compressor = compressor.extract({
+      ...crop,
+      left: crop.x,
+      top: crop.y,
+    });
+  }
+  compressor = compressor.resize(400, 400).png({
+    compressionLevel: 9,
+    adaptiveFiltering: true,
+    force: true,
+  });
+
+  Promise.all([
+    UserModel.findById(req.user._id),
+    uploadFileStream(
+      compressor,
+      `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`
+    ),
+  ])
     .then(([user, result]) => {
       const old = user.profilePicture;
 
@@ -212,12 +212,7 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
         profilePictureModified: new Date(),
       });
 
-      return Promise.all([
-        user.save(),
-        old ? deleteFileAWS(old) : null,
-        fs.unlink(req.file.path),
-        fs.unlink(`${req.file.path}.png`),
-      ]);
+      return Promise.all([user.save(), old ? deleteFileAWS(old) : null, fs.unlink(req.file.path)]);
     })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res));
