@@ -55,7 +55,7 @@ async function api_validtoken() {
   if (!token_get()) return false;
 
   const res = await api_call(API_ENDPOINTS.TOKEN);
-  return res && res.valid;
+  return res;
 }
 
 /**
