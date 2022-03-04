@@ -44,10 +44,9 @@ router.post("/login", (req, res, next) => {
 
 // Token validation route
 router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {
-  UserModel.findById((req.user ?? {})._id, (err, user) => {
-    if (err) res.json({ valid: false, admin: false });
-    else res.json({ valid: Boolean(req.user), admin: user.admin });
-  });
+  UserModel.findById((req.user ?? {})._id)
+    .then((user) => res.json({ valid: Boolean(user) && Boolean(req.user), admin: user.admin }))
+    .catch(() => res.json({ valid: false, admin: false }));
 });
 
 module.exports = router;
