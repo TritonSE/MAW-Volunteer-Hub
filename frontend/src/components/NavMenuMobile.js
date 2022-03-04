@@ -21,6 +21,7 @@ function NavMenuMobile({
   setFilteredFiles,
   desktopDropdown,
   setDesktopDropdown,
+  isAdmin,
 }) {
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
@@ -98,18 +99,19 @@ function NavMenuMobile({
           <hr className="separator-mobile" />
 
           <div className="pages-container-mobile">
-            {Object.entries(PAGES).map(([page, route]) => (
-              <NavLink
-                key={route}
-                className={`page-links-mobile ${
-                  active.trim() !== "" && route.indexOf(active) > -1 ? "underline-mobile" : ""
-                }`}
-                to={route}
-                onClick={() => setDesktopDropdown((prevState) => !prevState)}
-              >
-                {page}
-              </NavLink>
-            ))}
+            {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
+              (needs_admin && isAdmin) || !needs_admin ? (
+                <NavLink
+                  key={route}
+                  className={`page-links-mobile ${
+                    active.trim() !== "" && route.indexOf(active) > -1 ? "underline-mobile" : ""
+                  }`}
+                  to={route}
+                >
+                  {page}
+                </NavLink>
+              ) : null
+            )}
           </div>
 
           <hr className="separator-mobile" />
