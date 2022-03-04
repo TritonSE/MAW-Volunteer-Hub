@@ -14,7 +14,7 @@ function validateIdParam(req, res) {
 }
 // if current user is not an admin, then sends a 401 unauthorized
 function checkCurrentUserIsAdmin(req, res, next) {
-  const currentUserId = res.body._id;
+  const currentUserId = res.user._id;
   UserModel.findById(currentUserId, { admin: 1 }, (err, user) => {
     if (err) {
       next(err);
@@ -64,7 +64,7 @@ router.get("/:id?", (req, res, next) => {
         res.status(404).send("No user found with provided id");
       } else {
         const currentUserId = req.user._id;
-        const sameUser = currentUserId === req.params.id;
+        const sameUser = currentUserId === req.params.id ?? req.user._id;
         res.status(200).json({ user, sameUser });
       }
     }

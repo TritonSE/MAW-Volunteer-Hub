@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api_user } from "../auth";
 import history from "../history";
 import "../styles/ProfilePage.css";
@@ -15,26 +15,18 @@ function ProfilePage() {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
 
-  const [active, setActive] = useState(history.location.pathname.split("/profile/")[1] ?? "");
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
   useEffect(async () => {
-    const res = await api_user(active);
+    const res = await api_user(id ?? "");
     if (!res || !res.user) navigate("/user-not-found");
     else {
       setUser(res.user);
       setIsCurrentUser(res.sameUser);
     }
-  }, [active]);
-
-  useEffect(
-    () =>
-      history.listen((e) => {
-        setActive(e.location.pathname.split("/profile/")[1]);
-      }),
-    []
-  );
+  }, [id]);
 
   return (
     <div className="profile-page">

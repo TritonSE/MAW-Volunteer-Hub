@@ -158,22 +158,16 @@ function App() {
       <Route exact path="/" element={<ProtectedRoute isAuth={isAuth} setIsAuth={setIsAuth} />}>
         {/* Profile Page */}
         <Route
-          path={`${SITE_PAGES.PROFILE}/:id`}
+          path={SITE_PAGES.PROFILE}
           element={
             <PageLayout>
-              <ProfilePage />
+              <Outlet />
             </PageLayout>
           }
-        />
-        <Route
-          exact
-          path={`${SITE_PAGES.PROFILE}`}
-          element={
-            <PageLayout>
-              <ProfilePage />
-            </PageLayout>
-          }
-        />
+        >
+          <Route path=":id" element={<ProfilePage />} />
+          <Route path={SITE_PAGES.PROFILE} element={<ProfilePage />} />
+        </Route>
         {/* Manage Page */}
         <Route
           exact
