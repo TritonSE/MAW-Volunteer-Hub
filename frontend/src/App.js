@@ -22,19 +22,38 @@ import UserManage from "./components/UserManage";
 
 const MANAGE_COMPONENTS = [<UserManage />, <div>Message</div>, <div>Wish Wednesday</div>];
 
-function ProtectedRoute({ isAuth, setIsAuth }) {
+function ProtectedRoute({
+  isAuth,
+  setIsAuth,
+  isAdmin,
+  setIsAdmin,
+
+  needsAdmin = false,
+  dest = SITE_PAGES.LOGIN,
+  children = null,
+  useChildren = false,
+  doCheck = true,
+} = {}) {
   const [hasFired, setHasFired] = useState(false);
 
-  useEffect(async () => {
-    setIsAuth(await api_validtoken());
-    setHasFired(true);
-  }, []);
+  if (doCheck) {
+    useEffect(async () => {
+      const res = (await api_validtoken()) ?? { valid: false, admin: false };
+      setIsAuth(res.valid);
+      setIsAdmin(res.admin);
+      setHasFired(true);
+    }, []);
+  } else {
+    useEffect(() => {
+      setHasFired(true);
+    }, [isAuth, isAdmin]);
+  }
 
-  if (!isAuth) {
-    if (hasFired) return <Navigate to={SITE_PAGES.LOGIN} />;
+  if (!isAuth || (!isAdmin && needsAdmin)) {
+    if (hasFired) return <Navigate to={dest} />;
     return null;
   }
-  return <Outlet />;
+  return useChildren ? children : <Outlet />;
 }
 
 function SignoutHelper({ setIsAuth }) {
@@ -48,31 +67,68 @@ function SignoutHelper({ setIsAuth }) {
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // Updates the windowWidth variable if the window is resized
+  useEffect(() => {
+    function handleResize() {
+      setWindowWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <Routes>
       {/* Log In Page */}
-      <Route exact path={SITE_PAGES.LOGIN} element={<LoginPage setIsAuth={setIsAuth} />} />
+      <Route
+        exact
+        path={SITE_PAGES.LOGIN}
+        element={<LoginPage setIsAuth={setIsAuth} setIsAdmin={setIsAdmin} />}
+      />
 
-      <Route exact path="/" element={<ProtectedRoute isAuth={isAuth} setIsAuth={setIsAuth} />}>
+      <Route
+        exact
+        path="/"
+        element={
+          <ProtectedRoute
+            isAuth={isAuth}
+            setIsAuth={setIsAuth}
+            isAdmin={isAdmin}
+            setIsAdmin={setIsAdmin}
+          />
+        }
+      >
         {/* Profile Page */}
         <Route
-          exact
           path={SITE_PAGES.PROFILE}
           element={
             <PageLayout>
-              <ProfilePage />
+              <Outlet />
             </PageLayout>
           }
-        />
+        >
+          <Route path=":id" element={<ProfilePage isAdmin={isAdmin} />} />
+          <Route path={SITE_PAGES.PROFILE} element={<ProfilePage isAdmin={isAdmin} />} />
+        </Route>
         {/* Manage Page */}
         <Route
           exact
           path={SITE_PAGES.MANAGE}
           element={
-            <PageLayout>
-              <ManagePage />
-            </PageLayout>
+            <ProtectedRoute
+              isAuth={isAuth}
+              isAdmin={isAdmin}
+              needsAdmin
+              dest={SITE_PAGES.WISH_GRANTING}
+              useChildren
+              doCheck={false}
+            >
+              <PageLayout isAdmin={isAdmin}>
+                <ManagePage />
+              </PageLayout>
+            </ProtectedRoute>
           }
         >
           <Route
@@ -90,7 +146,7 @@ function App() {
         <Route
           path={SITE_PAGES.WISH_GRANTING}
           element={
-            <PageLayout>
+            <PageLayout isAdmin={isAdmin}>
               <WishGrantingPage />
             </PageLayout>
           }
@@ -117,7 +173,7 @@ function App() {
         <Route
           path="*"
           element={
-            <PageLayout>
+            <PageLayout isAdmin={isAdmin}>
               <Custom404Page />
             </PageLayout>
           }
