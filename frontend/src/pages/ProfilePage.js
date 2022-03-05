@@ -30,6 +30,21 @@ function ProfilePage() {
     profilePicture: "",
   };
 
+  function fix_crop(e) {
+    const img = e.currentTarget;
+    const size = Math.min(img.width, img.height);
+
+    setCrop({
+      unit: "px",
+      aspect: 1,
+      width: size,
+      height: size,
+      x: (img.width - size) / 2,
+      y: (img.height - size) / 2,
+    });
+    setImgRef(img);
+  }
+
   function prepare_pfp(e) {
     if (e.target.files.length === 0) return;
 
@@ -113,26 +128,43 @@ function ProfilePage() {
             contentLabel="Change profile picture"
           >
             <h1 className="modal-title-crop">Crop Profile Picture</h1>
+            <span className="modal-subtitle-crop">Click and drag to crop</span>
             <ReactCrop
-              src={upImg}
               crop={crop}
+              aspect={1}
               minWidth={10}
               ruleOfThirds
-              imageStyle={{
-                maxHeight: "calc(100vh - 171px)",
-              }}
-              onImageLoaded={(img) => setImgRef(img)}
+              imageStyle={{}}
               onChange={(c) => setCrop(c)}
               onComplete={(c) => setCrop(c)}
-            />
-            <br />
-            <button
-              type="button"
-              className="modal-button button-primary button-nomargin"
-              onClick={do_upload}
             >
-              Upload
-            </button>
+              <img
+                alt="Crop modal"
+                src={upImg}
+                style={{
+                  maxHeight: "calc(100vh - 180px)",
+                }}
+                onLoad={fix_crop}
+              />
+            </ReactCrop>
+            <br />
+            <div className="modal-flex-crop">
+              <button
+                type="button"
+                className="modal-button button-nomargin change-password-button"
+                onClick={() => setPFPModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <span>&nbsp;</span>
+              <button
+                type="button"
+                className="modal-button button-primary button-nomargin"
+                onClick={do_upload}
+              >
+                Upload
+              </button>
+            </div>
           </Modal>
           <Modal
             className="profile-page-modal"

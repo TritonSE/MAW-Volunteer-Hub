@@ -250,7 +250,18 @@
 
 .modal-title-crop {
   margin-top: 0 !important;
+  margin-bottom: 10px !important;
+}
+.modal-subtitle-crop {
   margin-bottom: 15px !important;
+  font-size: 12px;
+  font-style: italic;
+}
+.modal-flex-crop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 .button-nomargin {
   margin: 0 !important;
