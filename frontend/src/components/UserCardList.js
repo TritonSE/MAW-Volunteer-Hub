@@ -92,9 +92,9 @@ function UserCardList({ userData, ...props }) {
 
   // Determine if a user should be displayed.
   // Mainly considers the name search variable stored in searchUsers
-  const displayUser = (id, email) => {
+  const displayUser = (id, userName) => {
     if (searchUsers !== "") {
-      if (separateAdmin(id) && email.toLowerCase().includes(searchUsers.toLowerCase())) {
+      if (separateAdmin(id) && userName.toLowerCase().includes(searchUsers.toLowerCase())) {
         return true;
       }
 
@@ -139,7 +139,7 @@ function UserCardList({ userData, ...props }) {
       <div className="card_list">
         {userData.map(
           (user, i) =>
-            displayUser(user._id, user.email) && (
+            displayUser(user._id, user.name) && (
               <UserCard user={user} key={Math.random()} row={i} {...props} />
             )
         )}
