@@ -14,6 +14,7 @@ function parseAuthHeader(hdrValue) {
 
 // helper function-- retrieves JWT token then parses it to get user id of logged in user
 // modifed PassportJS's fromAuthHeaderWithScheme function
+// no longer needed because we can retrieve user id from req.user._id;
 function idOfCurrentUser(req) {
   // retreives JWT token
   // var token;

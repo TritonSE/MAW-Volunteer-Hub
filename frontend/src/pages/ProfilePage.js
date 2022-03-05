@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-
+import { useNavigate, useParams } from "react-router-dom";
+import { api_user } from "../auth";
+import history from "../history";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage() {
+function ProfilePage({ isAdmin }) {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-  const user = {
-    full_name: "Carly Shay",
-    email: "carlyshay@gmail.com",
-    join_date: "June 2019",
-    profilePicture: "",
-  };
+  const [user, setUser] = useState({});
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
+
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  useEffect(async () => {
+    const res = await api_user(id ?? "");
+    if (!res || !res.user) navigate("/user-not-found");
+    else {
+      setUser(res.user);
+      console.log(res.sameUser);
+      setIsCurrentUser(res.sameUser);
+    }
+  }, [id]);
 
   return (
     <div className="profile-page">
@@ -22,32 +35,40 @@ function ProfilePage() {
         <div className="profile-image">
           <img
             src="https://www.pinclipart.com/picdir/big/372-3725108_user-profile-avatar-scalable-vector-graphics-icon-woman.png"
-            alt={`${user.full_name}'s Profile`}
+            alt={`${user.name}'s Profile`}
           />
           <button type="button">+</button>
         </div>
         <div className="profile-header-info">
-          <h1>{user.full_name}</h1>
-          <h2>Joined {user.join_date}</h2>
+          <h1>{user.name}</h1>
+          <h2>
+            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+            {new Date(user.createdAt).getFullYear()}
+          </h2>
           <br />
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          <button
-            type="button"
-            className="change-password-button"
-            onClick={() => setPassModalOpen(true)}
-          >
-            Change Password
-          </button>
-          <button
-            type="button"
-            className="delete-account-button"
-            onClick={() => setDeleteModalOpen(true)}
-          >
-            Delete Profile
-          </button>
+          {isCurrentUser && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setPassModalOpen(true)}
+            >
+              Change Password
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              type="button"
+              className="delete-account-button"
+              onClick={() => setDeleteModalOpen(true)}
+            >
+              Delete Profile
+            </button>
+          )}
         </div>
+        {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
       {/* Change Password and Delete Profile Modals */}
@@ -97,7 +118,7 @@ function ProfilePage() {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger " type="button">
+          <button className="modal-button small button-danger" type="button">
             Delete
           </button>
         </div>
