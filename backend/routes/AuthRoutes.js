@@ -3,7 +3,6 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 
 const User = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
@@ -12,11 +11,10 @@ const router = express.Router();
 
 // Sign up route
 router.post("/signup", passport.authenticate("signup", { session: false }), (req, res) => {
-  Promise.all([User.findById(req.user._id), bcrypt.hash(req.body.password, 10)])
-    .then(([user, password]) => {
+  User.findById(req.user._id)
+    .then((user) => {
       Object.assign(user, {
         name: req.body.name,
-        password,
       });
       return user.save();
     })
