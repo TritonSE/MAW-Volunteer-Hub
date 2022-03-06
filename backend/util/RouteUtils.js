@@ -2,6 +2,9 @@
  * RouteUtils.js: Utilities for writing routes more cleanly
  */
 
+const config = require("../config");
+const log = require("./Logger");
+
 /**
  * A simple parameter validator middleware,
  *   verifying that the given body parameters
@@ -33,8 +36,9 @@ const validate =
  *   error to the screen if in development.
  */
 const errorHandler = (res) => (e) => {
-  if (process.env.NODE_ENV === "dev") console.error(e);
-  res.status(500).json({ error: e.toString() });
+  log.error(e);
+  if (config.app.env === "development") res.status(500).json({ error: e.toString() });
+  else res.status(500).json({ error: true });
 };
 
 module.exports = {

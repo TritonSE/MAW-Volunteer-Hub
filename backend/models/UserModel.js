@@ -4,20 +4,6 @@ const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
 
-// Anonther way to add an email section-- to make sure the email is a real email and belongs to the user
-// doesn't completely work and may be unnecessarily complicated so I commented it out
-// in case we want to use this in the future
-/* const Email = new Schema({	
-    address: {
-        type: String,  
-        required: [true, "can't be blank"],
-        match: [/\S+@\S+\.\S+/, 'is invalid'], 
-        index: true},
-    validated: {type: Boolean, default: false}
-    
-
-}); */
-
 const UserSchema = new Schema(
   {
     verified: {
@@ -37,6 +23,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
     },
     admin: {
       type: Boolean,

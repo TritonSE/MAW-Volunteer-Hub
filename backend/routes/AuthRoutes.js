@@ -1,10 +1,9 @@
-/* eslint consistent-return: "warn" */
-
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/UserModel");
+const config = require("../config");
 
 const router = express.Router();
 
@@ -32,7 +31,7 @@ router.post("/login", (req, res, next) => {
         }
 
         const body = { _id: user._id, email: user.email }; // sign is admin into this body
-        const token = jwt.sign({ user: body }, "TOP_SECRET");
+        const token = jwt.sign({ user: body }, config.auth.jwt_secret);
 
         res.json({ token, admin: user.admin });
       });

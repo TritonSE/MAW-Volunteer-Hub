@@ -7,11 +7,12 @@ const JWTstrategy = require("passport-jwt").Strategy;
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
 const UserModel = require("../models/UserModel");
+const config = require("../config");
 
 passport.use(
   new JWTstrategy(
     {
-      secretOrKey: "TOP_SECRET",
+      secretOrKey: config.auth.jwt_secret,
       jwtFromRequest: ExtractJWT.fromExtractors([
         ExtractJWT.fromAuthHeaderAsBearerToken(),
         ExtractJWT.fromUrlQueryParameter("secret_token"),
