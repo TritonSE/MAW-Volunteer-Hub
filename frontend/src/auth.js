@@ -36,7 +36,7 @@ async function api_call(
  */
 async function api_validtoken() {
   const res = await api_call(API_ENDPOINTS.TOKEN);
-  return res && res.valid;
+  return res;
 }
 
 /**
@@ -145,8 +145,13 @@ async function api_category_download(id) {
 }
 
 /**
- * PROFILE PICTURES
+ * USER / PROFILE PICTURES
  */
+async function api_user(id) {
+  const res = await api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
+  return res;
+}
+
 async function api_pfp_upload(pfp, crop) {
   const res = await api_call(API_ENDPOINTS.PFP_UPLOAD, {
     data: { pfp, crop },
@@ -173,5 +178,6 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
+  api_user,
   api_pfp_upload,
 };

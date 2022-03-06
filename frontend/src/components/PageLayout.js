@@ -7,7 +7,7 @@ import { api_category_all } from "../auth";
 import NavBar from "./NavBar";
 import { FileStructure, CacheBreaker } from "./Contexts";
 
-export default function PageLayout({ children }) {
+export default function PageLayout({ isAdmin, children }) {
   const [structure, setStructure] = useState({});
 
   async function get_structure() {
@@ -24,7 +24,7 @@ export default function PageLayout({ children }) {
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
       <FileStructure.Provider value={memo}>
         <CacheBreaker.Provider value={breaker}>
-          <NavBar />
+          <NavBar isAdmin={isAdmin} />
           {children}
         </CacheBreaker.Provider>
       </FileStructure.Provider>

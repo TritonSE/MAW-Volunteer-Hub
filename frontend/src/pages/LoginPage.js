@@ -35,7 +35,7 @@ function PasswordField({ name, placeholder, className, onChange }) {
   );
 }
 
-function LoginPage({ setIsAuth }) {
+function LoginPage({ setIsAuth, setIsAdmin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,13 +60,16 @@ function LoginPage({ setIsAuth }) {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res);
+      const success = Boolean(res && !res.error);
 
       if (isLogin) {
         setSuccessState(success);
         setIsAuth(success);
 
-        if (success) navigate(SITE_PAGES.HOME);
+        if (success) {
+          setIsAdmin(res.admin);
+          navigate(SITE_PAGES.HOME);
+        }
       } else {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes

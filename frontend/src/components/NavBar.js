@@ -13,7 +13,7 @@ import { CacheBreaker } from "./Contexts";
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.
 */
-function NavBar() {
+function NavBar({ isAdmin }) {
   // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
 
@@ -52,23 +52,25 @@ function NavBar() {
         {/* Container for Logo and page links */}
         <li className="logo-and-pages">
           <div className="logo-container">
-            <NavLink to={SITE_PAGES.MANAGE}>
+            <NavLink to={SITE_PAGES.HOME}>
               <img src="/img/maw_logo.png" alt="Make-A-Wish logo" className="maw-logo" />
             </NavLink>
           </div>
 
           <div className="pages-container">
-            {Object.entries(PAGES).map(([page, route]) => (
-              <NavLink
-                key={route}
-                className={`page-links ${
-                  active.trim() !== "" && route.indexOf(active) > -1 ? "underline" : ""
-                }`}
-                to={route}
-              >
-                {page}
-              </NavLink>
-            ))}
+            {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
+              (needs_admin && isAdmin) || !needs_admin ? (
+                <NavLink
+                  key={route}
+                  className={`page-links ${
+                    active.trim() !== "" && route.indexOf(active) > -1 ? "underline" : ""
+                  }`}
+                  to={route}
+                >
+                  {page}
+                </NavLink>
+              ) : null
+            )}
           </div>
         </li>
 
@@ -93,6 +95,7 @@ function NavBar() {
             setFilteredFiles={setFilteredFiles}
             desktopDropdown={dropdown}
             setDesktopDropdown={setDropdown}
+            isAdmin={isAdmin}
           />
 
           <div className="profile-container">
@@ -123,7 +126,7 @@ function NavBar() {
             >
               <NavLink
                 className="view-profile-link"
-                to={SITE_PAGES.PROFILE}
+                to={`${SITE_PAGES.PROFILE}/`}
                 onClick={() => setDropdown((prevState) => !prevState)}
               >
                 View your profile

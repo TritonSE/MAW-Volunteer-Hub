@@ -207,8 +207,8 @@
 }
 .button-danger {
   color: white;
-  background: var(--light-red);
-  border: 1px solid var(--light-red);
+  background: var(--secondary-red);
+  border: 1px solid var(--secondary-red);
   font-size: 12px;
   line-height: 14px;
 }

@@ -29,6 +29,8 @@ const API_ENDPOINTS = {
   CATEGORY_UPDATE: "/category/edit",
   CATEGORY_DOWNLOAD: "/category/download",
 
+  USER: "/user/info",
+
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
 };

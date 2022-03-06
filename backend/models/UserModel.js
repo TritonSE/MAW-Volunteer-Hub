@@ -18,55 +18,53 @@ const { Schema } = mongoose;
 
 }); */
 
-const UserSchema = new Schema({
-  verified: {
-    type: Boolean,
-    required: true,
-    default: false,
+const UserSchema = new Schema(
+  {
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    // to make sure the user is a part of make-a-wish
+    name: {
+      type: String,
+      // required: true,
+    },
+    profilePicture: {
+      type: String,
+      default: null,
+    },
+    profilePictureModified: {
+      type: Date,
+      default: new Date(0),
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
+    active: {
+      type: Boolean,
+      default: false,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    roles: {
+      type: [String],
+    },
+    joinDate: {
+      type: Date,
+      // required: true
+    },
   },
-  // to make sure the user is a part of make-a-wish
-  name: {
-    type: String,
-    // required: true,
-  },
-  /*
-  defaultProfilePicture: {
-    type: Buffer,
-  },
-  */
-  profilePicture: {
-    type: String,
-    default: null,
-  },
-  profilePictureModified: {
-    type: Date,
-    default: new Date(0),
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  admin: {
-    type: Boolean,
-    default: false,
-  },
-  active: {
-    type: Boolean,
-    default: false,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  roles: {
-    type: [String],
-  },
-  joinDate: {
-    type: Date,
-    // required: true
-  },
-});
+  { timestamps: true }
+);
 
 UserSchema.pre("save", async function save(next) {
   if (this.password && this.isModified("password")) {

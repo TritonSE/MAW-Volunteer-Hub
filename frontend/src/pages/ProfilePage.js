@@ -1,17 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactCrop from "react-image-crop";
 import Modal from "react-modal";
 import "react-image-crop/dist/ReactCrop.css";
 
 import { API_ENDPOINTS } from "../constants/links";
-import { api_pfp_upload } from "../auth";
+import { api_user, api_pfp_upload } from "../auth";
 import { CacheBreaker } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage() {
+function ProfilePage({ isAdmin }) {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
@@ -23,12 +24,22 @@ function ProfilePage() {
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
 
-  const user = {
-    full_name: "Carly Shay",
-    email: "carlyshay@gmail.com",
-    join_date: "June 2019",
-    profilePicture: "",
-  };
+  const [user, setUser] = useState({});
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
+
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  useEffect(async () => {
+    const res = await api_user(id ?? "");
+    if (!res || !res.user) navigate("/user-not-found");
+    else {
+      setUser(res.user);
+      setIsCurrentUser(res.sameUser);
+    }
+  }, [id]);
 
   function fix_crop(e) {
     const img = e.currentTarget;
@@ -100,7 +111,7 @@ function ProfilePage() {
         <div className="profile-image">
           <img
             src={`${API_ENDPOINTS.PFP_GET}?cacheBreaker=${cacheBreaker}`}
-            alt={`${user.full_name}'s Profile`}
+            alt={`${user.name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
           <button type="button">
@@ -186,27 +197,35 @@ function ProfilePage() {
           </Modal>
         </div>
         <div className="profile-header-info">
-          <h1>{user.full_name}</h1>
-          <h2>Joined {user.join_date}</h2>
+          <h1>{user.name}</h1>
+          <h2>
+            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+            {new Date(user.createdAt).getFullYear()}
+          </h2>
           <br />
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          <button
-            type="button"
-            className="change-password-button"
-            onClick={() => setPassModalOpen(true)}
-          >
-            Change Password
-          </button>
-          <button
-            type="button"
-            className="delete-account-button"
-            onClick={() => setDeleteModalOpen(true)}
-          >
-            Delete Profile
-          </button>
+          {isCurrentUser && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setPassModalOpen(true)}
+            >
+              Change Password
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              type="button"
+              className="delete-account-button"
+              onClick={() => setDeleteModalOpen(true)}
+            >
+              Delete Profile
+            </button>
+          )}
         </div>
+        {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
       {/* Change Password and Delete Profile Modals */}
@@ -256,7 +275,7 @@ function ProfilePage() {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger " type="button">
+          <button className="modal-button small button-danger" type="button">
             Delete
           </button>
         </div>
