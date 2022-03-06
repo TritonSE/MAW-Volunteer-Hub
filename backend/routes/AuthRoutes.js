@@ -9,11 +9,20 @@ const UserModel = require("../models/UserModel");
 const router = express.Router();
 
 // Sign up route
-router.post("/signup", passport.authenticate("signup", { session: false }), (req, res) =>
-  res.json({
-    message: "Signup successful",
-    user: req.user,
-  })
+router.post("/signup", (req, res, next) =>
+  passport.authenticate("signup", { session: false }, (error) => {
+    if (error) {
+      if (error.errors && error.errors.email) {
+        res.status(500).json({ error: "Email is already in use." });
+      } else res.status(500).json({ error: "Failed to sign up." });
+      return;
+    }
+
+    res.json({
+      message: "Signup successful",
+      user: req.user,
+    });
+  })(req, res, next)
 );
 
 // Log In route

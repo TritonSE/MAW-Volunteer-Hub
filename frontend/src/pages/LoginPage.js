@@ -105,7 +105,9 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes
         setSuccessState(-1);
-        setModalOpen(success);
+
+        // auth.js guarantees that res will have an error object on failure
+        setModalOpen(success ? true : res.error);
       }
     }
   }
@@ -179,7 +181,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
       </form>
 
       <Modal
-        isOpen={modalOpen}
+        isOpen={Boolean(modalOpen)}
         onRequestClose={() => setModalOpen(false)}
         className="login_react_modal"
       >
@@ -195,8 +197,9 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
             </button>
           </div>
           <div className="login_modal_content">
-            Your account has been created! Once an admin confirms, you will be notified via email
-            and be able to access the website.
+            {modalOpen === true
+              ? "Your account has been created! Once an admin confirms, you will be notified via email and be able to access the website."
+              : `Error: ${modalOpen}`}
           </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
             Okay

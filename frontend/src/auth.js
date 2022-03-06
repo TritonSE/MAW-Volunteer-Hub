@@ -63,12 +63,12 @@ async function api_validtoken() {
  */
 async function api_login({ email, password }) {
   const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
-  return res ?? {};
+  return res ?? { error: "Unable to connect to server, please try again." };
 }
 
 async function api_signup({ name, email, password }) {
   const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
-  return res && !res.error;
+  return res ?? { error: "Unable to connect to server, please try again." };
 }
 
 /**
