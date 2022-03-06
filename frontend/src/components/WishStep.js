@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useState, useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import { api_category_download, api_file_display } from "../auth";
 import ModalVariants from "./ModalVariants";
@@ -15,8 +14,6 @@ function WishStep({ index, stepName }) {
   const [name, setName] = useState("");
   const [activeListing, setActiveListing] = useState();
   const [structure, getStructure] = useContext(FileStructure);
-
-  const rerender = useOutletContext();
 
   /**
    * UTILITY FUNCTIONS
@@ -54,11 +51,6 @@ function WishStep({ index, stepName }) {
     setName("");
     setActiveListing(null);
   }
-
-  /**
-   * HOOK
-   */
-  useEffect(hide_modal, [rerender]);
 
   /**
    * RENDER

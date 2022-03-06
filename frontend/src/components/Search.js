@@ -54,42 +54,36 @@ function Search() {
     setName("");
     setActiveListing(null);
   }
+  function filter_files(filter = input) {
+    const arr = [];
+    Object.entries(structure).forEach(([_tab, categories]) => {
+      categories.forEach((cat) => {
+        cat.Files.forEach((file) => {
+          if (file.name.toLowerCase().indexOf(filter.toLowerCase()) > -1) arr.push(file);
+        });
+      });
+    });
+    setFilteredFiles(arr);
+  }
 
   /**
    * HOOKS
    */
   useEffect(hide_modal, []);
-  useEffect(() => {
-    if (showResults) hide_modal();
-  }, [showResults]);
-  useEffect(() => {
-    const arr = [];
-    Object.entries(structure).forEach(([_tab, categories]) => {
-      categories.forEach((cat) => {
-        cat.Files.forEach((file) => {
-          if (file.name.toLowerCase().indexOf(input.toLowerCase()) > -1) arr.push(file);
-        });
-      });
-    });
-    setFilteredFiles(arr);
-  }, [structure]);
+  useEffect(filter_files, [structure]);
 
-  const handleClose = () => {
-    setShowResults((prevState) => !prevState);
-  };
-  const handleSearchSubmit = () => {
-    getStructure();
-    setShowResults(true);
-  };
   return (
     <>
       <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
         <input
           className="search-input"
           placeholder="Search all files..."
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            filter_files(e.target.value);
+          }}
         />
-        <button className="search-button" type="submit" onClick={() => handleSearchSubmit()}>
+        <button className="search-button" type="submit" onClick={() => setShowResults(true)}>
           <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
         </button>
       </form>
@@ -99,12 +93,12 @@ function Search() {
       */}
       <Modal
         isOpen={showResults}
-        onRequestClose={handleClose}
+        onRequestClose={() => setShowResults(false)}
         className="search-results"
         overlayClassName="search-results-overlay"
       >
         <div className="results-container">
-          <button className="close-btn" onClick={handleClose} type="button">
+          <button className="close-btn" onClick={() => setShowResults(false)} type="button">
             <img
               src="/img/search_exit_icon.svg"
               alt="Close Search Results"

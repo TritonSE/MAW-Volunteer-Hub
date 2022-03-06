@@ -2,16 +2,21 @@
   display: flex;
   flex-direction: row;
   background-color: white;
-  height: calc(100vh - 73px);
+  min-height: calc(100vh - 73px);
+  height: max-content;
 }
 
 .side_nav_buttons {
   display: flex;
   flex-direction: column;
-  position: relative;
   align-items: center;
   background-color: white;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
+
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .side_nav_links {
@@ -71,7 +76,7 @@
   }
 }
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 795px) {
   .side_nav_layout {
     flex-direction: column;
   }
@@ -83,6 +88,8 @@
     max-height: 63px;
     background: var(--blue-gradient);
     box-shadow: none;
+    align-self: unset;
+    z-index: 99;
   }
 
   .side_nav_links {

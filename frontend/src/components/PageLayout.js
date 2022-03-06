@@ -20,11 +20,9 @@ export default function PageLayout({ isAdmin, children }) {
   const memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
 
   return (
-    <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
-      <FileStructure.Provider value={memo}>
-        <NavBar isAdmin={isAdmin} />
-        {children}
-      </FileStructure.Provider>
-    </div>
+    <FileStructure.Provider value={memo}>
+      <NavBar isAdmin={isAdmin} />
+      {children}
+    </FileStructure.Provider>
   );
 }
