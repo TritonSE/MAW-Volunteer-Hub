@@ -4,6 +4,8 @@
 
 const { RateLimiterMemory } = require("rate-limiter-flexible");
 
+const log = require("../util/Logger");
+
 /* No more than 16 requests per second, per IP */
 const rate_limiter = new RateLimiterMemory({
   points: 16,
@@ -17,6 +19,7 @@ module.exports = (req, res, next) => {
       next();
     })
     .catch(() => {
+      log.warn(`IP address ${req.ip} has made too many requests.`);
       res.status(429).send({ error: "Too many requests" });
     });
 };

@@ -53,6 +53,10 @@
 
   margin-bottom: 16px;
 }
+.login input.error:not([type="checkbox"]),
+.login_password.error input {
+  border: 1px solid #ff0000;
+}
 
 .login button {
   width: 300px;

@@ -2,8 +2,9 @@ const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
-const UserModel = require("../models/UserModel");
 const config = require("../config");
+const log = require("../util/Logger");
+const UserModel = require("../models/UserModel");
 
 const router = express.Router();
 
@@ -16,30 +17,35 @@ router.post("/signup", passport.authenticate("signup", { session: false }), (req
 );
 
 // Log In route
-router.post("/login", (req, res, next) => {
+router.post("/login", (req, res, next) =>
   passport.authenticate("login", (err, user) => {
-    try {
-      if (err || !user) {
-        res.json({ error: "Failed to log in" });
+    if (err || !user) {
+      res.status(401).json({ error: "Invalid email or password." });
+      return;
+    }
+
+    req.login(user, { session: false }, (error) => {
+      if (error) {
+        log.error(error);
+        res.status(500).json({ error: "Internal server error." });
         return;
       }
 
-      req.login(user, { session: false }, (error) => {
-        if (error) {
-          res.json({ error });
-          return;
-        }
-
-        const body = { _id: user._id, email: user.email }; // sign is admin into this body
-        const token = jwt.sign({ user: body }, config.auth.jwt_secret);
-
-        res.json({ token, admin: user.admin });
+      res.json({
+        token: jwt.sign(
+          {
+            user: {
+              _id: user._id,
+              email: user.email,
+            },
+          },
+          config.auth.jwt_secret
+        ),
+        admin: user.admin,
       });
-    } catch (error) {
-      res.json({ error });
-    }
-  })(req, res, next);
-});
+    });
+  })(req, res, next)
+);
 
 // Token validation route
 router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {

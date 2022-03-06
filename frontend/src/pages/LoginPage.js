@@ -46,17 +46,45 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
   const [password, setPassword] = useState("");
   const [rpassword, setRPassword] = useState("");
 
+  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
-  function validate() {
-    if (isLogin) return email && password;
-    return name && email && password && rpassword && password === rpassword;
+  function validate(is_submit = false) {
+    // This is a very simple regex to avoid performance degradation
+    //   on longer strings -- More complex validation is done server-
+    //   side.
+    const email_regex = /\S+@\S+\.\S+/;
+
+    if (!is_submit) {
+      if (isLogin) return email_regex.test(email) && password;
+      return name && email_regex.test(email) && password && rpassword && password === rpassword;
+    }
+
+    let errors_obj = {
+      email: !email_regex.test(email),
+      password: !password.trim(),
+    };
+
+    if (!isLogin) {
+      errors_obj = {
+        name: !name.trim(),
+        ...errors_obj,
+        rpassword: !rpassword.trim() || password !== rpassword,
+      };
+    }
+
+    setErrors(errors_obj);
+    return Object.values(errors_obj).indexOf(true) === -1;
   }
 
   async function handle_submit(e) {
     e.preventDefault();
 
     if (successState < 1) {
+      if (!validate(true)) return;
+
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
@@ -70,6 +98,8 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
           setIsAdmin(res.admin);
           token_set(res.token, doRemember);
           navigate(SITE_PAGES.HOME);
+        } else {
+          setErrorMessage(res.error);
         }
       } else {
         // TODO: This lets the user log in immediately
@@ -92,27 +122,38 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
           <input
             name="name"
             placeholder="Full Name"
-            className={isLogin ? "hidden" : ""}
+            className={`
+              ${isLogin ? "hidden" : ""}
+              ${errors.name ? "error" : ""}
+            `}
             onChange={(e) => setName(e.target.value)}
           />
           <input
             name="email"
             placeholder="Email"
             type="email"
+            className={`
+              ${errors.email ? "error" : ""}
+            `}
             onChange={(e) => setEmail(e.target.value)}
           />
           <PasswordField
             name="password"
-            className=""
+            className={`
+              ${errors.password ? "error" : ""}
+            `}
             placeholder="Password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
 
           <PasswordField
+            className={`
+              ${isLogin ? "hidden" : ""}
+              ${errors.rpassword ? "error" : ""}
+            `}
             placeholder="Re-enter password"
             type="password"
-            className={isLogin ? "hidden" : ""}
             onChange={(e) => setRPassword(e.target.value)}
           />
           <div className={"login_flex" + (isLogin ? "" : " hidden")}>
@@ -131,17 +172,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
             {isLogin ? "Login" : "Create new account"}
           </button>
         </div>
-        {isLogin && !successState ? (
-          <div className="login_errorbox">
-            {/*
-             * Security-wise, it's generally a
-             *   good idea to not tell the user
-             *   what specifically about the
-             *   login went wrong.
-             */}
-            Invalid email or password.
-          </div>
-        ) : null}
+        {isLogin && !successState ? <div className="login_errorbox">{errorMessage}</div> : null}
         <button type="button" className="login_switch" onClick={() => setIsLogin(!isLogin)}>
           {isLogin ? "Create new account" : "I already have an account"}
         </button>
