@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { api_user } from "../auth";
 import history from "../history";
+import AdminContext from "../components/AdminContext";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage({ isAdmin }) {
+function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
+
+  const [isAdmin] = useContext(AdminContext);
 
   const { id } = useParams();
 

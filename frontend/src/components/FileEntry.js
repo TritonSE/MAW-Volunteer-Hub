@@ -1,5 +1,3 @@
-/* eslint no-alert: "off" */
-
 /**
  * Component displaying information about a
  *   specific file or folder, as well as
@@ -7,7 +5,8 @@
  *   each
  */
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import AdminContext from "./AdminContext";
 import "../styles/FileEntry.css";
 
 function evt_wrapper(func) {
@@ -47,11 +46,15 @@ function UnmemoizedFileAccordion({ children }) {
 }
 const FileAccordion = React.memo(UnmemoizedFileAccordion);
 
-function FileButton({ description, image, onClick, className }) {
+function FileButton({ description, image, adminOnly, onClick, className }) {
+  const [isAdmin] = useContext(AdminContext);
+
   function fix_bubbling(e) {
     e.stopPropagation();
     onClick(e);
   }
+
+  if (adminOnly && !isAdmin) return null;
 
   return (
     <button
@@ -107,11 +110,13 @@ function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile, searchModal
       <FileButton
         description="Edit file"
         image="/img/filelisting_edit.svg"
+        adminOnly
         onClick={evt_wrapper(onEditFile)}
       />
       <FileButton
         description="Delete file"
         image="/img/filelisting_delete.svg"
+        adminOnly
         onClick={evt_wrapper(onDeleteFile)}
       />
     </FileListing>
@@ -155,16 +160,19 @@ function FileCategory({
         <FileButton
           description="Add file"
           image="/img/filelisting_add.svg"
+          adminOnly
           onClick={evt_wrapper(onAddFile)}
         />
         <FileButton
           description="Edit file"
           image="/img/filelisting_edit.svg"
+          adminOnly
           onClick={evt_wrapper(onEditCategory)}
         />
         <FileButton
           description="Delete file"
           image="/img/filelisting_delete.svg"
+          adminOnly
           onClick={evt_wrapper(onDeleteCategory)}
         />
         <div className="filelisting_separator" />

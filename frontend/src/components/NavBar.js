@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
 import { SITE_PAGES } from "../constants/links";
@@ -7,14 +7,17 @@ import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
+import AdminContext from "./AdminContext";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.
 */
-function NavBar({ isAdmin }) {
+function NavBar() {
   // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
+
+  const [isAdmin] = useContext(AdminContext);
 
   /* 
     States for the search bar 
