@@ -93,6 +93,7 @@ function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModa
       data,
       updateMyData, // will be available in cell render
       handleConfirmationModal, // for showing confirm modal
+      autoResetGlobalFilter: false,
     },
     useGlobalFilter,
     useSortBy

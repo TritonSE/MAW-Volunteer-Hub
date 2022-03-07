@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ScrollContainer from "react-indiana-drag-scroll";
+import { Link, useNavigate } from "react-router-dom";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
+import { SITE_PAGES } from "../constants/links";
 import { api_get_users, api_verify_user } from "../auth";
 
 import "../styles/UserManage.css";
@@ -77,14 +79,14 @@ const headers = [
     Header: "Name",
     accessor: "name",
     Cell: ({ row, value }) => (
-      <a
+      <Link
         className="user_link"
         target="_blank"
-        href={`/profile/${row.original._id}`}
+        to={`${SITE_PAGES.PROFILE}/${row.original._id}`}
         rel="noreferrer"
       >
         {value}
-      </a>
+      </Link>
     ),
   },
   // Replace the following three rows with the commented out rows for the full table
@@ -105,6 +107,9 @@ export default function UserManage() {
   const [userData, setUserData] = useState(null);
   const [modalState, setModalState] = useState({ name: "", isOpen: false });
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const navigate = useNavigate();
 
   // Updates the windowWidth variable if the window is resized
   useEffect(() => {
@@ -119,6 +124,7 @@ export default function UserManage() {
   useEffect(async () => {
     const data = await getUsers();
     setUserData(data.users);
+    setHasFetched(true);
   }, []);
 
   const updateMyData = (rowIndex, columnId, value) => {
@@ -127,8 +133,8 @@ export default function UserManage() {
       old.map((row, index) => {
         if (index === rowIndex) {
           // verify user here, reload if fail
-          api_verify_user(row._id).catch((err) => {
-            window.reload();
+          api_verify_user(row._id).then((res) => {
+            if (!res || res.error) navigate(window.location);
           });
           return {
             ...old[rowIndex],
@@ -143,9 +149,15 @@ export default function UserManage() {
   const handleConfirmationModal = ({ name, isOpen }) => {
     setModalState({ name, isOpen });
   };
-
-  if (!userData) {
-    return <div>Data could not be fetched!!!</div>;
+  if (!hasFetched) {
+    return <div />;
+  }
+  if (hasFetched && !userData) {
+    return (
+      <div>
+        <p>Data could not be fetched, please reload</p>
+      </div>
+    );
   }
   return (
     <div>

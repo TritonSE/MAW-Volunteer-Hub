@@ -29,6 +29,8 @@ const API_ENDPOINTS = {
   CATEGORY_DOWNLOAD: "/category/download",
 
   USER: "/user",
+  USER_ALL: "/user/users",
+  USER_VERIFY: "/user/verify",
 };
 
 const SIDENAV_STEPS = [

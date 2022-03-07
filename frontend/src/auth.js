@@ -159,16 +159,17 @@ async function api_category_download(id) {
 }
 
 async function api_get_users() {
-  const res = await api_call("/user/users", {
+  const res = await api_call(`${API_ENDPOINTS.USER_ALL}`, {
     method: "GET",
   });
   return res;
 }
 
 async function api_verify_user(id) {
-  const res = await api_call(`/user/verify/${id}`, {
+  const res = await api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
     method: "PUT",
   });
+  return res;
 }
 /**
  * USER

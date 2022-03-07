@@ -1,18 +1,20 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
-        <a
+        <Link
           className="card_item_top"
           aria-label="user_profile"
           target="blank_"
-          href={`/profile/${user._id}`}
+          to={`${SITE_PAGES.PROFILE}/${user._id}`}
         >
           {user.name}
-        </a>
+        </Link>
         <div className="card_item_bottom">Assignments Completed: {user.completed ?? "N/A"}</div>
       </div>
       <div className="card_col">
