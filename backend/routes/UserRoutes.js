@@ -165,7 +165,7 @@ router.get("/pfp/:id?", (req, res) => {
         let new_url = req.originalUrl;
         new_url += !req.query || Object.keys(req.query).length === 0 ? "?" : "&";
         new_url += `lastModified=${user.profilePictureModified.getTime()}`;
-        res.set("Cache-Control", "max-age=0");
+        res.set("Cache-Control", "no-store");
         res.redirect(new_url);
       } else {
         res.set("Content-Type", "image/png");

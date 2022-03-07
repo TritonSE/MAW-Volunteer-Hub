@@ -123,6 +123,9 @@ function ProfilePage({ isAdmin }) {
                 type="file"
                 accept="image/*"
                 onChange={prepare_pfp}
+                onClick={(e) => {
+                  e.target.value = null;
+                }}
                 hidden
               />
             </label>
