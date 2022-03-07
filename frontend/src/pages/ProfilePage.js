@@ -23,6 +23,7 @@ function ProfilePage({ isAdmin }) {
   const [upImg, setUpImg] = useState();
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
+  const [dragActive, setDragActive] = useState(false);
 
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
@@ -32,18 +33,14 @@ function ProfilePage({ isAdmin }) {
 
   const navigate = useNavigate();
 
-  useEffect(async () => {
-    const res = await api_user(id ?? "");
-    if (!res || !res.user) navigate("/user-not-found");
-    else {
-      setUser(res.user);
-      setIsCurrentUser(res.sameUser);
-    }
-  }, [id]);
-
   function fix_crop(e) {
-    const img = e.currentTarget;
-    const size = Math.min(img.width, img.height);
+    if (!e || e.currentTarget instanceof Window) {
+      if (window.innerWidth >= 450 && window.innerHeight >= 580) return;
+      if (crop.x + crop.width <= imgRef.width && crop.y + crop.height <= imgRef.height) return;
+    }
+
+    const img = e.currentTarget instanceof Window ? imgRef : e.currentTarget;
+    const size = Math.min(img.width, img.height) * 0.8;
 
     setCrop({
       unit: "px",
@@ -105,6 +102,20 @@ function ProfilePage({ isAdmin }) {
     setCrop({ aspect: 1 });
   }
 
+  useEffect(() => {
+    window.addEventListener("resize", fix_crop);
+    return () => window.removeEventListener("resize", fix_crop);
+  }, [imgRef]);
+
+  useEffect(async () => {
+    const res = await api_user(id ?? "");
+    if (!res || !res.user) navigate("/user-not-found");
+    else {
+      setUser(res.user);
+      setIsCurrentUser(res.sameUser);
+    }
+  }, [id]);
+
   return (
     <div className="profile-page">
       <section className="header-section">
@@ -136,8 +147,10 @@ function ProfilePage({ isAdmin }) {
             overlayClassName="profile-page-modal-overlay"
             isOpen={pfpModalOpen}
             onRequestClose={() => {
-              setPFPModalOpen(false);
-              setCrop({ aspect: 1 });
+              if (!dragActive) {
+                setPFPModalOpen(false);
+                setCrop({ aspect: 1 });
+              }
             }}
             contentLabel="Change profile picture"
           >
@@ -148,9 +161,10 @@ function ProfilePage({ isAdmin }) {
               aspect={1}
               minWidth={10}
               ruleOfThirds
-              imageStyle={{}}
               onChange={(c) => setCrop(c)}
               onComplete={(c) => setCrop(c)}
+              onDragStart={() => setDragActive(true)}
+              onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
             >
               <img
                 alt="Crop modal"
