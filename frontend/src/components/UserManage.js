@@ -101,15 +101,18 @@ const headers = [
 export default function UserManage() {
   const [userData, setUserData] = useState(null);
   const [modalState, setModalState] = useState({ name: "", isOpen: false });
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
   const [hasFetched, setHasFetched] = useState(false);
 
   const navigate = useNavigate();
 
-  // Updates the windowWidth variable if the window is resized
+  // Updates the windowSize variable if the window is resized
   useEffect(() => {
     function handleResize() {
-      setWindowWidth(window.innerWidth);
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -156,7 +159,7 @@ export default function UserManage() {
   }
   return (
     <div>
-      {windowWidth > 650 ? (
+      {windowSize.width > 650 && windowSize.height > 450 ? (
         <UserList
           tableHeaders={headers}
           userData={userData}

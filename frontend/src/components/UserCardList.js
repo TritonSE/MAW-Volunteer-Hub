@@ -10,7 +10,6 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
         <Link
           className="card_item_top"
           aria-label="user_profile"
-          target="blank_"
           to={`${SITE_PAGES.PROFILE}/${user._id}`}
         >
           {user.name}
