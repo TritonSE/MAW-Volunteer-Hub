@@ -1,10 +1,15 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const json5 = require("json5");
 
 const router = express.Router();
 
+// , "Volunteer", "Mentor", "Airport Greeter", "Office",
+//     "Special Events", "Translator", "Speaker's Bureau", "Las Estrellas"
+
 const UserModel = require("../models/UserModel");
 const { idOfCurrentUser } = require("../util/userUtil");
+const { validate } = require("../util/RouteUtils");
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -36,8 +41,8 @@ router.get("/users", (req, res, next) => {
   if (req.query.admin) {
     try {
       UserModel.find({ admin: req.query.admin }).then((users) => res.status(200).json({ users })); // return users found
-    } catch (e) {
-      next(e);
+    } catch (error) {
+      next(error);
     }
   } else {
     // prevent route from hanging if no query param passed in
@@ -140,6 +145,50 @@ router.put("/edit/:id", async (req, res, next) => {
   } else {
     checkCurrentUserIsAdmin(req, res, updateInfo);
   }
+});
+
+router.patch("/set-roles/:id", validate(["roles"], []), async (req, res) => {
+  const roles = json5.parse(req.body.roles);
+  const keyroles = [
+    "Wish Granter",
+    "Volunteer",
+    "Mentor",
+    "Airport Greeter",
+    "Office",
+    "Special Events",
+    "Translator",
+    "Speaker's Bureau",
+    "Las Estrellas",
+    "Primary Admin",
+    "Secondary Admin",
+  ];
+  if (JSON.stringify(Object.keys(roles)) === JSON.stringify(keyroles)) {
+    const roles_user = [];
+    Object.keys(roles).forEach(async (key) => {
+      if (roles[key]) {
+        await roles_user.push(key);
+      }
+    });
+    await UserModel.findByIdAndUpdate(req.params.id, { roles: roles_user }).catch((error) => {
+      console.log(error);
+      res.status(400).json({ error: "User not found" });
+    });
+  } else {
+    res.status(400).json({ erorr: "Malformed request" });
+  }
+});
+
+router.get("/role/:role", async (req, res) => {
+  const role = req.params.role;
+  await UserModel.find({ roles: role })
+    .then((users) => {
+      res.send(users);
+      return users;
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json({ error: "Malformed request" });
+    });
 });
 
 module.exports = router;
