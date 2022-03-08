@@ -42,10 +42,10 @@ function UserCardSearch({ search }) {
     }
   };
   return (
-    <div className="search_bar_container">
-      <div className="mobile_user_search_bar">
+    <div className="search_bar_container_mobile">
+      <div className="user_search_bar_mobile">
         <input
-          className="mobile_user_search_input"
+          className="user_search_input_mobile"
           value={searchVal || ""}
           onChange={(e) => {
             setSearchVal(e.target.value);
@@ -56,7 +56,7 @@ function UserCardSearch({ search }) {
           placeholder="Search by name"
         />
         <button
-          className="user_search_button"
+          className="user_search_button_mobile"
           type="button"
           aria-label="Search"
           onClick={() => {

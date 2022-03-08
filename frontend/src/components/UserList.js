@@ -159,19 +159,11 @@ function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModa
             Admin
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={visibleColumns.length}>
-                <GlobalFilter
-                  preGlobalFilteredRows={preGlobalFilteredRows}
-                  globalFilter={globalFilter}
-                  setGlobalFilter={setGlobalFilter}
-                />
-              </th>
-            </tr>
-          </thead>
-        </table>
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
       </div>
       <div className="table-container">
         <table className="people_table" {...getTableProps()}>
