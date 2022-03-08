@@ -79,12 +79,7 @@ const headers = [
     Header: "Name",
     accessor: "name",
     Cell: ({ row, value }) => (
-      <Link
-        className="user_link"
-        target="_blank"
-        to={`${SITE_PAGES.PROFILE}/${row.original._id}`}
-        rel="noreferrer"
-      >
+      <Link className="user_link" to={`${SITE_PAGES.PROFILE}/${row.original._id}`}>
         {value}
       </Link>
     ),
