@@ -104,7 +104,7 @@ function App() {
         <Route
           path={SITE_PAGES.PROFILE}
           element={
-            <PageLayout>
+            <PageLayout isAdmin={isAdmin}>
               <Outlet />
             </PageLayout>
           }

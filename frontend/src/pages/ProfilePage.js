@@ -121,27 +121,28 @@ function ProfilePage({ isAdmin }) {
       <section className="header-section">
         <div className="profile-image">
           <img
-            src={`${API_ENDPOINTS.PFP_GET}?cacheBreaker=${cacheBreaker}`}
+            src={`${API_ENDPOINTS.PFP_GET}${id ? "/" + id : ""}?cacheBreaker=${cacheBreaker}`}
             alt={`${user.name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
-          <button type="button">
-            <label htmlFor="pfp_input">
-              +
-              <input
-                id="pfp_input"
-                className="hidden"
-                type="file"
-                accept="image/*"
-                onChange={prepare_pfp}
-                onClick={(e) => {
-                  e.target.value = null;
-                }}
-                hidden
-              />
-            </label>
-          </button>
-
+          {isCurrentUser && (
+            <button type="button">
+              <label htmlFor="pfp_input">
+                +
+                <input
+                  id="pfp_input"
+                  className="hidden"
+                  type="file"
+                  accept="image/*"
+                  onChange={prepare_pfp}
+                  onClick={(e) => {
+                    e.target.value = null;
+                  }}
+                  hidden
+                />
+              </label>
+            </button>
+          )}
           <Modal
             className="profile-page-modal"
             overlayClassName="profile-page-modal-overlay"
