@@ -17,6 +17,9 @@
   border-radius: 10px !important;
   box-sizing: border-box;
 }
+.ReactModal__Content.wishgranting_react_modal.error {
+  top: calc(50vh - (200px / 2)) !important;
+}
 .wishgranting_modal {
   font-family: "Lato", sans-serif;
 }
@@ -106,4 +109,7 @@
 .wishgranting_modal_center.thin {
   width: 245px;
   justify-content: space-between;
+}
+.wishgranting_modal_center.center {
+  justify-content: center;
 }

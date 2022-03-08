@@ -80,7 +80,7 @@ async function api_file_upload(file, name, category) {
     method: "POST",
     type: "multipart/form-data",
   });
-  return res && !res.error;
+  return res;
 }
 
 async function api_file_display(id) {
@@ -90,7 +90,7 @@ async function api_file_display(id) {
 
 async function api_file_delete(id) {
   const res = await api_call(`${API_ENDPOINTS.FILE_DELETE}/${id}`, { method: "DELETE" });
-  return res && !res.error;
+  return res;
 }
 
 async function api_file_update(id, file, name) {
@@ -99,7 +99,7 @@ async function api_file_update(id, file, name) {
     method: "PATCH",
     type: "multipart/form-data",
   });
-  return res && !res.error;
+  return res;
 }
 
 async function api_file_search(name) {
@@ -117,7 +117,7 @@ async function api_file_all() {
  */
 async function api_category_delete(category) {
   const res = await api_call(`${API_ENDPOINTS.CATEGORY_DELETE}/${category}`, { method: "DELETE" });
-  return res && !res.error;
+  return res;
 }
 
 async function api_category_all(parent) {
@@ -139,7 +139,7 @@ async function api_category_create(name, parent) {
       parent,
     },
   });
-  return res && !res.error;
+  return res;
 }
 
 async function api_category_update(category, name) {
@@ -147,7 +147,7 @@ async function api_category_update(category, name) {
     data: { updated_name: name },
     method: "PATCH",
   });
-  return res && !res.error;
+  return res;
 }
 
 async function api_category_download(id) {

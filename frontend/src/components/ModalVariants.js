@@ -27,6 +27,7 @@ function ModalVariants({
    */
   const [fileContents, setFileContents] = useState("");
   const [variant, setVariant] = useState({});
+  const [errorOpen, setErrorOpen] = useState(false);
 
   /**
    * MODAL VARIANTS
@@ -139,81 +140,122 @@ function ModalVariants({
   }
 
   return (
-    <Modal
-      isOpen={open}
-      onRequestClose={() => setOpen(false)}
-      contentLabel={variant.title}
-      style={{ content: variant.style ?? {} }}
-      className="wishgranting_react_modal"
-    >
-      <div className="wishgranting_modal">
-        <div className="wishgranting_modal_header">
-          <h3>{variant.title}</h3>
-          <button type="button" className="wishgranting_modal_close" onClick={() => setOpen(false)}>
-            <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-          </button>
-        </div>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (validate()) {
-              await variant.on_submit({
-                name,
-                activeListing,
-                fileContents,
-                categoryParent,
-              });
-              onClose();
-            }
-          }}
-        >
-          <input type="submit" hidden /> {/* Form submits on enter key */}
-          <div className={variant.name ? "" : "hidden"}>
-            <div className="wishgranting_modal_label">{(variant.name ?? {}).title}</div>
-            <input
-              type="text"
-              id="wishgranting_addfile_filename"
-              placeholder={(variant.name ?? {}).placeholder}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <br />
-            <br />
+    <>
+      <Modal
+        isOpen={open}
+        onRequestClose={() => setOpen(false)}
+        contentLabel={variant.title}
+        style={{ content: variant.style ?? {} }}
+        className="wishgranting_react_modal"
+      >
+        <div className="wishgranting_modal">
+          <div className="wishgranting_modal_header">
+            <h3>{variant.title}</h3>
+            <button
+              type="button"
+              className="wishgranting_modal_close"
+              onClick={() => setOpen(false)}
+            >
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
+            </button>
           </div>
-          {variant.has_upload ? (
-            <>
-              <div className="wishgranting_modal_label">Upload File</div>
-              <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
-            </>
-          ) : null}
-          {variant.center ? (
-            <div className="wishgranting_modal_center halfheight column">
-              <div className="wishgranting_modal_center">{variant.center.title}</div>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (validate()) {
+                const res = await variant.on_submit({
+                  name,
+                  activeListing,
+                  fileContents,
+                  categoryParent,
+                });
+                if (!res || res.error) {
+                  setErrorOpen(res ? res.error : "Unable to reach server, please try again.");
+                } else onClose();
+              }
+            }}
+          >
+            <input type="submit" hidden /> {/* Form submits on enter key */}
+            <div className={variant.name ? "" : "hidden"}>
+              <div className="wishgranting_modal_label">{(variant.name ?? {}).title}</div>
+              <input
+                type="text"
+                id="wishgranting_addfile_filename"
+                placeholder={(variant.name ?? {}).placeholder}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <br />
-              <div className="wishgranting_modal_center thin">
-                <button
-                  type="button"
-                  className="wishgranting_modal_button"
-                  onClick={() => setOpen(false)}
-                >
-                  Cancel
-                </button>
-                <button type="submit" className="wishgranting_modal_button error">
-                  {variant.center.action_button.title}
+              <br />
+            </div>
+            {variant.has_upload ? (
+              <>
+                <div className="wishgranting_modal_label">Upload File</div>
+                <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
+              </>
+            ) : null}
+            {variant.center ? (
+              <div className="wishgranting_modal_center halfheight column">
+                <div className="wishgranting_modal_center">{variant.center.title}</div>
+                <br />
+                <div className="wishgranting_modal_center thin">
+                  <button
+                    type="button"
+                    className="wishgranting_modal_button"
+                    onClick={() => setOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button type="submit" className="wishgranting_modal_button error">
+                    {variant.center.action_button.title}
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            {variant.action_button ? (
+              <div className="wishgranting_modal_bottom">
+                <button type="submit" className="wishgranting_modal_button primary">
+                  {variant.action_button.title}
                 </button>
               </div>
-            </div>
-          ) : null}
-          {variant.action_button ? (
-            <div className="wishgranting_modal_bottom">
-              <button type="submit" className="wishgranting_modal_button primary">
-                {variant.action_button.title}
+            ) : null}
+          </form>
+        </div>
+      </Modal>
+      <Modal
+        isOpen={Boolean(errorOpen)}
+        onRequestClose={() => setErrorOpen(false)}
+        contentLabel="Error"
+        style={{ content: { height: "202px" } }}
+        className="wishgranting_react_modal error"
+      >
+        <div className="wishgranting_modal">
+          <div className="wishgranting_modal_header">
+            <h3>Error</h3>
+            <button
+              type="button"
+              className="wishgranting_modal_close"
+              onClick={() => setErrorOpen(false)}
+            >
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
+            </button>
+          </div>
+          <div className="wishgranting_modal_center halfheight column">
+            <div className="wishgranting_modal_center">{errorOpen}</div>
+            <br />
+            <div className="wishgranting_modal_center thin center">
+              <button
+                type="button"
+                className="wishgranting_modal_button primary"
+                onClick={() => setErrorOpen(false)}
+              >
+                Okay
               </button>
             </div>
-          ) : null}
-        </form>
-      </div>
-    </Modal>
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
 
