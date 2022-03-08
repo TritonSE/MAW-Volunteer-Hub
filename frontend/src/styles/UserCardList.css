@@ -3,11 +3,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
 }
 
 .card_list {
   height: calc(100vh - 300px);
-  overflow-y: scroll;
+  width: 100vw;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0px 20px;
 }
 
 .user_toggle {
@@ -16,19 +23,14 @@
   width: calc(100vw - 70px);
   height: 40px;
   box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
-  padding-left: 40px;
-  padding-right: 40px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding: 10px 40px;
   margin-bottom: 10px;
 }
 
 .toggle_btn {
   background-color: transparent;
   border: 0px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
+
   font-size: 15px;
   line-height: 18px;
   text-align: center;
@@ -39,9 +41,6 @@
 .toggle_btn_selected {
   background-color: transparent;
   border: 0px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 15px;
   line-height: 18px;
   text-align: center;
@@ -56,17 +55,15 @@
 
 .user_card {
   display: flex;
+  flex: 1;
   justify-content: space-evenly;
+  align-items: center;
 
-  width: calc(100vw - 50px);
-  height: 65px;
-  margin-bottom: 10px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  max-height: 80px;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 20px 0;
 
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 16px;
   line-height: 19px;
 
@@ -78,10 +75,13 @@
 .card_col {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   padding-left: 10px;
+  height: 65px;
 }
-
+.card_col > div > button {
+  margin: 0;
+}
 .card_item_top {
   display: flex;
   flex-direction: column;
@@ -92,6 +92,8 @@
 
   width: 200px;
   min-height: 35px;
+  color: black;
+  text-decoration: none;
 }
 
 .card_item_top:hover {
@@ -102,41 +104,50 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  height: 30px;
-  margin-top: 10px;
-  margin-bottom: 10px;
 
   font-size: 14px;
   line-height: 14px;
 }
 
-.mobile_user_search_bar {
+.user_search_bar_mobile {
+  position: relative;
   display: flex;
-  margin-top: 10px;
-  margin-bottom: 15px;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 20px;
+  width: 300px;
 }
 
-.mobile_user_search_input {
-  border-radius: 3px 0px 0px 3px;
-  border-width: 1px;
-  padding-left: 5px;
+.user_search_button_mobile {
+  position: absolute;
+  right: 0px;
+  background: #1a68bf;
+  width: 53px;
+  height: 30px;
+  border-radius: 0px 3px 3px 0px;
+  border-width: 0px;
+  background-image: url("../../public/img/searchbar.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.user_search_input_mobile {
+  border: 1px solid #000000;
+  height: 26px;
   width: 300px;
-  margin-left: 50px;
+  border-radius: 3px;
+  padding: 1px 63px 1px 10px;
 
   font-family: Lato;
   font-style: normal;
   font-weight: 300;
+  font-size: 12px;
+  line-height: 14px;
 }
 
-.mobile_user_search_input:focus {
+.user_search_input_mobile:focus {
   font-weight: normal;
-  border: 3px lightblue;
-}
-
-.search_bar_container {
-  display: flex;
-  justify-content: center;
-  width: 80vw;
 }
 
 @media only screen and (max-width: 476px) {

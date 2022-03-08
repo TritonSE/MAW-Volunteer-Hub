@@ -30,6 +30,8 @@ const API_ENDPOINTS = {
   CATEGORY_DOWNLOAD: "/category/download",
 
   USER: "/user/info",
+  USER_ALL: "/user/users",
+  USER_VERIFY: "/user/verify",
 
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
