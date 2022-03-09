@@ -158,27 +158,20 @@ router.put("/edit/:id", async (req, res, next) => {
 /**
  * PROFILE PICTURES
  */
-router.get("/pfp/:id?", (req, res) => {
-  UserModel.findById(req.params.id ?? req.user._id)
-    .then((user) => {
-      /*
-      const mod_header = req.get("If-Modified-Since");
-      if(mod_header){
-        const mod_date = new Date(mod_header);
-        if(mod_date.getTime() === user.profilePictureModified.getTime()){
-          res.set("Last-Modified", user.profilePictureModified.toUTCString());
-          res.status(304).end();
-          return;
-        }
-      } */
+router.get("/pfp", (req, res) => {
+  res.redirect(`/user/pfp/${req.user._id}`);
+});
 
-      res.set("Content-Type", "image/png");
-      // res.set("Last-Modified", user.profilePictureModified.toUTCString());
-      if (!user.profilePicture) {
-        res.redirect("/img/no_profile_pic.svg");
-      } else {
-        const stream = getFileStream(user.profilePicture);
-        stream.pipe(res);
+router.get("/pfp/:id/:time?", (req, res) => {
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      if (!req.params.time)
+        res.redirect(`/user/pfp/${req.params.id}/${user.profilePictureModified.getTime()}`);
+      else {
+        res.set("Content-Type", "image/png");
+        res.set("Cache-Control", "max-age=604800");
+        if (!user.profilePicture) res.redirect("/img/no_profile_pic.svg");
+        else getFileStream(user.profilePicture).pipe(res);
       }
     })
     .catch(errorHandler(res));

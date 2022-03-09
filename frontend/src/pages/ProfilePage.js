@@ -97,15 +97,6 @@ function ProfilePage({ isAdmin }) {
   async function do_upload() {
     setOpacity(0.5);
 
-    /*
-    const corrected_crop = {
-      width: Math.round((crop.width / imgRef.width) * imgRef.naturalWidth),
-      height: Math.round((crop.height / imgRef.height) * imgRef.naturalHeight),
-      x: Math.round((crop.x / imgRef.width) * imgRef.naturalWidth),
-      y: Math.round((crop.y / imgRef.height) * imgRef.naturalHeight),
-    };
-    */
-
     const corrected_crop = {
       width: Math.floor((crop.width / 100) * imgRef.naturalWidth),
       height: Math.floor((crop.height / 100) * imgRef.naturalHeight),
