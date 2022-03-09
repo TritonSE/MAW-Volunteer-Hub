@@ -161,21 +161,24 @@ router.put("/edit/:id", async (req, res, next) => {
 router.get("/pfp/:id?", (req, res) => {
   UserModel.findById(req.params.id ?? req.user._id)
     .then((user) => {
-      if (!req.query || !req.query.lastModified) {
-        let new_url = req.originalUrl;
-        new_url += !req.query || Object.keys(req.query).length === 0 ? "?" : "&";
-        new_url += `lastModified=${user.profilePictureModified.getTime()}`;
-        res.set("Cache-Control", "no-store");
-        res.redirect(new_url);
-      } else {
-        res.set("Content-Type", "image/png");
-        res.set("Cache-Control", "max-age=604800"); // Cache is valid for 7 days
-        if (!user.profilePicture) {
-          res.redirect("/img/no_profile_pic.svg");
-        } else {
-          const stream = getFileStream(user.profilePicture);
-          stream.pipe(res);
+      /*
+      const mod_header = req.get("If-Modified-Since");
+      if(mod_header){
+        const mod_date = new Date(mod_header);
+        if(mod_date.getTime() === user.profilePictureModified.getTime()){
+          res.set("Last-Modified", user.profilePictureModified.toUTCString());
+          res.status(304).end();
+          return;
         }
+      } */
+
+      res.set("Content-Type", "image/png");
+      // res.set("Last-Modified", user.profilePictureModified.toUTCString());
+      if (!user.profilePicture) {
+        res.redirect("/img/no_profile_pic.svg");
+      } else {
+        const stream = getFileStream(user.profilePicture);
+        stream.pipe(res);
       }
     })
     .catch(errorHandler(res));
@@ -185,12 +188,8 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
   const crop = JSON.parse(req.body.crop);
 
   let compressor = sharp(req.file.path);
-  if (crop.width !== 0 && crop.height !== 0 && crop.x !== 0 && crop.y !== 0) {
-    compressor = compressor.extract({
-      ...crop,
-      left: crop.x,
-      top: crop.y,
-    });
+  if (crop.width && crop.height && crop.left && crop.top) {
+    compressor = compressor.extract(crop);
   }
   compressor = compressor.resize(400, 400).png({
     compressionLevel: 9,
