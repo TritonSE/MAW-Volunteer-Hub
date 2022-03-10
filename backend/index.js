@@ -25,6 +25,7 @@ mongoose.connection.on("error", (error) => log.error(error));
 
 const app = express();
 
+app.disable("x-powered-by");
 app.use(helmet());
 app.use(rateLimiter);
 app.use(bodyParser.urlencoded({ extended: false }));
