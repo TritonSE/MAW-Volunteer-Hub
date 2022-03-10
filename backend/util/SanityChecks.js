@@ -11,11 +11,9 @@ module.exports = () => {
   if (config.app.env === "development") {
     const stats = fs.fstatSync(1);
     if (stats && !stats.isFIFO()) {
-      const msg =
-        'Running in development environment, but logs are not being passed through pino-pretty. Install it with \x1b[32m"npm i pino-pretty -g"\x1b[0m, then re-run this command as \x1b[33m"node index.js | pino-pretty"\x1b[0m for pretty-printed logs.';
-
-      console.log(`Warning: ${msg}\n`);
-      log.warn(msg);
+      console.log(
+        '\x1b[33mWarning\x1b[0m: Running in development environment, but logs are not being passed through \x1b[35mpino-pretty\x1b[0m. Install it with \x1b[32m"npm i pino-pretty -g"\x1b[0m, then re-run this command as \x1b[32m"node index.js | pino-pretty"\x1b[0m for pretty-printed logs.\n'
+      );
     }
   }
 
