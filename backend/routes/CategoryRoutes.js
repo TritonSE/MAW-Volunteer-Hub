@@ -4,7 +4,7 @@ const Archiver = require("archiver");
 const File = require("../models/FileModel");
 const Category = require("../models/CategoryModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
-const { deleteFileAWS, getFileStream } = require("../util/S3Util");
+const { deleteFileAWS, getObject } = require("../util/S3Util");
 
 const router = express.Router();
 
@@ -77,7 +77,7 @@ router.get("/download/:id", validate([], ["id"]), (req, res) => {
       const archive = Archiver("zip");
       archive.pipe(res);
       category.Files.forEach((file) =>
-        archive.append(getFileStream(file.S3_ID), { name: file.name })
+        archive.append(getObject(file.S3_ID).createReadStream(), { name: file.name })
       );
       archive.finalize();
     })

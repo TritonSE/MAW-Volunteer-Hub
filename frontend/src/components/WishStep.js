@@ -1,36 +1,41 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import { api_category_download, api_file_display } from "../auth";
-import ModalVariants from "./ModalVariants";
 import "../styles/WishGrantingPage.css";
-import FileStructure from "./FileStructure";
+import { FileStructure, ModalVariantsManager } from "./Contexts";
 
 function WishStep({ index, stepName }) {
   /**
    * STATE
    */
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("add_file");
-  const [name, setName] = useState("");
-  const [activeListing, setActiveListing] = useState();
-  const [structure, getStructure] = useContext(FileStructure);
-
-  const rerender = useOutletContext();
+  const [structure] = useContext(FileStructure);
+  const {
+    modalVariant: [_modalVariant, setModalVariant],
+    open: [_modalOpen, setModalOpen],
+    errorOpen: [_errorOpen, setErrorOpen],
+    progressOpen: [_progressOpen, setProgressOpen],
+    name: [_name, setName],
+    activeListing: [_activeListing, setActiveListing],
+    categoryParent: [_categoryParent, setCategoryParent],
+  } = useContext(ModalVariantsManager);
 
   /**
    * UTILITY FUNCTIONS
    */
   async function download_file(file) {
-    const res = await api_file_display(file._id);
+    setProgressOpen(0);
+    const res = await api_file_display(file._id, setProgressOpen);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
       window.open(url);
       window.URL.revokeObjectURL(url);
+    } else {
+      setErrorOpen("Failed to download file, please try again.");
     }
   }
   async function download_all_files(cat) {
-    const res = await api_category_download(cat._id);
+    setProgressOpen(0);
+    const res = await api_category_download(cat._id, setProgressOpen);
     if (res && !res.error) {
       const a = document.createElement("a");
       const url = window.URL.createObjectURL(res);
@@ -46,19 +51,9 @@ function WishStep({ index, stepName }) {
     setModalVariant(variant);
     setName(new_name);
     setActiveListing(new_activeListing);
+    setCategoryParent(stepName);
     setModalOpen(true);
   }
-  async function hide_modal() {
-    getStructure();
-    setModalOpen(false);
-    setName("");
-    setActiveListing(null);
-  }
-
-  /**
-   * HOOK
-   */
-  useEffect(hide_modal, [rerender]);
 
   /**
    * RENDER
@@ -107,16 +102,6 @@ function WishStep({ index, stepName }) {
         ))}
       </div>
       <br />
-      <ModalVariants
-        modalVariant={modalVariant}
-        open={modalOpen}
-        setOpen={setModalOpen}
-        name={name}
-        setName={setName}
-        activeListing={activeListing}
-        categoryParent={stepName}
-        onClose={() => hide_modal()}
-      />
     </div>
   );
 }

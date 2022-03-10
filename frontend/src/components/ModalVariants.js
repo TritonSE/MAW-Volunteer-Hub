@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import {
   api_category_create,
@@ -8,26 +8,29 @@ import {
   api_file_update,
   api_file_delete,
 } from "../auth";
+import { FileStructure, ModalVariantsManager } from "./Contexts";
 import "../styles/ModalVariants.css";
 
 Modal.setAppElement("#root");
 
-function ModalVariants({
-  modalVariant,
-  open,
-  setOpen,
-  name,
-  setName,
-  activeListing,
-  categoryParent,
-  onClose,
-}) {
+function ModalVariants() {
   /**
    * STATE
    */
-  const [fileContents, setFileContents] = useState("");
+  const [fileContents, setFileContents] = useState();
   const [variant, setVariant] = useState({});
-  const [errorOpen, setErrorOpen] = useState(false);
+  const [submitEnabled, setSubmitEnabled] = useState(true);
+
+  const [_structure, getStructure] = useContext(FileStructure);
+  const {
+    modalVariant: [modalVariant],
+    open: [open, setOpen],
+    errorOpen: [errorOpen, setErrorOpen],
+    progressOpen: [progressOpen, setProgressOpen],
+    name: [name, setName],
+    activeListing: [activeListing, setActiveListing],
+    categoryParent: [categoryParent],
+  } = useContext(ModalVariantsManager);
 
   /**
    * MODAL VARIANTS
@@ -44,7 +47,10 @@ function ModalVariants({
         title: "Add",
       },
       on_submit: async (args) =>
-        api_file_upload(args.fileContents, args.name, args.activeListing._id),
+        api_file_upload(args.fileContents, args.name, args.activeListing._id, (val) => {
+          setProgressOpen(val);
+          setOpen(false);
+        }),
     },
     edit_file: {
       title: "Edit File",
@@ -57,11 +63,16 @@ function ModalVariants({
         title: "Update",
       },
       on_submit: async (args) =>
-        api_file_update(args.activeListing._id, args.fileContents, args.name),
+        api_file_update(args.activeListing._id, args.fileContents, args.name, (val) => {
+          if (args.fileContents) {
+            setProgressOpen(val);
+            setOpen(false);
+          }
+        }),
     },
     delete_file: {
       title: " ",
-      style: { height: "202px" },
+      className: "thin",
       name: false,
       has_upload: false,
       action_button: false,
@@ -100,7 +111,7 @@ function ModalVariants({
     },
     delete_category: {
       title: " ",
-      style: { height: "202px" },
+      className: "thin",
       name: false,
       has_upload: false,
       action_button: false,
@@ -121,9 +132,13 @@ function ModalVariants({
   };
 
   /**
-   * HOOK
+   * HOOKS
    */
   useEffect(() => setVariant(modal_variants[modalVariant]), [modalVariant]);
+  useEffect(() => {
+    // Explicit check for false because errorOpen's initial state is null
+    if (errorOpen === false) setOpen(true);
+  }, [errorOpen]);
 
   /**
    * UTILITY FUNCTIONS
@@ -145,8 +160,7 @@ function ModalVariants({
         isOpen={open}
         onRequestClose={() => setOpen(false)}
         contentLabel={variant.title}
-        style={{ content: variant.style ?? {} }}
-        className="wishgranting_react_modal"
+        className={`wishgranting_react_modal ${variant.className ?? ""}`}
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">
@@ -163,15 +177,24 @@ function ModalVariants({
             onSubmit={async (e) => {
               e.preventDefault();
               if (validate()) {
+                setSubmitEnabled(false);
                 const res = await variant.on_submit({
                   name,
                   activeListing,
                   fileContents,
                   categoryParent,
                 });
+                setSubmitEnabled(true);
                 if (!res || res.error) {
                   setErrorOpen(res ? res.error : "Unable to reach server, please try again.");
-                } else onClose();
+                  setOpen(false);
+                } else {
+                  getStructure();
+                  setOpen(false);
+                  setName("");
+                  setActiveListing(null);
+                  setFileContents();
+                }
               }
             }}
           >
@@ -206,7 +229,11 @@ function ModalVariants({
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="wishgranting_modal_button error">
+                  <button
+                    type="submit"
+                    className="wishgranting_modal_button error"
+                    disabled={!submitEnabled}
+                  >
                     {variant.center.action_button.title}
                   </button>
                 </div>
@@ -214,7 +241,11 @@ function ModalVariants({
             ) : null}
             {variant.action_button ? (
               <div className="wishgranting_modal_bottom">
-                <button type="submit" className="wishgranting_modal_button primary">
+                <button
+                  type="submit"
+                  className="wishgranting_modal_button primary"
+                  disabled={!submitEnabled}
+                >
                   {variant.action_button.title}
                 </button>
               </div>
@@ -223,11 +254,42 @@ function ModalVariants({
         </div>
       </Modal>
       <Modal
+        isOpen={progressOpen !== undefined}
+        onRequestClose={() => setProgressOpen()}
+        contentLabel="Progress"
+        className="wishgranting_react_modal thin"
+      >
+        <div className="wishgranting_modal">
+          <div className="wishgranting_modal_header">
+            <h3>Progress</h3>
+            <button
+              type="button"
+              className="wishgranting_modal_close"
+              onClick={() => setProgressOpen()}
+            >
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
+            </button>
+          </div>
+          <div className="wishgranting_modal_center halfheight column">
+            <div className="wishgranting_modal_center">
+              <div
+                className="wishgranting_progress"
+                role="progressbar"
+                style={{ "--progress": `${progressOpen}%` }}
+              >
+                {Math.floor(progressOpen)}%
+              </div>
+            </div>
+            <br />
+            <div className="wishgranting_modal_center thin center">{/* TODO */}</div>
+          </div>
+        </div>
+      </Modal>
+      <Modal
         isOpen={Boolean(errorOpen)}
         onRequestClose={() => setErrorOpen(false)}
         contentLabel="Error"
-        style={{ content: { height: "202px" } }}
-        className="wishgranting_react_modal error"
+        className="wishgranting_react_modal thin"
       >
         <div className="wishgranting_modal">
           <div className="wishgranting_modal_header">

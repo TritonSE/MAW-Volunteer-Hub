@@ -17,7 +17,8 @@
   border-radius: 10px !important;
   box-sizing: border-box;
 }
-.ReactModal__Content.wishgranting_react_modal.error {
+.ReactModal__Content.wishgranting_react_modal.thin {
+  height: 202px !important;
   top: calc(50vh - (200px / 2)) !important;
 }
 .wishgranting_modal {
@@ -83,6 +84,7 @@
   cursor: pointer;
   border: 1px solid black;
   background: white;
+  transition: opacity 0.1s;
 }
 .wishgranting_modal_button.primary {
   background: var(--primary-blue);
@@ -93,6 +95,9 @@
   background: #ff797d;
   color: white;
   border: none;
+}
+.wishgranting_modal_button:disabled {
+  opacity: 0.5;
 }
 
 .wishgranting_modal_center {
@@ -112,4 +117,49 @@
 }
 .wishgranting_modal_center.center {
   justify-content: center;
+}
+
+/*
+ * PROGRESS BAR
+ */
+.wishgranting_progress {
+  --hue: 220;
+  --holesize: 65%;
+  --track-bg: hsl(233, 34%, 92%);
+
+  height: 50%;
+  width: 50%;
+  min-width: 100px;
+  min-height: 100px;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  position: relative;
+  font-weight: 700;
+  font-size: 20px;
+  z-index: 999;
+}
+
+.wishgranting_progress::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-radius: 50%;
+  z-index: -1;
+  background: conic-gradient(
+    hsl(var(--hue) 100% 70%),
+    hsl(var(--hue) 100% 40%),
+    hsl(var(--hue) 100% 70%) var(--progress, 0%),
+    var(--track-bg) var(--progress, 0%) 100%
+  );
+
+  -webkit-mask-image: radial-gradient(
+    transparent var(--holesize),
+    black calc(var(--holesize) + 0.5px)
+  );
+
+  mask-image: radial-gradient(transparent var(--holesize), black calc(var(--holesize) + 0.5px));
 }

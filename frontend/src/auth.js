@@ -1,6 +1,8 @@
 /**
  * auth.js: Auth utilities
  */
+import axios from "axios";
+
 import { API_ENDPOINTS } from "./constants/links";
 
 /**
@@ -23,26 +25,50 @@ function token_clear() {
  */
 async function api_call(
   endpoint,
-  { data = null, method = "POST", type = "application/x-www-form-urlencoded", blob = false } = {}
+  {
+    data = null,
+    method = "POST",
+    type = "application/x-www-form-urlencoded",
+    blob = false,
+    onProgress = null,
+  } = {}
 ) {
+  let has_attached = false;
+
+  function progress_handler({ currentTarget }) {
+    if (!has_attached) {
+      has_attached = true;
+      currentTarget.onprogress = (e) => onProgress(e.total === 0 ? -1 : (e.loaded / e.total) * 100);
+      currentTarget.onload = () => onProgress();
+    }
+  }
+
   const options = {
     method,
+    url: endpoint,
     headers: {
       Authorization: "bearer " + token_get(),
     },
+    responseType: blob ? "blob" : "json",
+    onUploadProgress: (e) => onProgress((e.loaded / e.total) * 100),
+    onDownloadProgress: onProgress ? progress_handler : null,
   };
   if (type === "application/x-www-form-urlencoded") {
     options.headers["Content-Type"] = type;
   }
   if (data && Object.keys(data)) {
-    if (type === "multipart/form-data") options.body = new FormData();
-    else options.body = new URLSearchParams();
-    Object.keys(data).forEach((key) => options.body.append(key, data[key]));
+    if (type === "multipart/form-data") options.data = new FormData();
+    else options.data = new URLSearchParams();
+    Object.keys(data).forEach((key) => options.data.append(key, data[key]));
   }
 
   try {
-    const res = await fetch(endpoint, options);
-    return await (blob ? res.blob() : res.json());
+    const res = await axios(options);
+    if (res && res.data) {
+      if (blob) return new Blob([res.data], { type: res.headers["content-type"] });
+      return res.data;
+    }
+    return null;
   } catch {
     return null;
   }
@@ -74,17 +100,22 @@ async function api_signup({ name, email, password }) {
 /**
  * FILES
  */
-async function api_file_upload(file, name, category) {
+async function api_file_upload(file, name, category, onProgress) {
   const res = await api_call(API_ENDPOINTS.FILE_UPLOAD, {
     data: { file, name, category },
     method: "POST",
     type: "multipart/form-data",
+    onProgress,
   });
   return res;
 }
 
-async function api_file_display(id) {
-  const res = await api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, { method: "GET", blob: true });
+async function api_file_display(id, onProgress) {
+  const res = await api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, {
+    method: "GET",
+    blob: true,
+    onProgress,
+  });
   return res;
 }
 
@@ -93,11 +124,12 @@ async function api_file_delete(id) {
   return res;
 }
 
-async function api_file_update(id, file, name) {
+async function api_file_update(id, file, name, onProgress) {
   const res = await api_call(`${API_ENDPOINTS.FILE_UPDATE}/${id}`, {
     data: { file, updated_file_name: name },
     method: "PATCH",
     type: "multipart/form-data",
+    onProgress,
   });
   return res;
 }
@@ -150,10 +182,11 @@ async function api_category_update(category, name) {
   return res;
 }
 
-async function api_category_download(id) {
+async function api_category_download(id, onProgress) {
   const res = await api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
     method: "GET",
     blob: true,
+    onProgress,
   });
   return res;
 }
