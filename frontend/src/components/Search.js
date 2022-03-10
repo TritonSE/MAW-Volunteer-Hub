@@ -28,8 +28,8 @@ function Search() {
   const {
     modalVariant: [_modalVariant, setModalVariant],
     open: [_modalOpen, setModalOpen],
-    errorOpen: [_errorOpen, setErrorOpen],
-    progressOpen: [_progressOpen, setProgressOpen],
+    errorMessage: [_errorMessage, setErrorMessage],
+    progress: [_progress, setProgress],
     name: [_name, setName],
     activeListing: [_activeListing, setActiveListing],
   } = useContext(ModalVariantsManager);
@@ -38,14 +38,15 @@ function Search() {
    * UTILITY FUNCTIONS
    */
   async function display_file(file) {
-    setProgressOpen(0);
-    const res = await api_file_display(file._id, setProgressOpen);
+    setProgress(0);
+    const res = await api_file_display(file._id, setProgress);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
       window.open(url);
       window.URL.revokeObjectURL(url);
     } else {
-      setErrorOpen("Failed to download file, please try again.");
+      setModalVariant();
+      setErrorMessage("Failed to download file, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {

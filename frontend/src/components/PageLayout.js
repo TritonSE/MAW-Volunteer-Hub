@@ -23,10 +23,10 @@ export default function PageLayout({ children }) {
   /*
    * MODAL VARIANT PROPS
    */
-  const modalVariant = useState("add_file");
+  const modalVariant = useState();
   const open = useState(false);
-  const errorOpen = useState();
-  const progressOpen = useState();
+  const errorMessage = useState();
+  const progress = useState();
   const name = useState("");
   const activeListing = useState();
   const categoryParent = useState();
@@ -35,8 +35,8 @@ export default function PageLayout({ children }) {
     () => ({
       modalVariant,
       open,
-      errorOpen,
-      progressOpen,
+      errorMessage,
+      progress,
       name,
       activeListing,
       categoryParent,
@@ -44,8 +44,8 @@ export default function PageLayout({ children }) {
     [
       modalVariant[0],
       open[0],
-      errorOpen[0],
-      progressOpen[0],
+      errorMessage[0],
+      progress[0],
       name[0],
       activeListing[0],
       categoryParent[0],

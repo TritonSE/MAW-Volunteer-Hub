@@ -117,27 +117,36 @@
 }
 .wishgranting_modal_center.center {
   justify-content: center;
+  width: 100%;
 }
 
 /*
  * PROGRESS BAR
  */
+@keyframes indeterminate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .wishgranting_progress {
   --hue: 220;
   --holesize: 65%;
   --track-bg: hsl(233, 34%, 92%);
 
-  height: 50%;
-  width: 50%;
-  min-width: 100px;
-  min-height: 100px;
+  height: 100px;
+  width: 100px;
   display: grid;
   align-items: center;
   justify-items: center;
   position: relative;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px;
   z-index: 999;
+  font-family: "Lato", sans-serif;
 }
 
 .wishgranting_progress::before {
@@ -162,4 +171,8 @@
   );
 
   mask-image: radial-gradient(transparent var(--holesize), black calc(var(--holesize) + 0.5px));
+}
+
+.wishgranting_progress.indeterminate::before {
+  animation: indeterminate 1s infinite ease-in-out;
 }

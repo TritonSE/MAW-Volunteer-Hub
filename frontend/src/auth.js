@@ -38,8 +38,9 @@ async function api_call(
   function progress_handler({ currentTarget }) {
     if (!has_attached) {
       has_attached = true;
-      currentTarget.onprogress = (e) => onProgress(e.total === 0 ? -1 : (e.loaded / e.total) * 100);
-      currentTarget.onload = () => onProgress();
+      currentTarget.onprogress = (e) =>
+        onProgress(e.total === 0 ? "indeterminate" : (e.loaded / e.total) * 100);
+      currentTarget.onload = () => onProgress("done");
     }
   }
 
@@ -50,7 +51,7 @@ async function api_call(
       Authorization: "bearer " + token_get(),
     },
     responseType: blob ? "blob" : "json",
-    onUploadProgress: (e) => onProgress((e.loaded / e.total) * 100),
+    onUploadProgress: onProgress ? (e) => onProgress((e.loaded / e.total) * 100) : null,
     onDownloadProgress: onProgress ? progress_handler : null,
   };
   if (type === "application/x-www-form-urlencoded") {

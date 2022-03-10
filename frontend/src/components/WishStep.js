@@ -12,8 +12,8 @@ function WishStep({ index, stepName }) {
   const {
     modalVariant: [_modalVariant, setModalVariant],
     open: [_modalOpen, setModalOpen],
-    errorOpen: [_errorOpen, setErrorOpen],
-    progressOpen: [_progressOpen, setProgressOpen],
+    errorMessage: [_errorMessage, setErrorMessage],
+    progress: [_progress, setProgress],
     name: [_name, setName],
     activeListing: [_activeListing, setActiveListing],
     categoryParent: [_categoryParent, setCategoryParent],
@@ -23,19 +23,20 @@ function WishStep({ index, stepName }) {
    * UTILITY FUNCTIONS
    */
   async function download_file(file) {
-    setProgressOpen(0);
-    const res = await api_file_display(file._id, setProgressOpen);
+    setProgress(0);
+    const res = await api_file_display(file._id, setProgress);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
       window.open(url);
       window.URL.revokeObjectURL(url);
     } else {
-      setErrorOpen("Failed to download file, please try again.");
+      setModalVariant();
+      setErrorMessage("Failed to download file, please try again.");
     }
   }
   async function download_all_files(cat) {
-    setProgressOpen(0);
-    const res = await api_category_download(cat._id, setProgressOpen);
+    setProgress(0);
+    const res = await api_category_download(cat._id, setProgress);
     if (res && !res.error) {
       const a = document.createElement("a");
       const url = window.URL.createObjectURL(res);
@@ -45,6 +46,9 @@ function WishStep({ index, stepName }) {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+    } else {
+      setModalVariant();
+      setErrorMessage("Failed to download category, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
