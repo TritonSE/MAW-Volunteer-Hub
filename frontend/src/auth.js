@@ -67,7 +67,8 @@ async function api_call(
     const res = await axios(options);
     return res && res.data ? res.data : null;
   } catch (e) {
-    return e.response ? e.response.data : null;
+    if (e.response && e.response.data && e.response.data.error) return e.response.data;
+    return null;
   }
 }
 
