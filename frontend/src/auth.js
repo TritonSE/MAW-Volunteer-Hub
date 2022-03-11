@@ -65,11 +65,7 @@ async function api_call(
 
   try {
     const res = await axios(options);
-    if (res && res.data) {
-      if (blob) return new Blob([res.data], { type: res.headers["content-type"] });
-      return res.data;
-    }
-    return null;
+    return res && res.data ? res.data : null;
   } catch (e) {
     return e.response ? e.response.data : null;
   }
