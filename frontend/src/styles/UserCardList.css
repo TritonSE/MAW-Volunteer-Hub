@@ -154,7 +154,7 @@
   .card_item_top {
     font-size: 18px;
     white-space: nowrap;
-    overflow: scroll;
+    text-overflow: ellipsis;
 
     width: 150px;
     min-height: 35px;
