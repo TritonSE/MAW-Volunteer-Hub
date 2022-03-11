@@ -22,6 +22,13 @@ function WishStep({ index, stepName }) {
   /**
    * UTILITY FUNCTIONS
    */
+
+  /*
+   * TODO: This function is identical to one in Search.js. It should be
+   * moved into a dedicated file, but I'm leaving that to a later PR because
+   * it will be a non-trivial task/involve some decisions about organization
+   * and structure.
+   */
   async function download_file(file) {
     setProgress(0);
     const res = await api_file_display(file._id, setProgress);
@@ -31,7 +38,7 @@ function WishStep({ index, stepName }) {
       window.URL.revokeObjectURL(url);
     } else {
       setModalVariant();
-      setErrorMessage("Failed to download file, please try again.");
+      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
     }
   }
   async function download_all_files(cat) {
@@ -48,7 +55,7 @@ function WishStep({ index, stepName }) {
       window.URL.revokeObjectURL(url);
     } else {
       setModalVariant();
-      setErrorMessage("Failed to download category, please try again.");
+      setErrorMessage("Unable to reach server, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {

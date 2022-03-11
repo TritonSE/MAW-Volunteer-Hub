@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { api_user } from "../auth";
 import history from "../history";
-import AdminContext from "../components/AdminContext";
+import { AdminContext } from "../components/Contexts";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));

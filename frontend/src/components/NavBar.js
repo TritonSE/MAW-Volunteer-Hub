@@ -7,7 +7,7 @@ import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
-import AdminContext from "./AdminContext";
+import { AdminContext } from "./Contexts";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 

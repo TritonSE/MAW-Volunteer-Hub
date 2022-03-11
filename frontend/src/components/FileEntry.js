@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useContext } from "react";
-import AdminContext from "./AdminContext";
+import { AdminContext } from "./Contexts";
 import "../styles/FileEntry.css";
 
 function evt_wrapper(func) {

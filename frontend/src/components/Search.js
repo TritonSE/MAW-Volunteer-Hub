@@ -37,6 +37,13 @@ function Search() {
   /**
    * UTILITY FUNCTIONS
    */
+
+  /*
+   * TODO: This function is identical to one in WishStep.js. It should be
+   * moved into a dedicated file, but I'm leaving that to a later PR because
+   * it will be a non-trivial task/involve some decisions about organization
+   * and structure.
+   */
   async function display_file(file) {
     setProgress(0);
     const res = await api_file_display(file._id, setProgress);
@@ -46,7 +53,7 @@ function Search() {
       window.URL.revokeObjectURL(url);
     } else {
       setModalVariant();
-      setErrorMessage("Failed to download file, please try again.");
+      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {

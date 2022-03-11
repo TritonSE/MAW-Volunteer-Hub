@@ -19,7 +19,7 @@ import WishStep from "./components/WishStep";
 import UserList from "./components/UserList";
 import UserCardList from "./components/UserCardList";
 import AssignBtn from "./components/AssignBtn";
-import AdminContext from "./components/AdminContext";
+import { AdminContext } from "./components/Contexts";
 
 import "./App.css";
 
