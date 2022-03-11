@@ -10,32 +10,38 @@ let ft = import("file-type").then((module) => {
 const { uploadFile, getObject, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
-const { validate, errorHandler } = require("../util/RouteUtils");
+const { validate, errorHandler, adminValidator } = require("../util/RouteUtils");
 
 const router = express.Router();
 const upload = multer({ dest: "server_uploads/" });
 
-router.post("/upload", upload.single("file"), validate(["name", "category"]), (req, res) => {
-  uploadFile(req.file)
-    .then((result) =>
-      Promise.all([
-        Category.findById(req.body.category),
-        File.create({
-          name: req.body.name,
-          userID: req.user._id,
-          Category_ID: req.body.category,
-          S3_ID: result.key,
-        }),
-        fs.unlink(req.file.path),
-      ])
-    )
-    .then(([category, file]) => {
-      category.Files.push(file);
-      return category.save();
-    })
-    .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
-});
+router.post(
+  "/upload",
+  adminValidator,
+  upload.single("file"),
+  validate(["name", "category"]),
+  (req, res) => {
+    uploadFile(req.file)
+      .then((result) =>
+        Promise.all([
+          Category.findById(req.body.category),
+          File.create({
+            name: req.body.name,
+            userID: req.user._id,
+            Category_ID: req.body.category,
+            S3_ID: result.key,
+          }),
+          fs.unlink(req.file.path),
+        ])
+      )
+      .then(([category, file]) => {
+        category.Files.push(file);
+        return category.save();
+      })
+      .then(() => res.json({ success: true }))
+      .catch(errorHandler(res));
+  }
+);
 
 router.get("/display/:id", validate([], ["id"]), (req, res) => {
   File.findById(req.params.id)
@@ -54,7 +60,7 @@ router.get("/display/:id", validate([], ["id"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
+router.delete("/delete/:id", adminValidator, validate([], ["id"]), (req, res) => {
   File.findById(req.params.id)
     .then((file) =>
       Promise.all([
@@ -78,6 +84,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
 
 router.patch(
   "/update/:id",
+  adminValidator,
   upload.single("file"),
   validate(["updated_file_name"], ["id"]),
   (req, res) => {

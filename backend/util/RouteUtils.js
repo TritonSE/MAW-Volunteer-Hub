@@ -37,7 +37,17 @@ const errorHandler = (res) => (e) => {
   res.status(500).json({ error: e.toString() });
 };
 
+/**
+ * A middleware to check whether the current
+ *   user is an admin.
+ */
+const adminValidator = (req, res, next) => {
+  if (req.user && req.user.admin) next();
+  else res.status(403).json({ error: "Access denied." });
+};
+
 module.exports = {
   validate,
   errorHandler,
+  adminValidator,
 };

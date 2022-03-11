@@ -70,8 +70,8 @@ async function api_call(
       return res.data;
     }
     return null;
-  } catch {
-    return null;
+  } catch (e) {
+    return e.response ? e.response.data : null;
   }
 }
 
