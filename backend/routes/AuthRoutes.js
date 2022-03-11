@@ -10,18 +10,17 @@ const router = express.Router();
 
 // Sign up route
 router.post("/signup", (req, res, next) =>
-  passport.authenticate("signup", { session: false }, (error) => {
-    if (error) {
-      if (error.errors && error.errors.email) {
-        res.status(500).json({ error: "Email is already in use." });
-      } else res.status(500).json({ error: "Failed to sign up." });
-      return;
+  passport.authenticate("signup", { session: false }, ({ errors } = {}) => {
+    if (errors) {
+      res.status(500).json({
+        error: errors.email ? "Email is already in use." : "Failed to sign up, please try again.",
+      });
+    } else {
+      res.json({
+        success: true,
+        user: req.user,
+      });
     }
-
-    res.json({
-      message: "Signup successful",
-      user: req.user,
-    });
   })(req, res, next)
 );
 

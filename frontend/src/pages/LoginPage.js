@@ -187,7 +187,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
       >
         <div className="login_flex login_form login_modal">
           <div className="login_flex nomargin">
-            <div>&nbsp;</div>
+            {modalOpen === true ? <div>&nbsp;</div> : <h3>Error</h3>}
             <button
               type="button"
               className="login_button_unstyled"
@@ -199,7 +199,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
           <div className="login_modal_content">
             {modalOpen === true
               ? "Your account has been created! Once an admin confirms, you will be notified via email and be able to access the website."
-              : `Error: ${modalOpen}`}
+              : modalOpen}
           </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
             Okay

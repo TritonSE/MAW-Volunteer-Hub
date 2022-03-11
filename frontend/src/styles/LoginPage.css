@@ -186,6 +186,10 @@
   margin-top: 16px;
   margin-bottom: 24px;
 }
+.login_modal h3 {
+  font-size: 14pt;
+  margin: 0;
+}
 
 .login_button_unstyled {
   background: transparent;

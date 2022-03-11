@@ -38,7 +38,7 @@ const validate =
 const errorHandler = (res) => (e) => {
   log.error(e);
   if (config.app.env === "development") res.status(500).json({ error: e.toString() });
-  else res.status(500).json({ error: true });
+  else res.status(500).json({ error: "Internal server error." });
 };
 
 module.exports = {

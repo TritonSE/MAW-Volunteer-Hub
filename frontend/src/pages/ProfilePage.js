@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { api_user } from "../auth";
-import history from "../history";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
@@ -24,7 +23,6 @@ function ProfilePage({ isAdmin }) {
     if (!res || !res.user) navigate("/user-not-found");
     else {
       setUser(res.user);
-      console.log(res.sameUser);
       setIsCurrentUser(res.sameUser);
     }
   }, [id]);
