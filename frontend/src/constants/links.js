@@ -48,7 +48,9 @@ const SIDENAV_ROUTES = [
   "wish-closeout",
 ];
 
-const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
+// const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
+const MANAGE_STEPS = ["People"];
 
-const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+// const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+const MANAGE_ROUTES = ["people"];
 export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };
