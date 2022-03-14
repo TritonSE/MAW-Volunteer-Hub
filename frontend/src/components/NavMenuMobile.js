@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import "../styles/NavMenuMobile.css";
 import Search from "./Search";
 import history from "../history";
+import { CurrentUser } from "./Contexts";
 
 /*
   Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
@@ -21,8 +22,8 @@ function NavMenuMobile({
   setFilteredFiles,
   desktopDropdown,
   setDesktopDropdown,
-  isAdmin,
 }) {
+  const [currentUser] = useContext(CurrentUser);
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
@@ -100,7 +101,7 @@ function NavMenuMobile({
 
           <div className="pages-container-mobile">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && isAdmin) || !needs_admin ? (
+              (needs_admin && currentUser && currentUser.admin) || !needs_admin ? (
                 <NavLink
                   key={route}
                   className={`page-links-mobile ${

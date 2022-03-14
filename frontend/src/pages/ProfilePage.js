@@ -6,18 +6,17 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import { API_ENDPOINTS } from "../constants/links";
 import { api_user, api_pfp_upload } from "../auth";
-import { CacheBreaker } from "../components/Contexts";
+import { CurrentUser } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage({ isAdmin }) {
+function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
   const [pfpErrorModalOpen, setPFPErrorModalOpen] = useState(false);
-  const [cacheBreaker, setCacheBreaker] = useContext(CacheBreaker);
   const [opacity, setOpacity] = useState(1);
   const [crop, setCrop] = useState({ aspect: 1 });
   const [upImg, setUpImg] = useState();
@@ -25,9 +24,9 @@ function ProfilePage({ isAdmin }) {
   const [imgRef, setImgRef] = useState();
   const [dragActive, setDragActive] = useState(false);
 
+  const [currentUser, setCurrentUser] = useContext(CurrentUser);
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
-  // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
 
   const { id } = useParams();
 
@@ -106,7 +105,8 @@ function ProfilePage({ isAdmin }) {
 
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
-      setCacheBreaker(cacheBreaker + 1);
+      setUser(res.user);
+      if (res.user._id === currentUser._id) setCurrentUser(res.user);
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
@@ -121,11 +121,16 @@ function ProfilePage({ isAdmin }) {
   }, [imgRef]);
 
   useEffect(async () => {
-    const res = await api_user(id ?? "");
-    if (!res || !res.user) navigate("/user-not-found");
-    else {
-      setUser(res.user);
-      setIsCurrentUser(res.sameUser);
+    if (!id) {
+      setUser(currentUser);
+      setIsCurrentUser(true);
+    } else {
+      const res = await api_user(id ?? "");
+      if (!res || !res.user) navigate("/user-not-found");
+      else {
+        setUser(res.user);
+        setIsCurrentUser(res.user._id === currentUser._id);
+      }
     }
   }, [id]);
 
@@ -134,7 +139,13 @@ function ProfilePage({ isAdmin }) {
       <section className="header-section">
         <div className="profile-image">
           <img
-            src={`${API_ENDPOINTS.PFP_GET}/${id ?? ""}?cacheBreaker=${cacheBreaker}`}
+            src={
+              user && user._id
+                ? `${API_ENDPOINTS.PFP_GET}/${user._id}/${new Date(
+                    user.profilePictureModified
+                  ).getTime()}`
+                : ""
+            }
             alt={`${user.name}'s Profile`}
             style={{ opacity, transition: "opacity 0.3s" }}
           />
@@ -249,7 +260,7 @@ function ProfilePage({ isAdmin }) {
               Change Password
             </button>
           )}
-          {isAdmin && (
+          {currentUser && currentUser.admin && (
             <button
               type="button"
               className="delete-account-button"

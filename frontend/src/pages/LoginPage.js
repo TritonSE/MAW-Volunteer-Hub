@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { api_login, api_signup } from "../auth";
 import { SITE_PAGES } from "../constants/links";
+import { CurrentUser } from "../components/Contexts";
 import "../index.css";
 import "../styles/LoginPage.css";
 
@@ -35,7 +36,9 @@ function PasswordField({ name, placeholder, className, onChange }) {
   );
 }
 
-function LoginPage({ setIsAuth, setIsAdmin }) {
+function LoginPage() {
+  const [_currentUser, setCurrentUser] = useContext(CurrentUser);
+
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
@@ -64,12 +67,9 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
 
       if (isLogin) {
         setSuccessState(success);
-        setIsAuth(success);
+        setCurrentUser(res.user);
 
-        if (success) {
-          setIsAdmin(res.admin);
-          navigate(SITE_PAGES.HOME);
-        }
+        if (res.user) navigate(SITE_PAGES.HOME);
       } else {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes

@@ -7,13 +7,13 @@ import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
-import { CacheBreaker } from "./Contexts";
+import { CurrentUser } from "./Contexts";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
     Also contains the file search bar and the account menu to go to the profile page or sign out.
 */
-function NavBar({ isAdmin }) {
+function NavBar() {
   // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
 
@@ -34,7 +34,7 @@ function NavBar({ isAdmin }) {
   const [input, setInput] = useState("");
   const [filteredFiles, setFilteredFiles] = useState([]);
 
-  const [cacheBreaker] = useContext(CacheBreaker);
+  const [currentUser] = useContext(CurrentUser);
 
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
@@ -59,7 +59,7 @@ function NavBar({ isAdmin }) {
 
           <div className="pages-container">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && isAdmin) || !needs_admin ? (
+              (needs_admin && currentUser && currentUser.admin) || !needs_admin ? (
                 <NavLink
                   key={route}
                   className={`page-links ${
@@ -95,14 +95,19 @@ function NavBar({ isAdmin }) {
             setFilteredFiles={setFilteredFiles}
             desktopDropdown={dropdown}
             setDesktopDropdown={setDropdown}
-            isAdmin={isAdmin}
           />
 
           <div className="profile-container">
             <div className="profile-icon">
               <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
                 <img
-                  src={`${API_ENDPOINTS.PFP_GET}?cacheBreaker=${cacheBreaker}`}
+                  src={
+                    currentUser && currentUser._id
+                      ? `${API_ENDPOINTS.PFP_GET}/${currentUser._id}/${new Date(
+                          currentUser.profilePictureModified
+                        ).getTime()}`
+                      : ""
+                  }
                   alt="Profile Icon"
                   className="account-icon"
                 />

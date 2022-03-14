@@ -4,8 +4,9 @@ const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
-const { validate, errorHandler } = require("../util/RouteUtils");
 const UserModel = require("../models/UserModel");
+const { validate, errorHandler } = require("../util/RouteUtils");
+const { sanitizeUser } = require("../util/UserUtils");
 
 const router = express.Router();
 
@@ -48,10 +49,10 @@ router.post("/login", validate(["email", "password", "remember"], [], false), (r
           cookie_opts.expires = exp;
         }
         res.cookie("token", token, cookie_opts);
-        res.json({ success: true, admin: user.admin });
+        res.json({ success: true, user: sanitizeUser(user) });
       });
     } catch (error) {
-      res.json({ error });
+      res.status(401).json({ error });
     }
   })(req, res, next);
 });
@@ -64,8 +65,8 @@ router.post("/signout", (req, res) => {
 // Token validation route
 router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {
   UserModel.findById((req.user ?? {})._id)
-    .then((user) => res.json({ valid: Boolean(user) && Boolean(req.user), admin: user.admin }))
-    .catch(() => res.json({ valid: false, admin: false }));
+    .then((user) => res.json({ user: sanitizeUser(user) }))
+    .catch(() => res.status(404).json({ error: "No such user exists." }));
 });
 
 module.exports = router;

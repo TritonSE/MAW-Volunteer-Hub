@@ -9,6 +9,7 @@ const router = express.Router();
 const UserModel = require("../models/UserModel");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { errorHandler } = require("../util/RouteUtils");
+const { sanitizeUser } = require("../util/UserUtils");
 const config = require("../config");
 
 const upload = multer({
@@ -63,24 +64,18 @@ router.get("/info/:id?", (req, res, next) => {
     return;
   }
 
-  UserModel.findById(
-    req.params.id ?? req.user._id,
-    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1, createdAt: 1 },
-    (err, user) => {
-      if (err) {
-        next(err);
-      }
-
-      if (!user) {
-        // checks if a user was found with id
-        res.status(404).send("No user found with provided id");
-      } else {
-        const currentUserId = req.user._id;
-        const sameUser = currentUserId === (req.params.id ?? req.user._id);
-        res.status(200).json({ user, sameUser });
-      }
+  UserModel.findById(req.params.id ?? req.user._id, (err, user) => {
+    if (err) {
+      next(err);
     }
-  );
+
+    if (!user) {
+      // checks if a user was found with id
+      res.status(404).json({ error: "No user found with provided ID." });
+    } else {
+      res.status(200).json({ user: sanitizeUser(user) });
+    }
+  });
 });
 
 // finds user by id then verifies user
@@ -158,21 +153,13 @@ router.put("/edit/:id", async (req, res, next) => {
 /**
  * PROFILE PICTURES
  */
-router.get("/pfp", (req, res) => {
-  res.redirect(`/user/pfp/${req.user._id}`);
-});
-
-router.get("/pfp/:id/:time?", (req, res) => {
+router.get("/pfp/:id/:time", (req, res) => {
   UserModel.findById(req.params.id)
     .then((user) => {
-      if (!req.params.time)
-        res.redirect(`/user/pfp/${req.params.id}/${user.profilePictureModified.getTime()}`);
-      else {
-        res.set("Content-Type", "image/png");
-        res.set("Cache-Control", "max-age=604800");
-        if (!user.profilePicture) res.redirect("/img/no_profile_pic.svg");
-        else getFileStream(user.profilePicture).pipe(res);
-      }
+      res.set("Content-Type", "image/png");
+      res.set("Cache-Control", "max-age=604800");
+      if (!user.profilePicture) res.redirect("/img/no_profile_pic.svg");
+      else getFileStream(user.profilePicture).pipe(res);
     })
     .catch(errorHandler(res));
 });
@@ -205,9 +192,14 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
         profilePictureModified: new Date(),
       });
 
-      return Promise.all([user.save(), old ? deleteFileAWS(old) : null, fs.unlink(req.file.path)]);
+      return Promise.all([
+        sanitizeUser(user),
+        user.save(),
+        old ? deleteFileAWS(old) : null,
+        fs.unlink(req.file.path),
+      ]);
     })
-    .then(() => res.json({ success: true }))
+    .then(([user]) => res.json({ success: true, user }))
     .catch(errorHandler(res));
 });
 

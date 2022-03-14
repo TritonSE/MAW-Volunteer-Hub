@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
 const FileStructure = createContext();
-const CacheBreaker = createContext();
+const CurrentUser = createContext();
 
-export { FileStructure, CacheBreaker };
+export { FileStructure, CurrentUser };

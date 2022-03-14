@@ -44,7 +44,7 @@ async function api_validtoken() {
  */
 async function api_login({ email, password, remember }) {
   const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } });
-  return (res ?? {}).success;
+  return res ?? { user: { auth: false } };
 }
 
 async function api_signup({ name, email, password }) {
