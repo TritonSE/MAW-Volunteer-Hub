@@ -63,13 +63,15 @@ function LoginPage() {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res && !res.error);
+      const success = Boolean(res && res.user && !res.error);
 
       if (isLogin) {
         setSuccessState(success);
-        setCurrentUser(res.user);
 
-        if (res.user) navigate(SITE_PAGES.HOME);
+        if (res.user) {
+          setCurrentUser(res.user);
+          navigate(SITE_PAGES.HOME);
+        }
       } else {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes

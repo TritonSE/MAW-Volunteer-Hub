@@ -157,7 +157,7 @@ router.get("/pfp/:id/:time", (req, res) => {
   UserModel.findById(req.params.id)
     .then((user) => {
       res.set("Content-Type", "image/png");
-      res.set("Cache-Control", "max-age=604800");
+      res.set("Cache-Control", "max-age=31536000");
       if (!user.profilePicture) res.redirect("/img/no_profile_pic.svg");
       else getFileStream(user.profilePicture).pipe(res);
     })
