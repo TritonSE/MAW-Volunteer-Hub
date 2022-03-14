@@ -89,6 +89,7 @@ function WishStep({ index, stepName }) {
               onClick={() => show_modal("add_category")}
             />
           }
+          adminOnly
         />
         {(structure[stepName] ?? []).map((cat) => (
           <FileCategory

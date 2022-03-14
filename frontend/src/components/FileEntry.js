@@ -77,14 +77,17 @@ function FileListing({
   style,
   children,
   searchModal = false,
+  adminOnly,
 }) {
-  return (
+  const [isAdmin] = useContext(AdminContext);
+
+  return (adminOnly && isAdmin) || !adminOnly ? (
     <div
       className={`filelisting
-        ${noalternate ? " no_nth_child" : ""}
-        ${onClick !== undefined ? " pointer " : ""}
-        ${className !== undefined ? className : ""}
-        ${searchModal ? " search-modal" : ""}`}
+          ${noalternate ? " no_nth_child" : ""}
+          ${onClick !== undefined ? " pointer " : ""}
+          ${className !== undefined ? className : ""}
+          ${searchModal ? " search-modal" : ""}`}
       onClick={onClick ?? (() => {})}
       style={style !== undefined ? style : {}}
       role="presentation"
@@ -101,7 +104,7 @@ function FileListing({
       </div>
       <div className="filelisting_flex_center">{children}</div>
     </div>
-  );
+  ) : null;
 }
 
 function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile, searchModal = false }) {
