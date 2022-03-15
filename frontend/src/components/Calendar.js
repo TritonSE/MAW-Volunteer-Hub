@@ -169,14 +169,13 @@ export default function Calendar({ isAdmin }) {
   const [offset, setOffset] = useState({
     x: 61, // Used to calculate an event's position on top of the table
     y: 52, // ^^^
-    w: 53,
-    h: 49,
     abs_x: 230, // Used to convert from mouse event coords to table coords
     abs_y: 160, // ^^^
   });
   const [modalOpen, setModalOpen] = useState(false);
 
   const scrollRef = useRef();
+  const eventSizeRef = useRef({ getBoundingClientRect: () => ({ width: 53, height: 49 }) });
 
   const [calendars, setCalendars] = useState([
     { name: "Wish Granters", enabled: true, color: "#00BAB3", bgd: "#CCF1F0" },
@@ -198,13 +197,8 @@ export default function Calendar({ isAdmin }) {
 
     function resize() {
       setOffset({
-        x: offset.x,
-        y: offset.y,
-        w: node.offsetWidth,
-        h: node.offsetHeight,
-
-        abs_x: 230,
-        abs_y: 160,
+        ...offset,
+        abs_y: scrollRef.current ? 89 + scrollRef.current.offsetTop : 160,
       });
     }
     window.addEventListener("resize", resize);
@@ -212,7 +206,10 @@ export default function Calendar({ isAdmin }) {
   }, []);
 
   useEffect(() => {
-    offset.abs_y = 89 + scrollRef.current.offsetTop;
+    setOffset({
+      ...offset,
+      abs_y: 89 + scrollRef.current.offsetTop,
+    });
   }, [weekStart]);
 
   useEffect(async () => {
@@ -238,12 +235,15 @@ export default function Calendar({ isAdmin }) {
    */
   function date_from_pos(x, y) {
     const xadj = x - offset.x - offset.abs_x;
-    const xmod = Math.floor(xadj / offset.w);
+    const xmod = Math.floor(xadj / eventSizeRef.current.getBoundingClientRect().width);
 
     const yadj = y - offset.y - offset.abs_y + (scrollRef.current.scrollTop || 0);
-    const ymod = Math.floor(yadj / offset.h);
+    const ymod = Math.floor(yadj / eventSizeRef.current.getBoundingClientRect().height);
 
-    const ymin_orig = ((yadj % offset.h) / offset.h) * 60;
+    const ymin_orig =
+      ((yadj % eventSizeRef.current.getBoundingClientRect().height) /
+        eventSizeRef.current.getBoundingClientRect().height) *
+      60;
     const ymin = Math.floor(ymin_orig / 15) * 15;
 
     if (xadj < 0 || yadj < 0) return null;
@@ -255,8 +255,11 @@ export default function Calendar({ isAdmin }) {
   }
   function pos_from_date(date) {
     return {
-      x: date.getDay() * offset.w + offset.x,
-      y: date.getHours() * offset.h + (date.getMinutes() / 60) * offset.h + offset.y,
+      x: date.getDay() * eventSizeRef.current.getBoundingClientRect().width + offset.x,
+      y:
+        date.getHours() * eventSizeRef.current.getBoundingClientRect().height +
+        (date.getMinutes() / 60) * eventSizeRef.current.getBoundingClientRect().height +
+        offset.y,
     };
   }
 
@@ -283,7 +286,9 @@ export default function Calendar({ isAdmin }) {
 
     const out = {
       top: `${pos.y}px`,
-      height: `${Math.floor((dif / DATE_UTILS.HOUR_IN_MS) * offset.h)}px`,
+      height: `${Math.floor(
+        (dif / DATE_UTILS.HOUR_IN_MS) * eventSizeRef.current.getBoundingClientRect().height
+      )}px`,
       background: confirmed || isAdmin ? cal.bgd : "#ffffff",
       color: cal.color,
       borderColor: confirmed || isAdmin ? "#ffffff" : cal.color,
@@ -295,7 +300,7 @@ export default function Calendar({ isAdmin }) {
       //   with a few tweaks)
       const overlaps = [];
       let x = pos.x;
-      let w = 0.95 * offset.w;
+      let w = 0.95 * eventSizeRef.current.getBoundingClientRect().width;
       events.forEach((evt) => {
         if (evt.calendar.enabled && DATE_UTILS.dates_overlap(evt.date, { from, to })) {
           overlaps.push(evt);
@@ -332,7 +337,7 @@ export default function Calendar({ isAdmin }) {
       out.width = `${w}px`;
     } else {
       out.left = `${pos.x}px`;
-      out.width = `${offset.w}px`;
+      out.width = `${eventSizeRef.current.getBoundingClientRect().width}px`;
       out.zIndex = 999;
     }
 
@@ -420,6 +425,10 @@ export default function Calendar({ isAdmin }) {
     setModalOpen(false);
   }
 
+  function view_event(event) {
+    console.log(event);
+  }
+
   /*
    * RENDER
    */
@@ -428,7 +437,8 @@ export default function Calendar({ isAdmin }) {
       <div className="calendar_view">
         <div className="calendar_side">
           <button type="button" className="calendar_add" onClick={() => setModalOpen(true)}>
-            New Event
+            <img src="/img/calendar_add.svg" alt="Add event" />
+            <div>New Event</div>
           </button>
           <CalendarPreview
             setWeekStart={setWeekStart}
@@ -526,7 +536,7 @@ export default function Calendar({ isAdmin }) {
                       {i > 0 ? DATE_UTILS.format_hour(i) : ""}
                     </td>
                     <td ref={i === 0 ? compute_sizing : null} />
-                    <td />
+                    <td ref={i === 0 ? eventSizeRef : null} />
                     <td />
                     <td />
                     <td />
@@ -546,11 +556,16 @@ export default function Calendar({ isAdmin }) {
                 style={styles_from_event(evt, false, evt.calendar)}
                 onMouseDown={mouse_down}
                 onMouseMove={mouse_move}
-                onMouseUp={mouse_up}
+                onMouseUp={(e) => {
+                  if (currentEvent.visible) {
+                    mouse_up(e);
+                  } else {
+                    view_event(evt);
+                  }
+                }}
               >
                 <div className="calendar_event_time">
-                  {DATE_UTILS.format_time(evt.date.from, true)} &ndash;{" "}
-                  {DATE_UTILS.format_time(evt.date.to, true)}
+                  {DATE_UTILS.format_range(evt.date.from, evt.date.to, true)}
                 </div>
                 <div className="calendar_event_title">{evt.name}</div>
               </div>
@@ -565,8 +580,7 @@ export default function Calendar({ isAdmin }) {
                 onMouseUp={mouse_up}
               >
                 <div className="calendar_event_time">
-                  {DATE_UTILS.format_time(currentEvent.from, true)} &ndash;{" "}
-                  {DATE_UTILS.format_time(currentEvent.to, true)}
+                  {DATE_UTILS.format_range(currentEvent.from, currentEvent.to, true)}
                 </div>
                 <div className="calendar_event_title">(No title)</div>
               </div>
@@ -578,7 +592,7 @@ export default function Calendar({ isAdmin }) {
                 display: DATE_UTILS.is_within_week(weekStart, DATE_UTILS.TODAY) ? "block" : "none",
                 top: `${pos_from_date(new Date()).y}px`,
                 left: `${pos_from_date(new Date()).x}px`,
-                width: `${offset.w}px`,
+                width: `${eventSizeRef.current.getBoundingClientRect().width}px`,
               }}
             >
               <div className="calendar_ticker_ball" />
@@ -597,6 +611,31 @@ export default function Calendar({ isAdmin }) {
         />
         {/* TODO: Enable/disable calendar, clear current event on request close */}
       </div>
+
+      {/* Hints to help with cursor positioning/offset calculation */}
+      {/*
+      <div
+        style={{
+          position: "absolute",
+          width: "10px",
+          height: "10px",
+          background: "purple",
+          left: `${offset.abs_x}px`,
+          top: `${offset.abs_y}px`,
+          zIndex: "99999"
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          width: "10px",
+          height: "10px",
+          background: "red",
+          left: `${offset.abs_x + offset.x}px`,
+          top: `${offset.abs_y + offset.y}px`,
+          zIndex: "99999"
+        }}
+      /> */}
     </div>
   );
 }

@@ -85,14 +85,14 @@ export default function AddEventModal({
             <input
               type="time"
               step={60}
-              value={DATE_UTILS.format_time(from)}
+              value={DATE_UTILS.format_time(from, false, false, true)}
               onChange={(e) => change_time(e)}
             />
             –
             <input
               type="time"
               step={60}
-              value={DATE_UTILS.format_time(to)}
+              value={DATE_UTILS.format_time(to, false, false, true)}
               onChange={(e) => change_time(e, false)}
             />
             <br />

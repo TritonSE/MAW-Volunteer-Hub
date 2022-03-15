@@ -41,6 +41,11 @@
   font-family: "Lato", sans-serif;
   border: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-left: 30px;
+  padding-right: 35px;
 }
 .calendar_preview {
   width: 176px;
@@ -247,6 +252,7 @@
   box-sizing: border-box;
   border: 1px solid transparent;
   cursor: pointer;
+  overflow: hidden;
 }
 .calendar_event.confirmed {
   background: #ccf1f0;
