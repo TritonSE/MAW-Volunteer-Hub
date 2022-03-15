@@ -36,4 +36,11 @@ module.exports = (app) => {
       changeOrigin: true,
     })
   );
+  app.use(
+    "/calendar",
+    createProxyMiddleware({
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    })
+  );
 };

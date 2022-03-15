@@ -20,6 +20,7 @@ const authRoutes = require("./routes/AuthRoutes");
 const userRoutes = require("./routes/UserRoutes");
 const fileRoutes = require("./routes/FileRoutes");
 const categoryRoutes = require("./routes/CategoryRoutes");
+const calendarRoutes = require("./routes/CalendarRoutes");
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/auth", authRoutes); // authentication routes are not JWT protected
 app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes); // all user routes are JWT protected
 app.use("/file", passport.authenticate("jwt", { session: false }), fileRoutes);
 app.use("/category", passport.authenticate("jwt", { session: false }), categoryRoutes);
+app.use("/calendar", passport.authenticate("jwt", { session: false }), calendarRoutes);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
