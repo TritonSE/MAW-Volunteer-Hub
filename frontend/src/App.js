@@ -274,7 +274,7 @@ function App() {
           path={SITE_PAGES.CALENDAR}
           element={
             <PageLayout isAdmin={isAdmin}>
-              <Calendar />
+              <Calendar isAdmin={isAdmin} />
             </PageLayout>
           }
         />

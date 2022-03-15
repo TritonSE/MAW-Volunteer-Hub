@@ -19,6 +19,14 @@ module.exports = mongoose.model(
       type: String,
       required: true,
     },
+    volunteers: {
+      type: [mongoose.Types.ObjectId],
+      default: [],
+    },
+    guests: {
+      type: [String],
+      default: [],
+    },
     /* TODO */
   })
 );

@@ -4,6 +4,9 @@ import AddEventModal from "./AddEventModal";
 import { api_calendar_all } from "../auth";
 import "../styles/Calendar.css";
 
+// XXX: Temporary until my profile pictures PR gets merged in
+const CURRENT_USER_ID = "6227c2332abac608951c8ec1";
+
 /**
  * Component for formatting dates according
  *   to a format string.
@@ -155,7 +158,7 @@ function CalendarPreview({ setWeekStart, selected, setSelected }) {
 /**
  * Main calendar view
  */
-export default function Calendar() {
+export default function Calendar({ isAdmin }) {
   /*
    * STATE and REFS
    */
@@ -225,6 +228,7 @@ export default function Calendar() {
             from: new Date(evt.from),
             to: new Date(evt.to),
           },
+          confirmed: evt.volunteers.indexOf(CURRENT_USER_ID) > -1,
         }))
       );
   }, []);
@@ -256,7 +260,11 @@ export default function Calendar() {
     };
   }
 
-  function styles_from_date({ from, to }, is_selected, calendar) {
+  function styles_from_event(event, is_selected) {
+    const { date, confirmed, calendar } = event;
+    const from = date.from;
+    const to = date.to;
+
     if (!from || !to) return {};
     if (
       !DATE_UTILS.is_within_week(weekStart, from) ||
@@ -271,41 +279,61 @@ export default function Calendar() {
     const dif = DATE_UTILS.difference(to, from);
     if (dif === 0) return {};
 
+    const cal = calendar ?? calendars[0];
+
     const out = {
       top: `${pos.y}px`,
       height: `${Math.floor((dif / DATE_UTILS.HOUR_IN_MS) * offset.h)}px`,
-      zIndex: Math.min(999, Math.round(DATE_UTILS.DAY_IN_MS / dif)),
-      background: (calendar ?? calendars[0]).bgd,
-      color: (calendar ?? calendars[0]).color,
+      background: confirmed || isAdmin ? cal.bgd : "#ffffff",
+      color: cal.color,
+      borderColor: confirmed || isAdmin ? "#ffffff" : cal.color,
     };
 
     if (!is_selected) {
       // Compute overlapping elements to determine element width
+      //   (Logic mostly copied from observations about Google Calendar,
+      //   with a few tweaks)
       const overlaps = [];
-      let idx = 0;
+      let x = pos.x;
+      let w = 0.95 * offset.w;
       events.forEach((evt) => {
         if (evt.calendar.enabled && DATE_UTILS.dates_overlap(evt.date, { from, to })) {
           overlaps.push(evt);
         }
       });
 
-      // Sort by start time, earlier elements are positioned farther left
       if (overlaps.length > 0) {
+        let last = null;
         overlaps.sort((a, b) => a.date.from - b.date.from);
-        idx = overlaps.findIndex(
-          (evt) =>
-            DATE_UTILS.compare_times(evt.date.from, from) &&
-            DATE_UTILS.compare_times(evt.date.to, to)
-        );
-        if (idx < 0) idx = 0;
+        overlaps.every((evt, ind) => {
+          if (last) {
+            if (
+              Math.abs(DATE_UTILS.difference(last.date.from, evt.date.from)) <=
+              DATE_UTILS.HOUR_IN_MS / 2
+            ) {
+              w /= 2;
+              x += w;
+            } else {
+              w -= 5;
+              x += 5;
+            }
+          }
+          last = evt;
+
+          if (evt === event) {
+            out.zIndex = ind;
+            return false;
+          }
+          return true;
+        });
       }
 
-      const w = offset.w / (overlaps.length || 1);
-      out.left = `${pos.x + w * idx}px`;
+      out.left = `${x}px`;
       out.width = `${w}px`;
     } else {
       out.left = `${pos.x}px`;
       out.width = `${offset.w}px`;
+      out.zIndex = 999;
     }
 
     return out;
@@ -363,6 +391,10 @@ export default function Calendar() {
       tmp.to = DATE_UTILS.walk_hour(currentEvent.from);
     }
 
+    setCurrentEvent({
+      ...tmp,
+      visible: true,
+    });
     setModalOpen(true);
   }
 
@@ -372,14 +404,14 @@ export default function Calendar() {
     setCalendars(cpy);
   }
 
-  function add_event(obj) {
+  function add_event({ event }) {
     const cpy = events.slice();
     cpy.push({
-      ...obj.event,
-      calendar: calendars.find((cal) => cal.name === obj.calendar) || calendars[0],
+      ...event,
+      calendar: calendars.find((cal) => cal.name === event.calendar) || calendars[0],
       date: {
-        from: new Date(obj.from),
-        to: new Date(obj.to),
+        from: new Date(event.from),
+        to: new Date(event.to),
       },
     });
 
@@ -510,35 +542,33 @@ export default function Calendar() {
               <div
                 key={evt._id}
                 role="presentation"
-                className="calendar_event"
-                style={styles_from_date(evt.date, false, evt.calendar)}
+                className={`calendar_event ${evt.confirmed ? "confirmed" : ""}`}
+                style={styles_from_event(evt, false, evt.calendar)}
                 onMouseDown={mouse_down}
                 onMouseMove={mouse_move}
                 onMouseUp={mouse_up}
               >
-                {evt.name}
-                <br />
-                <span>
+                <div className="calendar_event_time">
                   {DATE_UTILS.format_time(evt.date.from, true)} &ndash;{" "}
                   {DATE_UTILS.format_time(evt.date.to, true)}
-                </span>
+                </div>
+                <div className="calendar_event_title">{evt.name}</div>
               </div>
             ))}
             {currentEvent.visible ? (
               <div
                 role="presentation"
                 className="calendar_event current"
-                style={styles_from_date(currentEvent, true)}
+                style={styles_from_event({ date: currentEvent, confirmed: false }, true)}
                 onMouseDown={mouse_down}
                 onMouseMove={mouse_move}
                 onMouseUp={mouse_up}
               >
-                (No title)
-                <br />
-                <span>
+                <div className="calendar_event_time">
                   {DATE_UTILS.format_time(currentEvent.from, true)} &ndash;{" "}
                   {DATE_UTILS.format_time(currentEvent.to, true)}
-                </span>
+                </div>
+                <div className="calendar_event_title">(No title)</div>
               </div>
             ) : null}
 
@@ -548,7 +578,7 @@ export default function Calendar() {
                 display: DATE_UTILS.is_within_week(weekStart, DATE_UTILS.TODAY) ? "block" : "none",
                 top: `${pos_from_date(new Date()).y}px`,
                 left: `${pos_from_date(new Date()).x}px`,
-                width: `${offset.w + 3}px`,
+                width: `${offset.w}px`,
               }}
             >
               <div className="calendar_ticker_ball" />

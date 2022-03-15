@@ -236,8 +236,8 @@
 
 .calendar_event {
   position: absolute;
-  background: #ccf1f0;
-  color: #00bab3;
+  background: #ffffff;
+  color: #ccf1f0;
   z-index: 1;
   width: 112px;
   border-radius: 8px;
@@ -245,6 +245,18 @@
   padding-top: 9px;
   font-size: 12px;
   box-sizing: border-box;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.calendar_event.confirmed {
+  background: #ccf1f0;
+  color: #00bab3;
+}
+.calendar_event .calendar_event_title {
+  font-weight: 600;
+}
+.calendar_event .calendar_event_time {
+  font-size: 11px;
 }
 .calendar_event.current {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -253,7 +265,7 @@
 
 .calendar_ticker {
   position: absolute;
-  z-index: 10000;
+  z-index: 1000;
 }
 .calendar_ticker_ball {
   width: 10px;

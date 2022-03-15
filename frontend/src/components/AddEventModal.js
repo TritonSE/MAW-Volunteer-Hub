@@ -42,14 +42,6 @@ export default function AddEventModal({
     const res = await api_calendar_new(from, to, name, calendar || calendars[0].name);
     if (res && !res.error) {
       addEvent(res);
-      /*
-      addEvent({
-        name,
-        calendar: calendars.find((cal) => cal.name === calendar) || calendars[0],
-        from,
-        to,
-      });
-      */
       setAnimationPlaying(true);
       setTimeout(() => {
         setAnimationPlaying(false);
