@@ -1,0 +1,46 @@
+.view_modal.evt_modal.nonadmin {
+  width: 300px !important;
+  height: unset;
+}
+
+.view_modal .spots_filled {
+  font-size: 14px;
+  color: #bbbcbc;
+}
+
+.view_modal .prop {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+.view_modal .prop img {
+  margin-right: 7px;
+}
+
+.view_modal hr {
+  margin-top: 12px;
+  opacity: 0.5;
+}
+
+.view_modal .question {
+  background: rgba(26, 104, 191, 0.2);
+  border-radius: 2px;
+  padding: 5px;
+  margin-top: 12px;
+}
+
+.view_modal .question_info {
+  color: #bbbcbc;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.view_modal label {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  margin-top: 8px;
+}
+.view_modal label .calendar_checkbox {
+  cursor: pointer;
+}

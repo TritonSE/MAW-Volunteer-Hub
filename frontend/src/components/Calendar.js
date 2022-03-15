@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import DATE_UTILS from "../date";
 import AddEventModal from "./AddEventModal";
+import ViewEventModal from "./ViewEventModal";
 import { api_calendar_all } from "../auth";
 import "../styles/Calendar.css";
 
@@ -166,13 +167,15 @@ export default function Calendar({ isAdmin }) {
   const [weekStart, setWeekStart] = useState(DATE_UTILS.first_of_week(DATE_UTILS.TODAY));
   const [selected, setSelected] = useState(DATE_UTILS.TODAY);
   const [currentEvent, setCurrentEvent] = useState({ from: null, to: null, visible: false });
+  const [viewTarget, setViewTarget] = useState({});
   const [offset, setOffset] = useState({
     x: 61, // Used to calculate an event's position on top of the table
     y: 52, // ^^^
     abs_x: 230, // Used to convert from mouse event coords to table coords
     abs_y: 160, // ^^^
   });
-  const [modalOpen, setModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [viewModalOpen, setViewModalOpen] = useState(false);
 
   const scrollRef = useRef();
   const eventSizeRef = useRef({ getBoundingClientRect: () => ({ width: 53, height: 49 }) });
@@ -400,7 +403,7 @@ export default function Calendar({ isAdmin }) {
       ...tmp,
       visible: true,
     });
-    setModalOpen(true);
+    setAddModalOpen(true);
   }
 
   function toggle_calendar(cal, state) {
@@ -422,11 +425,13 @@ export default function Calendar({ isAdmin }) {
 
     setEvents(cpy);
     setCurrentEvent({ from: null, to: null, visible: false });
-    setModalOpen(false);
+    setAddModalOpen(false);
   }
 
   function view_event(event) {
-    console.log(event);
+    setCurrentEvent({ from: null, to: null, visible: false });
+    setViewTarget(event);
+    setViewModalOpen(true);
   }
 
   /*
@@ -436,7 +441,7 @@ export default function Calendar({ isAdmin }) {
     <div className="calendar_scrollfix">
       <div className="calendar_view">
         <div className="calendar_side">
-          <button type="button" className="calendar_add" onClick={() => setModalOpen(true)}>
+          <button type="button" className="calendar_add" onClick={() => setAddModalOpen(true)}>
             <img src="/img/calendar_add.svg" alt="Add event" />
             <div>New Event</div>
           </button>
@@ -557,11 +562,8 @@ export default function Calendar({ isAdmin }) {
                 onMouseDown={mouse_down}
                 onMouseMove={mouse_move}
                 onMouseUp={(e) => {
-                  if (currentEvent.visible) {
-                    mouse_up(e);
-                  } else {
-                    view_event(evt);
-                  }
+                  if (currentEvent.visible) mouse_up(e);
+                  else view_event(evt);
                 }}
               >
                 <div className="calendar_event_time">
@@ -604,10 +606,16 @@ export default function Calendar({ isAdmin }) {
         <AddEventModal
           currentEvent={currentEvent}
           setCurrentEvent={setCurrentEvent}
-          isOpen={modalOpen}
-          setIsOpen={setModalOpen}
+          isOpen={addModalOpen}
+          setIsOpen={setAddModalOpen}
           calendars={calendars}
           addEvent={(args) => add_event(args)}
+        />
+        <ViewEventModal
+          event={viewTarget}
+          isOpen={viewModalOpen}
+          setIsOpen={setViewModalOpen}
+          isAdmin={isAdmin}
         />
         {/* TODO: Enable/disable calendar, clear current event on request close */}
       </div>
