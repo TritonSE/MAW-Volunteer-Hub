@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
 import ScrollContainer from "react-indiana-drag-scroll";
-import { token_clear, api_validtoken } from "./auth";
+import { token_clear, api_validtoken } from "./api";
 import {
   SITE_PAGES,
   SIDENAV_STEPS,

@@ -7,7 +7,7 @@ import {
   api_file_upload,
   api_file_update,
   api_file_delete,
-} from "../auth";
+} from "../api";
 import "../styles/ModalVariants.css";
 
 Modal.setAppElement("#root");

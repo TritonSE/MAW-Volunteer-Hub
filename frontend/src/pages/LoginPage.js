@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { token_set, api_login, api_signup } from "../auth";
+import { token_set, api_login, api_signup } from "../api";
 import { SITE_PAGES } from "../constants/links";
 import "../index.css";
 import "../styles/LoginPage.css";
@@ -106,7 +106,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
         //   after signing up, for debug purposes
         setSuccessState(-1);
 
-        // auth.js guarantees that res will have an error object on failure
+        // api.js guarantees that res will have an error object on failure
         setModalOpen(success ? true : res.error);
       }
     }

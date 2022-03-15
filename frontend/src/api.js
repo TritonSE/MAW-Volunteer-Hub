@@ -1,5 +1,5 @@
 /**
- * auth.js: Auth utilities
+ * api.js: API interfacing
  */
 import { API_ENDPOINTS } from "./constants/links";
 
@@ -54,21 +54,26 @@ async function api_call(
 async function api_validtoken() {
   if (!token_get()) return false;
 
-  const res = await api_call(API_ENDPOINTS.TOKEN);
-  return res;
+  return api_call(API_ENDPOINTS.TOKEN);
 }
 
 /**
  * LOGIN/SIGNUP
  */
 async function api_login({ email, password }) {
-  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
-  return res ?? { error: "Unable to connect to server, please try again." };
+  return (
+    api_call(API_ENDPOINTS.LOGIN, { data: { email, password } }) ?? {
+      error: "Unable to connect to server, please try again.",
+    }
+  );
 }
 
 async function api_signup({ name, email, password }) {
-  const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
-  return res ?? { error: "Unable to connect to server, please try again." };
+  return (
+    api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } }) ?? {
+      error: "Unable to connect to server, please try again.",
+    }
+  );
 }
 
 /**
@@ -84,8 +89,7 @@ async function api_file_upload(file, name, category) {
 }
 
 async function api_file_display(id) {
-  const res = await api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, { method: "GET", blob: true });
-  return res;
+  return api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, { method: "GET", blob: true });
 }
 
 async function api_file_delete(id) {
@@ -103,13 +107,11 @@ async function api_file_update(id, file, name) {
 }
 
 async function api_file_search(name) {
-  const res = await api_call(`${API_ENDPOINTS.FILE_SEARCH}/${name}`, { method: "GET" });
-  return res;
+  return api_call(`${API_ENDPOINTS.FILE_SEARCH}/${name}`, { method: "GET" });
 }
 
 async function api_file_all() {
-  const res = await api_call(`${API_ENDPOINTS.FILE_ALL}`, { method: "GET" });
-  return res;
+  return api_call(`${API_ENDPOINTS.FILE_ALL}`, { method: "GET" });
 }
 
 /**
@@ -121,15 +123,13 @@ async function api_category_delete(category) {
 }
 
 async function api_category_all(parent) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ALL}${parent ? "/" + parent : ""}`, {
+  return api_call(`${API_ENDPOINTS.CATEGORY_ALL}${parent ? "/" + parent : ""}`, {
     method: "GET",
   });
-  return res;
 }
 
 async function api_category_one(category) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, { method: "GET" });
-  return res;
+  return api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, { method: "GET" });
 }
 
 async function api_category_create(name, parent) {
@@ -151,19 +151,17 @@ async function api_category_update(category, name) {
 }
 
 async function api_category_download(id) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
+  return api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
     method: "GET",
     blob: true,
   });
-  return res;
 }
 
 /**
  * USER
  */
 async function api_user(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
-  return res;
+  return api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
 }
 
 export {

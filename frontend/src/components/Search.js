@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
-import { api_file_display } from "../auth";
+import { api_file_display } from "../api";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
 import ModalVariants from "./ModalVariants";

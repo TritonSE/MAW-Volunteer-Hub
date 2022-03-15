@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
-import { api_user } from "../auth";
+import { api_user } from "../api";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
