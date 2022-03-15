@@ -37,7 +37,7 @@ module.exports = (app) => {
     })
   );
   app.use(
-    "/calendar",
+    "/cal",
     createProxyMiddleware({
       target: "http://localhost:5000",
       changeOrigin: true,

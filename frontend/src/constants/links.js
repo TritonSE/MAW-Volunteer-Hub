@@ -5,6 +5,7 @@ const SITE_PAGES = {
   WISH_GRANTING: "/wish-granting",
   PROFILE: "/profile",
   MANAGE: "/manage",
+  CALENDAR: "/calendar",
 
   SIGNOUT: "/signout",
 };
@@ -29,6 +30,12 @@ const API_ENDPOINTS = {
   CATEGORY_DOWNLOAD: "/category/download",
 
   USER: "/user",
+
+  CALENDAR_ALL: "/cal/all",
+  CALENDAR_ICS: "/cal/ics",
+  CALENDAR_NEW: "/cal/new",
+  CALENDAR_DELETE: "/cal/del",
+  CALENDAR_UPDATE: "/cal/update",
 };
 
 const SIDENAV_STEPS = [

@@ -15,6 +15,7 @@ import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
+import Calendar from "./components/Calendar";
 import WishStep from "./components/WishStep";
 import UserList from "./components/UserList";
 import UserCardList from "./components/UserCardList";
@@ -266,6 +267,17 @@ function App() {
             />
           ))}
         </Route>
+
+        {/* Calendar */}
+        <Route
+          exact
+          path={SITE_PAGES.CALENDAR}
+          element={
+            <PageLayout isAdmin={isAdmin}>
+              <Calendar />
+            </PageLayout>
+          }
+        />
 
         {/* Sign out */}
         <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper setIsAuth={setIsAuth} />} />
