@@ -169,6 +169,7 @@ function ModalVariants() {
     progress: {
       title: "Progress",
       className: "thin",
+      has_close: false,
       name: false,
       has_upload: false,
       action_button: false,
@@ -180,7 +181,9 @@ function ModalVariants() {
               role="progressbar"
               style={{ "--progress": `${typeof progress === "number" ? progress : 50}%` }}
             >
-              {progress === "indeterminate" ? "Loading..." : Math.floor(progress) + "%"}
+              <div className="wishgranting_progress_inner">
+                {progress === "indeterminate" ? "Loading..." : Math.floor(progress) + "%"}
+              </div>
             </div>
           </div>
           <br />
@@ -230,16 +233,24 @@ function ModalVariants() {
   return (
     <Modal
       isOpen={open}
-      onRequestClose={() => setOpen(false)}
+      onRequestClose={() => {
+        if (variant.has_close === undefined) setOpen(false);
+      }}
       contentLabel={variant.title}
       className={`wishgranting_react_modal ${variant.className ?? ""}`}
     >
       <div className="wishgranting_modal">
         <div className="wishgranting_modal_header">
           <h3>{variant.title}</h3>
-          <button type="button" className="wishgranting_modal_close" onClick={() => setOpen(false)}>
-            <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-          </button>
+          {variant.has_close === undefined && (
+            <button
+              type="button"
+              className="wishgranting_modal_close"
+              onClick={() => setOpen(false)}
+            >
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
+            </button>
+          )}
         </div>
         <form
           onSubmit={async (e) => {

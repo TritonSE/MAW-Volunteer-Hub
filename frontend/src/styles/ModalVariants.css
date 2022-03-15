@@ -139,40 +139,39 @@
 
   height: 100px;
   width: 100px;
-  display: grid;
+  border-radius: 50px;
+  display: flex;
   align-items: center;
-  justify-items: center;
-  position: relative;
+  justify-content: center;
   font-weight: 700;
   font-size: 18px;
-  z-index: 999;
   font-family: "Lato", sans-serif;
-}
 
-.wishgranting_progress::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  border-radius: 50%;
-  z-index: -1;
   background: conic-gradient(
     hsl(var(--hue) 100% 70%),
     hsl(var(--hue) 100% 40%),
     hsl(var(--hue) 100% 70%) var(--progress, 0%),
     var(--track-bg) var(--progress, 0%) 100%
   );
-
-  -webkit-mask-image: radial-gradient(
-    transparent var(--holesize),
-    black calc(var(--holesize) + 0.5px)
-  );
-
-  mask-image: radial-gradient(transparent var(--holesize), black calc(var(--holesize) + 0.5px));
 }
 
-.wishgranting_progress.indeterminate::before {
+.wishgranting_progress_inner {
+  width: 90px;
+  height: 90px;
+  border-radius: 45px;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wishgranting_progress.indeterminate {
   animation: indeterminate 1s infinite ease-in-out;
+}
+.wishgranting_progress.indeterminate .wishgranting_progress_inner {
+  animation: indeterminate 1s reverse infinite ease-in-out;
+}
+
+.wishgranting_progress.done {
 }
