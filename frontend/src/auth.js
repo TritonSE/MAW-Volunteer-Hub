@@ -166,6 +166,36 @@ async function api_user(id) {
   return res;
 }
 
+/**
+ * CALENDAR
+ */
+async function api_calendar_all() {
+  return api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
+}
+
+async function api_calendar_new(from, to, name, calendar) {
+  const res = await api_call(API_ENDPOINTS.CALENDAR_NEW, {
+    data: { from: from.toISOString(), to: to.toISOString(), name, calendar },
+    method: "PUT",
+  });
+  return res;
+}
+
+async function api_calendar_delete(id) {
+  const res = await api_call(`${API_ENDPOINTS.CALENDAR_DELETE}/${id}`, {
+    method: "DELETE",
+  });
+  return res;
+}
+
+async function api_calendar_update(id) {
+  const res = await api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
+    data: {},
+    method: "PATCH",
+  });
+  return res;
+}
+
 export {
   token_get,
   token_set,
@@ -186,4 +216,8 @@ export {
   api_category_update,
   api_category_download,
   api_user,
+  api_calendar_all,
+  api_calendar_new,
+  api_calendar_delete,
+  api_calendar_update,
 };

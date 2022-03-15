@@ -13,16 +13,25 @@ router.get("/all", (_req, res) => {
 });
 
 router.get("/ics", (_req, res) => {
+  /* TODO: Can filter by the type of calendar */
   const calendar = ical({ name: "Make-a-Wish Volunteers" });
   EventModel.find()
     .then((events) => {
-      events.forEach((evt) => calendar.createEvent(evt));
+      events.forEach((evt) =>
+        calendar.createEvent({
+          start: evt.from,
+          end: evt.to,
+          summary: evt.name,
+          description: "TODO",
+          location: "TODO",
+        })
+      );
       calendar.serve(res);
     })
     .catch(errorHandler(res));
 });
 
-router.put("/new", validate(["from", "to", "name"], []), (req, res) => {
+router.put("/new", validate(["from", "to", "name", "calendar"], []), (req, res) => {
   const from = new Date(req.body.from);
   const to = new Date(req.body.to);
 
@@ -35,8 +44,9 @@ router.put("/new", validate(["from", "to", "name"], []), (req, res) => {
     from: new Date(req.body.from),
     to: new Date(req.body.to),
     name: req.body.name,
+    calendar: req.body.calendar,
   })
-    .then(() => res.json({ success: true }))
+    .then((event) => res.json({ event }))
     .catch(errorHandler(res));
 });
 
@@ -46,6 +56,6 @@ router.delete("/del/:id", validate([], ["id"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.patch("/update/:id", validate([], ["id"]), (_req, _res) => {});
+router.patch("/upd/:id", validate([], ["id"]), (_req, _res) => {});
 
 module.exports = router;

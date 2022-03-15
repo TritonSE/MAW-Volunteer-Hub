@@ -35,7 +35,7 @@ const API_ENDPOINTS = {
   CALENDAR_ICS: "/cal/ics",
   CALENDAR_NEW: "/cal/new",
   CALENDAR_DELETE: "/cal/del",
-  CALENDAR_UPDATE: "/cal/update",
+  CALENDAR_UPDATE: "/cal/upd",
 };
 
 const SIDENAV_STEPS = [

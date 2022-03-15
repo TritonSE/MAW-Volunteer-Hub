@@ -57,6 +57,10 @@
   outline: 0;
   box-sizing: border-box;
   margin-bottom: 20px;
+  background: #ffffff;
+}
+.evt_modal_content select {
+  background: #ffffff;
 }
 .evt_modal_content input:not([type="checkbox"]):focus {
   border-bottom: 1.5px solid var(--primary-blue);

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import DATE_UTILS from "../date";
+import { api_calendar_new } from "../auth";
 import "../styles/AddEventModal.css";
 
 Modal.setAppElement("#root");
@@ -36,19 +37,25 @@ export default function AddEventModal({
     setTo(DATE_UTILS.copy_time(to, e.target.value));
   }
 
-  function add_event() {
+  async function add_event() {
     /* TODO: Validation */
-    addEvent({
-      name,
-      calendar: calendars.find((cal) => cal.name === calendar) || calendars[0],
-      from,
-      to,
-    });
-    setAnimationPlaying(true);
-    setTimeout(() => {
-      setAnimationPlaying(false);
-      setIsOpen(false);
-    }, 2500);
+    const res = await api_calendar_new(from, to, name, calendar || calendars[0].name);
+    if (res && !res.error) {
+      addEvent(res);
+      /*
+      addEvent({
+        name,
+        calendar: calendars.find((cal) => cal.name === calendar) || calendars[0],
+        from,
+        to,
+      });
+      */
+      setAnimationPlaying(true);
+      setTimeout(() => {
+        setAnimationPlaying(false);
+        setIsOpen(false);
+      }, 2500);
+    }
   }
 
   function cleanup() {

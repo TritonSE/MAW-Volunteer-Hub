@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import DATE_UTILS from "../date";
 import AddEventModal from "./AddEventModal";
+import { api_calendar_all } from "../auth";
 import "../styles/Calendar.css";
 
 /**
@@ -163,17 +164,16 @@ export default function Calendar() {
   const [selected, setSelected] = useState(DATE_UTILS.TODAY);
   const [currentEvent, setCurrentEvent] = useState({ from: null, to: null, visible: false });
   const [offset, setOffset] = useState({
-    x: 61,
-    y: 147,
-    w: (window.innerWidth - (29 * 2 + 176 + 24)) / 10, // Heuristic
+    x: 61, // Used to calculate an event's position on top of the table
+    y: 52, // ^^^
+    w: 53,
     h: 49,
-    abs_x: 230,
-    abs_y: 95,
+    abs_x: 230, // Used to convert from mouse event coords to table coords
+    abs_y: 160, // ^^^
   });
   const [modalOpen, setModalOpen] = useState(false);
 
   const scrollRef = useRef();
-  const offsetTopRef = useRef();
 
   const [calendars, setCalendars] = useState([
     { name: "Wish Granters", enabled: true, color: "#00BAB3", bgd: "#CCF1F0" },
@@ -201,7 +201,7 @@ export default function Calendar() {
         h: node.offsetHeight,
 
         abs_x: 230,
-        abs_y: 95,
+        abs_y: 160,
       });
     }
     window.addEventListener("resize", resize);
@@ -209,14 +209,25 @@ export default function Calendar() {
   }, []);
 
   useEffect(() => {
-    offset.y = 0;
-
-    let tmp = offsetTopRef.current;
-    while (tmp !== scrollRef.current) {
-      offset.y += tmp.offsetTop;
-      tmp = tmp.parentNode;
-    }
+    offset.abs_y = 89 + scrollRef.current.offsetTop;
   }, [weekStart]);
+
+  useEffect(async () => {
+    scrollRef.current.scrollTo(0, 386);
+
+    const res = await api_calendar_all();
+    if (res && !res.error)
+      setEvents(
+        res.map((evt) => ({
+          ...evt,
+          calendar: calendars.find((cal) => cal.name === evt.calendar) || calendars[0],
+          date: {
+            from: new Date(evt.from),
+            to: new Date(evt.to),
+          },
+        }))
+      );
+  }, []);
 
   /*
    * STYLE and FORMATTING
@@ -361,15 +372,14 @@ export default function Calendar() {
     setCalendars(cpy);
   }
 
-  function add_event({ name, calendar, from, to }) {
+  function add_event(obj) {
     const cpy = events.slice();
     cpy.push({
-      id: `${Date.now()}_${Math.random()}`,
-      name,
-      calendar,
+      ...obj.event,
+      calendar: calendars.find((cal) => cal.name === obj.calendar) || calendars[0],
       date: {
-        from,
-        to,
+        from: new Date(obj.from),
+        to: new Date(obj.to),
       },
     });
 
@@ -411,7 +421,7 @@ export default function Calendar() {
             ))}
           </div>
         </div>
-        <div ref={scrollRef} className="calendar_box">
+        <div className="calendar_box">
           <div className="calendar_head">
             <button
               type="button"
@@ -449,93 +459,101 @@ export default function Calendar() {
             <div className="counterweight" />
           </div>
 
-          <table
-            role="presentation"
-            className="calendar"
-            cellPadding={0}
-            cellSpacing={0}
-            border={0}
-            onMouseDown={mouse_down}
-            onMouseMove={mouse_move}
-            onMouseUp={mouse_up}
-          >
-            <thead>
-              <tr>
-                <th width="61">&nbsp;</th>
-                {DATE_UTILS.DAYS_OF_WEEK.map((day, ind) => {
-                  const tmp = DATE_UTILS.walk_day(weekStart, ind);
-                  return (
-                    <th
-                      key={day}
-                      className={DATE_UTILS.compare_dates(DATE_UTILS.TODAY, tmp) ? "today" : ""}
-                    >
-                      <div>{day}</div>
-                      <div>{tmp.getDate()}</div>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-            <tbody ref={offsetTopRef}>
-              {[...Array(24).keys()].map((i) => (
-                <tr key={i}>
-                  <td width="61" className="time">
-                    {i > 0 ? DATE_UTILS.format_hour(i) : ""}
-                  </td>
-                  <td ref={i === 0 ? compute_sizing : null} />
-                  <td />
-                  <td />
-                  <td />
-                  <td />
-                  <td />
-                  <td />
+          <div ref={scrollRef} className="calendar_scrollbox">
+            <table
+              role="presentation"
+              className="calendar"
+              cellPadding={0}
+              cellSpacing={0}
+              border={0}
+              onMouseDown={mouse_down}
+              onMouseMove={mouse_move}
+              onMouseUp={mouse_up}
+            >
+              <thead>
+                <tr>
+                  <th width="61">&nbsp;</th>
+                  {DATE_UTILS.DAYS_OF_WEEK.map((day, ind) => {
+                    const tmp = DATE_UTILS.walk_day(weekStart, ind);
+                    return (
+                      <th
+                        key={day}
+                        className={DATE_UTILS.compare_dates(DATE_UTILS.TODAY, tmp) ? "today" : ""}
+                      >
+                        <div>{day}</div>
+                        <div>{tmp.getDate()}</div>
+                      </th>
+                    );
+                  })}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[...Array(24).keys()].map((i) => (
+                  <tr key={i}>
+                    <td width="61" className="time">
+                      {i > 0 ? DATE_UTILS.format_hour(i) : ""}
+                    </td>
+                    <td ref={i === 0 ? compute_sizing : null} />
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                    <td />
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <br />
 
-          {events.map((evt) => (
-            <div
-              key={evt.id}
-              role="presentation"
-              className="calendar_event"
-              style={styles_from_date(evt.date, false, evt.calendar)}
-              onMouseDown={mouse_down}
-              onMouseMove={mouse_move}
-              onMouseUp={mouse_up}
-            >
-              {evt.name}
-            </div>
-          ))}
-          {currentEvent.visible ? (
-            <div
-              role="presentation"
-              className="calendar_event current"
-              style={styles_from_date(currentEvent, true)}
-              onMouseDown={mouse_down}
-              onMouseMove={mouse_move}
-              onMouseUp={mouse_up}
-            >
-              <b>(No title)</b>
-              <br />
-              <span>
-                {DATE_UTILS.format_time(currentEvent.from, true)} &ndash;{" "}
-                {DATE_UTILS.format_time(currentEvent.to, true)}
-              </span>
-            </div>
-          ) : null}
+            {events.map((evt) => (
+              <div
+                key={evt._id}
+                role="presentation"
+                className="calendar_event"
+                style={styles_from_date(evt.date, false, evt.calendar)}
+                onMouseDown={mouse_down}
+                onMouseMove={mouse_move}
+                onMouseUp={mouse_up}
+              >
+                {evt.name}
+                <br />
+                <span>
+                  {DATE_UTILS.format_time(evt.date.from, true)} &ndash;{" "}
+                  {DATE_UTILS.format_time(evt.date.to, true)}
+                </span>
+              </div>
+            ))}
+            {currentEvent.visible ? (
+              <div
+                role="presentation"
+                className="calendar_event current"
+                style={styles_from_date(currentEvent, true)}
+                onMouseDown={mouse_down}
+                onMouseMove={mouse_move}
+                onMouseUp={mouse_up}
+              >
+                (No title)
+                <br />
+                <span>
+                  {DATE_UTILS.format_time(currentEvent.from, true)} &ndash;{" "}
+                  {DATE_UTILS.format_time(currentEvent.to, true)}
+                </span>
+              </div>
+            ) : null}
 
-          <div
-            className="calendar_ticker"
-            style={{
-              display: DATE_UTILS.is_within_week(weekStart, DATE_UTILS.TODAY) ? "block" : "none",
-              top: `${pos_from_date(new Date()).y}px`,
-              left: `${pos_from_date(new Date()).x}px`,
-              width: `${offset.w + 3}px`,
-            }}
-          >
-            <div className="calendar_ticker_ball" />
-            <div className="calendar_ticker_line" />
+            <div
+              className="calendar_ticker"
+              style={{
+                display: DATE_UTILS.is_within_week(weekStart, DATE_UTILS.TODAY) ? "block" : "none",
+                top: `${pos_from_date(new Date()).y}px`,
+                left: `${pos_from_date(new Date()).x}px`,
+                width: `${offset.w + 3}px`,
+              }}
+            >
+              <div className="calendar_ticker_ball" />
+              <div className="calendar_ticker_line" />
+            </div>
           </div>
         </div>
 

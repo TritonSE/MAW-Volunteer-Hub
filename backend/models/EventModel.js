@@ -15,6 +15,10 @@ module.exports = mongoose.model(
       type: String,
       required: true,
     },
+    calendar: {
+      type: String,
+      required: true,
+    },
     /* TODO */
   })
 );
