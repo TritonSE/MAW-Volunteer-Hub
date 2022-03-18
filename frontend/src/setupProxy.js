@@ -16,6 +16,13 @@ module.exports = (app) => {
     })
   );
   app.use(
+    "/user",
+    createProxyMiddleware({
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    })
+  );
+  app.use(
     "/file",
     createProxyMiddleware({
       target: "http://localhost:5000",

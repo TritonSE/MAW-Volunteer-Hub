@@ -72,6 +72,9 @@
   transition: top 0.4s;
   width: 100%;
 }
+.filelisting_no_files {
+  font-family: "Lato", sans-serif;
+}
 
 /* if the file entry & file listing is displaying for the search modal */
 .search-modal {

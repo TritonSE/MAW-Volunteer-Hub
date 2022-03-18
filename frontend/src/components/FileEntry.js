@@ -17,7 +17,7 @@ function evt_wrapper(func) {
 
 function UnmemoizedFileAccordion({ children }) {
   if (!children || children.length === 0)
-    children = [<div>There are no files in this category.</div>];
+    children = [<div className="filelisting_no_files">There are no files in this category.</div>];
 
   function compute_top(i) {
     return (i + 1) * 60 + "px";

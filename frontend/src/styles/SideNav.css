@@ -17,6 +17,7 @@
   position: sticky;
   top: 0;
   height: 100vh;
+  min-width: 225px;
 }
 
 .side_nav_links {
@@ -90,6 +91,7 @@
     box-shadow: none;
     align-self: unset;
     z-index: 99;
+    overflow: auto;
   }
 
   .side_nav_links {
