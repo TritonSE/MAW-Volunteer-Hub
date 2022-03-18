@@ -35,6 +35,7 @@
   font-size: 15px;
   line-height: 18px;
   text-align: center;
+  font-family: "Lato", sans-serif;
 
   color: #75787b;
 }
@@ -45,6 +46,7 @@
   font-size: 15px;
   line-height: 18px;
   text-align: center;
+  font-family: "Lato", sans-serif;
 
   border-bottom: 1px solid #000;
   color: #0057b8;
@@ -77,8 +79,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding-left: 10px;
+  padding-left: 30px;
   height: 65px;
+  width: 100%;
 }
 .card_col > div > button {
   margin: 0;
