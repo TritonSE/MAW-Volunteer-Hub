@@ -20,7 +20,7 @@ Modal.setAppElement(document.getElementById("#root"));
     -setFilteredFiles: set the filtered files when it changes 
 */
 
-function Search() {
+function Search({ onBlur }) {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
@@ -81,6 +81,9 @@ function Search() {
           onChange={(e) => {
             setInput(e.target.value);
             filter_files(e.target.value);
+          }}
+          onBlur={() => {
+            if (!showResults && onBlur) onBlur();
           }}
         />
         <button className="search-button" type="submit" onClick={() => setShowResults(true)}>

@@ -22,7 +22,16 @@ function WishStep({ index, stepName }) {
     const res = await api_file_display(file._id);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
-      window.open(url);
+      if (!window.open(url)) {
+        // Fix for pop-up blockers (e.g. iOS Safari)
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
       window.URL.revokeObjectURL(url);
     }
   }

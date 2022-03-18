@@ -145,6 +145,7 @@ function ModalVariants({
       contentLabel={variant.title}
       style={{ content: variant.style ?? {} }}
       className="wishgranting_react_modal"
+      overlayClassName="wishgranting_react_modal"
     >
       <div className="wishgranting_modal">
         <div className="wishgranting_modal_header">
