@@ -189,6 +189,19 @@ async function api_category_download(id, onProgress) {
   return res;
 }
 
+async function api_get_users() {
+  const res = await api_call(`${API_ENDPOINTS.USER_ALL}`, {
+    method: "GET",
+  });
+  return res;
+}
+
+async function api_verify_user(id) {
+  const res = await api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
+    method: "PUT",
+  });
+  return res;
+}
 /**
  * USER
  */
@@ -216,5 +229,7 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
+  api_get_users,
+  api_verify_user,
   api_user,
 };
