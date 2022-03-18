@@ -133,9 +133,9 @@ function UserCardList({ userData, ...props }) {
         >
           Admin
         </button>
-        <button className={`toggle_btn${getButtonHeader(2)}`} type="button" aria-label="volunteer">
+        {/* <button className={`toggle_btn${getButtonHeader(2)}`} type="button" aria-label="volunteer">
           Deactivated
-        </button>
+        </button> */}
       </div>
       <UserCardSearch search={setSearchUser} />
       <div className="card_list">
