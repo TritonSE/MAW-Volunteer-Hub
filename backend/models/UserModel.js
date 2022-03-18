@@ -77,6 +77,14 @@ UserSchema.methods.isValidPassword = async function isValidPassword(password) {
   return bcrypt.compare(password, this.password);
 };
 
+UserSchema.set("toJSON", {
+  transform(doc, obj) {
+    const ret = { ...obj };
+    delete ret.password;
+    return ret;
+  },
+});
+
 UserSchema.plugin(uniqueValidator);
 
 const UserModel = mongoose.model("user", UserSchema);

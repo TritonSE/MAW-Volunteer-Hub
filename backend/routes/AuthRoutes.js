@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
-const { sanitizeUser } = require("../util/UserUtils");
 
 const router = express.Router();
 
@@ -49,7 +48,7 @@ router.post("/login", validate(["email", "password", "remember"], [], false), (r
           cookie_opts.expires = exp;
         }
         res.cookie("token", token, cookie_opts);
-        res.json({ success: true, user: sanitizeUser(user) });
+        res.json({ success: true, user: user.toJSON() });
       });
     } catch (error) {
       res.status(401).json({ error });
@@ -65,7 +64,7 @@ router.post("/signout", (req, res) => {
 // Token validation route
 router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {
   UserModel.findById((req.user ?? {})._id)
-    .then((user) => res.json({ user: sanitizeUser(user) }))
+    .then((user) => res.json({ user: user.toJSON() }))
     .catch(() => res.status(404).json({ error: "No such user exists." }));
 });
 

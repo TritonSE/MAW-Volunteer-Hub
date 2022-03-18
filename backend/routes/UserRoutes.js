@@ -9,7 +9,6 @@ const router = express.Router();
 const UserModel = require("../models/UserModel");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const { errorHandler } = require("../util/RouteUtils");
-const { sanitizeUser } = require("../util/UserUtils");
 const config = require("../config");
 
 const upload = multer({
@@ -73,7 +72,7 @@ router.get("/info/:id?", (req, res, next) => {
       // checks if a user was found with id
       res.status(404).json({ error: "No user found with provided ID." });
     } else {
-      res.status(200).json({ user: sanitizeUser(user) });
+      res.status(200).json({ user: user.toJSON() });
     }
   });
 });
@@ -193,7 +192,7 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
       });
 
       return Promise.all([
-        sanitizeUser(user),
+        user.toJSON(),
         user.save(),
         old ? deleteFileAWS(old) : null,
         fs.unlink(req.file.path),
