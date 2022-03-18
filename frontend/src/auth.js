@@ -68,7 +68,7 @@ async function api_login({ email, password }) {
 
 async function api_signup({ name, email, password }) {
   const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
-  return res && !res.error;
+  return res ?? { error: "Unable to reach server, please try again." };
 }
 
 /**

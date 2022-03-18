@@ -62,8 +62,8 @@ router.put("/updatepass", validate(["old_pass", "new_pass"], []), (req, res) =>
 
 router.put("/edit/:id", idParamValidator(), (req, res) =>
   UserModel.findById(req.user._id)
-  .then((user) => {
-      if ((req.params.id !== req.user._id && user.admin) return UserModel.findById(req.params.id);
+    .then((user) => {
+      if (req.params.id !== req.user._id && user.admin) return UserModel.findById(req.params.id);
       if (req.params.id === req.user._id) return user;
       throw new Error("Access denied.");
     })
