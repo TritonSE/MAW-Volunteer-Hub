@@ -97,7 +97,7 @@ function NavBar({ isAdmin }) {
 
           <div className="profile-container">
             <div className="profile-icon">
-              <NavLink className="account-button" to={`${SITE_PAGES.PROFILE}/`}>
+              <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
                 <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon" />
               </NavLink>
               <button
