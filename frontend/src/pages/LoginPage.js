@@ -63,7 +63,7 @@ function LoginPage() {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res && res.user && !res.error);
+      const success = Boolean(res && res.success);
 
       if (isLogin) {
         setSuccessState(success);

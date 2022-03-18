@@ -43,13 +43,11 @@ async function api_validtoken() {
  * LOGIN/SIGNUP
  */
 async function api_login({ email, password, remember }) {
-  const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } });
-  return res;
+  return api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } });
 }
 
 async function api_signup({ name, email, password }) {
-  const res = await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
-  return res && !res.error;
+  return api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
 }
 
 async function api_signout() {
