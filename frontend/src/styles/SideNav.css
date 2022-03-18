@@ -12,6 +12,7 @@
   align-items: center;
   background-color: white;
   box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
+  min-width: 225px;
 }
 
 .side_nav_links {

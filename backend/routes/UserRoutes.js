@@ -7,7 +7,7 @@ const UserModel = require("../models/UserModel");
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).send("Invalid user id passed into user route");
+    res.status(400).json({ error: "Invalid user id passed into user route" });
     return true;
   }
   return false;
@@ -32,16 +32,11 @@ function checkCurrentUserIsAdmin(req, res, next) {
 }
 
 router.get("/users", (req, res, next) => {
-  if (req.query.admin) {
-    try {
-      UserModel.find({ admin: req.query.admin }).then((users) => res.status(200).json({ users })); // return users found
-    } catch (e) {
-      next(e);
-    }
-  } else {
-    // prevent route from hanging if no query param passed in
-    res.status(400).send("No query param passed in to users route");
-  }
+  checkCurrentUserIsAdmin(req, res, () => {
+    UserModel.find()
+      .then((users) => res.status(200).json({ users }))
+      .catch((e) => res.status(400).json({ error: "An error occurred fetching users" }));
+  });
 });
 
 // Get user by id - Will return an object with only the user profile information
@@ -79,7 +74,7 @@ router.put("/verify/:id", (req, res, next) => {
 
   checkCurrentUserIsAdmin(req, res, () => {
     UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-      .then(() => res.status(200).send())
+      .then((user) => res.status(200).json({ user }))
       .catch((err) => {
         next(err);
       });
