@@ -162,8 +162,11 @@ async function api_category_download(id) {
  * USER
  */
 async function api_user_info(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { method: "GET" });
-  return res;
+  return api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { method: "GET" });
+}
+
+async function api_user_all() {
+  return api_call(API_ENDPOINTS.USER_ALL, { method: "GET" });
 }
 
 async function api_user_verify(id) {
@@ -209,6 +212,7 @@ export {
   api_category_update,
   api_category_download,
   api_user_info,
+  api_user_all,
   api_user_verify,
   api_user_promote,
   api_user_delete,

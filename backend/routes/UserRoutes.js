@@ -29,7 +29,7 @@ router.put("/verify/:id", idParamValidator(), isAdmin(), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/promoteadmin/:id", idParamValidator(), isAdmin(), (req, res) =>
+router.put("/promote/:id", idParamValidator(), isAdmin(), (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { admin: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
