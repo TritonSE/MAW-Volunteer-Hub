@@ -116,6 +116,10 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
     setSuccessState(-1);
   }, [email, password]);
 
+  useEffect(() => {
+    document.title = "Log In - Make-a-Wish San Diego";
+  }, []);
+
   return (
     <div className="login">
       <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
@@ -193,7 +197,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
               className="login_button_unstyled"
               onClick={() => setModalOpen(false)}
             >
-              <img src="/close-modal.svg" alt="Close modal" />
+              <img src="/img/close-modal.svg" alt="Close modal" />
             </button>
           </div>
           <div className="login_modal_content">

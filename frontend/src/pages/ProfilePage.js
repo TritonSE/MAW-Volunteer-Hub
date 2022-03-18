@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import Custom404Page from "./Custom404Page";
 import { api_user } from "../api";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
 function ProfilePage({ isAdmin }) {
+  const [is404, setIs404] = useState(false);
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -16,18 +18,24 @@ function ProfilePage({ isAdmin }) {
 
   const { id } = useParams();
 
-  const navigate = useNavigate();
-
   useEffect(async () => {
     const res = await api_user(id ?? "");
-    if (!res || !res.user) navigate("/user-not-found");
-    else {
+    if (!res || !res.user) {
+      setIs404(true);
+    } else {
+      setIs404(false);
       setUser(res.user);
       setIsCurrentUser(res.sameUser);
     }
   }, [id]);
 
-  return (
+  useEffect(() => {
+    document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
+  }, [user]);
+
+  return is404 ? (
+    <Custom404Page />
+  ) : (
     <div className="profile-page">
       <section className="header-section">
         <div className="profile-image">
