@@ -3,8 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
-const { validate, errorHandler, idParamValidator } = require("../util/RouteUtils");
-const { isAdmin } = require("../util/UserUtils");
+const { validate, errorHandler, idParamValidator, adminValidator } = require("../util/RouteUtils");
 
 router.get("/users", (req, res) =>
   UserModel.find({ admin: req.query.admin ?? false })
@@ -23,19 +22,19 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/verify/:id", idParamValidator(), isAdmin(), (req, res) =>
+router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.put("/promote/:id", idParamValidator(), isAdmin(), (req, res) =>
+router.put("/promote/:id", idParamValidator(), adminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { admin: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.delete("/delete/:id", idParamValidator(), isAdmin(), (req, res) =>
+router.delete("/delete/:id", idParamValidator(), adminValidator, (req, res) =>
   UserModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))

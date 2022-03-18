@@ -1,15 +1,14 @@
 /* eslint no-restricted-globals: off */
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { api_user_info, api_user_updatepass, api_user_delete } from "../auth";
-import history from "../history";
+import { AdminContext } from "../components/Contexts";
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function ProfilePage({ isAdmin }) {
+function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [responseModalOpen, setResponseModalOpen] = useState();
@@ -22,6 +21,8 @@ function ProfilePage({ isAdmin }) {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
   // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
+
+  const [isAdmin] = useContext(AdminContext);
 
   const { id } = useParams();
 
@@ -63,6 +64,9 @@ function ProfilePage({ isAdmin }) {
       setChangePassResponse();
       setResponseModalOpen("Password changed successfully.");
       setPassModalOpen(false);
+      setOldPass("");
+      setNewPass("");
+      setConfirmPass("");
     }
   }
 
