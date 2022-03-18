@@ -4,7 +4,7 @@ const router = express.Router();
 
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler, idParamValidator } = require("../util/RouteUtils");
-const { sanitizeUser, isAdmin } = require("../util/UserUtils");
+const { isAdmin } = require("../util/UserUtils");
 
 router.get("/users", (req, res) =>
   UserModel.find({ admin: req.query.admin ?? false })
@@ -16,7 +16,7 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
     .then((user) =>
       res.json({
-        user: sanitizeUser(user),
+        user: user.toJSON(),
         sameUser: user._id.toString() === req.user._id.toString(),
       })
     )
