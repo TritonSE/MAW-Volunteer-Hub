@@ -62,7 +62,7 @@ async function api_validtoken() {
  */
 async function api_login({ email, password }) {
   return (
-    api_call(API_ENDPOINTS.LOGIN, { data: { email, password } }) ?? {
+    (await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } })) ?? {
       error: "Unable to connect to server, please try again.",
     }
   );
@@ -70,7 +70,7 @@ async function api_login({ email, password }) {
 
 async function api_signup({ name, email, password }) {
   return (
-    api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } }) ?? {
+    (await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } })) ?? {
       error: "Unable to connect to server, please try again.",
     }
   );

@@ -68,6 +68,12 @@
   border: 0;
 
   font-family: "Lato" !important;
+
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+.login button.waiting {
+  opacity: 0.5;
 }
 
 .login button:disabled {

@@ -40,6 +40,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
   const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
   const [doRemember, setDoRemember] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -87,8 +88,10 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
 
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
+      setIsWaiting(true);
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
       const success = Boolean(res && !res.error);
+      setIsWaiting(false);
 
       if (isLogin) {
         setSuccessState(success);
@@ -174,7 +177,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
             </label>
             <a href="#forgot">Forgot password</a>
           </div>
-          <button type="submit" disabled={!validate()}>
+          <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
             {isLogin ? "Login" : "Create new account"}
           </button>
         </div>
