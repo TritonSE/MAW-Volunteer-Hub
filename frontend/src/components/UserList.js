@@ -45,11 +45,13 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
 /**
  * @param {Array} tableHeaders Array containing header objects with corresponding accessors
  * @param {Array} userData Array containing user information to be displayed
+ * @param {function} updateMyData function for updating user data
  * @returns
  */
-function UserList({ tableHeaders, userData }) {
+function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModal }) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
+   * NOTE: This format only applies for the hard-coded user information used for V1
    * userData should be formated as such:
    * const userData = [
    *    {
@@ -62,7 +64,7 @@ function UserList({ tableHeaders, userData }) {
    * ]
    */
 
-  const data = React.useMemo(() => userData, []);
+  const data = React.useMemo(() => userData, [userData]);
 
   /**
    * tableHeaders should be formatted as such:
@@ -89,11 +91,13 @@ function UserList({ tableHeaders, userData }) {
     {
       columns,
       data,
+      updateMyData, // will be available in cell render
+      handleConfirmationModal, // for showing confirm modal
+      autoResetGlobalFilter: false,
     },
     useGlobalFilter,
     useSortBy
   );
-
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
       if (direction) {
@@ -118,10 +122,10 @@ function UserList({ tableHeaders, userData }) {
   };
 
   // Determine if a row should be displayed based on which tab the table is on.
-  // Uses the name of the user to check to see if the user is an admin.
+  // Uses the id of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
-  const separateAdmin = (userName) => {
-    const isAdmin = userData.some((user) => user.Name === userName && user.Admin);
+  const separateAdmin = (id) => {
+    const isAdmin = userData.some((user) => user._id === id && user.admin);
 
     if (isAdmin && showAdmin) {
       return true;
@@ -155,19 +159,11 @@ function UserList({ tableHeaders, userData }) {
             Admin
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={visibleColumns.length}>
-                <GlobalFilter
-                  preGlobalFilteredRows={preGlobalFilteredRows}
-                  globalFilter={globalFilter}
-                  setGlobalFilter={setGlobalFilter}
-                />
-              </th>
-            </tr>
-          </thead>
-        </table>
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+        />
       </div>
       <div className="table-container">
         <table className="people_table" {...getTableProps()}>
@@ -195,7 +191,7 @@ function UserList({ tableHeaders, userData }) {
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
-              return separateAdmin(row.original.Name) ? (
+              return separateAdmin(row.original._id) ? (
                 <tr {...row.getRowProps()} key={Math.random()}>
                   {row.cells.map((cell, colIndex) => (
                     <td
