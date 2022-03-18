@@ -47,3 +47,8 @@
   /* TODO */
   /* border-image-source: linear-gradient(170.51deg, #8DC8E8 -12.27%, rgba(26, 104, 191, 0.6) 45.67%, rgba(26, 104, 191, 0.6) 85.79%); */
 }
+
+.wishgranting_no_files {
+  width: 100%;
+  text-align: center;
+}

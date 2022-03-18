@@ -147,7 +147,6 @@ function ProfilePage() {
                 : ""
             }
             alt={`${user.name}'s Profile`}
-            style={{ opacity, transition: "opacity 0.3s" }}
           />
           {isCurrentUser && (
             <>
@@ -215,6 +214,7 @@ function ProfilePage() {
                     type="button"
                     className="modal-button button-primary button-nomargin"
                     onClick={do_upload}
+                    style={{ opacity }}
                   >
                     Upload
                   </button>

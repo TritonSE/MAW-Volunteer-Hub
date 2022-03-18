@@ -34,15 +34,24 @@ const validate =
  * A simple error handler that prints the
  *   error to the screen if in development.
  */
-const errorHandler =
-  (res, full_error = true) =>
-  (e) => {
-    if (process.env.NODE_ENV === "dev") console.error(e);
-    if (full_error) res.status(500).json({ error: e.toString() });
-    else res.status(401).json({ error: "Access denied" });
-  };
+const errorHandler = (res) => (e) => {
+  if (process.env.NODE_ENV === "development") {
+    console.error(e);
+    res.status(500).json({ error: e.toString() });
+  } else res.status(401).json({ error: "Internal server error." });
+};
+
+/**
+ * A middleware to check whether the current
+ *   user is an admin.
+ */
+const adminValidator = (req, res, next) => {
+  if (req.user && req.user.admin) next();
+  else res.status(403).json({ error: "Access denied." });
+};
 
 module.exports = {
   validate,
   errorHandler,
+  adminValidator,
 };

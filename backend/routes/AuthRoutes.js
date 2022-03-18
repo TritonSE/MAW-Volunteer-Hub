@@ -19,7 +19,7 @@ router.post("/signup", passport.authenticate("signup", { session: false }), (req
       return user.save();
     })
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res, false));
+    .catch(errorHandler(res));
 });
 
 // Log In route
@@ -37,7 +37,7 @@ router.post("/login", validate(["email", "password", "remember"], [], false), (r
           return;
         }
 
-        const body = { _id: user._id, email: user.email }; // sign is admin into this body
+        const body = { _id: user._id, email: user.email, admin: user.admin }; // sign is admin into this body
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
         const cookie_opts = { signed: true };

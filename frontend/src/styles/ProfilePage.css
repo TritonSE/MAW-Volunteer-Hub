@@ -188,10 +188,14 @@
   line-height: 17px;
   height: 26px;
   width: 100%;
+  transition: opacity 0.1s;
 }
 .modal-button.small {
   width: 105px !important;
   margin: 5px;
+}
+.modal-button.waiting {
+  opacity: 0.5;
 }
 .button-primary {
   color: white;

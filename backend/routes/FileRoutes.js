@@ -5,10 +5,10 @@ let ft = import("file-type").then((module) => {
   ft = module;
 });
 
-const { upload, getFileStream, deleteFileAWS } = require("../util/S3Util");
+const { upload, getObject, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
-const { validate, errorHandler } = require("../util/RouteUtils");
+const { validate, errorHandler, adminValidator } = require("../util/RouteUtils");
 
 const router = express.Router();
 
@@ -33,19 +33,21 @@ router.post("/upload", upload.single("file"), validate(["name", "category"]), (r
 router.get("/display/:id", validate([], ["id"]), (req, res) => {
   File.findById(req.params.id)
     .then((file) => {
-      const stream = getFileStream(file.S3_ID);
-      return Promise.all([file, ft.fileTypeFromStream(stream)]);
+      const obj = getObject(file.S3_ID);
+      obj.on("httpHeaders", (_code, headers) => {
+        res.set("Content-Length", headers["content-length"]);
+      });
+      return Promise.all([file, ft.fileTypeFromStream(obj.createReadStream())]);
     })
     .then(([file, type]) => {
-      const stream = getFileStream(file.S3_ID);
       if (type && type.mime) res.set("Content-Type", type.mime);
       else res.set("Content-Type", mime.lookup(file.name));
-      stream.pipe(res);
+      getObject(file.S3_ID).createReadStream().pipe(res);
     })
     .catch(errorHandler(res));
 });
 
-router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
+router.delete("/delete/:id", adminValidator, validate([], ["id"]), (req, res) => {
   File.findById(req.params.id)
     .then((file) =>
       Promise.all([
@@ -69,6 +71,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
 
 router.patch(
   "/update/:id",
+  adminValidator,
   upload.single("file"),
   validate(["updated_file_name"], ["id"]),
   (req, res) => {
