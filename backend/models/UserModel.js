@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-
-mongoose.connect("mongodb://127.0.0.1:27017/MAWDB");
-// const uniqueValidator = require('mongoose-unique-validator');
+const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
@@ -20,67 +18,61 @@ const { Schema } = mongoose;
 
 }); */
 
-const UserSchema = new Schema({
-  verified: {
-    type: Boolean,
-    required: true,
-    default: false,
+const UserSchema = new Schema(
+  {
+    verified: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    // to make sure the user is a part of make-a-wish
+    name: {
+      type: String,
+      // required: true,
+    },
+    profilePicture: {
+      type: String,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    admin: {
+      type: Boolean,
+      default: false,
+    },
+    active: {
+      type: Boolean,
+      default: false,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    roles: {
+      type: [String],
+    },
+    joinDate: {
+      type: Date,
+      // required: true
+    },
   },
-  // to make sure the user is a part of make-a-wish
-  name: {
-    type: String,
-    //  required : true
-  },
-  profilePicture: {
-    type: String,
-    //  required : false
-  },
-  /* email: {
-        type: Email,
-        required: true,
-    }, */
-  email: {
-    type: String,
-    required: true,
-  },
-  admin: {
-    type: Boolean,
-    default: false,
-    //  required : true
-  },
-  active: {
-    type: Boolean,
-    // required: true,
-    default: false,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  roles: {
-    type: [String],
-    // required: true
-  },
-  joinDate: {
-    type: Date,
-    // required: true
-  },
-});
+  { timestamps: true }
+);
 
-UserSchema.pre("save", async function (next) {
-  // const user = this;
-  const hash = await bcrypt.hash(this.password, 10);
-
-  this.password = hash;
+UserSchema.pre("save", async function save(next) {
+  if (this.password && this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
   next();
 });
 
-UserSchema.methods.isValidPassword = async function (password) {
-  const user = this;
-  const compare = await bcrypt.compare(password, user.password);
-
-  return compare;
+UserSchema.methods.isValidPassword = async function isValidPassword(password) {
+  return bcrypt.compare(password, this.password);
 };
+
+UserSchema.plugin(uniqueValidator);
 
 const UserModel = mongoose.model("user", UserSchema);
 

@@ -1,0 +1,158 @@
+/* Navbar top styles */
+.nav-menu-mobile {
+  display: none;
+}
+
+.maw-logo-mobile {
+  width: 104px;
+  height: 28px;
+}
+
+.logo-container-mobile {
+  width: 104px;
+  height: 28px;
+  margin-top: 3px;
+}
+
+.searchbar-icon-mobile {
+  width: 32px;
+  height: 32px;
+}
+
+.search-button-mobile {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mobileSearchBarComponent {
+  align-self: center;
+  z-index: 1000;
+}
+
+.dropdown-button-mobile {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  height: 40px;
+}
+
+.hamburger-mobile {
+  width: 37px;
+  height: 37px;
+}
+
+/* Navigation Dropdown Menu styles */
+.dropdown-container-mobile {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(91.79deg, #5286c0 0.19%, #0057b8 100%);
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  z-index: 1005;
+}
+
+.logo-and-exit-mobile {
+  display: flex;
+  justify-content: space-between;
+  padding: 22px 45px 0px 26px;
+}
+
+.exit-dropdown-mobile {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.close-menu-btn-mobile {
+  width: 26px;
+  height: 26px;
+}
+
+.separator-mobile {
+  width: 90%;
+  background-color: rgba(255, 255, 255, 0.2);
+  left: 32px;
+  top: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: 35px;
+}
+
+.pages-container-mobile {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.page-links-mobile {
+  color: var(--white);
+  text-decoration: none;
+  margin: 26px 32px 0px 32px;
+}
+
+.underline-mobile {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.view-profile-link-mobile,
+.signout-link-mobile {
+  display: flex;
+  color: var(--white);
+  text-decoration: none;
+  margin: 32px 0px 0px 32px;
+}
+
+.signout-icon-mobile {
+  margin-left: 20px;
+  align-items: center;
+}
+
+/* media queries for mobile menu */
+
+@media only screen and (max-width: 795px) {
+  .nav-menu-mobile {
+    display: flex;
+  }
+
+  .search-mobile {
+    display: none;
+  }
+
+  .dropdown-icon-mobile {
+    margin-left: 38px;
+    margin-right: 11px;
+  }
+}
+
+/* For navbar menu styles (spacing) */
+@media only screen and (max-width: 490px) {
+  .nav-menu-mobile {
+    flex: 1;
+    justify-content: space-between;
+  }
+  .search-mobile {
+    display: flex;
+    align-self: center;
+    flex: 1;
+    justify-content: space-between;
+  }
+}
+
+/* Hide mobile navbar search component when screen is big enough */
+@media only screen and (min-width: 490px) {
+  .mobileSearchBarComponent {
+    display: none;
+  }
+}

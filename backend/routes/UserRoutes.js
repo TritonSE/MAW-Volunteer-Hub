@@ -2,175 +2,62 @@ const express = require("express");
 
 const router = express.Router();
 
-const Buffer = require("buffer/").Buffer;
-
-const bcrypt = require("bcrypt");
-const auth_hdr = require("./auth_header");
-
-const AUTH_HEADER = "authorization";
-
-
 const UserModel = require("../models/UserModel");
+const { errorHandler, idParamValidator } = require("../util/RouteUtils");
+const { sanitizeUser, isAdmin } = require("../util/UserUtils");
 
-// temporary secure route, accessed with /users/
-
-router.get("/secure", (req, res, next) =>
-  res.json({
-    message: "You made it to the secure route",
-    user: req.user,
-    token: req.query.secret_token,
-  })
+router.get("/users", (req, res) =>
+  UserModel.find({ admin: req.query.admin ?? false })
+    .then((users) => res.json({ users }))
+    .catch(errorHandler(res))
 );
 
-router.get("/admin", (req, res, next) => {
-  console.log(req.query.admin);
-  if (req.query.admin) {
-    try {
-      UserModel.find({ admin: req.query.admin }).then((user) => res.status(200));
-    } catch (e) {
-      console.log("error");
-      console.log(e);
-      next(e);
-    }
-  }
-});
+router.get("/id?", idParamValidator(true), (req, res) =>
+  UserModel.findById(req.params.id ?? req.user._id)
+    .then((user) => res.json({ user: sanitizeUser(user), sameUser: user._id === req.user._id }))
+    .catch(errorHandler(res))
+);
 
-// Get user by id - Will return an object with only the user profile information
-router.get("/id", (req, res, next) => {
-  UserModel.findOne(
-    { _id: req.query._id },
-    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1 }
-  )
+router.put("/verify/:id", idParamValidator(), isAdmin(), (req, res) =>
+  UserModel.findByIdAndUpdate(req.params.id, { verified: true })
+    .then(() => res.status(200).json({ success: true }))
+    .catch(errorHandler(res))
+);
+
+router.put("/promoteadmin/:id", idParamValidator(), isAdmin(), (req, res) =>
+  UserModel.findByIdAndUpdate(req.params.id, { admin: true })
+    .then(() => res.status(200).json({ success: true }))
+    .catch(errorHandler(res))
+);
+
+router.delete("/DeleteUser/:id", idParamValidator(), isAdmin(), (req, res) =>
+  UserModel.deleteOne({ _id: req.params.id })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res))
+);
+
+router.put("/updatePassword", (req, res) =>
+  UserModel.findByIdAndUpdate(req.user._id, { password: req.body.password })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res))
+);
+
+router.put("/edit/:id", idParamValidator(), (req, res) =>
+  UserModel.findById(req.user._id)
     .then((user) => {
-      res.json(user);
+      if (req.params.id !== req.user._id && user.admin) return user;
+      if (req.params.id === req.user._id) return UserModel.findById(req.params.id);
+      throw new Error("Access denied.");
     })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-// helper function-- retrieves JWT token then parses it to get user id of logged in user
-// modifed PassportJS's fromAuthHeaderWithScheme function
-function idOfCurrentUser(req) {
-  // retreives JWT token
-  // var token;
-  const auth_params = auth_hdr.parse(req.headers[AUTH_HEADER]);
-  const token = auth_params.value;
-  // parses JWT Token
-  const base64Payload = token.split(".")[1];
-  const payload = Buffer.from(base64Payload, "base64");
-  const answer = JSON.parse(payload.toString());
-  const userId = answer["user"]["_id"];
-  return userId;
-}
-
-// finds user by id then verifies user
-router.put("/VerifybyId", (req, res, next) => {
-  UserModel.findOneAndUpdate({ _id: req.query._id }, { verified: true })
     .then((user) => {
-      res.json(user);
+      Object.assign(
+        user,
+        req.body.name && { name: req.body.name },
+        req.body.email && { email: req.body.email }
+      );
+      return user.save();
     })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-// finds user by id then updates user to admin (can only be done byan admin)
-router.put("/AdminbyId", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  const users = await UserModel.findById(userId).select("admin");
-  const isAdmin = users["admin"];
-
-  if (isAdmin === true) {
-    try {
-      UserModel.findOneAndUpdate({ _id: req.query._id }, { admin: true }).then((user) => {
-        res.json(user);
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-  else{
-    try {
-      throw new Error('non-admin user')
-    } catch (err) {
-      next(err)
-    }
-  }
-});
-
-// finds user by id then deletes user (can only be done by an admin)
-router.delete("/DeleteUser", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  const users = await UserModel.findById(userId).select("admin");
-  const isAdmin = users["admin"];
-
-  if (isAdmin === true) {
-    try {
-      UserModel.deleteOne({ _id: req.query._id }).then((user) => {
-        res.json(user);
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-  else{
-    try {
-      throw new Error('non-admin user')
-    } catch (err) {
-      next(err)
-    }
-  }
-});
-
-// Update password route if the user id is the same as the current user's jwt id   
-router.put("/updatePassword", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  const queryPassword = await bcrypt.hash(req.query.password , 10);
-  if (userId === req.query._id) {
-    try {
-      UserModel.findOneAndUpdate({ password: queryPassword }).then((user) => {
-        res.json(user);
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-  else{
-    try {
-      throw new Error('non-admin user')
-    } catch (err) {
-      next(err)
-    }
-  }
-});
-
-// edits user information
-// can only be done by an admin or a logged-in user if they are the same as the user who's info is being editted)
-router.put("/edits", async (req, res, next) => {
-  const userId = idOfCurrentUser(req);
-  console.log(userId);
-  console.log(req.query._id);
-  console.log(userId === req.query._id);
-  const users = await UserModel.findById(userId).select("admin");
-  const isAdmin = users["admin"];
-  console.log(isAdmin);
-  if (isAdmin === true || userId === req.query._id) {
-    try {
-      UserModel.findByIdAndUpdate({ _id: req.query._id }, { $set: req.body }).then((user) => {
-        res.json(user);
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-  else{
-    try {
-      throw new Error('non-admin user')
-    } catch (err) {
-      next(err)
-    }
-  }
-});
+    .catch(errorHandler(res))
+);
 
 module.exports = router;

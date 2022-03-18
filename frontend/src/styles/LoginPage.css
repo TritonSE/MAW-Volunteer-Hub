@@ -159,6 +159,7 @@
   background: rgba(0, 0, 0, 0.3) !important;
 }
 .ReactModal__Content.login_react_modal {
+  background: var(--background-grey);
   position: absolute;
   width: 462px;
   height: 202px;

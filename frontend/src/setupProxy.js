@@ -15,4 +15,25 @@ module.exports = (app) => {
       changeOrigin: true,
     })
   );
+  app.use(
+    "/file",
+    createProxyMiddleware({
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    })
+  );
+  app.use(
+    "/category",
+    createProxyMiddleware({
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    })
+  );
+  app.use(
+    "/user",
+    createProxyMiddleware({
+      target: "http://localhost:5000",
+      changeOrigin: true,
+    })
+  );
 };
