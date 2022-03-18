@@ -3,8 +3,8 @@ const Archiver = require("archiver");
 
 const File = require("../models/FileModel");
 const Category = require("../models/CategoryModel");
-const { validate, errorHandler } = require("../util/RouteUtils");
-const { deleteFileAWS, getFileStream } = require("../util/S3Util");
+const { validate, errorHandler, adminValidator } = require("../util/RouteUtils");
+const { deleteFileAWS, getObject } = require("../util/S3Util");
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ router.get("/one/:id", validate([], ["id"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
+router.delete("/delete/:id", adminValidator, validate([], ["id"]), (req, res) => {
   Category.findById(req.params.id)
     .then((category) => {
       Promise.all(
@@ -48,7 +48,7 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.post("/create", validate(["name", "parent"]), (req, res) => {
+router.post("/create", adminValidator, validate(["name", "parent"]), (req, res) => {
   Category.create({
     name: req.body.name,
     parent: req.body.parent,
@@ -59,7 +59,7 @@ router.post("/create", validate(["name", "parent"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.patch("/edit/:id", validate(["updated_name"], ["id"]), (req, res) => {
+router.patch("/edit/:id", adminValidator, validate(["updated_name"], ["id"]), (req, res) => {
   Category.findById(req.params.id)
     .then((category) => {
       Object.assign(category, { name: req.body.updated_name });
@@ -77,7 +77,7 @@ router.get("/download/:id", validate([], ["id"]), (req, res) => {
       const archive = Archiver("zip");
       archive.pipe(res);
       category.Files.forEach((file) =>
-        archive.append(getFileStream(file.S3_ID), { name: file.name })
+        archive.append(getObject(file.S3_ID).createReadStream(), { name: file.name })
       );
       archive.finalize();
     })

@@ -31,7 +31,7 @@ router.post("/login", (req, res, next) => {
           return;
         }
 
-        const body = { _id: user._id, email: user.email }; // sign is admin into this body
+        const body = { _id: user._id, email: user.email, admin: user.admin }; // sign is admin into this body
         const token = jwt.sign({ user: body }, "TOP_SECRET");
 
         res.json({ token, admin: user.admin });
