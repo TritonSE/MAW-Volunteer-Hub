@@ -1,7 +1,9 @@
+/* eslint no-restricted-globals: off */
+
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useNavigate, useParams } from "react-router-dom";
-import { api_user } from "../auth";
+import { api_user_info, api_user_updatepass, api_user_delete } from "../auth";
 import history from "../history";
 import "../styles/ProfilePage.css";
 
@@ -10,9 +12,15 @@ Modal.setAppElement(document.getElementById("root"));
 function ProfilePage({ isAdmin }) {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [responseModalOpen, setResponseModalOpen] = useState();
+  const [shouldRedirect, setShouldRedirect] = useState(0);
+  const [changePassResponse, setChangePassResponse] = useState();
 
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
   // const [isCurrentUserAdmin, setIsCurrentUserAdmin] = useState(true); // change this once andrew's pr gets merged in
 
   const { id } = useParams();
@@ -20,7 +28,7 @@ function ProfilePage({ isAdmin }) {
   const navigate = useNavigate();
 
   useEffect(async () => {
-    const res = await api_user(id ?? "");
+    const res = await api_user_info(id ?? "");
     if (!res || !res.user) navigate("/user-not-found");
     else {
       setUser(res.user);
@@ -28,6 +36,48 @@ function ProfilePage({ isAdmin }) {
       setIsCurrentUser(res.sameUser);
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!responseModalOpen) {
+      if (shouldRedirect === 1) {
+        navigate("/");
+        location.reload();
+      } else if (shouldRedirect === -1) {
+        setDeleteModalOpen(true);
+      }
+    }
+  }, [responseModalOpen]);
+
+  async function change_password(e) {
+    e.preventDefault();
+
+    if (newPass !== confirmPass) {
+      setChangePassResponse("New passwords do not match.");
+      return;
+    }
+
+    const res = await api_user_updatepass(oldPass, newPass);
+    if (!res || res.error) {
+      setChangePassResponse((res ?? {}).error ?? "Unable to reach server, please try again.");
+    } else {
+      setChangePassResponse();
+      setResponseModalOpen("Password changed successfully.");
+      setPassModalOpen(false);
+    }
+  }
+
+  async function delete_account() {
+    const res = await api_user_delete(id ?? "");
+    if (!res || res.error) {
+      setResponseModalOpen((res ?? {}).error ?? "Unable to reach server, please try again.");
+      setDeleteModalOpen(false);
+      setShouldRedirect(-1);
+    } else {
+      setResponseModalOpen("Account deleted successfully.");
+      setDeleteModalOpen(false);
+      setShouldRedirect(1);
+    }
+  }
 
   return (
     <div className="profile-page">
@@ -85,10 +135,32 @@ function ProfilePage({ isAdmin }) {
           type="button"
           onClick={() => setPassModalOpen(false)}
         />
-        <form className="change-pass-form">
-          <input placeholder="Enter old password" type="password" />
-          <input placeholder="Enter new password" type="password" />
-          <input placeholder="Reenter new password" type="password" />
+        <form className="change-pass-form" onSubmit={change_password}>
+          <input
+            placeholder="Enter old password"
+            type="password"
+            value={oldPass}
+            onChange={(e) => setOldPass(e.target.value)}
+          />
+          <input
+            placeholder="Enter new password"
+            type="password"
+            value={newPass}
+            onChange={(e) => setNewPass(e.target.value)}
+          />
+          <input
+            placeholder="Reenter new password"
+            type="password"
+            value={confirmPass}
+            onChange={(e) => setConfirmPass(e.target.value)}
+          />
+
+          <div
+            className="change-pass-errorbox"
+            style={{ visibility: changePassResponse ? "visible" : "hidden" }}
+          >
+            {changePassResponse}
+          </div>
 
           <button className="modal-button button-primary" type="submit">
             Change password
@@ -118,8 +190,31 @@ function ProfilePage({ isAdmin }) {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger" type="button">
+          <button
+            className="modal-button small button-danger"
+            type="button"
+            onClick={delete_account}
+          >
             Delete
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
+        isOpen={Boolean(responseModalOpen)}
+        onRequestClose={() => setResponseModalOpen()}
+        contentLabel="Response"
+      >
+        <h1>{responseModalOpen}</h1>
+        <div className="delete-button-container">
+          <button
+            className="modal-button small button-primary"
+            type="button"
+            onClick={() => setResponseModalOpen()}
+          >
+            Okay
           </button>
         </div>
       </Modal>

@@ -63,7 +63,7 @@ async function api_validtoken() {
  */
 async function api_login({ email, password }) {
   const res = await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } });
-  return res ?? {};
+  return res ?? { error: "Unable to reach server, please try again." };
 }
 
 async function api_signup({ name, email, password }) {
@@ -161,9 +161,32 @@ async function api_category_download(id) {
 /**
  * USER
  */
-async function api_user(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
+async function api_user_info(id) {
+  const res = await api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { method: "GET" });
   return res;
+}
+
+async function api_user_verify(id) {
+  return api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, { method: "PUT" });
+}
+
+async function api_user_promote(id) {
+  return api_call(`${API_ENDPOINTS.USER_PROMOTE}/${id}`, { method: "PUT" });
+}
+
+async function api_user_delete(id) {
+  return api_call(`${API_ENDPOINTS.USER_DELETE}/${id}`, { method: "DELETE" });
+}
+
+async function api_user_updatepass(old_pass, new_pass) {
+  return api_call(API_ENDPOINTS.USER_UPDATE_PASS, {
+    method: "PUT",
+    data: { old_pass, new_pass },
+  });
+}
+
+async function api_user_edit(id) {
+  return api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 }
 
 export {
@@ -185,5 +208,10 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
-  api_user,
+  api_user_info,
+  api_user_verify,
+  api_user_promote,
+  api_user_delete,
+  api_user_updatepass,
+  api_user_edit,
 };

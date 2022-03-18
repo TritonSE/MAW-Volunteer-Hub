@@ -35,8 +35,12 @@ const validate =
  *   error to the screen if in development.
  */
 const errorHandler = (res) => (e) => {
-  if (process.env.NODE_ENV === "dev") console.error(e);
-  res.status(500).json({ error: e.toString() });
+  if (process.env.NODE_ENV === "development") {
+    console.error(e);
+    res.status(500).json({ error: e.toString() });
+  } else {
+    res.status(500).json({ error: "Internal server error." });
+  }
 };
 
 /**
@@ -46,10 +50,9 @@ const errorHandler = (res) => (e) => {
 const idParamValidator =
   (only_if_present = false) =>
   (req, res, next) => {
-    if (!req.params.id && only_if_present) next();
-    else if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
-      res.status(400).json({ error: "Invalid user ID parameter." });
-    } else next();
+    if (only_if_present && !req.params.id) next();
+    else if (req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)) next();
+    else res.status(400).json({ error: "Invalid user ID parameter." });
   };
 
 module.exports = {

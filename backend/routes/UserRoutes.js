@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
-const { errorHandler, idParamValidator } = require("../util/RouteUtils");
+const { validate, errorHandler, idParamValidator } = require("../util/RouteUtils");
 const { sanitizeUser, isAdmin } = require("../util/UserUtils");
 
 router.get("/users", (req, res) =>
@@ -12,9 +12,14 @@ router.get("/users", (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.get("/id?", idParamValidator(true), (req, res) =>
+router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
-    .then((user) => res.json({ user: sanitizeUser(user), sameUser: user._id === req.user._id }))
+    .then((user) =>
+      res.json({
+        user: sanitizeUser(user),
+        sameUser: user._id.toString() === req.user._id.toString(),
+      })
+    )
     .catch(errorHandler(res))
 );
 
@@ -30,15 +35,28 @@ router.put("/promoteadmin/:id", idParamValidator(), isAdmin(), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.delete("/DeleteUser/:id", idParamValidator(), isAdmin(), (req, res) =>
+router.delete("/delete/:id", idParamValidator(), isAdmin(), (req, res) =>
   UserModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.put("/updatePassword", (req, res) =>
-  UserModel.findByIdAndUpdate(req.user._id, { password: req.body.password })
-    .then(() => res.json({ success: true }))
+router.put("/updatepass", validate(["old_pass", "new_pass"], []), (req, res) =>
+  UserModel.findById(req.user._id)
+    .then((user) => Promise.all([user, user.isValidPassword(req.body.old_pass)]))
+    .then(([user, valid]) => {
+      if (!valid) {
+        return Promise.all(["Incorrect current password."]);
+      }
+      Object.assign(user, {
+        password: req.body.new_pass,
+      });
+      return Promise.all([false, user.save()]);
+    })
+    .then(([error]) => {
+      if (!error) res.json({ success: true });
+      else res.status(403).json({ error });
+    })
     .catch(errorHandler(res))
 );
 

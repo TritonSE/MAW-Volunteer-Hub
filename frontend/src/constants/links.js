@@ -28,7 +28,13 @@ const API_ENDPOINTS = {
   CATEGORY_UPDATE: "/category/edit",
   CATEGORY_DOWNLOAD: "/category/download",
 
-  USER: "/user",
+  USER_INFO: "/user/info",
+  USER_ALL: "/user/users",
+  USER_VERIFY: "/user/verify",
+  USER_PROMOTE: "/user/promoteadmin",
+  USER_DELETE: "/user/delete",
+  USER_UPDATE_PASS: "/user/updatepass",
+  USER_EDIT: "/user/edit",
 };
 
 const SIDENAV_STEPS = [
