@@ -90,7 +90,6 @@
     background: var(--blue-gradient);
     box-shadow: none;
     align-self: unset;
-    z-index: 99;
     overflow: auto;
   }
 

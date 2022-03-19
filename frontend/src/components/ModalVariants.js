@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import {
   api_category_create,
@@ -8,25 +8,29 @@ import {
   api_file_update,
   api_file_delete,
 } from "../api";
+import { FileStructure, ModalVariantsManager } from "./Contexts";
 import "../styles/ModalVariants.css";
 
 Modal.setAppElement("#root");
 
-function ModalVariants({
-  modalVariant,
-  open,
-  setOpen,
-  name,
-  setName,
-  activeListing,
-  categoryParent,
-  onClose,
-}) {
+function ModalVariants() {
   /**
    * STATE
    */
-  const [fileContents, setFileContents] = useState("");
+  const [fileContents, setFileContents] = useState();
   const [variant, setVariant] = useState({});
+  const [submitEnabled, setSubmitEnabled] = useState(true);
+
+  const [_structure, getStructure] = useContext(FileStructure);
+  const {
+    modalVariant: [modalVariant],
+    open: [open, setOpen],
+    errorMessage: [errorMessage, setErrorMessage],
+    progress: [progress, setProgress],
+    name: [name, setName],
+    activeListing: [activeListing, setActiveListing],
+    categoryParent: [categoryParent],
+  } = useContext(ModalVariantsManager);
 
   /**
    * MODAL VARIANTS
@@ -42,8 +46,17 @@ function ModalVariants({
       action_button: {
         title: "Add",
       },
-      on_submit: async (args) =>
-        api_file_upload(args.fileContents, args.name, args.activeListing._id),
+      on_submit: async (args) => {
+        setProgress(0);
+        const res = await api_file_upload(
+          args.fileContents,
+          args.name,
+          args.activeListing._id,
+          (val) => setProgress(val)
+        );
+        setProgress("done");
+        return res;
+      },
     },
     edit_file: {
       title: "Edit File",
@@ -55,12 +68,25 @@ function ModalVariants({
       action_button: {
         title: "Update",
       },
-      on_submit: async (args) =>
-        api_file_update(args.activeListing._id, args.fileContents, args.name),
+      on_submit: async (args) => {
+        if (args.fileContents) setProgress(0);
+        const res = await api_file_update(
+          args.activeListing._id,
+          args.fileContents,
+          args.name,
+          (val) => {
+            if (args.fileContents) {
+              setProgress(val);
+            }
+          }
+        );
+        setProgress("done");
+        return res;
+      },
     },
     delete_file: {
       title: " ",
-      style: { height: "202px" },
+      className: "thin",
       name: false,
       has_upload: false,
       action_button: false,
@@ -99,7 +125,7 @@ function ModalVariants({
     },
     delete_category: {
       title: " ",
-      style: { height: "202px" },
+      className: "thin",
       name: false,
       has_upload: false,
       action_button: false,
@@ -117,12 +143,78 @@ function ModalVariants({
       },
       on_submit: async (args) => api_category_delete(args.activeListing._id),
     },
+    error: {
+      title: "Error",
+      className: "thin",
+      name: false,
+      has_upload: false,
+      action_button: false,
+      custom: (
+        <>
+          <br />
+          <div className="wishgranting_modal_center">{errorMessage}</div>
+          <br />
+          <div className="wishgranting_modal_center thin center">
+            <button
+              type="button"
+              className="wishgranting_modal_button primary"
+              onClick={() => setErrorMessage()}
+            >
+              Okay
+            </button>
+          </div>
+        </>
+      ),
+    },
+    progress: {
+      title: "Progress",
+      className: "thin",
+      has_close: false,
+      name: false,
+      has_upload: false,
+      action_button: false,
+      custom: (
+        <>
+          <div className="wishgranting_modal_center">
+            <div
+              className={`wishgranting_progress ${progress}`}
+              role="progressbar"
+              style={{ "--progress": `${typeof progress === "number" ? progress : 50}%` }}
+            >
+              <div className="wishgranting_progress_inner">
+                {progress === "indeterminate" ? "Loading..." : Math.floor(progress) + "%"}
+              </div>
+            </div>
+          </div>
+          <br />
+        </>
+      ),
+    },
   };
 
   /**
-   * HOOK
+   * HOOKS
    */
-  useEffect(() => setVariant(modal_variants[modalVariant]), [modalVariant]);
+  useEffect(() => {
+    if (!modalVariant && !errorMessage) setOpen(false);
+    else if (modalVariant && modal_variants[modalVariant]) setVariant(modal_variants[modalVariant]);
+  }, [modalVariant]);
+  useEffect(() => {
+    if (errorMessage) setVariant(modal_variants.error);
+    else if (modal_variants[modalVariant]) setVariant(modal_variants[modalVariant]);
+
+    if (errorMessage || modal_variants[modalVariant]) setOpen(true);
+    else if (!modalVariant) setOpen(false);
+  }, [errorMessage]);
+  useEffect(() => {
+    // Explicitly check for undefined because 0 is a valid progress state
+    if (!errorMessage && progress !== undefined) {
+      if (progress !== "done") setVariant(modal_variants.progress);
+      else if (modal_variants[modalVariant]) setVariant(modal_variants[modalVariant]);
+
+      setOpen(progress !== "done");
+    }
+  }, [progress]);
 
   /**
    * UTILITY FUNCTIONS
@@ -141,30 +233,48 @@ function ModalVariants({
   return (
     <Modal
       isOpen={open}
-      onRequestClose={() => setOpen(false)}
+      onRequestClose={() => {
+        if (variant.has_close === undefined) setOpen(false);
+      }}
       contentLabel={variant.title}
       style={{ content: variant.style ?? {} }}
-      className="wishgranting_react_modal"
-      overlayClassName="wishgranting_react_modal"
+      className={`wishgranting_react_modal ${variant.className ?? ""}`}
+      overlayClassName={`wishgranting_react_modal ${variant.className ?? ""}`}
     >
       <div className="wishgranting_modal">
         <div className="wishgranting_modal_header">
           <h3>{variant.title}</h3>
-          <button type="button" className="wishgranting_modal_close" onClick={() => setOpen(false)}>
-            <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-          </button>
+          {variant.has_close === undefined && (
+            <button
+              type="button"
+              className="wishgranting_modal_close"
+              onClick={() => setOpen(false)}
+            >
+              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
+            </button>
+          )}
         </div>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
             if (validate()) {
-              await variant.on_submit({
+              setSubmitEnabled(false);
+              const res = await variant.on_submit({
                 name,
                 activeListing,
                 fileContents,
                 categoryParent,
               });
-              onClose();
+              setSubmitEnabled(true);
+              if (!res || res.error) {
+                setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
+              } else {
+                getStructure();
+                setOpen(false);
+                setName("");
+                setActiveListing(null);
+                setFileContents();
+              }
             }
           }}
         >
@@ -199,7 +309,11 @@ function ModalVariants({
                 >
                   Cancel
                 </button>
-                <button type="submit" className="wishgranting_modal_button error">
+                <button
+                  type="submit"
+                  className="wishgranting_modal_button error"
+                  disabled={!submitEnabled}
+                >
                   {variant.center.action_button.title}
                 </button>
               </div>
@@ -207,11 +321,16 @@ function ModalVariants({
           ) : null}
           {variant.action_button ? (
             <div className="wishgranting_modal_bottom">
-              <button type="submit" className="wishgranting_modal_button primary">
+              <button
+                type="submit"
+                className="wishgranting_modal_button primary"
+                disabled={!submitEnabled}
+              >
                 {variant.action_button.title}
               </button>
             </div>
           ) : null}
+          {variant.custom || null}
         </form>
       </div>
     </Modal>

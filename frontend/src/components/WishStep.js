@@ -1,25 +1,38 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import { api_category_download, api_file_display } from "../api";
-import ModalVariants from "./ModalVariants";
-import "../styles/WishGrantingPage.css";
-import FileStructure from "./FileStructure";
+import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
+import "../styles/WishStep.css";
 
 function WishStep({ index, stepName }) {
   /**
    * STATE
    */
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("add_file");
-  const [name, setName] = useState("");
-  const [activeListing, setActiveListing] = useState();
-  const [structure, getStructure] = useContext(FileStructure);
+  const [structure] = useContext(FileStructure);
+  const {
+    modalVariant: [_modalVariant, setModalVariant],
+    open: [_modalOpen, setModalOpen],
+    errorMessage: [_errorMessage, setErrorMessage],
+    progress: [_progress, setProgress],
+    name: [_name, setName],
+    activeListing: [_activeListing, setActiveListing],
+    categoryParent: [_categoryParent, setCategoryParent],
+  } = useContext(ModalVariantsManager);
+  const [currentUser] = useContext(CurrentUser);
 
   /**
    * UTILITY FUNCTIONS
    */
+
+  /*
+   * TODO: This function is identical to one in Search.js. It should be
+   * moved into a dedicated file, but I'm leaving that to a later PR because
+   * it will be a non-trivial task/involve some decisions about organization
+   * and structure.
+   */
   async function download_file(file) {
-    const res = await api_file_display(file._id);
+    setProgress(0);
+    const res = await api_file_display(file._id, setProgress);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
       if (!window.open(url)) {
@@ -33,10 +46,14 @@ function WishStep({ index, stepName }) {
         document.body.removeChild(a);
       }
       window.URL.revokeObjectURL(url);
+    } else {
+      setModalVariant();
+      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
     }
   }
   async function download_all_files(cat) {
-    const res = await api_category_download(cat._id);
+    setProgress(0);
+    const res = await api_category_download(cat._id, setProgress);
     if (res && !res.error) {
       const a = document.createElement("a");
       const url = window.URL.createObjectURL(res);
@@ -46,19 +63,17 @@ function WishStep({ index, stepName }) {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+    } else {
+      setModalVariant();
+      setErrorMessage("Unable to reach server, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
     setModalVariant(variant);
     setName(new_name);
     setActiveListing(new_activeListing);
+    setCategoryParent(stepName);
     setModalOpen(true);
-  }
-  async function hide_modal() {
-    getStructure();
-    setModalOpen(false);
-    setName("");
-    setActiveListing(null);
   }
 
   /**
@@ -84,7 +99,11 @@ function WishStep({ index, stepName }) {
               onClick={() => show_modal("add_category")}
             />
           }
+          adminOnly
         />
+        {(!currentUser || !currentUser.admin) && (structure[stepName] ?? []).length === 0 && (
+          <div className="wishgranting_no_files">Files coming soon!</div>
+        )}
         {(structure[stepName] ?? []).map((cat) => (
           <FileCategory
             name={cat.name}
@@ -108,16 +127,6 @@ function WishStep({ index, stepName }) {
         ))}
       </div>
       <br />
-      <ModalVariants
-        modalVariant={modalVariant}
-        open={modalOpen}
-        setOpen={setModalOpen}
-        name={name}
-        setName={setName}
-        activeListing={activeListing}
-        categoryParent={stepName}
-        onClose={() => hide_modal()}
-      />
     </div>
   );
 }

@@ -1,9 +1,21 @@
+const fs = require("fs").promises;
 const express = require("express");
 const mongoose = require("mongoose");
+const multer = require("multer");
+const sharp = require("sharp");
 
 const router = express.Router();
 
 const UserModel = require("../models/UserModel");
+const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
+const { errorHandler } = require("../util/RouteUtils");
+const config = require("../config");
+
+const upload = multer({
+  dest: "server_uploads/",
+  fileFilter: (req, file, cb) => cb(null, file.mimetype.indexOf("image") > -1),
+  limits: { fileSize: config.amazons3.max_file_size, files: 1 },
+});
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -40,30 +52,24 @@ router.get("/users", (req, res, next) => {
 });
 
 // Get user by id - Will return an object with only the user profile information
-// if no id provided, returns information for current user
-router.get("/:id?", (req, res, next) => {
+router.get("/info/:id?", (req, res, next) => {
+  // check if there is an id param and that it is a valid id
   if (req.params.id && validateIdParam(req, res)) {
     return;
   }
 
-  UserModel.findById(
-    req.params.id ?? req.user._id,
-    { name: 1, _id: 0, email: 1, profilePicture: 1, roles: 1, joinDate: 1, createdAt: 1 },
-    (err, user) => {
-      if (err) {
-        next(err);
-      }
-
-      if (!user) {
-        // checks if a user was found with id
-        res.status(404).send("No user found with provided id");
-      } else {
-        const currentUserId = req.user._id;
-        const sameUser = currentUserId === (req.params.id ?? req.user._id);
-        res.status(200).json({ user, sameUser });
-      }
+  UserModel.findById(req.params.id ?? req.user._id, (err, user) => {
+    if (err) {
+      next(err);
     }
-  );
+
+    if (!user) {
+      // checks if a user was found with id
+      res.status(404).json({ error: "No user found with provided ID." });
+    } else {
+      res.status(200).json({ user: user.toJSON() });
+    }
+  });
 });
 
 // finds user by id then verifies user
@@ -136,6 +142,59 @@ router.put("/edit/:id", async (req, res, next) => {
   } else {
     checkCurrentUserIsAdmin(req, res, updateInfo);
   }
+});
+
+/**
+ * PROFILE PICTURES
+ */
+router.get("/pfp/:id/:time", (req, res) => {
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      res.set("Content-Type", "image/png");
+      res.set("Cache-Control", "max-age=31536000");
+      if (!user.profilePicture) res.redirect("/img/no_profile_pic.svg");
+      else getFileStream(user.profilePicture).pipe(res);
+    })
+    .catch(errorHandler(res));
+});
+
+router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
+  const crop = JSON.parse(req.body.crop);
+
+  let compressor = sharp(req.file.path);
+  if (crop.width && crop.height && crop.left && crop.top) {
+    compressor = compressor.extract(crop);
+  }
+  compressor = compressor.resize(400, 400).png({
+    compressionLevel: 9,
+    adaptiveFiltering: true,
+    force: true,
+  });
+
+  Promise.all([
+    UserModel.findById(req.user._id),
+    uploadFileStream(
+      compressor,
+      `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`
+    ),
+  ])
+    .then(([user, result]) => {
+      const old = user.profilePicture;
+
+      Object.assign(user, {
+        profilePicture: result.key,
+        profilePictureModified: new Date(),
+      });
+
+      return Promise.all([
+        user.toJSON(),
+        user.save(),
+        old ? deleteFileAWS(old) : null,
+        fs.unlink(req.file.path),
+      ]);
+    })
+    .then(([user]) => res.json({ success: true, user }))
+    .catch(errorHandler(res));
 });
 
 module.exports = router;

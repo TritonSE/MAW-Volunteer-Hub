@@ -15,14 +15,18 @@ const validate =
   (req, res, next) => {
     const body_valid = body_params.every((p) => {
       if (!req.body[p] || req.body[p].trim() === "") {
-        res.status(400).json({ error: `"${p}" missing from body` });
+        if (config.app.env === "development")
+          res.status(400).json({ error: `"${p}" missing from body.` });
+        else res.status(401).json({ error: "Access denied." });
         return false;
       }
       return true;
     });
     const params_valid = query_params.every((p) => {
       if (!req.params[p] || req.params[p].trim() === "") {
-        res.status(400).json({ error: `"${p}" missing from params` });
+        if (config.app.env === "development")
+          res.status(400).json({ error: `"${p}" missing from params.` });
+        else res.status(401).json({ error: "Access denied." });
         return false;
       }
       return true;
@@ -41,7 +45,17 @@ const errorHandler = (res) => (e) => {
   else res.status(500).json({ error: "Internal server error." });
 };
 
+/**
+ * A middleware to check whether the current
+ *   user is an admin.
+ */
+const adminValidator = (req, res, next) => {
+  if (req.user && req.user.admin) next();
+  else res.status(403).json({ error: "Access denied." });
+};
+
 module.exports = {
   validate,
   errorHandler,
+  adminValidator,
 };

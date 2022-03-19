@@ -3,8 +3,7 @@ import Modal from "react-modal";
 import { api_file_display } from "../api";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
-import ModalVariants from "./ModalVariants";
-import FileStructure from "./FileStructure";
+import { FileStructure, ModalVariantsManager } from "./Contexts";
 
 Modal.setAppElement(document.getElementById("#root"));
 
@@ -24,22 +23,37 @@ function Search({ onBlur }) {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
-  const [structure, getStructure] = useContext(FileStructure);
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("add_file");
-  const [name, setName] = useState("");
-  const [activeListing, setActiveListing] = useState();
+  const [structure] = useContext(FileStructure);
+  const {
+    modalVariant: [_modalVariant, setModalVariant],
+    open: [_modalOpen, setModalOpen],
+    errorMessage: [_errorMessage, setErrorMessage],
+    progress: [_progress, setProgress],
+    name: [_name, setName],
+    activeListing: [_activeListing, setActiveListing],
+  } = useContext(ModalVariantsManager);
 
   /**
    * UTILITY FUNCTIONS
    */
+
+  /*
+   * TODO: This function is identical to one in WishStep.js. It should be
+   * moved into a dedicated file, but I'm leaving that to a later PR because
+   * it will be a non-trivial task/involve some decisions about organization
+   * and structure.
+   */
   async function display_file(file) {
-    const res = await api_file_display(file._id);
+    setProgress(0);
+    const res = await api_file_display(file._id, setProgress);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
       window.open(url);
       window.URL.revokeObjectURL(url);
+    } else {
+      setModalVariant();
+      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
@@ -48,29 +62,21 @@ function Search({ onBlur }) {
     setActiveListing(new_activeListing);
     setModalOpen(true);
   }
-  async function hide_modal() {
-    getStructure();
-    setModalOpen(false);
-    setName("");
-    setActiveListing(null);
-  }
-  function filter_files(filter = input) {
-    const arr = [];
-    Object.entries(structure).forEach(([_tab, categories]) => {
-      categories.forEach((cat) => {
-        cat.Files.forEach((file) => {
-          if (file.name.toLowerCase().indexOf(filter.toLowerCase()) > -1) arr.push(file);
-        });
-      });
-    });
-    setFilteredFiles(arr);
-  }
 
   /**
    * HOOKS
    */
-  useEffect(hide_modal, []);
-  useEffect(filter_files, [structure]);
+  useEffect(() => {
+    const arr = [];
+    Object.entries(structure).forEach(([_tab, categories]) => {
+      categories.forEach((cat) => {
+        cat.Files.forEach((file) => {
+          if (file.name.toLowerCase().indexOf(input.toLowerCase()) > -1) arr.push(file);
+        });
+      });
+    });
+    setFilteredFiles(arr);
+  }, [structure, input]);
 
   return (
     <>
@@ -78,10 +84,7 @@ function Search({ onBlur }) {
         <input
           className="search-input"
           placeholder="Search all files..."
-          onChange={(e) => {
-            setInput(e.target.value);
-            filter_files(e.target.value);
-          }}
+          onChange={(e) => setInput(e.target.value)}
           onBlur={() => {
             if (!showResults && onBlur) onBlur();
           }}
@@ -143,16 +146,6 @@ function Search({ onBlur }) {
           )}
         </div>
       </Modal>
-
-      <ModalVariants
-        modalVariant={modalVariant}
-        open={modalOpen}
-        setOpen={setModalOpen}
-        name={name}
-        setName={setName}
-        activeListing={activeListing}
-        onClose={() => hide_modal()}
-      />
     </>
   );
 }

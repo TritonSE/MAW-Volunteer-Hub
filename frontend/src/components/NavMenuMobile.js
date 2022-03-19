@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import "../styles/NavMenuMobile.css";
 import Search from "./Search";
 import history from "../history";
+import { CurrentUser } from "./Contexts";
 
 /*
   Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
@@ -12,13 +13,8 @@ import history from "../history";
   -desktopDropdown: whether the profile/menu icon dropdown was open in the desktop view
   -setDesktopDropdown: toggle the profile/menu icon dropdown 
 */
-function NavMenuMobile({
-  showResults,
-  setShowResults,
-  desktopDropdown,
-  setDesktopDropdown,
-  isAdmin,
-}) {
+function NavMenuMobile({ showResults, setShowResults, desktopDropdown, setDesktopDropdown }) {
+  const [currentUser] = useContext(CurrentUser);
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
@@ -89,7 +85,7 @@ function NavMenuMobile({
 
           <div className="pages-container-mobile">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && isAdmin) || !needs_admin ? (
+              (needs_admin && currentUser && currentUser.admin) || !needs_admin ? (
                 <NavLink
                   key={route}
                   className={`page-links-mobile ${
@@ -115,7 +111,7 @@ function NavMenuMobile({
           </NavLink>
           <NavLink
             className="signout-link-mobile"
-            to={SITE_PAGES.LOGIN}
+            to={SITE_PAGES.SIGNOUT}
             onClick={() => setDesktopDropdown(false)}
           >
             <span>Sign Out</span>

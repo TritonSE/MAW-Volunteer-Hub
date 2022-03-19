@@ -24,6 +24,9 @@
   box-sizing: border-box;
   position: relative;
 }
+.ReactModal__Content.wishgranting_react_modal.thin {
+  max-height: 202px !important;
+}
 .wishgranting_modal {
   font-family: "Lato", sans-serif;
 }
@@ -90,6 +93,7 @@
   background: white;
   color: black;
   font-weight: normal;
+  transition: opacity 0.1s;
 }
 .wishgranting_modal_button.primary {
   background: var(--primary-blue);
@@ -100,6 +104,9 @@
   background: #ff797d;
   color: white;
   border: none;
+}
+.wishgranting_modal_button:disabled {
+  opacity: 0.5;
 }
 
 .wishgranting_modal_center {
@@ -117,4 +124,64 @@
 .wishgranting_modal_center.thin {
   width: 245px;
   justify-content: space-between;
+}
+.wishgranting_modal_center.center {
+  justify-content: center;
+  width: 100%;
+}
+
+/*
+ * PROGRESS BAR
+ */
+@keyframes indeterminate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.wishgranting_progress {
+  --hue: 220;
+  --holesize: 65%;
+  --track-bg: hsl(233, 34%, 92%);
+
+  height: 100px;
+  width: 100px;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  font-family: "Lato", sans-serif;
+
+  background: conic-gradient(
+    hsl(var(--hue) 100% 70%),
+    hsl(var(--hue) 100% 40%),
+    hsl(var(--hue) 100% 70%) var(--progress, 0%),
+    var(--track-bg) var(--progress, 0%) 100%
+  );
+}
+
+.wishgranting_progress_inner {
+  width: 90px;
+  height: 90px;
+  border-radius: 45px;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wishgranting_progress.indeterminate {
+  animation: indeterminate 1s infinite ease-in-out;
+}
+.wishgranting_progress.indeterminate .wishgranting_progress_inner {
+  animation: indeterminate 1s reverse infinite ease-in-out;
+}
+
+.wishgranting_progress.done {
 }

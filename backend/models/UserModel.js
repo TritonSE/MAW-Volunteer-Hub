@@ -18,6 +18,11 @@ const UserSchema = new Schema(
     },
     profilePicture: {
       type: String,
+      default: null,
+    },
+    profilePictureModified: {
+      type: Date,
+      default: new Date(0),
     },
     email: {
       type: String,
@@ -49,16 +54,23 @@ const UserSchema = new Schema(
 );
 
 UserSchema.pre("save", async function save(next) {
-  // const user = this;
-  const hash = await bcrypt.hash(this.password, 10);
-
-  this.password = hash;
+  if (this.password && this.isModified("password")) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
   next();
 });
 
 UserSchema.methods.isValidPassword = async function isValidPassword(password) {
   return bcrypt.compare(password, this.password);
 };
+
+UserSchema.set("toJSON", {
+  transform(doc, obj) {
+    const ret = { ...obj };
+    delete ret.password;
+    return ret;
+  },
+});
 
 UserSchema.plugin(uniqueValidator);
 

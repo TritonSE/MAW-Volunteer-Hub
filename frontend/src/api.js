@@ -1,49 +1,56 @@
 /**
  * api.js: API interfacing
  */
-import { API_ENDPOINTS } from "./constants/links";
+import axios from "axios";
 
-/**
- * TOKEN UTILITIES
- */
-function token_get() {
-  return sessionStorage.getItem("token") ?? localStorage.getItem("token");
-}
-function token_set(token, remember = false) {
-  if (remember) localStorage.setItem("token", token);
-  else sessionStorage.setItem("token", token);
-}
-function token_clear() {
-  sessionStorage.removeItem("token");
-  localStorage.removeItem("token");
-}
+import { API_ENDPOINTS } from "./constants/links";
 
 /**
  * GENERAL API CALL UTILS
  */
 async function api_call(
   endpoint,
-  { data = null, method = "POST", type = "application/x-www-form-urlencoded", blob = false } = {}
+  {
+    data = null,
+    method = "POST",
+    type = "application/x-www-form-urlencoded",
+    blob = false,
+    onProgress = null,
+  } = {}
 ) {
+  let has_attached = false;
+
+  function progress_handler({ currentTarget }) {
+    if (!has_attached) {
+      has_attached = true;
+      currentTarget.onprogress = (e) =>
+        onProgress(e.total === 0 ? "indeterminate" : (e.loaded / e.total) * 100);
+      currentTarget.onload = async () => onProgress("done");
+    }
+  }
+
   const options = {
     method,
-    headers: {
-      Authorization: "bearer " + token_get(),
-    },
+    url: endpoint,
+    headers: {},
+    responseType: blob ? "blob" : "json",
+    onUploadProgress: onProgress ? (e) => onProgress((e.loaded / e.total) * 100) : null,
+    onDownloadProgress: onProgress ? progress_handler : null,
   };
   if (type === "application/x-www-form-urlencoded") {
     options.headers["Content-Type"] = type;
   }
   if (data && Object.keys(data)) {
-    if (type === "multipart/form-data") options.body = new FormData();
-    else options.body = new URLSearchParams();
-    Object.keys(data).forEach((key) => options.body.append(key, data[key]));
+    if (type === "multipart/form-data") options.data = new FormData();
+    else options.data = new URLSearchParams();
+    Object.keys(data).forEach((key) => options.data.append(key, data[key]));
   }
 
   try {
-    const res = await fetch(endpoint, options);
-    return await (blob ? res.blob() : res.json());
-  } catch {
+    const res = await axios(options);
+    return res && res.data ? res.data : null;
+  } catch (e) {
+    if (e.response && e.response.data && e.response.data.error) return e.response.data;
     return null;
   }
 }
@@ -51,139 +58,120 @@ async function api_call(
 /**
  * TOKEN VALIDATION
  */
-async function api_validtoken() {
-  if (!token_get()) return false;
-
-  return api_call(API_ENDPOINTS.TOKEN);
-}
+const api_validtoken = async () => api_call(API_ENDPOINTS.TOKEN);
 
 /**
  * LOGIN/SIGNUP
  */
-async function api_login({ email, password }) {
-  return (
-    (await api_call(API_ENDPOINTS.LOGIN, { data: { email, password } })) ?? {
-      error: "Unable to connect to server, please try again.",
-    }
-  );
-}
+const api_login = async ({ email, password, remember }) =>
+  (await api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } })) ?? {
+    error: "Unable to connect to server, please try again.",
+  };
 
-async function api_signup({ name, email, password }) {
-  return (
-    (await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } })) ?? {
-      error: "Unable to connect to server, please try again.",
-    }
-  );
-}
+const api_signup = async ({ name, email, password }) =>
+  (await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } })) ?? {
+    error: "Unable to connect to server, please try again.",
+  };
+
+const api_signout = async () => api_call(API_ENDPOINTS.SIGNOUT);
 
 /**
  * FILES
  */
-async function api_file_upload(file, name, category) {
-  const res = await api_call(API_ENDPOINTS.FILE_UPLOAD, {
+const api_file_upload = async (file, name, category, onProgress) =>
+  api_call(API_ENDPOINTS.FILE_UPLOAD, {
     data: { file, name, category },
     method: "POST",
     type: "multipart/form-data",
+    onProgress,
   });
-  return res && !res.error;
-}
 
-async function api_file_display(id) {
-  return api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, { method: "GET", blob: true });
-}
+const api_file_display = async (id, onProgress) =>
+  api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, {
+    method: "GET",
+    blob: true,
+    onProgress,
+  });
 
-async function api_file_delete(id) {
-  const res = await api_call(`${API_ENDPOINTS.FILE_DELETE}/${id}`, { method: "DELETE" });
-  return res && !res.error;
-}
+const api_file_delete = async (id) =>
+  api_call(`${API_ENDPOINTS.FILE_DELETE}/${id}`, { method: "DELETE" });
 
-async function api_file_update(id, file, name) {
-  const res = await api_call(`${API_ENDPOINTS.FILE_UPDATE}/${id}`, {
+const api_file_update = async (id, file, name, onProgress) =>
+  api_call(`${API_ENDPOINTS.FILE_UPDATE}/${id}`, {
     data: { file, updated_file_name: name },
     method: "PATCH",
     type: "multipart/form-data",
+    onProgress,
   });
-  return res && !res.error;
-}
 
-async function api_file_search(name) {
-  return api_call(`${API_ENDPOINTS.FILE_SEARCH}/${name}`, { method: "GET" });
-}
+const api_file_search = async (name) =>
+  api_call(`${API_ENDPOINTS.FILE_SEARCH}/${name}`, { method: "GET" });
 
-async function api_file_all() {
-  return api_call(`${API_ENDPOINTS.FILE_ALL}`, { method: "GET" });
-}
+const api_file_all = async () => api_call(`${API_ENDPOINTS.FILE_ALL}`, { method: "GET" });
 
 /**
  * CATEGORIES
  */
-async function api_category_delete(category) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_DELETE}/${category}`, { method: "DELETE" });
-  return res && !res.error;
-}
+const api_category_delete = async (category) =>
+  api_call(`${API_ENDPOINTS.CATEGORY_DELETE}/${category}`, { method: "DELETE" });
 
-async function api_category_all(parent) {
-  return api_call(`${API_ENDPOINTS.CATEGORY_ALL}${parent ? "/" + parent : ""}`, {
+const api_category_all = async (parent) =>
+  api_call(`${API_ENDPOINTS.CATEGORY_ALL}${parent ? "/" + parent : ""}`, {
     method: "GET",
   });
-}
 
-async function api_category_one(category) {
-  return api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, { method: "GET" });
-}
+const api_category_one = async (category) =>
+  api_call(`${API_ENDPOINTS.CATEGORY_ONE}/${category}`, { method: "GET" });
 
-async function api_category_create(name, parent) {
-  const res = await api_call(API_ENDPOINTS.CATEGORY_CREATE, {
+const api_category_create = async (name, parent) =>
+  api_call(API_ENDPOINTS.CATEGORY_CREATE, {
     data: {
       name,
       parent,
     },
   });
-  return res && !res.error;
-}
 
-async function api_category_update(category, name) {
-  const res = await api_call(`${API_ENDPOINTS.CATEGORY_UPDATE}/${category}`, {
+const api_category_update = async (category, name) =>
+  api_call(`${API_ENDPOINTS.CATEGORY_UPDATE}/${category}`, {
     data: { updated_name: name },
     method: "PATCH",
   });
-  return res && !res.error;
-}
 
-async function api_category_download(id) {
-  return api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
+const api_category_download = async (id, onProgress) =>
+  api_call(`${API_ENDPOINTS.CATEGORY_DOWNLOAD}/${id}`, {
     method: "GET",
     blob: true,
+    onProgress,
   });
-}
 
-async function api_get_users() {
-  const res = await api_call(`${API_ENDPOINTS.USER_ALL}`, {
+/**
+ * USER / PROFILE PICTURES
+ */
+
+const api_get_users = async () =>
+  api_call(`${API_ENDPOINTS.USER_ALL}`, {
     method: "GET",
   });
-  return res;
-}
 
-async function api_verify_user(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
+const api_verify_user = async (id) =>
+  api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
     method: "PUT",
   });
-  return res;
-}
-/**
- * USER
- */
-async function api_user(id) {
-  return api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
-}
+
+const api_user = async (id) => api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
+
+const api_pfp_upload = async (pfp, crop) =>
+  api_call(API_ENDPOINTS.PFP_UPLOAD, {
+    data: { pfp, crop },
+    method: "POST",
+    type: "multipart/form-data",
+  });
 
 export {
-  token_get,
-  token_set,
-  token_clear,
   api_validtoken,
   api_login,
   api_signup,
+  api_signout,
   api_file_upload,
   api_file_display,
   api_file_delete,
@@ -199,4 +187,5 @@ export {
   api_get_users,
   api_verify_user,
   api_user,
+  api_pfp_upload,
 };
