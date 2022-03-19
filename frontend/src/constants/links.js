@@ -12,6 +12,7 @@ const SITE_PAGES = {
 const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  SIGNOUT: "/auth/signout",
   TOKEN: "/auth/token",
 
   FILE_UPLOAD: "/file/upload",
@@ -35,6 +36,9 @@ const API_ENDPOINTS = {
   USER_DELETE: "/user/delete",
   USER_UPDATE_PASS: "/user/updatepass",
   USER_EDIT: "/user/edit",
+
+  PFP_GET: "/user/pfp",
+  PFP_UPLOAD: "/user/pfp/upload",
 };
 
 const SIDENAV_STEPS = [

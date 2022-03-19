@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { token_set, api_login, api_signup } from "../auth";
+import { api_login, api_signup } from "../auth";
 import { SITE_PAGES } from "../constants/links";
+import { CurrentUser } from "../components/Contexts";
 import "../index.css";
 import "../styles/LoginPage.css";
 
@@ -35,7 +36,9 @@ function PasswordField({ name, placeholder, className, onChange }) {
   );
 }
 
-function LoginPage({ setIsAuth, setIsAdmin }) {
+function LoginPage() {
+  const [_currentUser, setCurrentUser] = useContext(CurrentUser);
+
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
@@ -60,15 +63,13 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res && !res.error);
+      const success = Boolean(res && res.success);
 
       if (isLogin) {
         setSuccessState(success);
-        setIsAuth(success);
 
-        if (success) {
-          setIsAdmin(res.admin);
-          token_set(res.token, doRemember);
+        if (res.user) {
+          setCurrentUser(res.user);
           navigate(SITE_PAGES.HOME);
         }
       } else {
@@ -120,6 +121,7 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
               <input
                 type="checkbox"
                 id="remember"
+                name="remember"
                 checked={doRemember}
                 onChange={(e) => setDoRemember(e.target.checked)}
               />

@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import Modal from "react-modal";
-import { SITE_PAGES } from "../constants/links";
+import { SITE_PAGES, API_ENDPOINTS } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import Search from "./Search";
 import history from "../history";
 import "../styles/NavBar.css";
 import NavMenuMobile from "./NavMenuMobile";
-import { AdminContext } from "./Contexts";
+import { CurrentUser } from "./Contexts";
 
 /*
     NavBar component, which is at the top of each page and provides links to navigate between each page. 
@@ -16,8 +16,6 @@ import { AdminContext } from "./Contexts";
 function NavBar() {
   // state for the profile dropdown
   const [dropdown, setDropdown] = useState(false);
-
-  const [isAdmin] = useContext(AdminContext);
 
   /* 
     States for the search bar 
@@ -35,6 +33,8 @@ function NavBar() {
   const [showResults, setShowResults] = useState(false);
   const [input, setInput] = useState("");
   const [filteredFiles, setFilteredFiles] = useState([]);
+
+  const [currentUser] = useContext(CurrentUser);
 
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
@@ -59,7 +59,7 @@ function NavBar() {
 
           <div className="pages-container">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && isAdmin) || !needs_admin ? (
+              !needs_admin || (currentUser && currentUser.admin) ? (
                 <NavLink
                   key={route}
                   className={`page-links ${
@@ -95,13 +95,22 @@ function NavBar() {
             setFilteredFiles={setFilteredFiles}
             desktopDropdown={dropdown}
             setDesktopDropdown={setDropdown}
-            isAdmin={isAdmin}
           />
 
           <div className="profile-container">
             <div className="profile-icon">
               <NavLink className="account-button" to={SITE_PAGES.PROFILE}>
-                <img src="/img/profile_icon.svg" alt="Profile Icon" className="account-icon" />
+                <img
+                  src={
+                    currentUser && currentUser._id
+                      ? `${API_ENDPOINTS.PFP_GET}/${currentUser._id}/${new Date(
+                          currentUser.profilePictureModified
+                        ).getTime()}`
+                      : ""
+                  }
+                  alt="Profile Icon"
+                  className="account-icon"
+                />
               </NavLink>
               <button
                 className="arrow-button"
