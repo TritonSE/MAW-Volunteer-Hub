@@ -2,6 +2,6 @@ import { createContext } from "react";
 
 const FileStructure = createContext();
 const ModalVariantsManager = createContext();
-const AdminContext = createContext();
+const CurrentUser = createContext();
 
-export { FileStructure, ModalVariantsManager, AdminContext };
+export { FileStructure, ModalVariantsManager, CurrentUser };

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useContext } from "react";
-import { AdminContext } from "./Contexts";
+import { CurrentUser } from "./Contexts";
 import "../styles/FileEntry.css";
 
 function evt_wrapper(func) {
@@ -47,14 +47,14 @@ function UnmemoizedFileAccordion({ children }) {
 const FileAccordion = React.memo(UnmemoizedFileAccordion);
 
 function FileButton({ description, image, adminOnly, onClick, className }) {
-  const [isAdmin] = useContext(AdminContext);
+  const [currentUser] = useContext(CurrentUser);
 
   function fix_bubbling(e) {
     e.stopPropagation();
     onClick(e);
   }
 
-  if (adminOnly && !isAdmin) return null;
+  if (adminOnly && (!currentUser || !currentUser.admin)) return null;
 
   return (
     <button
@@ -79,9 +79,9 @@ function FileListing({
   searchModal = false,
   adminOnly,
 }) {
-  const [isAdmin] = useContext(AdminContext);
+  const [currentUser] = useContext(CurrentUser);
 
-  return (adminOnly && isAdmin) || !adminOnly ? (
+  return (adminOnly && currentUser && currentUser.admin) || !adminOnly ? (
     <div
       className={`filelisting
           ${noalternate ? " no_nth_child" : ""}

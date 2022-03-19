@@ -8,18 +8,20 @@
  *   are non-null and non-empty.
  */
 const validate =
-  (body_params = [], query_params = []) =>
+  (body_params = [], query_params = [], full_error = true) =>
   (req, res, next) => {
     const body_valid = body_params.every((p) => {
       if (!req.body[p] || req.body[p].trim() === "") {
-        res.status(400).json({ error: `"${p}" missing from body` });
+        if (full_error) res.status(400).json({ error: `"${p}" missing from body` });
+        else res.status(401).json({ error: "Access denied" });
         return false;
       }
       return true;
     });
     const params_valid = query_params.every((p) => {
       if (!req.params[p] || req.params[p].trim() === "") {
-        res.status(400).json({ error: `"${p}" missing from params` });
+        if (full_error) res.status(400).json({ error: `"${p}" missing from params` });
+        else res.status(401).json({ error: "Access denied" });
         return false;
       }
       return true;
@@ -33,8 +35,10 @@ const validate =
  *   error to the screen if in development.
  */
 const errorHandler = (res) => (e) => {
-  if (process.env.NODE_ENV === "dev") console.error(e);
-  res.status(500).json({ error: e.toString() });
+  if (process.env.NODE_ENV === "development") {
+    console.error(e);
+    res.status(500).json({ error: e.toString() });
+  } else res.status(401).json({ error: "Internal server error." });
 };
 
 /**

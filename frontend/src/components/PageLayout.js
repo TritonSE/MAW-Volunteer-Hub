@@ -18,7 +18,7 @@ export default function PageLayout({ children }) {
 
   useEffect(() => get_structure(), []);
 
-  const memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
+  const fileStructure_memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
 
   /*
    * MODAL VARIANT PROPS
@@ -54,7 +54,7 @@ export default function PageLayout({ children }) {
 
   return (
     <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
-      <FileStructure.Provider value={memo}>
+      <FileStructure.Provider value={fileStructure_memo}>
         <ModalVariantsManager.Provider value={modal_variant_props}>
           <NavBar />
           {children}

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
 import { api_category_download, api_file_display } from "../auth";
-import { FileStructure, ModalVariantsManager, AdminContext } from "./Contexts";
+import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
 import "../styles/WishStep.css";
 
 function WishStep({ index, stepName }) {
@@ -18,7 +18,7 @@ function WishStep({ index, stepName }) {
     activeListing: [_activeListing, setActiveListing],
     categoryParent: [_categoryParent, setCategoryParent],
   } = useContext(ModalVariantsManager);
-  const [isAdmin] = useContext(AdminContext);
+  const [currentUser] = useContext(CurrentUser);
 
   /**
    * UTILITY FUNCTIONS
@@ -92,7 +92,7 @@ function WishStep({ index, stepName }) {
           }
           adminOnly
         />
-        {!isAdmin && (structure[stepName] ?? []).length === 0 && (
+        {(!currentUser || !currentUser.admin) && (structure[stepName] ?? []).length === 0 && (
           <div className="wishgranting_no_files">Files coming soon!</div>
         )}
         {(structure[stepName] ?? []).map((cat) => (
