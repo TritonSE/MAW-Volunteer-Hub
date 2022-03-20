@@ -2,6 +2,8 @@
  * RouteUtils.js: Utilities for writing routes more cleanly
  */
 
+const mongoose = require("mongoose");
+
 /**
  * A simple parameter validator middleware,
  *   verifying that the given body parameters
@@ -38,8 +40,22 @@ const errorHandler = (res) => (e) => {
   if (process.env.NODE_ENV === "development") {
     console.error(e);
     res.status(500).json({ error: e.toString() });
-  } else res.status(401).json({ error: "Internal server error." });
+  } else {
+    res.status(500).json({ error: "Internal server error." });
+  }
 };
+
+/**
+ * Middleware to validate the mongodb _id
+ *   value stored in the request parameters.
+ */
+const idParamValidator =
+  (only_if_present = false) =>
+  (req, res, next) => {
+    if (only_if_present && !req.params.id) next();
+    else if (req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)) next();
+    else res.status(400).json({ error: "Invalid user ID parameter." });
+  };
 
 /**
  * A middleware to check whether the current
@@ -53,5 +69,6 @@ const adminValidator = (req, res, next) => {
 module.exports = {
   validate,
   errorHandler,
+  idParamValidator,
   adminValidator,
 };

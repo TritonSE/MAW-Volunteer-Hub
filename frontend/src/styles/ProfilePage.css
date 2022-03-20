@@ -160,10 +160,12 @@
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 22px;
   text-align: center;
-  margin: 30px 10px;
+  margin-top: 40px;
+  margin-left: 10px;
+  margin-right: 10px;
 
   color: black;
 }
@@ -206,14 +208,12 @@
 .button-secondary {
   border: 1px solid black;
   background: white;
-  font-size: 12px;
   line-height: 14px;
 }
 .button-danger {
   color: white;
   background: var(--secondary-red);
   border: 1px solid var(--secondary-red);
-  font-size: 12px;
   line-height: 14px;
 }
 .change-pass-form {
@@ -229,19 +229,18 @@
   background: white;
   border: 1px solid black;
   margin-bottom: 14px;
-  font-size: 12px;
+  padding-left: 5px;
   line-height: 14px;
-  text-align: center;
   width: 100%;
   height: 28px;
   color: var(--blackish);
   box-sizing: border-box;
+  font-family: "Lato", sans-serif;
 }
 .change-pass-form > .button-primary {
-  margin-top: 70px;
+  margin-top: 14px;
   box-sizing: border-box;
   height: 28px;
-  font-size: 12px;
   line-height: 14px;
 }
 .delete-button-container {
@@ -250,6 +249,18 @@
   justify-content: space-evenly;
   flex-wrap: wrap;
   margin-bottom: 20px;
+}
+
+.change-pass-errorbox {
+  width: 100%;
+  min-height: 36px;
+  box-sizing: border-box;
+  padding: 10px;
+  background: var(--secondary-red);
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  font-size: 10pt;
+  color: white;
 }
 
 .modal-title-crop {

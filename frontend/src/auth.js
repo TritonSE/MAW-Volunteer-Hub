@@ -67,11 +67,19 @@ async function api_validtoken() {
  * LOGIN/SIGNUP
  */
 async function api_login({ email, password, remember }) {
-  return api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } });
+  return (
+    (await api_call(API_ENDPOINTS.LOGIN, { data: { email, password, remember } })) ?? {
+      error: "Unable to reach server, please try again.",
+    }
+  );
 }
 
 async function api_signup({ name, email, password }) {
-  return api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } });
+  return (
+    (await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } })) ?? {
+      error: "Unable to reach server, please try again.",
+    }
+  );
 }
 
 async function api_signout() {
@@ -173,25 +181,38 @@ async function api_category_download(id, onProgress) {
   return res;
 }
 
-async function api_get_users() {
-  const res = await api_call(`${API_ENDPOINTS.USER_ALL}`, {
-    method: "GET",
-  });
-  return res;
-}
-
-async function api_verify_user(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
-    method: "PUT",
-  });
-  return res;
-}
 /**
  * USER / PROFILE PICTURES
  */
-async function api_user(id) {
-  const res = await api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
-  return res;
+async function api_user_info(id) {
+  return api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { method: "GET" });
+}
+
+async function api_user_all() {
+  return api_call(API_ENDPOINTS.USER_ALL, { method: "GET" });
+}
+
+async function api_user_verify(id) {
+  return api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, { method: "PUT" });
+}
+
+async function api_user_promote(id) {
+  return api_call(`${API_ENDPOINTS.USER_PROMOTE}/${id}`, { method: "PUT" });
+}
+
+async function api_user_delete(id) {
+  return api_call(`${API_ENDPOINTS.USER_DELETE}/${id}`, { method: "DELETE" });
+}
+
+async function api_user_updatepass(old_pass, new_pass) {
+  return api_call(API_ENDPOINTS.USER_UPDATE_PASS, {
+    method: "PUT",
+    data: { old_pass, new_pass },
+  });
+}
+
+async function api_user_edit(id) {
+  return api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 }
 
 async function api_pfp_upload(pfp, crop) {
@@ -220,8 +241,12 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
-  api_get_users,
-  api_verify_user,
-  api_user,
+  api_user_info,
+  api_user_all,
+  api_user_verify,
+  api_user_promote,
+  api_user_delete,
+  api_user_updatepass,
+  api_user_edit,
   api_pfp_upload,
 };

@@ -6,7 +6,7 @@ import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
 import { SITE_PAGES } from "../constants/links";
-import { api_get_users, api_verify_user } from "../auth";
+import { api_user_all, api_user_verify } from "../auth";
 
 import "../styles/UserManage.css";
 
@@ -15,7 +15,7 @@ Modal.setAppElement(document.getElementById("root"));
 // Get user data from backend
 async function getUsers() {
   try {
-    const res = await api_get_users();
+    const res = await api_user_all();
     return res;
   } catch {
     console.error("Couldn't access users");
@@ -131,7 +131,7 @@ export default function UserManage() {
       old.map((row, index) => {
         if (index === rowIndex) {
           // verify user here, reload if fail
-          api_verify_user(row._id).then((res) => {
+          api_user_verify(row._id).then((res) => {
             if (!res || res.error) navigate(window.location);
           });
           return {
