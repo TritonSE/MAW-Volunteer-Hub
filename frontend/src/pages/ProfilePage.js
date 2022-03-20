@@ -1,12 +1,13 @@
+/* eslint no-restricted-globals: off */
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Modal from "react-modal";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 import Custom404Page from "./Custom404Page";
-import { api_user, api_pfp_upload } from "../api";
 import { API_ENDPOINTS } from "../constants/links";
+import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
@@ -16,6 +17,9 @@ Modal.setAppElement(document.getElementById("root"));
 function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [responseModalOpen, setResponseModalOpen] = useState();
+  const [shouldRedirect, setShouldRedirect] = useState(0);
+  const [changePassResponse, setChangePassResponse] = useState();
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
   const [pfpErrorModalOpen, setPFPErrorModalOpen] = useState(false);
   const [opacity, setOpacity] = useState(1);
@@ -30,7 +34,12 @@ function ProfilePage() {
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+
   const { id } = useParams();
+  const navigate = useNavigate();
 
   function fix_crop(e) {
     if (!e || e.currentTarget instanceof Window) {
@@ -116,6 +125,40 @@ function ProfilePage() {
     setCrop({ aspect: 1 });
   }
 
+  async function change_password(e) {
+    e.preventDefault();
+
+    if (newPass !== confirmPass) {
+      setChangePassResponse("New passwords do not match.");
+      return;
+    }
+
+    const res = await api_user_updatepass(oldPass, newPass);
+    if (!res || res.error) {
+      setChangePassResponse((res ?? {}).error ?? "Unable to reach server, please try again.");
+    } else {
+      setChangePassResponse();
+      setResponseModalOpen("Password changed successfully.");
+      setPassModalOpen(false);
+      setOldPass("");
+      setNewPass("");
+      setConfirmPass("");
+    }
+  }
+
+  async function delete_account() {
+    const res = await api_user_delete(id ?? "");
+    if (!res || res.error) {
+      setResponseModalOpen((res ?? {}).error ?? "Unable to reach server, please try again.");
+      setDeleteModalOpen(false);
+      setShouldRedirect(-1);
+    } else {
+      setResponseModalOpen("Account deleted successfully.");
+      setDeleteModalOpen(false);
+      setShouldRedirect(1);
+    }
+  }
+
   useEffect(() => {
     window.addEventListener("resize", fix_crop);
     return () => window.removeEventListener("resize", fix_crop);
@@ -126,7 +169,7 @@ function ProfilePage() {
       setUser(currentUser);
       setIsCurrentUser(true);
     } else {
-      const res = await api_user(id ?? "");
+      const res = await api_user_info(id ?? "");
       if (!res || !res.user) setIs404(true);
       else {
         setIs404(false);
@@ -135,6 +178,17 @@ function ProfilePage() {
       }
     }
   }, [id]);
+
+  useEffect(() => {
+    if (!responseModalOpen) {
+      if (shouldRedirect === 1) {
+        navigate("/");
+        location.reload();
+      } else if (shouldRedirect === -1) {
+        setDeleteModalOpen(true);
+      }
+    }
+  }, [responseModalOpen]);
 
   useEffect(() => {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
@@ -295,10 +349,32 @@ function ProfilePage() {
           type="button"
           onClick={() => setPassModalOpen(false)}
         />
-        <form className="change-pass-form">
-          <input placeholder="Enter old password" type="password" />
-          <input placeholder="Enter new password" type="password" />
-          <input placeholder="Reenter new password" type="password" />
+        <form className="change-pass-form" onSubmit={change_password}>
+          <input
+            placeholder="Enter old password"
+            type="password"
+            value={oldPass}
+            onChange={(e) => setOldPass(e.target.value)}
+          />
+          <input
+            placeholder="Enter new password"
+            type="password"
+            value={newPass}
+            onChange={(e) => setNewPass(e.target.value)}
+          />
+          <input
+            placeholder="Reenter new password"
+            type="password"
+            value={confirmPass}
+            onChange={(e) => setConfirmPass(e.target.value)}
+          />
+
+          <div
+            className="change-pass-errorbox"
+            style={{ visibility: changePassResponse ? "visible" : "hidden" }}
+          >
+            {changePassResponse}
+          </div>
 
           <button className="modal-button button-primary" type="submit">
             Change password
@@ -328,8 +404,31 @@ function ProfilePage() {
           >
             Cancel
           </button>
-          <button className="modal-button small button-danger" type="button">
+          <button
+            className="modal-button small button-danger"
+            type="button"
+            onClick={delete_account}
+          >
             Delete
+          </button>
+        </div>
+      </Modal>
+
+      <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
+        isOpen={Boolean(responseModalOpen)}
+        onRequestClose={() => setResponseModalOpen()}
+        contentLabel="Response"
+      >
+        <h1>{responseModalOpen}</h1>
+        <div className="delete-button-container">
+          <button
+            className="modal-button small button-primary"
+            type="button"
+            onClick={() => setResponseModalOpen()}
+          >
+            Okay
           </button>
         </div>
       </Modal>

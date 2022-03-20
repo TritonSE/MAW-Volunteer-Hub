@@ -58,7 +58,7 @@ async function api_call(
 /**
  * TOKEN VALIDATION
  */
-const api_validtoken = async () => api_call(API_ENDPOINTS.TOKEN);
+const api_validtoken = async () => (document.cookie ? api_call(API_ENDPOINTS.TOKEN) : false);
 
 /**
  * LOGIN/SIGNUP
@@ -147,20 +147,26 @@ const api_category_download = async (id, onProgress) =>
 /**
  * USER / PROFILE PICTURES
  */
+const api_user_info = (id) => api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { method: "GET" });
 
-const api_get_users = async () =>
-  api_call(`${API_ENDPOINTS.USER_ALL}`, {
-    method: "GET",
-  });
+const api_user_all = () => api_call(API_ENDPOINTS.USER_ALL, { method: "GET" });
 
-const api_verify_user = async (id) =>
-  api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, {
+const api_user_verify = (id) => api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, { method: "PUT" });
+
+const api_user_promote = (id) => api_call(`${API_ENDPOINTS.USER_PROMOTE}/${id}`, { method: "PUT" });
+
+const api_user_delete = (id) =>
+  api_call(`${API_ENDPOINTS.USER_DELETE}/${id}`, { method: "DELETE" });
+
+const api_user_updatepass = (old_pass, new_pass) =>
+  api_call(API_ENDPOINTS.USER_UPDATE_PASS, {
     method: "PUT",
+    data: { old_pass, new_pass },
   });
 
-const api_user = async (id) => api_call(`${API_ENDPOINTS.USER}/${id}`, { method: "GET" });
+const api_user_edit = (id) => api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 
-const api_pfp_upload = async (pfp, crop) =>
+const api_pfp_upload = (pfp, crop) =>
   api_call(API_ENDPOINTS.PFP_UPLOAD, {
     data: { pfp, crop },
     method: "POST",
@@ -184,8 +190,12 @@ export {
   api_category_create,
   api_category_update,
   api_category_download,
-  api_get_users,
-  api_verify_user,
-  api_user,
+  api_user_info,
+  api_user_all,
+  api_user_verify,
+  api_user_promote,
+  api_user_delete,
+  api_user_updatepass,
+  api_user_edit,
   api_pfp_upload,
 };

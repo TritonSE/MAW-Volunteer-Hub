@@ -1,15 +1,14 @@
 const fs = require("fs").promises;
 const express = require("express");
-const mongoose = require("mongoose");
 const multer = require("multer");
 const sharp = require("sharp");
 
 const router = express.Router();
 
-const UserModel = require("../models/UserModel");
-const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
-const { errorHandler } = require("../util/RouteUtils");
 const config = require("../config");
+const UserModel = require("../models/UserModel");
+const { validate, errorHandler, idParamValidator, adminValidator } = require("../util/RouteUtils");
+const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 
 const upload = multer({
   dest: "server_uploads/",
@@ -17,132 +16,77 @@ const upload = multer({
   limits: { fileSize: config.amazons3.max_file_size, files: 1 },
 });
 
-function validateIdParam(req, res) {
-  if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
-    res.status(400).json({ error: "Invalid user id passed into user route" });
-    return true;
-  }
-  return false;
-}
-// if current user is not an admin, then sends a 401 unauthorized
-function checkCurrentUserIsAdmin(req, res, next) {
-  const currentUserId = req.user._id;
-  UserModel.findById(currentUserId, { admin: 1 }, (err, user) => {
-    if (err) {
-      next(err);
-      return;
-    }
+router.get("/users", (req, res) =>
+  UserModel.find({ admin: req.query.admin ?? false })
+    .then((users) => res.json({ users }))
+    .catch(errorHandler(res))
+);
 
-    if (!user) {
-      res.status(500).send("JWT expired");
-    } else if (!user.admin) {
-      res.status(401).send("Current user is not an admin");
-    } else {
-      next();
-    }
-  });
-}
+router.get("/info/:id?", idParamValidator(true), (req, res) =>
+  UserModel.findById(req.params.id ?? req.user._id)
+    .then((user) =>
+      res.json({
+        user: user.toJSON(),
+        sameUser: user._id.toString() === req.user._id.toString(),
+      })
+    )
+    .catch(errorHandler(res))
+);
 
-router.get("/users", (req, res, next) => {
-  checkCurrentUserIsAdmin(req, res, () => {
-    UserModel.find()
-      .then((users) => res.status(200).json({ users }))
-      .catch((e) => res.status(400).json({ error: "An error occurred fetching users" }));
-  });
-});
+router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
+  UserModel.findByIdAndUpdate(req.params.id, { verified: true })
+    .then(() => res.status(200).json({ success: true }))
+    .catch(errorHandler(res))
+);
 
-// Get user by id - Will return an object with only the user profile information
-router.get("/info/:id?", (req, res, next) => {
-  // check if there is an id param and that it is a valid id
-  if (req.params.id && validateIdParam(req, res)) {
-    return;
-  }
+router.put("/promote/:id", idParamValidator(), adminValidator, (req, res) =>
+  UserModel.findByIdAndUpdate(req.params.id, { admin: true })
+    .then(() => res.status(200).json({ success: true }))
+    .catch(errorHandler(res))
+);
 
-  UserModel.findById(req.params.id ?? req.user._id, (err, user) => {
-    if (err) {
-      next(err);
-    }
+router.delete("/delete/:id", idParamValidator(), adminValidator, (req, res) =>
+  UserModel.deleteOne({ _id: req.params.id })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res))
+);
 
-    if (!user) {
-      // checks if a user was found with id
-      res.status(404).json({ error: "No user found with provided ID." });
-    } else {
-      res.status(200).json({ user: user.toJSON() });
-    }
-  });
-});
-
-// finds user by id then verifies user
-router.put("/verify/:id", (req, res, next) => {
-  if (validateIdParam(req, res)) {
-    return;
-  }
-
-  checkCurrentUserIsAdmin(req, res, () => {
-    UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-      .then((user) => res.status(200).json({ user }))
-      .catch((err) => {
-        next(err);
+router.put("/updatepass", validate(["old_pass", "new_pass"], []), (req, res) =>
+  UserModel.findById(req.user._id)
+    .then((user) => Promise.all([user, user.isValidPassword(req.body.old_pass)]))
+    .then(([user, valid]) => {
+      if (!valid) {
+        return Promise.all(["Incorrect current password."]);
+      }
+      Object.assign(user, {
+        password: req.body.new_pass,
       });
-  });
-});
+      return Promise.all([false, user.save()]);
+    })
+    .then(([error]) => {
+      if (!error) res.json({ success: true });
+      else res.status(403).json({ error });
+    })
+    .catch(errorHandler(res))
+);
 
-// finds user by id then updates user to admin (can only be done byan admin)
-router.put("/promoteadmin/:id", async (req, res, next) => {
-  if (validateIdParam(req, res)) {
-    return;
-  }
-
-  checkCurrentUserIsAdmin(req, res, () => {
-    UserModel.findByIdAndUpdate(req.params.id, { admin: true })
-      .then(() => res.status(200).send())
-      .catch((err) => {
-        next(err);
-      });
-  });
-});
-
-// edits user information
-// can only be done by an admin or a logged-in user if they are the same as the user who's info is being editted)
-router.put("/edit/:id", async (req, res, next) => {
-  if (validateIdParam(req, res)) {
-    return;
-  }
-  const userId = req.user._id;
-  // we only want the user to be able to update these pieces of their profile
-  const sanitizedBody = {};
-  if (req.body.name) sanitizedBody.name = req.body.name;
-  if (req.body.email) sanitizedBody.email = req.body.email;
-  if (req.body.profilePicture) sanitizedBody.profilePicture = req.body.profilePicture;
-
-  // function that updates user info based on sanitized body
-  const updateInfo = () => {
-    try {
-      UserModel.findByIdAndUpdate({ _id: req.params.id }, { $set: sanitizedBody }, { new: true })
-        .then((user) => {
-          if (user) {
-            res.status(200).json(user);
-          } else {
-            res.status(400).send();
-          }
-        })
-        .catch((err) => {
-          if (err.keyPattern.email === 1) {
-            res.status(400).json("This email is already taken");
-          }
-        });
-    } catch (err) {
-      next(err);
-    }
-  };
-
-  // if user is current user, or if current user is an admin
-  if (userId === req.params.id) {
-    updateInfo();
-  } else {
-    checkCurrentUserIsAdmin(req, res, updateInfo);
-  }
-});
+router.put("/edit/:id", idParamValidator(), (req, res) =>
+  UserModel.findById(req.user._id)
+    .then((user) => {
+      if (req.params.id !== req.user._id && user.admin) return UserModel.findById(req.params.id);
+      if (req.params.id === req.user._id) return user;
+      throw new Error("Access denied.");
+    })
+    .then((user) => {
+      Object.assign(
+        user,
+        req.body.name && { name: req.body.name },
+        req.body.email && { email: req.body.email }
+      );
+      return user.save();
+    })
+    .catch(errorHandler(res))
+);
 
 /**
  * PROFILE PICTURES

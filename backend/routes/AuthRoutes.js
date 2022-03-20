@@ -9,21 +9,18 @@ const { validate, errorHandler } = require("../util/RouteUtils");
 const router = express.Router();
 
 router.post("/signup", (req, res, next) =>
-  passport.authenticate("signup", { session: false }, ({ errors } = {}) => {
-    if (errors) {
+  passport.authenticate("signup", { session: false }, (resp, user) => {
+    if ((resp && resp.errors) || !user) {
       res.status(500).json({
-        error: errors.email ? "Email is already in use." : "Failed to sign up, please try again.",
+        error: resp.errors.email
+          ? "Email is already in use."
+          : "Failed to sign up, please try again.",
       });
     } else {
-      UserModel.findById(req.user._id)
-        .then((user) => {
-          Object.assign(user, {
-            name: req.body.name,
-          });
-          return Promise.all([user, user.save()]);
-        })
-        .then(([user]) => res.json({ success: true, user: user.toJSON() }))
-        .catch(errorHandler(res));
+      res.json({
+        success: true,
+        user: user.toJSON(),
+      });
     }
   })(req, res, next)
 );
@@ -65,7 +62,7 @@ router.post("/login", validate(["email", "password", "remember"], []), (req, res
   })(req, res, next)
 );
 
-router.post("/signout", (_req, res) => {
+router.post("/signout", (req, res) => {
   res.clearCookie("token", { signed: true });
   res.json({ success: true });
 });

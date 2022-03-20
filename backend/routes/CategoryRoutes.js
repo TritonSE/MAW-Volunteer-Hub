@@ -8,7 +8,7 @@ const { deleteFileAWS, getObject } = require("../util/S3Util");
 
 const router = express.Router();
 
-router.get("/all", (_req, res) => {
+router.get("/all", (req, res) => {
   Category.find()
     .then((files) =>
       res.json(

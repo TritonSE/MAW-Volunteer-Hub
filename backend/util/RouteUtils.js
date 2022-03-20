@@ -2,6 +2,7 @@
  * RouteUtils.js: Utilities for writing routes more cleanly
  */
 
+const mongoose = require("mongoose");
 const config = require("../config");
 const log = require("./Logger");
 
@@ -46,6 +47,18 @@ const errorHandler = (res) => (e) => {
 };
 
 /**
+ * Middleware to validate the mongodb _id
+ *   value stored in the request parameters.
+ */
+const idParamValidator =
+  (only_if_present = false) =>
+  (req, res, next) => {
+    if (only_if_present && !req.params.id) next();
+    else if (req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)) next();
+    else res.status(400).json({ error: "Invalid user ID parameter." });
+  };
+
+/**
  * A middleware to check whether the current
  *   user is an admin.
  */
@@ -57,5 +70,6 @@ const adminValidator = (req, res, next) => {
 module.exports = {
   validate,
   errorHandler,
+  idParamValidator,
   adminValidator,
 };
