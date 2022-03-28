@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const path = require("path");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -31,6 +32,7 @@ app.use(helmet());
 app.use(rateLimiter);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.auth.cookie_secret));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/auth", authRoutes);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
