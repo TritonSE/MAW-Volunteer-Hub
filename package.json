@@ -2,16 +2,29 @@
   "name": "maw-volunteer-hub",
   "version": "1.0.0",
   "description": "Volunteer Hub for Make-A-Wish San Diego",
-  "main": "index.js",
+  "author": "Triton Software Engineering <tse@ucsd.edu>",
+  "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "npm install --prefix backend && npm install --prefix frontend",
+    "lint-fix": "(npm run lint-fix --prefix backend || true) && npm run lint-fix --prefix frontend",
+    "lint-check": "npm run lint-check --prefix backend && npm run lint-check --prefix frontend",
+    "format": "npm run format --prefix backend && npm run format --prefix frontend",
+    "build": "npm run build --prefix frontend && rm -rf backend/public && mv frontend/build backend/public",
+    "watch": "npm run watch --prefix frontend",
+    "start-dev": "concurrently \"npm start --prefix backend\" \"npm start --prefix frontend\"",
+    "start": "cd backend && node ./bin/www"
+  },
+  "dependencies": {
+    "node-pre-gyp": "^0.17.0"
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TritonSE/MAW-Volunteer-Hub.git"
   },
-  "author": "Triton Software Engineering",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/TritonSE/MAW-Volunteer-Hub/issues"
   },

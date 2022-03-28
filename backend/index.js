@@ -40,3 +40,5 @@ app.use("/category", passport.authenticate("jwt", { session: false }), categoryR
 app.use((req, res) => res.status(404).json({ error: "Not found." }));
 
 app.listen(config.app.port, () => log.info(`Server started on port ${config.app.port}.`));
+
+module.exports = app;
