@@ -39,6 +39,10 @@ app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
 app.use("/file", passport.authenticate("jwt", { session: false }), fileRoutes);
 app.use("/category", passport.authenticate("jwt", { session: false }), categoryRoutes);
 
+app.get(["/", "/*"], (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 app.use((req, res) => res.status(404).json({ error: "Not found." }));
 
 app.listen(config.app.port, () => log.info(`Server started on port ${config.app.port}.`));
