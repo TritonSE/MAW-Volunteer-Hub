@@ -16,8 +16,9 @@ const upload = multer({
   limits: { fileSize: config.amazons3.max_file_size, files: 1 },
 });
 
+// returns all users
 router.get("/users", (req, res) =>
-  UserModel.find({ admin: req.query.admin ?? false })
+  UserModel.find()
     .then((users) => res.json({ users }))
     .catch(errorHandler(res))
 );
