@@ -1,13 +1,19 @@
-.ReactModal__Overlay {
+.ReactModal__Overlay.wishgranting_react_modal {
   z-index: 999;
-  background: rgba(0, 0, 0, 0.3) !important;
+  position: fixed;
+  inset: 0px;
+  background-color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
 }
 .ReactModal__Content.wishgranting_react_modal {
-  position: absolute;
-  width: 466px;
-  height: 278px;
-  left: calc(50vw - (466px / 2)) !important;
-  top: calc(50vh - (278px / 2)) !important;
+  width: 95vw;
+  max-width: 466px;
+  height: 95vh;
+  max-height: 278px;
   padding-top: 21px !important;
   padding-left: 25px !important;
   padding-right: 25px !important;
@@ -16,10 +22,10 @@
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px !important;
   box-sizing: border-box;
+  position: relative;
 }
 .ReactModal__Content.wishgranting_react_modal.thin {
-  height: 202px !important;
-  top: calc(50vh - (200px / 2)) !important;
+  max-height: 202px !important;
 }
 .wishgranting_modal {
   font-family: "Lato", sans-serif;
@@ -61,6 +67,7 @@
   width: 103px;
   height: 26px;
   background: white;
+  color: black;
   font-family: "Lato", sans-serif;
   border-radius: 3px;
   border: 1px solid black;
@@ -84,6 +91,8 @@
   cursor: pointer;
   border: 1px solid black;
   background: white;
+  color: black;
+  font-weight: normal;
   transition: opacity 0.1s;
 }
 .wishgranting_modal_button.primary {
@@ -104,6 +113,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 }
 .wishgranting_modal_center.halfheight {
   height: calc(202px / 2);

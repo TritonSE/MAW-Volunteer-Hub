@@ -3,7 +3,6 @@
 // @github https://github.com/Sam-Meech-Ward/image-upload-s3
 // @author Mohak Vaswani
 
-require("dotenv").config();
 const fs = require("fs");
 const multer = require("multer");
 const multerS3 = require("multer-s3");

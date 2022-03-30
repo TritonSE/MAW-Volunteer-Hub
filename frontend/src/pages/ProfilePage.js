@@ -1,12 +1,13 @@
 /* eslint no-restricted-globals: off */
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import ReactCrop from "react-image-crop";
+import { useParams, useNavigate } from "react-router-dom";
 import Modal from "react-modal";
+import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
+import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
-import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../auth";
+import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
@@ -27,6 +28,7 @@ function ProfilePage() {
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
   const [dragActive, setDragActive] = useState(false);
+  const [is404, setIs404] = useState(false);
 
   const [currentUser, setCurrentUser] = useContext(CurrentUser);
   const [user, setUser] = useState({});
@@ -37,7 +39,6 @@ function ProfilePage() {
   const [confirmPass, setConfirmPass] = useState("");
 
   const { id } = useParams();
-
   const navigate = useNavigate();
 
   function fix_crop(e) {
@@ -114,6 +115,7 @@ function ProfilePage() {
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
       setUser(res.user);
+      setIsCurrentUser(res.sameUser);
       if (res.user._id === currentUser._id) setCurrentUser(res.user);
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
@@ -122,36 +124,6 @@ function ProfilePage() {
     setPFPModalOpen(false);
     setCrop({ aspect: 1 });
   }
-
-  useEffect(() => {
-    window.addEventListener("resize", fix_crop);
-    return () => window.removeEventListener("resize", fix_crop);
-  }, [imgRef]);
-
-  useEffect(async () => {
-    if (!id) {
-      setUser(currentUser);
-      setIsCurrentUser(true);
-    } else {
-      const res = await api_user_info(id ?? "");
-      if (!res || !res.user) navigate("/user-not-found");
-      else {
-        setUser(res.user);
-        setIsCurrentUser(res.user._id === currentUser._id);
-      }
-    }
-  }, [id]);
-
-  useEffect(() => {
-    if (!responseModalOpen) {
-      if (shouldRedirect === 1) {
-        navigate("/");
-        location.reload();
-      } else if (shouldRedirect === -1) {
-        setDeleteModalOpen(true);
-      }
-    }
-  }, [responseModalOpen]);
 
   async function change_password(e) {
     e.preventDefault();
@@ -187,7 +159,44 @@ function ProfilePage() {
     }
   }
 
-  return (
+  useEffect(() => {
+    window.addEventListener("resize", fix_crop);
+    return () => window.removeEventListener("resize", fix_crop);
+  }, [imgRef]);
+
+  useEffect(async () => {
+    if (!id) {
+      setUser(currentUser);
+      setIsCurrentUser(true);
+    } else {
+      const res = await api_user_info(id ?? "");
+      if (!res || !res.user) setIs404(true);
+      else {
+        setIs404(false);
+        setUser(res.user);
+        setIsCurrentUser(res.user._id === currentUser._id);
+      }
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (!responseModalOpen) {
+      if (shouldRedirect === 1) {
+        navigate("/");
+        location.reload();
+      } else if (shouldRedirect === -1) {
+        setDeleteModalOpen(true);
+      }
+    }
+  }, [responseModalOpen]);
+
+  useEffect(() => {
+    document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
+  }, [user]);
+
+  return is404 ? (
+    <Custom404Page />
+  ) : (
     <div className="profile-page">
       <section className="header-section">
         <div className="profile-image">

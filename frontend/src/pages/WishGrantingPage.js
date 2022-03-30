@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SideNav from "../components/SideNav";
 import { SIDENAV_STEPS, SIDENAV_ROUTES } from "../constants/links";
 
@@ -7,6 +7,10 @@ function WishGrantingPage() {
     tab_route: SIDENAV_ROUTES[ind],
     tab_name: name,
   }));
+
+  useEffect(() => {
+    document.title = "Wish Granting - Make-a-Wish San Diego";
+  }, []);
 
   return <SideNav tabs={tabs} />;
 }

@@ -1,49 +1,50 @@
 const express = require("express");
-const createError = require("http-errors");
 const mongoose = require("mongoose");
+const path = require("path");
 const passport = require("passport");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+
 const config = require("./config");
-// const UserModel = require("./models/model");
-// const CategorySchema = require("./models/Category_model")
+const log = require("./util/Logger");
 
-mongoose.connect(config.db.uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-mongoose.connection.on("error", (error) => console.log(error));
-mongoose.Promise = global.Promise;
-
-require("./auth/passportutil");
+require("./util/SanityChecks")();
+require("./auth/PassportInit")();
 
 const authRoutes = require("./routes/AuthRoutes");
 const userRoutes = require("./routes/UserRoutes");
 const fileRoutes = require("./routes/FileRoutes");
 const categoryRoutes = require("./routes/CategoryRoutes");
 
+const rateLimiter = require("./middleware/RateLimiter");
+
+mongoose.connect(config.db.uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.connection.on("error", (error) => log.error(error));
+
 const app = express();
 
+app.disable("x-powered-by");
+app.use(helmet());
+app.use(rateLimiter);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser(config.auth.cookie_secret));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/auth", authRoutes); // authentication routes are not JWT protected
-app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes); // all user routes are JWT protected
+app.use("/auth", authRoutes);
+app.use("/user", passport.authenticate("jwt", { session: false }), userRoutes);
 app.use("/file", passport.authenticate("jwt", { session: false }), fileRoutes);
 app.use("/category", passport.authenticate("jwt", { session: false }), categoryRoutes);
 
-// catch 404 and forward to error handler
-app.use((req, res, next) => {
-  console.error("Error caught on URL " + req.url);
-  next(createError(404));
+app.get(["/", "/*"], (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// Handle errors.
-app.use((err, req, res) => {
-  res.status(err.status || 500);
-  res.json({ error: err });
-});
+app.use((req, res) => res.status(404).json({ error: "Not found." }));
 
-app.listen(5000, () => {
-  console.log("Server started.");
-});
+app.listen(config.app.port, () => log.info(`Server started on port ${config.app.port}.`));
+
+module.exports = app;

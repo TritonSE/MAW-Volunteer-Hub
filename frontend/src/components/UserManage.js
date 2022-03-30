@@ -6,22 +6,11 @@ import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
 import { SITE_PAGES } from "../constants/links";
-import { api_user_all, api_user_verify } from "../auth";
+import { api_user_all, api_user_verify } from "../api";
 
 import "../styles/UserManage.css";
 
 Modal.setAppElement(document.getElementById("root"));
-
-// Get user data from backend
-async function getUsers() {
-  try {
-    const res = await api_user_all();
-    return res;
-  } catch {
-    console.error("Couldn't access users");
-  }
-  return "";
-}
 
 function VerifyButtonCell({
   isVerified: initialVerified,
@@ -120,9 +109,11 @@ export default function UserManage() {
 
   // Get user data from backend
   useEffect(async () => {
-    const data = await getUsers();
-    setUserData(data.users);
-    setHasFetched(true);
+    const res = await api_user_all();
+    if (res && !res.error) {
+      setUserData(res.users);
+      setHasFetched(true);
+    }
   }, []);
 
   const updateMyData = (rowIndex, columnId, value) => {

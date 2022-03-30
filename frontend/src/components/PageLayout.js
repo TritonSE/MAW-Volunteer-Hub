@@ -3,7 +3,7 @@
   It currently just puts a navbar at the top of the page.
  */
 import React, { useState, useEffect, useMemo } from "react";
-import { api_category_all } from "../auth";
+import { api_category_all } from "../api";
 import NavBar from "./NavBar";
 import ModalVariants from "./ModalVariants";
 import { FileStructure, ModalVariantsManager } from "./Contexts";

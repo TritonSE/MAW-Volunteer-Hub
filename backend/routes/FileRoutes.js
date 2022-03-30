@@ -108,7 +108,7 @@ router.get("/search/:name", validate([], ["name"]), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.get("/all", (_req, res) => {
+router.get("/all", (req, res) => {
   File.find()
     .then((file) => res.json(file))
     .catch(errorHandler(res));

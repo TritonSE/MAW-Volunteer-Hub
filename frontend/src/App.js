@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
-import { api_validtoken, api_signout } from "./auth";
+import { api_validtoken, api_signout } from "./api";
 import {
   SITE_PAGES,
   SIDENAV_STEPS,

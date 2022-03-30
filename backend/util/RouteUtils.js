@@ -3,6 +3,8 @@
  */
 
 const mongoose = require("mongoose");
+const config = require("../config");
+const log = require("./Logger");
 
 /**
  * A simple parameter validator middleware,
@@ -10,20 +12,22 @@ const mongoose = require("mongoose");
  *   are non-null and non-empty.
  */
 const validate =
-  (body_params = [], query_params = [], full_error = true) =>
+  (body_params = [], query_params = []) =>
   (req, res, next) => {
     const body_valid = body_params.every((p) => {
       if (!req.body[p] || req.body[p].trim() === "") {
-        if (full_error) res.status(400).json({ error: `"${p}" missing from body` });
-        else res.status(401).json({ error: "Access denied" });
+        if (config.app.env === "development")
+          res.status(400).json({ error: `"${p}" missing from body.` });
+        else res.status(401).json({ error: "Access denied." });
         return false;
       }
       return true;
     });
     const params_valid = query_params.every((p) => {
       if (!req.params[p] || req.params[p].trim() === "") {
-        if (full_error) res.status(400).json({ error: `"${p}" missing from params` });
-        else res.status(401).json({ error: "Access denied" });
+        if (config.app.env === "development")
+          res.status(400).json({ error: `"${p}" missing from params.` });
+        else res.status(401).json({ error: "Access denied." });
         return false;
       }
       return true;
@@ -37,12 +41,9 @@ const validate =
  *   error to the screen if in development.
  */
 const errorHandler = (res) => (e) => {
-  if (process.env.NODE_ENV === "development") {
-    console.error(e);
-    res.status(500).json({ error: e.toString() });
-  } else {
-    res.status(500).json({ error: "Internal server error." });
-  }
+  log.error(e);
+  if (config.app.env === "development") res.status(500).json({ error: e.toString() });
+  else res.status(500).json({ error: "Internal server error." });
 };
 
 /**

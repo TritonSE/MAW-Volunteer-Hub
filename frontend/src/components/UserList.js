@@ -84,7 +84,6 @@ function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModa
     rows,
     prepareRow,
     state: { globalFilter },
-    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(

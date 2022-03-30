@@ -7,7 +7,7 @@ import {
   api_file_upload,
   api_file_update,
   api_file_delete,
-} from "../auth";
+} from "../api";
 import { FileStructure, ModalVariantsManager } from "./Contexts";
 import "../styles/ModalVariants.css";
 
@@ -237,7 +237,9 @@ function ModalVariants() {
         if (variant.has_close === undefined) setOpen(false);
       }}
       contentLabel={variant.title}
+      style={{ content: variant.style ?? {} }}
       className={`wishgranting_react_modal ${variant.className ?? ""}`}
+      overlayClassName={`wishgranting_react_modal ${variant.className ?? ""}`}
     >
       <div className="wishgranting_modal">
         <div className="wishgranting_modal_header">

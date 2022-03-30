@@ -53,6 +53,10 @@
 
   margin-bottom: 16px;
 }
+.login input.error:not([type="checkbox"]),
+.login_password.error input {
+  border: 1px solid #ff0000;
+}
 
 .login button {
   width: 300px;
@@ -64,6 +68,12 @@
   border: 0;
 
   font-family: "Lato" !important;
+
+  opacity: 1;
+  transition: opacity 0.1s;
+}
+.login button.waiting {
+  opacity: 0.5;
 }
 
 .login button:disabled {
@@ -181,6 +191,10 @@
 .login_modal_content {
   margin-top: 16px;
   margin-bottom: 24px;
+}
+.login_modal h3 {
+  font-size: 14pt;
+  margin: 0;
 }
 
 .login_button_unstyled {

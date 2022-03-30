@@ -1,67 +1,72 @@
-/* eslint consistent-return: "warn" */
-
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+const config = require("../config");
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
-// Sign up route
-router.post("/signup", passport.authenticate("signup", { session: false }), (req, res) => {
-  UserModel.findById(req.user._id)
-    .then((user) => {
-      Object.assign(user, {
-        name: req.body.name,
+router.post("/signup", (req, res, next) =>
+  passport.authenticate("signup", { session: false }, (resp, user) => {
+    if ((resp && resp.errors) || !user) {
+      res.status(500).json({
+        error: resp.errors.email
+          ? "Email is already in use."
+          : "Failed to sign up, please try again.",
       });
-      return user.save();
-    })
-    .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
-});
+    } else {
+      res.json({
+        success: true,
+        user: user.toJSON(),
+      });
+    }
+  })(req, res, next)
+);
 
-// Log In route
-router.post("/login", validate(["email", "password", "remember"], [], false), (req, res, next) => {
+router.post("/login", validate(["email", "password", "remember"], []), (req, res, next) =>
   passport.authenticate("login", (err, user) => {
-    try {
-      if (err || !user) {
-        res.json({ error: "Failed to log in" });
+    if (err || !user) {
+      res.status(401).json({ error: "Invalid email or password." });
+      return;
+    }
+
+    req.login(user, { session: false }, (error) => {
+      if (error) {
+        errorHandler(res)(error);
         return;
       }
 
-      req.login(user, { session: false }, (error) => {
-        if (error) {
-          res.json({ error });
-          return;
-        }
+      const token = jwt.sign(
+        {
+          user: {
+            _id: user._id,
+            email: user.email,
+            admin: user.admin,
+          },
+        },
+        config.auth.jwt_secret
+      );
 
-        const body = { _id: user._id, email: user.email, admin: user.admin }; // sign is admin into this body
-        const token = jwt.sign({ user: body }, "TOP_SECRET");
-
-        const cookie_opts = { signed: true };
-        if (req.body.remember && req.body.remember !== "undefined") {
-          // Fix for odd stringify in Chrome
-          const exp = new Date();
-          exp.setDate(exp.getDate() + 30);
-          cookie_opts.expires = exp;
-        }
-        res.cookie("token", token, cookie_opts);
-        res.json({ success: true, user: user.toJSON() });
-      });
-    } catch (error) {
-      res.status(401).json({ error });
-    }
-  })(req, res, next);
-});
+      const cookie_opts = { signed: true };
+      if (req.body.remember && req.body.remember !== "undefined") {
+        // Fix for odd stringify in Chrome
+        const exp = new Date();
+        exp.setDate(exp.getDate() + 30);
+        cookie_opts.expires = exp;
+      }
+      res.cookie("token", token, cookie_opts);
+      res.json({ success: true, user: user.toJSON() });
+    });
+  })(req, res, next)
+);
 
 router.post("/signout", (req, res) => {
   res.clearCookie("token", { signed: true });
   res.json({ success: true });
 });
 
-// Token validation route
 router.post("/token", passport.authenticate("jwt", { session: false }), (req, res) => {
   UserModel.findById((req.user ?? {})._id)
     .then((user) => res.json({ user: user.toJSON() }))

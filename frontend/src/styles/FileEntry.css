@@ -37,6 +37,7 @@
   border: 0;
   cursor: pointer;
   margin-right: 6px;
+  padding: 1px 6px;
 }
 
 .filelisting_separator {
@@ -71,6 +72,9 @@
   position: absolute;
   transition: top 0.4s;
   width: 100%;
+}
+.filelisting_no_files {
+  font-family: "Lato", sans-serif;
 }
 
 /* if the file entry & file listing is displaying for the search modal */

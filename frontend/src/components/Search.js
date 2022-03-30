@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
-import { api_file_display } from "../auth";
+import { api_file_display } from "../api";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
 import { FileStructure, ModalVariantsManager } from "./Contexts";
@@ -19,7 +19,7 @@ Modal.setAppElement(document.getElementById("#root"));
     -setFilteredFiles: set the filtered files when it changes 
 */
 
-function Search() {
+function Search({ onBlur }) {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
@@ -78,10 +78,6 @@ function Search() {
     setFilteredFiles(arr);
   }, [structure, input]);
 
-  const handleClose = () => {
-    setShowResults((prevState) => !prevState);
-  };
-  const handleSearchSubmit = () => setShowResults(true);
   return (
     <>
       <form className="search-container" role="search" onSubmit={(e) => e.preventDefault()}>
@@ -89,8 +85,11 @@ function Search() {
           className="search-input"
           placeholder="Search all files..."
           onChange={(e) => setInput(e.target.value)}
+          onBlur={() => {
+            if (!showResults && onBlur) onBlur();
+          }}
         />
-        <button className="search-button" type="submit" onClick={() => handleSearchSubmit()}>
+        <button className="search-button" type="submit" onClick={() => setShowResults(true)}>
           <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon" />
         </button>
       </form>
@@ -100,12 +99,12 @@ function Search() {
       */}
       <Modal
         isOpen={showResults}
-        onRequestClose={handleClose}
+        onRequestClose={() => setShowResults(false)}
         className="search-results"
         overlayClassName="search-results-overlay"
       >
         <div className="results-container">
-          <button className="close-btn" onClick={handleClose} type="button">
+          <button className="close-btn" onClick={() => setShowResults(false)} type="button">
             <img
               src="/img/search_exit_icon.svg"
               alt="Close Search Results"

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
-import { api_category_download, api_file_display } from "../auth";
+import { api_category_download, api_file_display } from "../api";
 import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
 import "../styles/WishStep.css";
 
@@ -35,7 +35,16 @@ function WishStep({ index, stepName }) {
     const res = await api_file_display(file._id, setProgress);
     if (res && !res.error) {
       const url = window.URL.createObjectURL(res);
-      window.open(url);
+      if (!window.open(url)) {
+        // Fix for pop-up blockers (e.g. iOS Safari)
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = file.name;
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
       window.URL.revokeObjectURL(url);
     } else {
       setModalVariant();
