@@ -177,7 +177,8 @@ function LoginPage() {
               />
               Keep me signed in
             </label>
-            <a href="#forgot">Forgot password</a>
+            {/* <a href="#forgot">Forgot password</a> */}
+            <span>&nbsp;</span>
           </div>
           <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
             {isLogin ? "Login" : "Create new account"}
