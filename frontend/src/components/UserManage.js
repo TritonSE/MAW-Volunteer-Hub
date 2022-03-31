@@ -169,6 +169,7 @@ export default function UserManage() {
         isOpen={modalState.isOpen}
         contentLabel="Account Access"
         className="access_notification"
+        overlayClassName="access_notification_overlay"
       >
         <div className="notification_contents">
           {modalState.name ?? "User"} has been given access.

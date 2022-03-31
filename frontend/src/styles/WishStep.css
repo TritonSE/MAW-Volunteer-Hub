@@ -52,3 +52,13 @@
   width: 100%;
   text-align: center;
 }
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 500px) {
+  .wishgranting_categories {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

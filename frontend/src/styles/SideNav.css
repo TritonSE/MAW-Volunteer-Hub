@@ -91,6 +91,7 @@
     box-shadow: none;
     align-self: unset;
     overflow: auto;
+    z-index: 998;
   }
 
   .side_nav_links {

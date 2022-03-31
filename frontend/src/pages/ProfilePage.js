@@ -115,8 +115,10 @@ function ProfilePage() {
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
       setUser(res.user);
-      setIsCurrentUser(res.sameUser);
-      if (res.user._id === currentUser._id) setCurrentUser(res.user);
+      if (res.user._id === currentUser._id) {
+        setIsCurrentUser(true);
+        setCurrentUser(res.user);
+      }
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
