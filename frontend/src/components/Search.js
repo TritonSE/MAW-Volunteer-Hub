@@ -86,7 +86,8 @@ function Search({ onBlur }) {
           placeholder="Search all files..."
           onChange={(e) => setInput(e.target.value)}
           onBlur={() => {
-            if (!showResults && onBlur) onBlur();
+            // TODO: Investigate
+            // if (!showResults && onBlur) onBlur();
           }}
         />
         <button className="search-button" type="submit" onClick={() => setShowResults(true)}>

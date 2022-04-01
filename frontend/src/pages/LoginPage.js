@@ -101,6 +101,7 @@ function LoginPage() {
 
         if (res.user) {
           setCurrentUser(res.user);
+          window.scrollTo(0, 0);
           navigate(SITE_PAGES.HOME);
         } else {
           setErrorMessage(res.error);
