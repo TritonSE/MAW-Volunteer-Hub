@@ -34,6 +34,10 @@
   flex: 0;
 }
 
+.filelisting_accordion_entry .filelisting_flex_center {
+  width: calc(100% - 20px - 60px);
+}
+
 .filelisting_flex_center_name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,6 +105,6 @@
     width: calc(100% - 60px);
   }
   .filelisting_flex_center {
-    width: calc(100% - 20px - 60px);
+    width: calc(100% - 20px - 150px);
   }
 }
