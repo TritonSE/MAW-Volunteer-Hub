@@ -95,6 +95,7 @@ export default function UserManage() {
     height: window.innerHeight,
   });
   const [hasFetched, setHasFetched] = useState(false);
+  const [filter, setFilter] = useState("");
 
   const navigate = useNavigate();
 
@@ -156,6 +157,8 @@ export default function UserManage() {
           userData={userData}
           updateMyData={updateMyData}
           handleConfirmationModal={handleConfirmationModal}
+          filter={filter}
+          setFilter={setFilter}
         />
       ) : (
         <UserCardList
@@ -163,6 +166,8 @@ export default function UserManage() {
           VerifyButtonCell={VerifyButtonCell}
           updateMyData={updateMyData}
           handleConfirmationModal={handleConfirmationModal}
+          filter={filter}
+          setFilter={setFilter}
         />
       )}
       <Modal

@@ -33,12 +33,10 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
   );
 }
 
-function UserCardSearch({ search }) {
-  const [searchVal, setSearchVal] = useState("");
-
+function UserCardSearch({ filter, setFilter }) {
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      search(searchVal);
+      setFilter(filter);
     }
   };
   return (
@@ -46,13 +44,11 @@ function UserCardSearch({ search }) {
       <div className="user_search_bar_mobile">
         <input
           className="user_search_input_mobile"
-          value={searchVal || ""}
+          value={filter || ""}
           onChange={(e) => {
-            setSearchVal(e.target.value);
+            setFilter(e.target.value);
           }}
-          onKeyPress={(e) => {
-            handleKeyPress(e);
-          }}
+          onKeyDown={handleKeyPress}
           placeholder="Search by name"
         />
         <button
@@ -60,7 +56,7 @@ function UserCardSearch({ search }) {
           type="button"
           aria-label="Search"
           onClick={() => {
-            search(searchVal);
+            setFilter(filter);
           }}
         />
       </div>
@@ -68,9 +64,9 @@ function UserCardSearch({ search }) {
   );
 }
 
-function UserCardList({ userData, ...props }) {
+function UserCardList({ userData, filter, setFilter, ...props }) {
   const [showAdmin, setShowAdmin] = useState(false);
-  const [searchUsers, setSearchUser] = useState("");
+
   // Separates admins from volunteers
   const separateAdmin = (id) => {
     let isAdmin = false;
@@ -93,10 +89,10 @@ function UserCardList({ userData, ...props }) {
   };
 
   // Determine if a user should be displayed.
-  // Mainly considers the name search variable stored in searchUsers
+  // Mainly considers the name search variable stored in filter
   const displayUser = (id, userName) => {
-    if (searchUsers !== "") {
-      if (separateAdmin(id) && userName.toLowerCase().includes(searchUsers.toLowerCase())) {
+    if (userName && filter !== "") {
+      if (separateAdmin(id) && userName.toLowerCase().includes(filter.toLowerCase())) {
         return true;
       }
 
@@ -137,7 +133,7 @@ function UserCardList({ userData, ...props }) {
           Deactivated
         </button> */}
       </div>
-      <UserCardSearch search={setSearchUser} />
+      <UserCardSearch filter={filter} setFilter={setFilter} />
       <div className="card_list">
         {userData.map(
           (user, i) =>
