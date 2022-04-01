@@ -17,7 +17,7 @@
 
 .login_logo {
   width: 369px;
-  height: 102.84px;
+  max-width: 90vw;
   left: 6vw;
   top: 38vh;
 }

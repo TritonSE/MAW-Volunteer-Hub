@@ -126,7 +126,7 @@ function LoginPage() {
 
   return (
     <div className="login">
-      <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
+      <img alt="Make-a-Wish Logo" src="/img/login_logo.png" className="login_logo" />
       <form className="login_box" onSubmit={handle_submit} method="POST">
         <div className="login_form">
           <input
