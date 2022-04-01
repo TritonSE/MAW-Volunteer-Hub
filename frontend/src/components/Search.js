@@ -19,7 +19,7 @@ Modal.setAppElement(document.getElementById("#root"));
     -setFilteredFiles: set the filtered files when it changes 
 */
 
-function Search({ onBlur }) {
+function Search() {
   const [input, setInput] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [filteredFiles, setFilteredFiles] = useState([]);
