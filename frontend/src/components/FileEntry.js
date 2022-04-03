@@ -100,7 +100,9 @@ function FileListing({
             onClick={evt_wrapper(onDownloadFile)}
           />
         )}
-        <span className="filelisting_flex_center_name">{name}</span>
+        <span className="filelisting_flex_center_name" title={name}>
+          {name}
+        </span>
       </div>
       <div className="filelisting_flex_center">{children}</div>
     </div>

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
-import { api_category_download, api_file_display } from "../api";
+import { api_category_download } from "../api";
+import { API_ENDPOINTS } from "../constants/links";
 import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
 import "../styles/WishStep.css";
 
@@ -23,34 +24,6 @@ function WishStep({ index, stepName }) {
   /**
    * UTILITY FUNCTIONS
    */
-
-  /*
-   * TODO: This function is identical to one in Search.js. It should be
-   * moved into a dedicated file, but I'm leaving that to a later PR because
-   * it will be a non-trivial task/involve some decisions about organization
-   * and structure.
-   */
-  async function download_file(file) {
-    setProgress(0);
-    const res = await api_file_display(file._id, setProgress);
-    if (res && !res.error) {
-      const url = window.URL.createObjectURL(res);
-      if (!window.open(url)) {
-        // Fix for pop-up blockers (e.g. iOS Safari)
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = file.name;
-        a.target = "_blank";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      }
-      window.URL.revokeObjectURL(url);
-    } else {
-      setModalVariant();
-      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
-    }
-  }
   async function download_all_files(cat) {
     setProgress(0);
     const res = await api_category_download(cat._id, setProgress);
@@ -118,7 +91,7 @@ function WishStep({ index, stepName }) {
               <FileEntry
                 name={f.name}
                 key={f._id + f.name}
-                onDownloadFile={() => download_file(f)}
+                onDownloadFile={() => window.open(`${API_ENDPOINTS.FILE_DISPLAY}/${f._id}`)}
                 onEditFile={() => show_modal("edit_file", f.name, f)}
                 onDeleteFile={() => show_modal("delete_file", "", f)}
               />

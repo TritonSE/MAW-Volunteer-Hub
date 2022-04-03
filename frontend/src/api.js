@@ -86,13 +86,6 @@ const api_file_upload = async (file, name, category, onProgress) =>
     onProgress,
   });
 
-const api_file_display = async (id, onProgress) =>
-  api_call(`${API_ENDPOINTS.FILE_DISPLAY}/${id}`, {
-    method: "GET",
-    blob: true,
-    onProgress,
-  });
-
 const api_file_delete = async (id) =>
   api_call(`${API_ENDPOINTS.FILE_DELETE}/${id}`, { method: "DELETE" });
 
@@ -179,7 +172,6 @@ export {
   api_signup,
   api_signout,
   api_file_upload,
-  api_file_display,
   api_file_delete,
   api_file_update,
   api_file_search,

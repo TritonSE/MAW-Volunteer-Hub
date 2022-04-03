@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
-import { api_file_display } from "../api";
+import { API_ENDPOINTS } from "../constants/links";
 import "../styles/Search.css";
 import { FileEntry } from "./FileEntry";
 import { FileStructure, ModalVariantsManager } from "./Contexts";
@@ -28,8 +28,6 @@ function Search() {
   const {
     modalVariant: [_modalVariant, setModalVariant],
     open: [_modalOpen, setModalOpen],
-    errorMessage: [_errorMessage, setErrorMessage],
-    progress: [_progress, setProgress],
     name: [_name, setName],
     activeListing: [_activeListing, setActiveListing],
   } = useContext(ModalVariantsManager);
@@ -37,25 +35,6 @@ function Search() {
   /**
    * UTILITY FUNCTIONS
    */
-
-  /*
-   * TODO: This function is identical to one in WishStep.js. It should be
-   * moved into a dedicated file, but I'm leaving that to a later PR because
-   * it will be a non-trivial task/involve some decisions about organization
-   * and structure.
-   */
-  async function display_file(file) {
-    setProgress(0);
-    const res = await api_file_display(file._id, setProgress);
-    if (res && !res.error) {
-      const url = window.URL.createObjectURL(res);
-      window.open(url);
-      window.URL.revokeObjectURL(url);
-    } else {
-      setModalVariant();
-      setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
-    }
-  }
   function show_modal(variant, new_name = "", new_activeListing = null) {
     setModalVariant(variant);
     setName(new_name);
@@ -138,7 +117,7 @@ function Search() {
                   key={val._id}
                   name={val.name}
                   searchModal
-                  onDownloadFile={() => display_file(val)}
+                  onDownloadFile={() => window.open(`${API_ENDPOINTS.FILE_DISPLAY}/${val._id}`)}
                   onEditFile={() => show_modal("edit_file", val.name, val)}
                   onDeleteFile={() => show_modal("delete_file", "", val)}
                 />
