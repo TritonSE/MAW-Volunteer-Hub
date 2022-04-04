@@ -154,7 +154,7 @@ function UserList({
             style={showAdmin ? { color: "#0057b8" } : {}}
             onClick={() => setShowAdmin(true)}
           >
-            Admin
+            Admins
           </button>
         </div>
         <GlobalFilter
