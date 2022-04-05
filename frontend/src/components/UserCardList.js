@@ -104,7 +104,7 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
 
   const getButtonHeader = (ind) => {
     if ((ind === 0 && !showAdmin) || (ind === 1 && showAdmin)) {
-      return "_selected";
+      return " selected";
     }
 
     return "";
