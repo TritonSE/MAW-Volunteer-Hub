@@ -30,6 +30,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: calc(100% - 20px - 150px);
+  flex: 0;
+}
+
+.filelisting_accordion_entry .filelisting_flex_center {
+  width: calc(100% - 20px - 50px);
+}
+
+.filelisting_flex_center_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filelisting_button {
@@ -90,7 +102,11 @@
     width: 8vw;
   }
   .filelisting_accordion {
-    margin-left: 12%;
-    width: calc(100% - 12%);
+    margin-left: 30px;
+    width: calc(100% - 30px);
+  }
+
+  .filelisting_flex_center {
+    width: calc(100% - 20px - 150px);
   }
 }

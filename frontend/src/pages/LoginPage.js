@@ -101,6 +101,7 @@ function LoginPage() {
 
         if (res.user) {
           setCurrentUser(res.user);
+          window.scrollTo(0, 0);
           navigate(SITE_PAGES.HOME);
         } else {
           setErrorMessage(res.error);
@@ -126,7 +127,7 @@ function LoginPage() {
 
   return (
     <div className="login">
-      <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
+      <img alt="Make-a-Wish Logo" src="/img/login_logo.png" className="login_logo" />
       <form className="login_box" onSubmit={handle_submit} method="POST">
         <div className="login_form">
           <input
@@ -177,7 +178,8 @@ function LoginPage() {
               />
               Keep me signed in
             </label>
-            <a href="#forgot">Forgot password</a>
+            {/* <a href="#forgot">Forgot password</a> */}
+            <span>&nbsp;</span>
           </div>
           <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
             {isLogin ? "Login" : "Create new account"}

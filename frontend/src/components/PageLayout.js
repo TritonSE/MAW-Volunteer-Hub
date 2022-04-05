@@ -53,7 +53,7 @@ export default function PageLayout({ children }) {
   );
 
   return (
-    <div style={{ overflowX: "hidden", height: "100vh" }} id="page-layout">
+    <div style={{ overflowX: "hidden" }} id="page-layout">
       <FileStructure.Provider value={fileStructure_memo}>
         <ModalVariantsManager.Provider value={modal_variant_props}>
           <NavBar />

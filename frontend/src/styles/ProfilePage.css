@@ -30,22 +30,12 @@
 
   border-radius: 50%;
   box-shadow: 0 6px 14px rgba(26, 104, 191, 0.1);
-  /* Change colors to vars after merge */
   background: #ffffff;
   border: 1px solid var(--primary-blue);
   font-size: 28px;
   color: var(--primary-blue);
   margin: 0;
   padding: 0;
-  line-height: 28px;
-}
-.profile-image > button label {
-  width: 34px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
 }
 .profile-image > button:hover {
   background: var(--background-grey);
@@ -53,6 +43,11 @@
 }
 .profile-image > button label:hover {
   cursor: pointer;
+}
+.profile-image > button label svg {
+  width: 14px;
+  height: 20px;
+  fill: var(--primary-blue);
 }
 
 .profile-header-info {
@@ -144,6 +139,7 @@
   bottom: 0;
   background-color: rgba(255, 255, 255, 0.75);
   z-index: 1001;
+  height: 100vh;
 }
 .profile-page-modal {
   max-width: 400px;
