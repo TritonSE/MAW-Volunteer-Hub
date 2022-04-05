@@ -1,0 +1,183 @@
+/* Navigation bar container styles */
+
+.container {
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 14px;
+  background: var(--blue-gradient);
+  padding: 16px 28px 17px 26px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+  /* position: sticky;
+  top: 0px;
+  z-index: 998; */
+}
+
+.navlist {
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Logo and pages styles */
+
+.logo-container {
+  width: 104px;
+  height: 28px;
+  margin: 6px 39px 0px 0px;
+}
+
+.logo-and-pages {
+  display: flex;
+}
+
+.maw-logo {
+  width: 104px;
+  height: 28px;
+}
+
+.pages-container {
+  display: flex;
+  justify-content: center;
+}
+
+.page-links {
+  color: var(--white);
+  text-decoration: none;
+  margin: 13px 32px 0px 0px;
+}
+
+.underline {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+/* Search and profile styles */
+
+.desktopSearchBarComponent {
+  display: flex;
+}
+
+.search-and-profile {
+  display: flex;
+  flex-direction: row;
+}
+
+.profile-container {
+  width: 59px;
+  margin-left: 40px;
+}
+
+.profile-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: transparent;
+  height: 40px;
+}
+
+.account-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 7px;
+}
+
+.account-icon {
+  width: 37px;
+  height: 37px;
+  border-radius: 20px;
+}
+
+.arrow-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.arrow-dropdown {
+  width: 15px;
+  height: 9px;
+}
+
+/* Profile dropdown styles */
+
+.profile-dropdown {
+  position: relative;
+  width: 153px;
+  height: 126px;
+  right: 0px;
+  background-color: var(--white);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  padding: 36px 0px 0px 30px;
+  margin-top: 73px;
+}
+
+.profile-dropdown-overlay {
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+}
+
+.view-profile-link {
+  margin-bottom: 48px;
+}
+
+.view-profile-link,
+.signout-link {
+  display: flex;
+  color: var(--black);
+  text-decoration: none;
+}
+
+.signout-icon {
+  margin-left: 20px;
+  align-items: center;
+}
+
+/* Media queries for responsive display desktop/mobile */
+
+/* 
+    Breakpoint 1: 795px
+    Page Links media query: change max-width depending on number of pages 
+*/
+@media only screen and (max-width: 795px) {
+  .pages-container {
+    display: none;
+  }
+  .profile-container {
+    display: none;
+  }
+  .profile-dropdown,
+  .profile-dropdown-overlay {
+    display: none;
+  }
+}
+
+/* For navbar mobile (spacing) */
+@media only screen and (max-width: 490px) {
+  .desktopSearchBarComponent {
+    display: none;
+  }
+  .navlist {
+    justify-content: unset;
+    flex: 1;
+  }
+  .logo-container {
+    display: none;
+  }
+  .search-and-profile {
+    flex: 1;
+  }
+}

@@ -1,0 +1,129 @@
+.side_nav_layout {
+  display: flex;
+  flex-direction: row;
+  /* height: max-content; */
+}
+
+.side_nav_buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+  box-shadow: 1px 0px 15px rgba(0, 0, 0, 0.1);
+
+  align-self: flex-start;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 73px);
+  min-width: 225px;
+}
+
+.side_nav_links {
+  left: 17.39%;
+  right: 16.96%;
+  top: 36%;
+  bottom: 34.67%;
+
+  width: 190px;
+  height: 59px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+
+  text-align: center;
+  color: #0057b8;
+
+  background-color: white;
+  border-width: 0px;
+  border-radius: 8px;
+
+  margin: 40px 20px 40px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.side_nav_selected {
+  background-color: rgba(0, 87, 184, 0.1);
+}
+
+.side_nav_links:hover {
+  background-color: rgba(0, 87, 184, 0.1);
+  cursor: pointer;
+}
+
+.side_nav_display {
+  width: calc(100vw - 190px);
+  height: calc(100vh - 73px);
+  overflow-y: auto;
+}
+
+.arrow {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+  position: absolute;
+  top: 59px;
+}
+
+@media only screen and (max-width: 1400px) {
+  .side_nav_links {
+    width: 175px;
+  }
+}
+
+@media only screen and (max-width: 795px) {
+  .side_nav_layout {
+    flex-direction: column;
+  }
+
+  .side_nav_buttons {
+    display: flex;
+    flex-direction: row;
+    min-height: 62px;
+    max-height: 63px;
+    background: var(--blue-gradient);
+    box-shadow: none;
+    align-self: unset;
+    overflow: auto;
+    z-index: 998;
+  }
+
+  .side_nav_links {
+    left: 11.76%;
+    right: 11.76%;
+    top: 23.53%;
+    bottom: 23.53%;
+    color: white;
+    white-space: nowrap;
+    width: fit-content;
+    height: 40px;
+    font-family: Lato;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 18px;
+    background-color: rgba(255, 0, 0, 0);
+
+    padding-right: 20px;
+    padding-left: 20px;
+    margin: 5px 15px 5px 15px;
+  }
+
+  .side_nav_display {
+    width: 100vw;
+  }
+
+  .side_nav_selected {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .side_nav_links:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}

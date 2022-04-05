@@ -1,0 +1,150 @@
+/* Search input/button & modal styles */
+
+.search-container {
+  display: flex;
+  align-items: center;
+  font-family: Lato;
+  font-weight: 400;
+  z-index: 1000;
+}
+
+.search-input {
+  height: 21px;
+  padding-bottom: 5px;
+  padding-top: 4px;
+  padding-left: 4.95px;
+  font-size: 14px;
+  border: 0px;
+  border-radius: 3px 0px 0px 3px;
+  font-family: "Lato", sans-serif;
+}
+
+.search-button {
+  background-color: transparent;
+  border: transparent;
+  cursor: pointer;
+  width: 36.85px;
+  height: 30px;
+  background-color: rgb(178 204 234);
+  border-radius: 0px 3px 3px 0px;
+}
+
+.searchbar-icon {
+  width: 10.45px;
+  height: 15px;
+  vertical-align: middle;
+}
+
+.search-results {
+  position: relative;
+  display: flex;
+  max-width: 802px;
+  max-height: 630px;
+  background-color: var(--grey-white);
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+  overflow: scroll;
+  padding-right: 30px;
+  padding-left: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-top: 73px;
+  font-family: "Lato", sans-serif;
+}
+
+/* Search results overlay styles */
+
+.search-results-overlay {
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+.results-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Search results & icons styles */
+
+.close-btn {
+  background-color: transparent;
+  border: transparent;
+  margin-top: 16px;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-end;
+  margin-right: 17px;
+  background: none;
+}
+
+.close-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  margin-top: 210px;
+  text-align: center;
+}
+
+.sad-face {
+  width: 61px;
+  height: 61px;
+  margin-bottom: 28px;
+}
+
+/* FileResult styles */
+
+.files-title {
+  margin-bottom: 48px;
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.show-results {
+  width: 500px;
+}
+
+/* Change placeholder color for input */
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--black);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: var(--black);
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: var(--black);
+}
+
+/*
+  media queries for responsive display desktop/mobile
+*/
+
+@media only screen and (max-width: 795px) {
+  .search-results {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 100%;
+  }
+  .results-container,
+  .show-results,
+  .no-results {
+    width: 100%;
+  }
+}

@@ -1,13 +1,68 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes popin {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  --primary-blue: #1a68bf;
+
+  --secondary-red: #ff585d;
+  --secondary-orange: #ffb549;
+  --secondary-blue: #8dc8e8;
+
+  --grey: #75787b;
+  --light-grey: #bbbcbc;
+  --background-grey: #f7f7f7;
+
+  --blackish: #101010;
+  --black: #000000;
+
+  --white: #ffffff;
+  --grey-white: #f7f7f7;
+
+  --blue-gradient: linear-gradient(90deg, #487db9 -1.35%, #3975b8 52.84%, #0459b8 102.69%);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background: var(--background-grey);
+}
+
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.ReactModal__Overlay {
+  animation: fadein 0.25s;
+}
+.ReactModal__Content {
+  animation: popin 0.25s;
+}
+
+.ReactModal__Overlay.closing {
+  animation: fadein 0.25s reverse !important;
+}
+.ReactModal__Content.closing {
+  animation: popin 0.25s reverse !important;
 }

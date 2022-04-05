@@ -1,0 +1,112 @@
+/**
+ * STANDARD FILELISTING
+ */
+.filelisting {
+  width: calc(100% - (10px * 2));
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background: rgba(187, 188, 188, 0.2);
+
+  font-family: "Lato", sans-serif;
+  font-size: 15px;
+}
+.filelisting:nth-child(2n),
+.filelisting.no_nth_child,
+.filelisting_accordion_entry.is_odd .filelisting {
+  background: #ffffff;
+}
+
+.filelisting.pointer {
+  cursor: pointer;
+}
+
+.filelisting_flex_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 20px - 150px);
+  flex: 0;
+}
+
+.filelisting_accordion_entry .filelisting_flex_center {
+  width: calc(100% - 20px - 50px);
+}
+
+.filelisting_flex_center_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filelisting_button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  margin-right: 6px;
+  padding: 1px 6px;
+}
+
+.filelisting_separator {
+  width: 40px;
+}
+
+/**
+ * CATEGORY ACCORDION
+ */
+.filelisting_button.expanded {
+  transition: transform 0.4s;
+  transform: scaleY(1);
+}
+.filelisting_button.not_expanded {
+  transition: transform 0.4s;
+  transform: scaleY(-1);
+}
+
+.filelisting_folder > .filelisting {
+  position: absolute;
+}
+
+.filelisting_accordion_parent {
+  transition: height 0.4s;
+}
+.filelisting_accordion {
+  position: absolute;
+  margin-left: 60px;
+  width: calc(100% - 60px);
+}
+.filelisting_accordion_entry {
+  position: absolute;
+  transition: top 0.4s;
+  width: 100%;
+}
+.filelisting_no_files {
+  font-family: "Lato", sans-serif;
+}
+
+/* if the file entry & file listing is displaying for the search modal */
+.search-modal {
+  width: unset;
+}
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 500px) {
+  .filelisting_separator {
+    width: 8vw;
+  }
+  .filelisting_accordion {
+    margin-left: 30px;
+    width: calc(100% - 30px);
+  }
+
+  .filelisting_flex_center {
+    width: calc(100% - 20px - 150px);
+  }
+}

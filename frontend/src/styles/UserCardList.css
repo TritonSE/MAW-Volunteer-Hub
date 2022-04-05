@@ -1,0 +1,168 @@
+.user_mobile_display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  height: calc(100vh - 136px);
+}
+.card_list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.card_list {
+  height: 100%;
+  width: 100vw;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0px 20px;
+}
+
+.user_toggle {
+  display: flex;
+  /* justify-content: space-between; */
+  justify-content: space-evenly;
+  width: 100%;
+  box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
+  padding: 10px 40px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.toggle_btn {
+  background-color: transparent;
+  border: 0px;
+
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  font-family: "Lato", sans-serif;
+  padding-bottom: 5px;
+
+  border-bottom: 1px solid transparent;
+  color: #75787b;
+}
+
+.toggle_btn.selected {
+  border-bottom: 1px solid #0057b8;
+  color: #0057b8;
+}
+
+.user_toggle button:hover {
+  cursor: pointer;
+}
+
+.user_card {
+  display: flex;
+  flex: 1;
+  justify-content: space-evenly;
+  align-items: center;
+
+  max-height: 80px;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 20px 0;
+
+  font-size: 16px;
+  line-height: 19px;
+
+  background: rgba(187, 188, 188, 0.2);
+  border-radius: 8px;
+  color: #101010;
+}
+
+.card_col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 30px;
+  height: 65px;
+  width: 100%;
+}
+.card_col > div > button {
+  margin: 0;
+}
+.card_item_top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0px;
+  background: transparent;
+  font-size: 20px;
+
+  width: 200px;
+  min-height: 35px;
+  color: black;
+  text-decoration: none;
+}
+
+.card_item_top:hover {
+  cursor: pointer;
+}
+
+.card_item_bottom {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.user_search_bar_mobile {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 15px 20px;
+  width: 300px;
+}
+
+.user_search_button_mobile {
+  position: absolute;
+  right: 0px;
+  background: #1a68bf;
+  width: 53px;
+  height: 30px;
+  border-radius: 0px 3px 3px 0px;
+  border-width: 0px;
+  background-image: url("../../public/img/searchbar.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.user_search_input_mobile {
+  border: 1px solid #000000;
+  height: 26px;
+  width: 300px;
+  border-radius: 3px;
+  padding: 1px 63px 1px 10px;
+
+  font-family: Lato;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+@media only screen and (max-width: 476px) {
+  .card_item_top {
+    font-size: 18px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    width: 150px;
+    min-height: 35px;
+  }
+
+  .card_item_bottom {
+    font-size: 12px;
+  }
+}

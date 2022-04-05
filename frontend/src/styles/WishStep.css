@@ -1,0 +1,62 @@
+/**
+ * Generic wish granting styles
+ */
+
+.wishgranting {
+  min-height: 100%;
+  background: var(--background-grey);
+}
+
+.wishgranting_header {
+  width: 100%;
+  height: 171px;
+  background-color: rgba(16, 16, 16, 0.65);
+  /*
+   * TODO: Different steps' pages should probably have different backgrounds,
+   *   need to ask designers
+   */
+  background-image: url("../../public/img/wishgranting_back.png");
+  background-blend-mode: darken;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.wishgranting_title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-family: "Lato", sans-serif;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.wishgranting_categories {
+  position: relative;
+  margin: 0 60px;
+}
+
+.wishgranting_newcategory {
+  width: calc(100% - (10px * 2) - (1.4px * 2));
+  background: white;
+  color: var(--primary-blue);
+  cursor: pointer;
+  border: 2px solid;
+  border-color: #8ac4e4;
+  /* TODO */
+  /* border-image-source: linear-gradient(170.51deg, #8DC8E8 -12.27%, rgba(26, 104, 191, 0.6) 45.67%, rgba(26, 104, 191, 0.6) 85.79%); */
+}
+
+.wishgranting_no_files {
+  width: 100%;
+  text-align: center;
+}
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 500px) {
+  .wishgranting_categories {
+    margin: 0 15px;
+  }
+}
