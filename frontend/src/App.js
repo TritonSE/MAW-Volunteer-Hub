@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
+import Message from "./components/Message";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 
@@ -21,7 +22,7 @@ import "./App.css";
 
 import UserManage from "./components/UserManage";
 
-const MANAGE_COMPONENTS = [<UserManage />, <div>Message</div>, <div>Wish Wednesday</div>];
+const MANAGE_COMPONENTS = [<UserManage />, <Message />, <div>Wish Wednesday</div>];
 
 function ProtectedRoute({
   needsAdmin = false,
