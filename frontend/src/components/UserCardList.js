@@ -127,7 +127,7 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
           aria-label="volunteer"
           onClick={() => setShowAdmin(true)}
         >
-          Admin
+          Admins
         </button>
         {/* <button className={`toggle_btn${getButtonHeader(2)}`} type="button" aria-label="volunteer">
           Deactivated

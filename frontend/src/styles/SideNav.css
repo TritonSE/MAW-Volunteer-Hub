@@ -1,8 +1,6 @@
 .side_nav_layout {
   display: flex;
   flex-direction: row;
-  background-color: white;
-  height: calc(100vh - 73px);
   /* height: max-content; */
 }
 
