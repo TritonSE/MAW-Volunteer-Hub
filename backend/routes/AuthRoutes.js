@@ -21,7 +21,7 @@ router.post("/signup", (req, res, next) =>
       });
     } else {
       const msg = {
-        to: "", // Change to your recipient
+        to: "ntrainlane@gmail.com", // Change to your recipient
         from: "MAWVolunteerHub@gmail.com", // Change to your verified sender
         subject: "Sending with SendGrid is Fun",
         text: "and easy to do anywhere, even with Node.js",
