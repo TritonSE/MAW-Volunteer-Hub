@@ -1,10 +1,13 @@
 const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
+const sgMail = require("@sendgrid/mail");
 
 const config = require("../config");
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const router = express.Router();
 
@@ -17,6 +20,24 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
+      const msg = {
+        to: "", // Change to your recipient
+        from: "MAWVolunteerHub@gmail.com", // Change to your verified sender
+        subject: "Sending with SendGrid is Fun",
+        text: "and easy to do anywhere, even with Node.js",
+        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+      };
+
+      sgMail
+        .send(msg)
+        .then((sendgrid_res) => {
+          console.log(sendgrid_res[0].statusCode);
+          console.log(sendgrid_res[0].headers);
+        })
+        .catch((sendgrid_error) => {
+          console.error(sendgrid_error);
+        });
+
       res.json({
         success: true,
         user: user.toJSON(),
