@@ -12,7 +12,6 @@ export default function WishWednesday() {
       [{ list: "ordered" }, { list: "bullet" }, { indent: "-1" }, { indent: "+1" }],
       ["link", "image"],
       ["clean"],
-      ["undo", "redo"],
     ],
   };
 
