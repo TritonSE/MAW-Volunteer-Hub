@@ -1,12 +1,12 @@
 /* Styles taken from Figma */
-tbody {
+.table-container tbody {
   display: block;
   height: calc(100vh - 300px);
   overflow-y: scroll;
 }
 
-thead,
-tbody tr {
+.table-container thead,
+.table-container tbody tr {
   display: table;
   width: 100%;
 }
@@ -78,9 +78,9 @@ tbody tr {
   margin-left: 10px;
 }
 
-tr:nth-child(2n) .people_table_data_start,
-tr:nth-child(2n) .people_table_data,
-tr:nth-child(2n) .people_table_data_end {
+.table-container tr:nth-child(2n) .people_table_data_start,
+.table-container tr:nth-child(2n) .people_table_data,
+.table-container tr:nth-child(2n) .people_table_data_end {
   background: rgba(187, 188, 188, 0.2);
 }
 
@@ -134,14 +134,14 @@ tr:nth-child(2n) .people_table_data_end {
     margin-top: 25px;
   }
 
-  tbody,
+  .table-container tbody,
   .people_table {
     height: calc(100vh - 340px);
   }
 }
 
 @media only screen and (max-width: 850px) {
-  tbody,
+  .table-container tbody,
   .people_table {
     height: calc(100vh - 380px);
   }

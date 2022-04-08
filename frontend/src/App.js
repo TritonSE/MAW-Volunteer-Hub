@@ -14,6 +14,7 @@ import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
+import CalendarPage from "./pages/CalendarPage";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 
@@ -113,6 +114,7 @@ function App() {
           </Route>
           {/* Redirect to Manage Page, only when authenticated */}
           <Route exact path="/" element={<Navigate to={SITE_PAGES.MANAGE} />} />
+
           {/* Wish Granting Page */}
           <Route
             path={SITE_PAGES.WISH_GRANTING}
@@ -136,6 +138,16 @@ function App() {
               />
             ))}
           </Route>
+
+          {/* Calendar Page */}
+          <Route
+            path={SITE_PAGES.CALENDAR}
+            element={
+              <PageLayout>
+                <CalendarPage />
+              </PageLayout>
+            }
+          />
 
           {/* Sign out */}
           <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper />} />

@@ -1,0 +1,83 @@
+.calendar {
+  display: flex;
+  justify-content: space-between;
+  margin: 21px;
+  font-family: "Lato", sans-serif;
+}
+
+.calendar h1,
+.calendar span,
+.calendar button .calendar div {
+  font-family: "Lato", sans-serif !important;
+}
+
+.calendar .react-simple-calendar {
+  padding: 12px;
+  padding-bottom: 24px;
+  border-radius: 8px;
+}
+.calendar .react-simple-calendar .head .month {
+  font-size: 14px;
+  margin-left: 8px;
+}
+.calendar .react-simple-calendar .today {
+  width: 24px;
+}
+
+.calendar .calendars_list {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  margin-top: 25px;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.calendar .calendars_header {
+  margin-bottom: 12px;
+}
+
+.calendar .calendar_label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.calendar .calendar_label input[type="checkbox"] {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.calendar .calendar_label input[type="checkbox"] ~ .calendar_checkbox {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #000000;
+  display: block;
+  margin: 0;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+.calendar .calendars_list input[type="checkbox"]:checked ~ .calendar_checkbox {
+  background: var(--checked-color);
+  background-image: url(../../public/img/calendar_check.svg);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position: 3px center;
+  border: none;
+}
+
+.calendar .react-simple-scheduler {
+  width: calc(100vw - 200px - 20px - 24px - 21px);
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+}
+.calendar .react-simple-scheduler .head {
+  width: calc(100vw - 200px - 20px - 24px - 21px);
+}
+.calendar .react-simple-scheduler .body {
+  width: calc(100vw - 200px - 20px - 24px - 21px - 21px);
+  /* height: calc(100vh - 70px - 73px - 42px); */
+  height: calc(91vh - 70px - 42px);
+}

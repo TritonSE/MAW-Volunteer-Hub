@@ -166,6 +166,35 @@ const api_pfp_upload = (pfp, crop) =>
     type: "multipart/form-data",
   });
 
+/**
+ * CALENDAR
+ */
+const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
+
+const api_calendar_new = (from, to, name, calendar, number_needed, location) =>
+  api_call(API_ENDPOINTS.CALENDAR_NEW, {
+    data: {
+      from: from.toISOString(),
+      to: to.toISOString(),
+      name,
+      calendar,
+      number_needed,
+      location,
+    },
+    method: "PUT",
+  });
+
+const api_calendar_delete = (id) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_DELETE}/${id}`, {
+    method: "DELETE",
+  });
+
+const api_calendar_update = (id) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
+    data: {},
+    method: "PATCH",
+  });
+
 export {
   api_validtoken,
   api_login,
@@ -190,4 +219,8 @@ export {
   api_user_updatepass,
   api_user_edit,
   api_pfp_upload,
+  api_calendar_all,
+  api_calendar_new,
+  api_calendar_delete,
+  api_calendar_update,
 };
