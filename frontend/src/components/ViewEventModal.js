@@ -49,48 +49,20 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
         </div>
         <div className="evt_modal_separator">Question Responses</div>
         <div className="evt_modal_scroll">
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
+          {event.responses.map((_resp) => (
+            <div className="evt_modal_smallbox">
+              <div className="name">Person&apos;s name:</div>
+              <div className="content">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
+                <span className="more">Read more</span>
+              </div>
             </div>
-          </div>
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
+          ))}
+          {event.responses.length === 0 ? (
+            <div className="evt_modal_center">
+              <div>No responses yet.</div>
             </div>
-          </div>
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
-            </div>
-          </div>
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
-            </div>
-          </div>
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
-            </div>
-          </div>
-          <div className="evt_modal_smallbox">
-            <div className="name">Person&apos;s name:</div>
-            <div className="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-              <span className="more">Read more</span>
-            </div>
-          </div>
+          ) : null}
         </div>
       </Modal>
     );
@@ -139,10 +111,10 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
             <div className="calendar_checkbox primary" />
             <span>Yes</span>
           </label>
+          <br />
 
           {event.question ? (
             <>
-              <br />
               <div className="question">
                 <b>Q: </b>
                 {event.question}
@@ -154,9 +126,20 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
         </div>
       </div>
       <div className="evt_modal_footer">
-        <button type="button" onClick={() => {}}>
-          Going
-        </button>
+        {!event.volunteers.includes(currentUser._id) ? (
+          <button type="button" onClick={() => {}}>
+            Going
+          </button>
+        ) : (
+          <div className="evt_modal_spaced">
+            <button type="button" className="unstyled" onClick={() => {}}>
+              Not going
+            </button>
+            <button type="button" onClick={() => {}}>
+              Save
+            </button>
+          </div>
+        )}
       </div>
       <br />
     </Modal>

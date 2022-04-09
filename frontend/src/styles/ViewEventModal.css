@@ -108,3 +108,17 @@
 .view_modal .evt_modal_smallbox .content .more:hover {
   text-decoration: underline;
 }
+
+.view_modal .evt_modal_center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 85%;
+}
+
+.view_modal .evt_modal_spaced {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+}

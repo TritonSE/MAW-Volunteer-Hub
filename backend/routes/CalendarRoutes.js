@@ -4,19 +4,18 @@ const ical = require("ical-generator");
 const router = express.Router();
 
 const EventModel = require("../models/EventModel");
-const { errorHandler, validate } = require("../util/RouteUtils");
+const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
 
-router.get("/all", (_req, res) => {
+router.get("/all", (req, res) =>
   EventModel.find()
     .then((events) => res.json(events))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
-router.get("/ics/:calendar?", (req, res) => {
-  /* TODO: Can filter by the type of calendar */
-  const calendar = ical({ name: "Make-a-Wish Volunteers" });
+router.get("/ics/:calendar?", (req, res) =>
   EventModel.find()
     .then((events) => {
+      const calendar = ical({ name: "Make-a-Wish Volunteers" });
       events
         .filter((evt) => !req.params.calendar || req.params.calendar === evt.calendar)
         .forEach((evt) =>
@@ -31,8 +30,8 @@ router.get("/ics/:calendar?", (req, res) => {
         );
       calendar.serve(res);
     })
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
 router.put(
   "/new",
@@ -58,12 +57,53 @@ router.put(
   }
 );
 
-router.delete("/del/:id", validate([], ["id"]), (req, res) => {
+router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
   EventModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
+    .catch(errorHandler(res))
+);
+
+router.patch("/upd/:id", idParamValidator(false, "event"), (req, _res) => {
+  /* TODO */
 });
 
-router.patch("/upd/:id", validate([], ["id"]), (_req, _res) => {});
+router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"), (req, res) =>
+  EventModel.findOne({ _id: req.params.id })
+    .then((event) => {
+      const tmp = event.volunteers.findIndex((vol) => vol.toString() === req.user._id);
+
+      if (tmp > -1) {
+        event.volunteers.splice(tmp, 1);
+        event.guests = event.guests.filter((guest) => guest.with.toString() !== req.user._id);
+        event.responses = event.responses.filter(
+          (resp) => resp.volunteer.toString() !== req.user._id
+        );
+      }
+
+      if (req.body.going) {
+        event.volunteers.push(req.user._id);
+
+        if (req.body.guests) {
+          event.guests.push(
+            ...req.body.guests.map((guest) => ({
+              ...guest,
+              with: req.user._id,
+            }))
+          );
+        }
+
+        if (req.body.response) {
+          event.responses.push({
+            volunteer: req.user._id,
+            response: req.body.response,
+          });
+        }
+      }
+
+      return event.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler)
+);
 
 module.exports = router;

@@ -192,6 +192,15 @@ const api_calendar_update = (id) =>
     method: "PATCH",
   });
 
+const api_calendar_respond = (id, guests, response) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_RESPOND}/${id}`, {
+    data: {
+      guests,
+      response,
+    },
+    method: "POST",
+  });
+
 export {
   api_validtoken,
   api_login,
@@ -220,4 +229,5 @@ export {
   api_calendar_new,
   api_calendar_delete,
   api_calendar_update,
+  api_calendar_respond,
 };

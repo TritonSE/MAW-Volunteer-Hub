@@ -194,6 +194,11 @@
   border: none;
   cursor: pointer;
 }
+.evt_modal_footer button.unstyled {
+  background: white;
+  color: black;
+  border: 1px solid black;
+}
 
 /* BEGIN ANIMATIONS */
 @keyframes fade-in {

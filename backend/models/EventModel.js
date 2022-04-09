@@ -1,5 +1,16 @@
 const mongoose = require("mongoose");
 
+const GuestSchema = new mongoose.Schema({
+  with: mongoose.Types.ObjectId,
+  name: String,
+  relation: String,
+});
+
+const ResponseSchema = new mongoose.Schema({
+  volunteer: mongoose.Types.ObjectId,
+  response: String,
+});
+
 module.exports = mongoose.model(
   "event",
   new mongoose.Schema({
@@ -47,7 +58,7 @@ module.exports = mongoose.model(
       default: [],
     },
     guests: {
-      type: [String],
+      type: [GuestSchema],
       default: [],
     },
     question: {
@@ -55,7 +66,7 @@ module.exports = mongoose.model(
       default: "",
     },
     responses: {
-      type: [String],
+      type: [ResponseSchema],
       default: [],
     },
   })
