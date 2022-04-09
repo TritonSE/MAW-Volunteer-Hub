@@ -110,7 +110,9 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
       </div>
       <div className="evt_modal_content">
         <div>
-          <div className="spots_filled">0/{event.number_needed} spots filled</div>
+          <div className="spots_filled">
+            {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
+          </div>
 
           <div className="prop">
             <img alt="Event time" src="/img/calendar_time.svg" />
@@ -128,19 +130,27 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
           <div className="question">
             <b>Q: </b>Are you bringing guests?
           </div>
-          <div className="question_info">Guests 18+ allowed</div>
+          <div className="question_info">
+            {event.over18 ? "Guests 18+ only" : ""}
+            {event.under18 ? "Guests under 18 allowed" : ""}
+          </div>
           <label htmlFor="guests">
             <input type="checkbox" id="guests" />
             <div className="calendar_checkbox primary" />
             <span>Yes</span>
           </label>
 
-          <br />
-          <div className="question">
-            <b>Q: </b>Can you bring a shovel?
-          </div>
-          <br />
-          <textarea placeholder="Type your response here" />
+          {event.question ? (
+            <>
+              <br />
+              <div className="question">
+                <b>Q: </b>
+                {event.question}
+              </div>
+              <br />
+              <textarea placeholder="Type your response here" />
+            </>
+          ) : null}
         </div>
       </div>
       <div className="evt_modal_footer">

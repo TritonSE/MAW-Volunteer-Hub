@@ -171,15 +171,12 @@ const api_pfp_upload = (pfp, crop) =>
  */
 const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
 
-const api_calendar_new = (from, to, name, calendar, number_needed, location) =>
+const api_calendar_new = (args) =>
   api_call(API_ENDPOINTS.CALENDAR_NEW, {
     data: {
-      from: from.toISOString(),
-      to: to.toISOString(),
-      name,
-      calendar,
-      number_needed,
-      location,
+      ...args,
+      from: args.from.toISOString(),
+      to: args.to.toISOString(),
     },
     method: "PUT",
   });

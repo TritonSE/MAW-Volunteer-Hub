@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 module.exports = mongoose.model(
   "event",
   new mongoose.Schema({
+    /**
+     * REQUIRED ARGS
+     */
     from: {
       type: Date,
       required: true,
@@ -27,6 +30,18 @@ module.exports = mongoose.model(
       type: String,
       required: true,
     },
+
+    /**
+     * OPTIONAL ARGS
+     */
+    over18: {
+      type: Boolean,
+      default: false,
+    },
+    under18: {
+      type: Boolean,
+      default: false,
+    },
     volunteers: {
       type: [mongoose.Types.ObjectId],
       default: [],
@@ -43,6 +58,5 @@ module.exports = mongoose.model(
       type: [String],
       default: [],
     },
-    /* TODO */
   })
 );

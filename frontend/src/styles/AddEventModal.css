@@ -93,6 +93,10 @@
   display: none;
 }
 
+.evt_modal_content input.error {
+  border-bottom: 1.5px solid red;
+}
+
 .evt_modal_content select {
   border: none;
   padding: 2px;
@@ -109,6 +113,9 @@
 .evt_modal_content select.styled {
   width: 210px;
   margin-left: 12px;
+}
+.evt_modal_content select.error {
+  border-bottom: 1.5px solid red;
 }
 
 .evt_modal_content button {
@@ -167,6 +174,9 @@
 }
 .evt_modal_content input[type="checkbox"]:checked ~ .calendar_checkbox.primary {
   background-color: #1a68bf;
+}
+.evt_modal_content input[type="checkbox"]:disabled ~ .calendar_checkbox {
+  opacity: 0.25;
 }
 
 .evt_modal_footer {
