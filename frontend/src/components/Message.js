@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { default as ReactSelect, components } from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import "../styles/Message.css";
 
 function Option(props) {
   // Source: https://medium.com/geekculture/creating-multi-select-dropdown-with-checkbox-in-react-792ff2464ef3
@@ -19,7 +20,7 @@ function Option(props) {
 export default function Message() {
   const [convertedText, setConvertedText] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState(null);
-  // const [subject, setSubject] = useState("");
+  const [subject, setSubject] = useState("");
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -65,10 +66,20 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
+  // Dummy Method
+  const handleSubmit = () => {
+    console.log("Recipients: ");
+    console.log(selectedRecipients);
+    console.log("Subject: " + subject);
+    console.log("Message: " + convertedText);
+  };
+
   return (
-    <div>
-      <form className="message_meta">
+    <div className="msg_layout">
+      <h2 className="title">Send a Message</h2>
+      <div className="message_meta">
         <ReactSelect
+          className="select_recipients"
           options={recipients}
           isMulti
           closeMenuOnSelect={false}
@@ -80,6 +91,8 @@ export default function Message() {
           allowSelectAll
           value={selectedRecipients}
         />
+        Subject:{" "}
+        <input type="text" className="subject_line" onChange={(e) => setSubject(e.target.value)} />
         <ReactQuill
           theme="snow"
           modules={modules}
@@ -87,7 +100,12 @@ export default function Message() {
           onChange={setConvertedText}
           style={{ minHeight: "300px" }}
         />
-      </form>
+      </div>
+      <div className="button_container">
+        <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
+          Post
+        </button>
+      </div>
     </div>
   );
 }

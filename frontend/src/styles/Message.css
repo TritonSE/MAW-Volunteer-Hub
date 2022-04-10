@@ -1,0 +1,16 @@
+.msg_layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.select_recipients {
+}
+
+.message_meta {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
