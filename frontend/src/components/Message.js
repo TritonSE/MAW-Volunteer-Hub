@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-default */
 import React, { useState } from "react";
 import { default as ReactSelect, components } from "react-select";
 import ReactQuill from "react-quill";
@@ -9,7 +10,7 @@ function Option(props) {
     <div>
       <components.Option {...props}>
         <input type="checkbox" checked={props.isSelected} onChange={() => null} />{" "}
-        <label>{props.label}</label>
+        <label htmlFor="option_label">{props.label}</label>
       </components.Option>
     </div>
   );
@@ -17,7 +18,7 @@ function Option(props) {
 
 export default function Message() {
   const [convertedText, setConvertedText] = useState("");
-  const [selectedRecipients, setSelectedRecipients] = useState();
+  const [selectedRecipients, setSelectedRecipients] = useState(null);
   // const [subject, setSubject] = useState("");
   const modules = {
     toolbar: [
@@ -44,6 +45,26 @@ export default function Message() {
     { label: "Secondary Admin", value: 12 },
   ];
 
+  const handleSelect = (e) => {
+    for (let i = 0; i < e.length; i++) {
+      // If "All" is one of the options
+      if (e[i].label === "All") {
+        // If we want to select all, but not all options have been selected
+        if (selectedRecipients === null || selectedRecipients.length !== recipients.length) {
+          setSelectedRecipients(recipients);
+          return;
+        }
+        // If we previously selected all and decided to reduce the number of selections
+        if (selectedRecipients.length === recipients.length) {
+          // Removes the "All" option
+          setSelectedRecipients(e.slice(1));
+          return;
+        }
+      }
+    }
+    setSelectedRecipients(e);
+  };
+
   return (
     <div>
       <form className="message_meta">
@@ -55,7 +76,7 @@ export default function Message() {
           components={{
             Option,
           }}
-          onChange={(e) => setSelectedRecipients(e)}
+          onChange={(e) => handleSelect(e)}
           allowSelectAll
           value={selectedRecipients}
         />
