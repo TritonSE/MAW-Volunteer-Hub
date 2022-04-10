@@ -7,6 +7,8 @@ const config = require("../config");
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
 
+const { signupMsg } = require("../util/EmailMessages");
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const router = express.Router();
@@ -20,13 +22,19 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
-      const msg = {
-        to: "ntrainlane@gmail.com", // Change to your recipient
-        from: "MAWVolunteerHub@gmail.com", // Change to your verified sender
-        subject: "Sending with SendGrid is Fun",
-        text: "and easy to do anywhere, even with Node.js",
-        html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-      };
+      // SendGrid Email
+      const msg = JSON.parse(JSON.stringify(signupMsg));
+
+      const msgHtml = `
+        <div>
+            <p>Dear ${user.name.split(" ")[0]},</p>
+            <p>Your account has been created and once an admin confirms, you will be 
+            notified via email and be able to access the website.</p>
+            <p>Thanks,<br/>MAW SD</p>
+        </div>`;
+      msg.html = msgHtml;
+
+      // msg.to = user.email; // UNCOMMENT WHEN MERGING TO PRODUCTION
 
       sgMail
         .send(msg)

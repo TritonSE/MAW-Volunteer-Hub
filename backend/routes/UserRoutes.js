@@ -2,6 +2,7 @@ const fs = require("fs").promises;
 const express = require("express");
 const multer = require("multer");
 const sharp = require("sharp");
+const sgMail = require("@sendgrid/mail");
 
 const router = express.Router();
 
@@ -9,6 +10,10 @@ const config = require("../config");
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler, idParamValidator, adminValidator } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
+
+const { accessMsg } = require("../util/EmailMessages");
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const upload = multer({
   dest: "server_uploads/",
@@ -36,7 +41,34 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
 
 router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-    .then(() => res.status(200).json({ success: true }))
+    .then((user) => {
+      // SendGrid Email
+      const msg = JSON.parse(JSON.stringify(accessMsg));
+
+      const msgHtml = `
+        <div>
+            <p>Dear ${user.name.split(" ")[0]},</p>
+            <p>You can now access the website at 
+            <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+            https://maw-volunteer-hub.herokuapp.com/login</a>.</p>
+            <p>Thanks,<br/>MAW SD</p>
+        </div>`;
+      msg.html = msgHtml;
+
+      // msg.to = user.email; // UNCOMMENT WHEN MERGING TO PRODUCTION
+
+      sgMail
+        .send(msg)
+        .then((sendgrid_res) => {
+          console.log(sendgrid_res[0].statusCode);
+          console.log(sendgrid_res[0].headers);
+        })
+        .catch((sendgrid_error) => {
+          console.error(sendgrid_error);
+        });
+
+      res.status(200).json({ success: true });
+    })
     .catch(errorHandler(res))
 );
 
