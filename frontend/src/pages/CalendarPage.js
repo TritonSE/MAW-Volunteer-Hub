@@ -32,44 +32,44 @@ function CalendarPage() {
     },
     {
       name: "Mentor",
-      background: "#D0CCF1",
-      color: "#0051BA",
+      background: "#FAEDDB",
+      color: "#E2C094",
       enabled: true,
     },
     {
       name: "Airport Greeter",
-      background: "#F1CCEE",
-      color: "#5D0BAF",
+      background: "#FFB3AE",
+      color: "#FE5F55",
       enabled: true,
     },
     {
       name: "Office",
-      background: "#F1D2CC",
-      color: "#BA0068",
+      background: "#CBE2CA",
+      color: "#80B87E",
       enabled: true,
     },
     {
       name: "Special Events",
-      background: "#ECF1CC",
-      color: "#BA0000",
+      background: "#D2CDF4",
+      color: "#8F82E3",
       enabled: true,
     },
     {
       name: "Translator",
-      background: "#CCF1CE",
-      color: "#BA8B00",
+      background: "#CBC4D4",
+      color: "#67597A",
       enabled: true,
     },
     {
       name: "Speaker's Bureau",
-      background: "#CCD5F1",
-      color: "#3ABA00",
+      background: "#BCC6C8",
+      color: "#5C6C70",
       enabled: true,
     },
     {
       name: "Las Estrellas",
-      background: "#CCF1D5",
-      color: "#00DA71",
+      background: "#F1D2CC",
+      color: "#BA0068",
       enabled: true,
     },
   ]);
@@ -107,6 +107,12 @@ function CalendarPage() {
   return (
     <main className="calendar" role="main">
       <div>
+        {currentUser.admin && (
+          <button type="button" className="calendar_new" onClick={() => setAddModal(true)}>
+            <img src="/img/calendar_add.svg" alt="New event" />
+            <div>New Event</div>
+          </button>
+        )}
         <Calendar selected={selected} setSelected={setSelected} />
         <div className="calendars_list">
           <div className="calendars_header">View calendars</div>

@@ -72,6 +72,10 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
     .then((event) => {
       const tmp = event.volunteers.findIndex((vol) => vol.toString() === req.user._id);
 
+      /*
+       * Avoid a patchwork edit by removing all of the current volunteer's info
+       * on the current event, then re-adding it as necessary
+       */
       if (tmp > -1) {
         event.volunteers.splice(tmp, 1);
         event.guests = event.guests.filter((guest) => guest.with.toString() !== req.user._id);
@@ -80,19 +84,19 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
         );
       }
 
-      if (req.body.going) {
+      if (req.body.going === "true") {
         event.volunteers.push(req.user._id);
 
-        if (req.body.guests) {
-          event.guests.push(
-            ...req.body.guests.map((guest) => ({
+        if (req.body.guests !== "null") {
+          req.body.guests.forEach((guest) =>
+            event.guests.push({
               ...guest,
               with: req.user._id,
-            }))
+            })
           );
         }
 
-        if (req.body.response) {
+        if (req.body.response.trim() !== "") {
           event.responses.push({
             volunteer: req.user._id,
             response: req.body.response,

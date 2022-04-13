@@ -122,3 +122,78 @@
   justify-content: space-around;
   width: 100%;
 }
+
+.view_modal .guests_container {
+  max-height: 20vh;
+  margin-top: 11px;
+  overflow: auto;
+}
+.view_modal .guests_container input {
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  padding: 5px;
+  margin-bottom: 11px;
+}
+.view_modal .guests_container input:focus {
+  border: 1px solid black;
+}
+.view_modal .guests_container button {
+  color: #75787b;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: fit-content;
+}
+.view_modal .guests_container button svg {
+  width: 14px;
+  height: 14px;
+  fill: #1a68bf;
+  border: 1px solid #1a68bf;
+  border-radius: 14px;
+  padding: 5px;
+  margin-right: 9px;
+}
+
+.evt_modal.confirm {
+  width: 95vw;
+  max-width: 466px;
+  height: 95vh;
+  max-height: 202px;
+}
+.evt_modal.confirm button {
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-weight: normal;
+  transition: opacity 0.1s;
+}
+.evt_modal.confirm button.primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+.evt_modal.confirm button.error {
+  background: #ff797d;
+  color: white;
+  border: none;
+}
+.evt_modal.confirm .columns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+}
+.evt_modal.confirm .rows {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

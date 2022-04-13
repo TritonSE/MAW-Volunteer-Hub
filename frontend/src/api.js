@@ -192,10 +192,11 @@ const api_calendar_update = (id) =>
     method: "PATCH",
   });
 
-const api_calendar_respond = (id, guests, response) =>
+const api_calendar_respond = (id, going, guests, response) =>
   api_call(`${API_ENDPOINTS.CALENDAR_RESPOND}/${id}`, {
     data: {
-      guests,
+      going,
+      guests: JSON.stringify(guests),
       response,
     },
     method: "POST",
