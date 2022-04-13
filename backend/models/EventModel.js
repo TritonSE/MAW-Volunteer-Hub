@@ -7,7 +7,10 @@ const GuestSchema = new mongoose.Schema({
 });
 
 const ResponseSchema = new mongoose.Schema({
-  volunteer: mongoose.Types.ObjectId,
+  volunteer: {
+    _id: mongoose.Types.ObjectId,
+    name: String,
+  },
   response: String,
 });
 

@@ -34,6 +34,19 @@
   font-size: 12px;
   margin-top: 4px;
 }
+.view_modal .question_info.smallskip {
+  margin-bottom: 10px;
+}
+.view_modal .question_info.small_indented {
+  margin-left: 24px;
+}
+
+.view_modal .circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+}
 
 .view_modal label {
   display: flex;
@@ -71,7 +84,7 @@
 }
 
 .view_modal .evt_modal_scroll {
-  height: 50%;
+  height: 34%;
   overflow: auto;
 }
 
@@ -113,7 +126,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 85%;
+  height: 90%;
 }
 
 .view_modal .evt_modal_spaced {
@@ -134,9 +147,13 @@
   border-radius: 3px;
   padding: 5px;
   margin-bottom: 11px;
+  width: 100%;
 }
 .view_modal .guests_container input:focus {
   border: 1px solid black;
+}
+.view_modal .guests_container input:last-child {
+  margin-bottom: 0;
 }
 .view_modal .guests_container button {
   color: #75787b;
@@ -154,6 +171,14 @@
   border-radius: 14px;
   padding: 5px;
   margin-right: 9px;
+}
+.view_modal .guests_container .guests_flex {
+  display: flex;
+  align-items: center;
+}
+.view_modal .guests_container .guests_flex button {
+  margin-left: 5px;
+  border: 1px solid black;
 }
 
 .evt_modal.confirm {

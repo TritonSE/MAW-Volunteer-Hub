@@ -12,30 +12,36 @@ function GuestsContainer({ guests, addGuest, deleteGuest }) {
    */
   return (
     <div className="guests_container">
-      {guests.map((guest, ind) => (
-        <div key={guest.name + guest.relation + ind}>
-          <input
-            placeholder="Guest's name"
-            onChange={(e) => {
-              guest.name = e.target.value;
-            }}
-          />
-          <input
-            placeholder="Guest's relationship to you"
-            onChange={(e) => {
-              guest.relation = e.target.value;
-            }}
-          />
-          {ind < guests.length - 1 ? (
-            <>
-              <br />
-              <br />
-            </>
-          ) : null}
+      {guests.map((guest) => (
+        <div key={guest.id}>
+          <div className="guests_flex">
+            <div>
+              <input
+                placeholder="Guest's name"
+                defaultValue={guest.name}
+                onChange={(e) => {
+                  guest.name = e.target.value;
+                }}
+              />
+              <input
+                placeholder="Guest's relationship to you"
+                defaultValue={guest.relation}
+                onChange={(e) => {
+                  guest.relation = e.target.value;
+                }}
+              />
+            </div>
+            <div>
+              <button type="button" onClick={() => deleteGuest(guest)}>
+                <img alt="Delete guest" src="/img/filelisting_delete.svg" />
+              </button>
+            </div>
+          </div>
+          <hr />
         </div>
       ))}
 
-      <button type="button" onClick={() => addGuest({ name: "", relation: "" })}>
+      <button type="button" onClick={() => addGuest({ id: Math.random(), name: "", relation: "" })}>
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
           <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
         </svg>
@@ -46,42 +52,95 @@ function GuestsContainer({ guests, addGuest, deleteGuest }) {
 }
 
 function ConfirmationModal({ confirmModal, setConfirmModal, setIsOpen, saveResponse }) {
+  const modals = [
+    <>
+      <div>
+        You have unsaved changes.
+        <br />
+        <br />
+        Are you sure you would like to
+        <br />
+        return to the calendar?
+      </div>
+      <br />
+      <div className="rows">
+        <button type="button" onClick={() => setConfirmModal(0)}>
+          Cancel
+        </button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" className="error" onClick={() => setIsOpen(false)}>
+          Return
+        </button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" className="primary" onClick={() => saveResponse(true)}>
+          Save
+        </button>
+      </div>
+    </>,
+    <>
+      <div>Are you sure you want to respond &quot;Not going&quot;?</div>
+      <br />
+      <div className="rows">
+        <button type="button" onClick={() => setConfirmModal(0)}>
+          Cancel
+        </button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" className="error" onClick={() => saveResponse(false)}>
+          Yes
+        </button>
+      </div>
+    </>,
+    <div>
+      <b>Error</b>:
+      <br />
+      <br />
+      No guests listed.
+      <br />
+      <br />
+      <button type="button" onClick={() => setConfirmModal(0)}>
+        Return
+      </button>
+    </div>,
+    <div>
+      <b>Error</b>:
+      <br />
+      <br />
+      Invalid guests list.
+      <br />
+      <br />
+      <button type="button" onClick={() => setConfirmModal(0)}>
+        Return
+      </button>
+    </div>,
+  ];
+
   return (
     <Modal
-      isOpen={confirmModal}
-      onRequestClose={() => setConfirmModal(false)}
+      isOpen={Boolean(confirmModal)}
+      onRequestClose={() => setConfirmModal(0)}
       className="evt_modal confirm"
       overlayClassName="evt_modal_overlay"
     >
-      <div className="columns">
-        <div>
-          You have unsaved changes.
-          <br />
-          <br />
-          Are you sure you would like to
-          <br />
-          return to the calendar?
-        </div>
-        <br />
-        <div className="rows">
-          <button type="button" onClick={() => setConfirmModal(false)}>
-            Cancel
-          </button>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <button type="button" className="error" onClick={() => setIsOpen(false)}>
-            Return
-          </button>
-          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-          <button type="button" className="primary" onClick={() => saveResponse(true)}>
-            Save
-          </button>
-        </div>
-      </div>
+      <div className="columns">{confirmModal > 0 ? modals[confirmModal - 1] : null}</div>
     </Modal>
   );
 }
 
-export default function ViewEventModal({ event, isOpen, setIsOpen }) {
+function Abbreviator({ content, maxLength }) {
+  return (
+    <>
+      {content.substring(0, maxLength)}
+      {content.length >= maxLength ? (
+        <>
+          ...&nbsp;
+          <span className="more">Read more</span>
+        </>
+      ) : null}
+    </>
+  );
+}
+
+export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }) {
   if (!event) return null;
 
   const [currentUser] = useContext(CurrentUser);
@@ -91,29 +150,47 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
   const [response, setResponse] = useState("");
 
   const [hasChanges, setHasChanges] = useState(-1);
-  const [confirmModal, setConfirmModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(0);
 
   useEffect(() => {
     const tmp = event.guests.filter((guest) => guest.with === currentUser._id);
-    if (tmp.length > 0) setGuests(tmp);
-    else setGuests([{ name: "", relation: "" }]);
+    if (tmp.length > 0) {
+      setGuests(tmp);
+      setHasGuests(true);
+    } else setGuests([{ name: "", relation: "" }]);
 
     setResponse(
       event.responses
-        ? event.responses.find((resp) => resp.volunteer === currentUser._id)?.response ?? ""
+        ? event.responses.find((resp) => resp.volunteer._id === currentUser._id)?.response ?? ""
         : ""
     );
   }, []);
 
-  useEffect(() => {
-    setHasChanges(hasChanges + 1);
-  }, [hasGuests, guests, response]);
+  useEffect(() => setHasChanges(hasChanges + 1), [hasGuests, guests, response]);
 
   async function save_response(going) {
+    if (hasGuests) {
+      if (guests.length === 0) {
+        setConfirmModal(3);
+
+        return;
+      }
+
+      const arr = guests.filter(
+        (guest) => guest.name.trim() === "" || guest.relation.trim() === ""
+      );
+
+      if (arr.length > 0) {
+        setConfirmModal(4);
+
+        return;
+      }
+    }
+
     const res = await api_calendar_respond(event._id, going, hasGuests ? guests : null, response);
-    console.log(res);
     if (res && !res.error) {
       /* TODO */
+      changeEvent();
       setIsOpen(false);
     }
   }
@@ -124,7 +201,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
         <Modal
           isOpen={isOpen}
           onRequestClose={() => {
-            if (hasChanges >= 2) setConfirmModal(true);
+            if (hasChanges >= 2) setConfirmModal(1);
             else setIsOpen(false);
           }}
           className="view_modal evt_modal admin"
@@ -135,7 +212,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
             <button
               type="button"
               onClick={() => {
-                if (hasChanges >= 2) setConfirmModal(true);
+                if (hasChanges >= 2) setConfirmModal(1);
                 else setIsOpen(false);
               }}
             >
@@ -153,9 +230,16 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
                 <DateRangeFormatter from={event.from} to={event.to} />
                 */}
                 </div>
+                <div className="question_info small_indented">Repeat schedule</div>
                 <div className="prop">
                   <img alt="Event time" src="/img/calendar_location.svg" />
                   {event.location}
+                </div>
+                <br />
+                <div className="prop underlined">
+                  <img src="/img/calendar_send.svg" alt="Send to" />
+                  {event.calendar.name}
+                  <div className="circle" style={{ background: event.calendar.color }} />
                 </div>
               </div>
               <div className="indented">
@@ -163,18 +247,28 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
                   <img alt="Event time" src="/img/calendar_people.svg" />
                   Guests allowed
                 </div>
+                <div className="question_info small_indented">
+                  {event.over18 ? "Guests 18+ only" : ""}
+                  {event.under18 ? "Guests under 18 allowed" : ""}
+                </div>
                 <div className="prop underlined">View who is going</div>
+                <div className="question_info smallskip">
+                  {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
+                </div>
+                <button type="button">Assign volunteers</button>
               </div>
             </div>
           </div>
           <div className="evt_modal_separator">Question Responses</div>
           <div className="evt_modal_scroll">
-            {event.responses.map((_resp) => (
+            {event.responses.map((resp) => (
               <div className="evt_modal_smallbox">
-                <div className="name">Person&apos;s name:</div>
+                <div className="name">{resp.volunteer.name}</div>
                 <div className="content">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed...&nbsp;
-                  <span className="more">Read more</span>
+                  <Abbreviator
+                    content={resp.response}
+                    maxLength={95 - resp.volunteer.name.length}
+                  />
                 </div>
               </div>
             ))}
@@ -200,7 +294,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
       <Modal
         isOpen={isOpen}
         onRequestClose={() => {
-          if (hasChanges >= 2) setConfirmModal(true);
+          if (hasChanges >= 2) setConfirmModal(1);
           else setIsOpen(false);
         }}
         className="view_modal evt_modal nonadmin"
@@ -211,7 +305,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
           <button
             type="button"
             onClick={() => {
-              if (hasChanges >= 2) setConfirmModal(true);
+              if (hasChanges >= 2) setConfirmModal(1);
               else setIsOpen(false);
             }}
           >
@@ -246,7 +340,12 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
               {event.under18 ? "Guests under 18 allowed" : ""}
             </div>
             <label htmlFor="guests">
-              <input type="checkbox" id="guests" onChange={(e) => setHasGuests(e.target.checked)} />
+              <input
+                type="checkbox"
+                id="guests"
+                defaultChecked={hasGuests}
+                onChange={(e) => setHasGuests(e.target.checked)}
+              />
               <div className="calendar_checkbox primary" />
               <span>Yes</span>
             </label>
@@ -265,7 +364,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
                 <textarea
                   placeholder="Type your response here..."
                   defaultValue={
-                    event.responses.find((resp) => resp.volunteer === currentUser._id)?.response
+                    event.responses.find((resp) => resp.volunteer._id === currentUser._id)?.response
                   }
                   onChange={(e) => setResponse(e.target.value)}
                 />
@@ -280,7 +379,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen }) {
             </button>
           ) : (
             <div className="evt_modal_spaced">
-              <button type="button" className="unstyled" onClick={() => save_response(false)}>
+              <button type="button" className="unstyled" onClick={() => setConfirmModal(2)}>
                 Not going
               </button>
               <button type="button" onClick={() => save_response(true)}>

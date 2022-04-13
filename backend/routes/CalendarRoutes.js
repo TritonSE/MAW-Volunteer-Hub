@@ -5,6 +5,7 @@ const router = express.Router();
 
 const EventModel = require("../models/EventModel");
 const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
+const log = require("../util/Logger");
 
 router.get("/all", (req, res) =>
   EventModel.find()
@@ -80,7 +81,7 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
         event.volunteers.splice(tmp, 1);
         event.guests = event.guests.filter((guest) => guest.with.toString() !== req.user._id);
         event.responses = event.responses.filter(
-          (resp) => resp.volunteer.toString() !== req.user._id
+          (resp) => resp.volunteer._id.toString() !== req.user._id
         );
       }
 
@@ -88,17 +89,21 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
         event.volunteers.push(req.user._id);
 
         if (req.body.guests !== "null") {
-          req.body.guests.forEach((guest) =>
-            event.guests.push({
-              ...guest,
-              with: req.user._id,
-            })
-          );
+          try {
+            JSON.parse(req.body.guests).forEach((guest) =>
+              event.guests.push({
+                ...guest,
+                with: req.user._id,
+              })
+            );
+          } catch (e) {
+            log.error(e);
+          }
         }
 
         if (req.body.response.trim() !== "") {
           event.responses.push({
-            volunteer: req.user._id,
+            volunteer: req.user,
             response: req.body.response,
           });
         }

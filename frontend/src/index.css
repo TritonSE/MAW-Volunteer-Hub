@@ -1,5 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes popin {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 :root {
   --primary-blue: #1a68bf;
 
@@ -26,15 +43,26 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--background-grey);
-}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+  background: var(--background-grey);
 }
 
 .hidden {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
+}
+
+.ReactModal__Overlay {
+  animation: fadein 0.25s;
+}
+.ReactModal__Content {
+  animation: popin 0.25s;
+}
+
+.ReactModal__Overlay.closing {
+  animation: fadein 0.25s reverse !important;
+}
+.ReactModal__Content.closing {
+  animation: popin 0.25s reverse !important;
 }

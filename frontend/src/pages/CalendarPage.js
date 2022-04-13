@@ -171,7 +171,12 @@ function CalendarPage() {
         calendars={calendars}
         addEvent={setEventAcquire}
       />
-      <ViewEventModal event={viewModal} isOpen={Boolean(viewModal)} setIsOpen={setViewModal} />
+      <ViewEventModal
+        event={viewModal}
+        isOpen={Boolean(viewModal)}
+        setIsOpen={setViewModal}
+        changeEvent={() => setEventAcquire(Math.random())}
+      />
     </main>
   );
 }
