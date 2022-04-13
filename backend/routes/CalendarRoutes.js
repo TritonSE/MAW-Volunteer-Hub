@@ -58,7 +58,7 @@ router.put(
 );
 
 router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
-  EventModel.deleteOne({ _id: req.params.id })
+  EventModel.findByIdAndDelete(req.params.id)
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
 );
@@ -68,7 +68,7 @@ router.patch("/upd/:id", idParamValidator(false, "event"), (req, _res) => {
 });
 
 router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"), (req, res) =>
-  EventModel.findOne({ _id: req.params.id })
+  EventModel.findById(req.params.id)
     .then((event) => {
       const tmp = event.volunteers.findIndex((vol) => vol.toString() === req.user._id);
 
