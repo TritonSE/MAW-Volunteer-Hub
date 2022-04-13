@@ -46,6 +46,24 @@ export default function Message() {
     { label: "Secondary Admin", value: 12 },
   ];
 
+  const customStyles = {
+    control: (base) => ({
+      ...base,
+      height: 35,
+      maxHeight: 35,
+      border: 1,
+      borderRadius: 7,
+    }),
+
+    valueContainer: (provided, state) => ({
+      ...provided,
+      textOverflow: "ellipsis",
+      maxWidth: "90%",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+    }),
+  };
+
   const handleSelect = (e) => {
     for (let i = 0; i < e.length; i++) {
       // If "All" is one of the options
@@ -78,21 +96,32 @@ export default function Message() {
     <div className="msg_layout">
       <h2 className="title">Send a Message</h2>
       <div className="message_meta">
-        <ReactSelect
-          className="select_recipients"
-          options={recipients}
-          isMulti
-          closeMenuOnSelect={false}
-          hideSelectedOptions={false}
-          components={{
-            Option,
-          }}
-          onChange={(e) => handleSelect(e)}
-          allowSelectAll
-          value={selectedRecipients}
-        />
-        Subject:{" "}
-        <input type="text" className="subject_line" onChange={(e) => setSubject(e.target.value)} />
+        <div className="recipient_section">
+          <p className="prompt_title">To: </p>
+          <ReactSelect
+            className="select_recipients"
+            options={recipients}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            components={{
+              Option,
+            }}
+            onChange={(e) => handleSelect(e)}
+            allowSelectAll
+            value={selectedRecipients}
+            styles={customStyles}
+          />
+        </div>
+
+        <div className="subject_section">
+          <p className="prompt_title">Subject: </p>
+          <input
+            type="text"
+            className="subject_line"
+            onChange={(e) => setSubject(e.target.value)}
+          />
+        </div>
         <ReactQuill
           theme="snow"
           modules={modules}
@@ -100,11 +129,11 @@ export default function Message() {
           onChange={setConvertedText}
           style={{ minHeight: "300px" }}
         />
-      </div>
-      <div className="button_container">
-        <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
-          Post
-        </button>
+        <div className="button_container">
+          <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
+            Post
+          </button>
+        </div>
       </div>
     </div>
   );

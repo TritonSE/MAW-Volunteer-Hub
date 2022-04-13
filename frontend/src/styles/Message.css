@@ -1,16 +1,64 @@
+.title {
+  box-sizing: border-box;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+
+  padding-left: 2vw;
+}
+
 .msg_layout {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  height: 90vh;
+  padding: 20px 50px 0px 50px;
 }
+
+.recipient_section {
+  display: flex;
+  align-items: center;
+}
+
+.subject_section {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.prompt_title {
+  width: 75px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 17px;
+}
+
+.subject_line,
 .select_recipients {
+  box-sizing: border-box;
+  width: calc(100% - 75px);
+
+  border: 1px solid #000000;
+  border-radius: 7px;
+}
+
+.subject_line {
+  padding-left: 10px;
+  height: 35px;
 }
 
 .message_meta {
   box-sizing: border-box;
+  width: 90%;
   display: flex;
   flex-direction: column;
-  width: 80%;
+}
+
+.post_announcement {
+  margin-top: 20vh;
 }
