@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useArrayState } from "@cubedoodl/react-simple-scheduler";
-import { api_calendar_respond } from "../api";
+import { api_calendar_delete, api_calendar_respond } from "../api";
 import { CurrentUser } from "./Contexts";
 import "../styles/AddEventModal.css";
 import "../styles/ViewEventModal.css";
@@ -51,7 +51,13 @@ function GuestsContainer({ guests, addGuest, deleteGuest }) {
   );
 }
 
-function ConfirmationModal({ confirmModal, setConfirmModal, setIsOpen, saveResponse }) {
+function ConfirmationModal({
+  confirmModal,
+  setConfirmModal,
+  setIsOpen,
+  saveResponse,
+  deleteEvent,
+}) {
   const modals = [
     <>
       <div>
@@ -112,6 +118,20 @@ function ConfirmationModal({ confirmModal, setConfirmModal, setIsOpen, saveRespo
         Return
       </button>
     </div>,
+    <div>
+      Are you sure you want to delete this event?
+      <br />
+      <br />
+      <div className="rows">
+        <button type="button" onClick={() => setConfirmModal(0)}>
+          Cancel
+        </button>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <button type="button" className="error" onClick={() => deleteEvent()}>
+          Yes
+        </button>
+      </div>
+    </div>,
   ];
 
   return (
@@ -140,7 +160,7 @@ function Abbreviator({ content, maxLength }) {
   );
 }
 
-export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }) {
+export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, editEvent }) {
   if (!event) return null;
 
   const [currentUser] = useContext(CurrentUser);
@@ -195,6 +215,14 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }
     }
   }
 
+  async function delete_event() {
+    const res = await api_calendar_delete(event._id);
+    if (res && !res.error) {
+      changeEvent();
+      setIsOpen(false);
+    }
+  }
+
   if (currentUser.admin) {
     return (
       <>
@@ -209,6 +237,15 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }
         >
           <div className="evt_modal_header">
             <h1>{event.name}</h1>
+            <div>
+              <button type="button" onClick={() => editEvent()}>
+                <img alt="Edit event" src="/img/filelisting_edit.svg" />
+              </button>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <button type="button" onClick={() => setConfirmModal(5)}>
+                <img alt="Delete event" src="/img/filelisting_delete.svg" />
+              </button>
+            </div>
             <button
               type="button"
               onClick={() => {
@@ -285,6 +322,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }
           setConfirmModal={setConfirmModal}
           setIsOpen={setIsOpen}
           saveResponse={(val) => save_response(val)}
+          deleteEvent={() => delete_event()}
         />
       </>
     );
@@ -346,7 +384,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent }
                 defaultChecked={hasGuests}
                 onChange={(e) => setHasGuests(e.target.checked)}
               />
-              <div className="calendar_checkbox primary" />
+              <div className="calendar_checkbox" />
               <span>Yes</span>
             </label>
             {hasGuests && (

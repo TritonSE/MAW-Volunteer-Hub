@@ -186,9 +186,13 @@ const api_calendar_delete = (id) =>
     method: "DELETE",
   });
 
-const api_calendar_update = (id) =>
+const api_calendar_update = (id, args) =>
   api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
-    data: {},
+    data: {
+      ...args,
+      from: args.from.toISOString(),
+      to: args.to.toISOString(),
+    },
     method: "PATCH",
   });
 

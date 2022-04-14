@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
 import DATE_UTILS from "../date";
-import { api_calendar_new } from "../api";
+import { api_calendar_new, api_calendar_update } from "../api";
 import "../styles/AddEventModal.css";
 
 Modal.setAppElement("#root");
@@ -25,7 +25,14 @@ function FormInput({ type, placeholder, step, onChange, value, setValue, error, 
   );
 }
 
-export default function AddEventModal({ currentEvent, setCurrentEvent, calendars, addEvent }) {
+export default function AddEventModal({
+  currentEvent,
+  setCurrentEvent,
+  calendars,
+  addEvent,
+  isEditing,
+}) {
+  /* TODO: Clean up, this feels unnecessary */
   const [name, setName] = useState("");
   const [errorName, setErrorName] = useState();
 
@@ -52,27 +59,27 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
   const [animationPlaying, setAnimationPlaying] = useState(false);
 
   function on_open() {
-    setName("");
+    setName(currentEvent?.name ?? "");
     setErrorName();
 
-    setCalendar("");
+    setCalendar(currentEvent?.calendar?.name ?? "");
     setErrorCalendar();
 
-    setFrom(currentEvent.from ? new Date(currentEvent.from) : new Date());
+    setFrom(currentEvent?.from ? new Date(currentEvent.from) : new Date());
     setErrorFrom();
 
-    setTo(currentEvent.to ? new Date(currentEvent.to) : DATE_UTILS.walk_hour(new Date(), 1));
+    setTo(currentEvent?.to ? new Date(currentEvent.to) : DATE_UTILS.walk_hour(new Date(), 1));
     setErrorTo();
 
-    setNumberNeeded();
+    setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
 
-    setLoc();
+    setLoc(currentEvent?.location ?? "");
     setErrorLoc();
 
-    setQuestion("");
-    setOver18(false);
-    setUnder18(false);
+    setQuestion(currentEvent?.question ?? "");
+    setOver18(currentEvent?.over18 ?? false);
+    setUnder18(currentEvent?.under18 ?? false);
   }
 
   function change_date(e) {
@@ -90,6 +97,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
 
     let has_err = false;
 
+    /* TODO: Clean up, this feels unnecessary */
     if (!name || name.trim() === "") {
       setErrorName(true);
       has_err = true;
@@ -117,7 +125,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
 
     if (has_err) return;
 
-    const res = await api_calendar_new({
+    const args = {
       from,
       to,
       name,
@@ -127,7 +135,11 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
       question,
       over18,
       under18,
-    });
+    };
+
+    const res = await (isEditing
+      ? api_calendar_update(currentEvent._id, args)
+      : api_calendar_new(args));
     if (res && !res.error) {
       res.event.calendar = calendars.find((cal) => cal.name === res.event.calendar) ?? calendars[0];
       addEvent(res.event);
@@ -144,11 +156,11 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
         onRequestClose={() => setCurrentEvent()}
         onAfterOpen={() => on_open()}
         className="evt_modal"
-        overlayClassName="evt_modal_overlay"
+        overlayClassName="evt_modal_overlay highest"
       >
         <form onSubmit={add_event}>
           <div className="evt_modal_header">
-            <h1>Create an Event</h1>
+            <h1>{isEditing ? "Edit" : "Create"} an Event</h1>
             <button type="button" onClick={() => setCurrentEvent()}>
               <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
             </button>
@@ -204,6 +216,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
               <FormInput
                 type="number"
                 placeholder="# of volunteers needed"
+                value={numberNeeded ?? ""}
                 setValue={setNumberNeeded}
                 error={errorNumberNeeded}
                 setError={setErrorNumberNeeded}
@@ -217,6 +230,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
               <FormInput
                 type="text"
                 placeholder="Location (or Zoom link)"
+                value={loc ?? ""}
                 setValue={setLoc}
                 error={errorLoc}
                 setError={setErrorLoc}
@@ -245,6 +259,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
               <br />
               <textarea
                 placeholder="Add a question..."
+                value={question}
                 onChange={(e) => setQuestion(e.target.value)}
               />
               <br />
@@ -283,7 +298,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, calendars
             </div>
           </div>
           <div className="evt_modal_footer">
-            <button type="submit">Create</button>
+            <button type="submit">{isEditing ? "Save" : "Create"}</button>
           </div>
         </form>
       </Modal>

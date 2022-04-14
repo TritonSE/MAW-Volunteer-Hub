@@ -13,6 +13,7 @@ function CalendarPage() {
   const [selected, setSelected] = useState(new Date());
   const [events, setEvents, addEvent, deleteEvent] = useArrayState();
   const [eventAcquire, setEventAcquire] = useState();
+  const [isEditing, setIsEditing] = useState(false);
   const [addModal, setAddModal] = useState();
   const [viewModal, setViewModal] = useState();
   const [tempEvent, setTempEvent] = useState();
@@ -108,7 +109,14 @@ function CalendarPage() {
     <main className="calendar" role="main">
       <div>
         {currentUser.admin && (
-          <button type="button" className="calendar_new" onClick={() => setAddModal(true)}>
+          <button
+            type="button"
+            className="calendar_new"
+            onClick={() => {
+              setIsEditing(false);
+              setAddModal(true);
+            }}
+          >
             <img src="/img/calendar_add.svg" alt="New event" />
             <div>New Event</div>
           </button>
@@ -146,6 +154,7 @@ function CalendarPage() {
         onRequestAdd={(cur) => {
           if (!currentUser.admin) return;
 
+          setIsEditing(false);
           setAddModal(cur);
 
           const tmp = {
@@ -170,12 +179,17 @@ function CalendarPage() {
         }}
         calendars={calendars}
         addEvent={setEventAcquire}
+        isEditing={isEditing}
       />
       <ViewEventModal
         event={viewModal}
         isOpen={Boolean(viewModal)}
         setIsOpen={setViewModal}
         changeEvent={() => setEventAcquire(Math.random())}
+        editEvent={() => {
+          setIsEditing(true);
+          setAddModal(viewModal);
+        }}
       />
     </main>
   );
