@@ -53,14 +53,7 @@ export default function Message() {
       maxHeight: 35,
       border: 1,
       borderRadius: 7,
-    }),
-
-    valueContainer: (provided, state) => ({
-      ...provided,
-      textOverflow: "ellipsis",
-      maxWidth: "90%",
-      whiteSpace: "nowrap",
-      overflow: "hidden",
+      overflow: "auto",
     }),
   };
 
