@@ -144,10 +144,18 @@ function LoginPage() {
             placeholder="Email"
             type="email"
             className={`
+              ${isLogin ? "" : "adjust-margin"}
               ${errors.email ? "error" : ""}
             `}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {!isLogin && (
+            <p className="email-info">
+              &#9432; By providing your email address, you are agreeing to recieve email
+              communication from Make-A-Wish San Diego for account-related info, messaging, and
+              events.
+            </p>
+          )}
           <PasswordField
             name="password"
             className={`
@@ -209,7 +217,7 @@ function LoginPage() {
           </div>
           <div className="login_modal_content">
             {modalOpen === true
-              ? "Your account has been created! Once an admin confirms, you will be notified via email and be able to access the website."
+              ? "Your account has been created! You should recieve a sign-up confirmation email shortly. Once an admin confirms, you will be notified via email and be able to access the website."
               : modalOpen}
           </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>

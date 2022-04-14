@@ -48,7 +48,7 @@ router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
       const msgHtml = `
         <div>
             <p>Dear ${user.name.split(" ")[0]},</p>
-            <p>You can now access the website at 
+            <p>Your account has been approved. You can now access the website at 
             <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
             https://maw-volunteer-hub.herokuapp.com/login</a>.</p>
             <p>Thanks,<br/>MAW SD</p>

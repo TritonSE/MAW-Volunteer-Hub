@@ -2,14 +2,14 @@ const mawEmail = "MAWVolunteerHub@gmail.com";
 
 const signupHtml = `
 <div>
-    <p>Your account has been created and once an admin confirms, you will be 
-    notified via email and be able to access the website.</p>
+    <p>Your account has been created. You will be notified when 
+    an admin has approved your account and have access to the website.</p>
     <p>Thanks,<br/>MAW SD</p>
 </div>`;
 
 const accessHtml = `
 <div>
-    <p>You can now access the website at 
+    <p>Your account has been approved. You can now access the website at 
     <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
     https://maw-volunteer-hub.herokuapp.com/login</a>.</p>
     <p>Thanks,<br/>MAW SD</p>
