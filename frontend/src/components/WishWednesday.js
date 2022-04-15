@@ -17,7 +17,7 @@ export default function WishWednesday() {
 
   return (
     <div className="wwed_layout">
-      <h2 className="title">Wish Wednesday Annoucements</h2>
+      <h2 className="title">Wish Wednesday Announcements</h2>
       <div className="editor_container">
         <ReactQuill
           className="md_editor"
