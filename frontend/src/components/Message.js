@@ -49,11 +49,9 @@ export default function Message() {
   const customStyles = {
     control: (base) => ({
       ...base,
-      height: 35,
-      maxHeight: 35,
+      height: "auto",
       border: 1,
       borderRadius: 7,
-      overflow: "auto",
     }),
   };
 
