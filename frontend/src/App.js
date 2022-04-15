@@ -16,6 +16,7 @@ import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
+import HomePage from "./pages/HomePage";
 
 import "./App.css";
 

@@ -1,0 +1,57 @@
+#wish {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.center {
+  margin: 0px auto;
+  width: 73%;
+  padding: 10px;
+}
+
+p {
+  text-align: left;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.Top_header {
+  width: 100%;
+  height: 224px;
+  background-color: rgba(16, 16, 16, 0.65);
+  background-image: url("../../public/Mountain.png");
+  background-blend-mode: darken;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.Top_title {
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-family: "Lato", sans-serif;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.image_body {
+  width: 100%;
+  height: 224px;
+  background-image: url("../../public/img/filler-img.png");
+}
+
+.Edit_button {
+  background-image: url("../../public/img/edit_icon.svg");
+  background-color: white;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  border: 0;
+}
