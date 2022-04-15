@@ -9,7 +9,34 @@ const log = require("../util/Logger");
 
 router.get("/all", (req, res) =>
   EventModel.find()
-    .then((events) => res.json(events))
+    .populate("volunteers")
+    .populate({
+      path: "guests",
+      populate: {
+        path: "with",
+        model: "user",
+      },
+    })
+    .populate({
+      path: "responses",
+      populate: {
+        path: "volunteer",
+        model: "user",
+      },
+    })
+    .then((events) => {
+      res.json(events);
+      EventModel.updateMany(
+        {
+          to: {
+            $lte: new Date(),
+          },
+        },
+        {
+          completed: true,
+        }
+      );
+    })
     .catch(errorHandler(res))
 );
 
@@ -37,25 +64,10 @@ router.get("/ics/:calendar?", (req, res) =>
 router.put(
   "/new",
   validate(["from", "to", "name", "calendar", "number_needed", "location"], []),
-  (req, res) => {
-    const from = new Date(req.body.from);
-    const to = new Date(req.body.to);
-    const number_needed = Number.parseInt(req.body.number_needed, 10);
-
-    if (from === "Invalid Date" || to === "Invalid Date" || Number.isNaN(number_needed)) {
-      res.status(400).json({ error: "Invalid event parameters." });
-      return;
-    }
-
-    EventModel.create({
-      ...req.body,
-      from,
-      to,
-      number_needed,
-    })
+  (req, res) =>
+    EventModel.create(req.body)
       .then((event) => res.json({ event }))
-      .catch(errorHandler(res));
-  }
+      .catch(errorHandler(res))
 );
 
 router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
@@ -64,14 +76,27 @@ router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.patch("/upd/:id", idParamValidator(false, "event"), (req, _res) => {
-  /* TODO */
-});
+router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
+  EventModel.findById(req.params.id)
+    .then((event) => {
+      /*
+       * Note: mongoose strict mode is enabled by default, meaning any
+       *   properties passed via req.body that are not listed in the
+       *   event schema will not be saved to the database
+       */
+      Object.entries(req.body).forEach(([key, value]) => {
+        event[key] = value;
+      });
+      return event.save();
+    })
+    .then((event) => res.json({ event }))
+    .catch(errorHandler(res))
+);
 
 router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"), (req, res) =>
   EventModel.findById(req.params.id)
     .then((event) => {
-      const tmp = event.volunteers.findIndex((vol) => vol.toString() === req.user._id);
+      const tmp = event.volunteers.findIndex((vol) => vol._id.toString() === req.user._id);
 
       /*
        * Avoid a patchwork edit by removing all of the current volunteer's info
@@ -79,7 +104,7 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
        */
       if (tmp > -1) {
         event.volunteers.splice(tmp, 1);
-        event.guests = event.guests.filter((guest) => guest.with.toString() !== req.user._id);
+        event.guests = event.guests.filter((guest) => guest.with._id.toString() !== req.user._id);
         event.responses = event.responses.filter(
           (resp) => resp.volunteer._id.toString() !== req.user._id
         );
@@ -103,7 +128,7 @@ router.post("/res/:id", validate(["going"], []), idParamValidator(false, "event"
 
         if (req.body.response.trim() !== "") {
           event.responses.push({
-            volunteer: req.user,
+            volunteer: req.user._id,
             response: req.body.response,
           });
         }

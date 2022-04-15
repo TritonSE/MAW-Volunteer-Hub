@@ -78,7 +78,7 @@ function CalendarPage() {
   function style_from_event(ev) {
     const css = calendars.find((cal) => cal.name === ev.calendar) ?? calendars[0];
 
-    if (!currentUser.admin && !ev.volunteers.includes(currentUser._id)) {
+    if (!currentUser.admin && !ev.volunteers.some((vol) => vol._id === currentUser._id)) {
       return {
         background: "white",
         color: css.color,
@@ -178,7 +178,10 @@ function CalendarPage() {
           setTempEvent();
         }}
         calendars={calendars}
-        addEvent={setEventAcquire}
+        addEvent={(val) => {
+          setEventAcquire(val);
+          if (isEditing) setViewModal(val);
+        }}
         isEditing={isEditing}
       />
       <ViewEventModal

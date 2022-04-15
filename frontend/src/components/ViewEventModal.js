@@ -173,7 +173,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   const [confirmModal, setConfirmModal] = useState(0);
 
   useEffect(() => {
-    const tmp = event.guests.filter((guest) => guest.with === currentUser._id);
+    const tmp = event.guests.filter((guest) => guest.with._id === currentUser._id);
     if (tmp.length > 0) {
       setGuests(tmp);
       setHasGuests(true);
@@ -189,7 +189,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   useEffect(() => setHasChanges(hasChanges + 1), [hasGuests, guests, response]);
 
   async function save_response(going) {
-    if (hasGuests) {
+    if (going && hasGuests) {
       if (guests.length === 0) {
         setConfirmModal(3);
 
@@ -209,7 +209,6 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
 
     const res = await api_calendar_respond(event._id, going, hasGuests ? guests : null, response);
     if (res && !res.error) {
-      /* TODO */
       changeEvent();
       setIsOpen(false);
     }
@@ -411,7 +410,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           </div>
         </div>
         <div className="evt_modal_footer">
-          {!event.volunteers.includes(currentUser._id) ? (
+          {!event.volunteers.some((vol) => vol._id === currentUser._id) ? (
             <button type="button" onClick={() => save_response(true)}>
               Going
             </button>

@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 
-const { Schema } = mongoose;
-
-const UserSchema = new Schema(
+const UserSchema = new mongoose.Schema(
   {
     verified: {
       type: Boolean,
@@ -49,6 +47,12 @@ const UserSchema = new Schema(
       type: Date,
       // required: true
     },
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "event",
+      },
+    ],
   },
   { timestamps: true }
 );

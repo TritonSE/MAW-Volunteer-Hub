@@ -143,9 +143,11 @@ export default function AddEventModal({
     if (res && !res.error) {
       res.event.calendar = calendars.find((cal) => cal.name === res.event.calendar) ?? calendars[0];
       addEvent(res.event);
-      setAnimationPlaying(true);
       setCurrentEvent();
-      setTimeout(() => setAnimationPlaying(false), 2500);
+      if (!isEditing) {
+        setAnimationPlaying(true);
+        setTimeout(() => setAnimationPlaying(false), 2500);
+      }
     }
   }
 
