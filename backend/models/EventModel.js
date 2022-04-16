@@ -33,13 +33,18 @@ const EventSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  calendar: {
-    type: String,
+  calendars: {
+    type: [String],
     required: true,
+    validate: [(arr) => arr.length > 0, "Event must be part of at least one calendar."],
   },
   number_needed: {
     type: Number,
     required: true,
+    validate: [
+      (num) => !Number.isNaN(Number.parseInt(num, 10)),
+      "Event must have a valid number of volunteers needed.",
+    ],
   },
   location: {
     type: String,
@@ -96,11 +101,11 @@ EventSchema.pre("save", function save(next) {
       next(new Error("Invalid event end date."));
     }
   }
-  if (this.number_needed && this.isModified("number_needed")) {
-    this.number_needed = Number.parseInt(this.number_needed, 10);
-
-    if (Number.isNaN(this.number_needed)) {
-      next(new Error("Invalid event volunteer count."));
+  if (this.calendars && this.isModified("calendars")) {
+    try {
+      this.calendars = JSON.parse(this.calendars);
+    } catch (e) {
+      next(e);
     }
   }
 

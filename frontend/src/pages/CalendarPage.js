@@ -4,6 +4,7 @@ import { api_calendar_all } from "../api";
 import { CurrentUser } from "../components/Contexts";
 import AddEventModal from "../components/AddEventModal";
 import ViewEventModal from "../components/ViewEventModal";
+import ROLES from "../constants/roles";
 import "../styles/CalendarPage.css";
 
 function CalendarPage() {
@@ -18,74 +19,30 @@ function CalendarPage() {
   const [viewModal, setViewModal] = useState();
   const [tempEvent, setTempEvent] = useState();
 
-  const [calendars] = useState([
-    {
-      name: "Wish Granters",
-      background: "#CCF1F0",
-      color: "#00BAB3",
+  const [calendars] = useState(
+    ROLES.map((role) => ({
+      ...role,
       enabled: true,
-    },
-    {
-      name: "Volunteers",
-      background: "#FFF0DB",
-      color: "#FFB549",
-      enabled: true,
-    },
-    {
-      name: "Mentor",
-      background: "#FAEDDB",
-      color: "#E2C094",
-      enabled: true,
-    },
-    {
-      name: "Airport Greeter",
-      background: "#FFB3AE",
-      color: "#FE5F55",
-      enabled: true,
-    },
-    {
-      name: "Office",
-      background: "#CBE2CA",
-      color: "#80B87E",
-      enabled: true,
-    },
-    {
-      name: "Special Events",
-      background: "#D2CDF4",
-      color: "#8F82E3",
-      enabled: true,
-    },
-    {
-      name: "Translator",
-      background: "#CBC4D4",
-      color: "#67597A",
-      enabled: true,
-    },
-    {
-      name: "Speaker's Bureau",
-      background: "#BCC6C8",
-      color: "#5C6C70",
-      enabled: true,
-    },
-    {
-      name: "Las Estrellas",
-      background: "#F1D2CC",
-      color: "#BA0068",
-      enabled: true,
-    },
-  ]);
+    }))
+  );
 
   function style_from_event(ev) {
-    const css = calendars.find((cal) => cal.name === ev.calendar) ?? calendars[0];
+    const css = calendars.find((cal) => cal.name === ev.calendars[0]) ?? calendars[0];
 
     if (!currentUser.admin && !ev.volunteers.some((vol) => vol._id === currentUser._id)) {
       return {
-        background: "white",
-        color: css.color,
-        border: `1px solid ${css.color}`,
+        style: {
+          background: "white",
+          color: css.color,
+          border: `1px solid ${css.color}`,
+        },
+        calendar: css,
       };
     }
-    return css;
+    return {
+      style: css,
+      calendar: css,
+    };
   }
 
   function sanitize_event(ev) {
@@ -93,8 +50,7 @@ function CalendarPage() {
       ...ev,
       from: new Date(ev.from),
       to: new Date(ev.to),
-      style: style_from_event(ev),
-      calendar: calendars.find((cal) => cal.name === ev.calendar) ?? calendars[0],
+      ...style_from_event(ev),
     };
   }
 
@@ -177,8 +133,7 @@ function CalendarPage() {
           deleteEvent(tempEvent);
           setTempEvent();
         }}
-        calendars={calendars}
-        addEvent={(val) => {
+        onAddEvent={(val) => {
           setEventAcquire(val);
           if (isEditing) setViewModal(val);
         }}

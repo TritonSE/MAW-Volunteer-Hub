@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
 import { useArrayState } from "@cubedoodl/react-simple-scheduler";
+import ROLES from "../constants/roles";
 import { api_calendar_delete, api_calendar_respond } from "../api";
 import { CurrentUser } from "./Contexts";
 import "../styles/AddEventModal.css";
@@ -272,10 +273,22 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   {event.location}
                 </div>
                 <br />
-                <div className="prop underlined">
+                <div className="prop list underlined">
                   <img src="/img/calendar_send.svg" alt="Send to" />
-                  {event.calendar.name}
-                  <div className="circle" style={{ background: event.calendar.color }} />
+                  <div>
+                    {event.calendars.map((name) => {
+                      const css = ROLES.find((cal) => cal.name === name);
+
+                      return (
+                        <div key={name}>
+                          <div className="role_listing">
+                            <div className="circle" style={{ background: css.color }} />
+                            {name}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="indented">

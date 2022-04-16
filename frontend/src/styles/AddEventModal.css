@@ -166,6 +166,7 @@
   margin: 0;
   margin-right: 10px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 .evt_modal_content input[type="checkbox"]:checked ~ .calendar_checkbox {
   background: var(--primary-blue);
@@ -177,6 +178,12 @@
 }
 .evt_modal_content input[type="checkbox"]:disabled ~ .calendar_checkbox {
   opacity: 0.25;
+}
+
+.evt_modal_content .evt_modal_row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .evt_modal_footer {

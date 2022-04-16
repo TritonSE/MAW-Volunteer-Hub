@@ -63,7 +63,7 @@ router.get("/ics/:calendar?", (req, res) =>
 
 router.put(
   "/new",
-  validate(["from", "to", "name", "calendar", "number_needed", "location"], []),
+  validate(["from", "to", "name", "calendars", "number_needed", "location"], []),
   (req, res) =>
     EventModel.create(req.body)
       .then((event) => res.json({ event }))

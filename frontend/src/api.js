@@ -177,6 +177,7 @@ const api_calendar_new = (args) =>
       ...args,
       from: args.from.toISOString(),
       to: args.to.toISOString(),
+      calendars: JSON.stringify(args.calendars.map((cal) => cal.name)),
     },
     method: "PUT",
   });
@@ -192,6 +193,7 @@ const api_calendar_update = (id, args) =>
       ...args,
       from: args.from.toISOString(),
       to: args.to.toISOString(),
+      calendars: JSON.stringify(args.calendars.map((cal) => cal.name)),
     },
     method: "PATCH",
   });

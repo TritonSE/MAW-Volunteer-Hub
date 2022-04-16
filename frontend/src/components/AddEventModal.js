@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import RoleSelect from "./RoleSelect";
 import DATE_UTILS from "../date";
+import ROLES from "../constants/roles";
 import { api_calendar_new, api_calendar_update } from "../api";
 import "../styles/AddEventModal.css";
 
@@ -25,19 +27,13 @@ function FormInput({ type, placeholder, step, onChange, value, setValue, error, 
   );
 }
 
-export default function AddEventModal({
-  currentEvent,
-  setCurrentEvent,
-  calendars,
-  addEvent,
-  isEditing,
-}) {
+export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEvent, isEditing }) {
   /* TODO: Clean up, this feels unnecessary */
   const [name, setName] = useState("");
   const [errorName, setErrorName] = useState();
 
-  const [calendar, setCalendar] = useState("");
-  const [errorCalendar, setErrorCalendar] = useState();
+  const [calendars, setCalendars] = useState([]);
+  const [errorCalendars, setErrorCalendars] = useState();
 
   const [from, setFrom] = useState();
   const [errorFrom, setErrorFrom] = useState();
@@ -62,8 +58,18 @@ export default function AddEventModal({
     setName(currentEvent?.name ?? "");
     setErrorName();
 
-    setCalendar(currentEvent?.calendar?.name ?? "");
-    setErrorCalendar();
+    if (currentEvent?.calendars) {
+      setCalendars(
+        currentEvent.calendars.map((cal_name) => ({
+          ...ROLES.find((role) => role.name === cal_name),
+          value: cal_name,
+          label: cal_name,
+        }))
+      );
+    } else {
+      setCalendars([]);
+    }
+    setErrorCalendars();
 
     setFrom(currentEvent?.from ? new Date(currentEvent.from) : new Date());
     setErrorFrom();
@@ -102,8 +108,8 @@ export default function AddEventModal({
       setErrorName(true);
       has_err = true;
     }
-    if (!calendar || calendar.trim() === "") {
-      setErrorCalendar(true);
+    if (!calendars || calendars.length === 0) {
+      setErrorCalendars(true);
       has_err = true;
     }
     if (!from || from.toString().trim() === "") {
@@ -129,7 +135,7 @@ export default function AddEventModal({
       from,
       to,
       name,
-      calendar: calendar || calendars[0].name,
+      calendars,
       number_needed: numberNeeded,
       location: loc,
       question,
@@ -141,8 +147,7 @@ export default function AddEventModal({
       ? api_calendar_update(currentEvent._id, args)
       : api_calendar_new(args));
     if (res && !res.error) {
-      res.event.calendar = calendars.find((cal) => cal.name === res.event.calendar) ?? calendars[0];
-      addEvent(res.event);
+      onAddEvent(res.event);
       setCurrentEvent();
       if (!isEditing) {
         setAnimationPlaying(true);
@@ -239,24 +244,17 @@ export default function AddEventModal({
               />
             </div>
             <div>
-              <img src="/img/calendar_send.svg" alt="Send to" />
-              <select
-                className={`styled ${errorCalendar ? "error" : ""}`}
-                value={calendar}
-                onChange={(e) => {
-                  setCalendar(e.target.value);
-                  setErrorCalendar(false);
-                }}
-              >
-                <option value="" disabled>
-                  Send event to
-                </option>
-                {calendars.map((cal) => (
-                  <option key={cal.name} value={cal.name}>
-                    {cal.name}
-                  </option>
-                ))}
-              </select>
+              <div className="evt_modal_row">
+                <img src="/img/calendar_send.svg" alt="Send to" />
+                <RoleSelect
+                  value={calendars}
+                  setValue={(val) => {
+                    setCalendars(val);
+                    setErrorCalendars(false);
+                  }}
+                  hasError={errorCalendars}
+                />
+              </div>
               <br />
               <br />
               <textarea
