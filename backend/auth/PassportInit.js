@@ -72,4 +72,6 @@ module.exports = () => {
       }
     )
   );
+
+  return passport.authenticate("jwt", { session: false, failureRedirect: "/login" });
 };

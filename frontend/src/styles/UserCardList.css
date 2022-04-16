@@ -1,4 +1,13 @@
-.user_mobile_display,
+.user_mobile_display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  height: calc(100vh - 136px);
+}
 .card_list {
   display: flex;
   flex-direction: column;
@@ -10,7 +19,7 @@
 }
 
 .card_list {
-  height: calc(100vh - 300px);
+  height: 100%;
   width: 100vw;
   overflow-y: auto;
   box-sizing: border-box;
@@ -21,11 +30,11 @@
   display: flex;
   /* justify-content: space-between; */
   justify-content: space-evenly;
-  width: calc(100vw - 70px);
-  height: 40px;
+  width: 100%;
   box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.1);
   padding: 10px 40px;
   margin-bottom: 10px;
+  box-sizing: border-box;
 }
 
 .toggle_btn {
@@ -36,19 +45,14 @@
   line-height: 18px;
   text-align: center;
   font-family: "Lato", sans-serif;
+  padding-bottom: 5px;
 
+  border-bottom: 1px solid transparent;
   color: #75787b;
 }
 
-.toggle_btn_selected {
-  background-color: transparent;
-  border: 0px;
-  font-size: 15px;
-  line-height: 18px;
-  text-align: center;
-  font-family: "Lato", sans-serif;
-
-  border-bottom: 1px solid #000;
+.toggle_btn.selected {
+  border-bottom: 1px solid #0057b8;
   color: #0057b8;
 }
 
@@ -144,14 +148,8 @@
   padding: 1px 63px 1px 10px;
 
   font-family: Lato;
-  font-style: normal;
-  font-weight: 300;
   font-size: 12px;
   line-height: 14px;
-}
-
-.user_search_input_mobile:focus {
-  font-weight: normal;
 }
 
 @media only screen and (max-width: 476px) {

@@ -37,25 +37,15 @@ const validate =
   };
 
 /**
- * A simple error handler that prints the
- *   error to the screen if in development.
- */
-const errorHandler = (res) => (e) => {
-  log.error(e);
-  if (config.app.env === "development") res.status(500).json({ error: e.toString() });
-  else res.status(500).json({ error: "Internal server error." });
-};
-
-/**
  * Middleware to validate the mongodb _id
  *   value stored in the request parameters.
  */
 const idParamValidator =
-  (only_if_present = false) =>
+  (only_if_present = false, kind = "user") =>
   (req, res, next) => {
     if (only_if_present && !req.params.id) next();
     else if (req.params.id && mongoose.Types.ObjectId.isValid(req.params.id)) next();
-    else res.status(400).json({ error: "Invalid user ID parameter." });
+    else res.status(400).json({ error: `Invalid ${kind} ID parameter.` });
   };
 
 /**
@@ -67,9 +57,19 @@ const adminValidator = (req, res, next) => {
   else res.status(403).json({ error: "Access denied." });
 };
 
+/**
+ * A simple error handler that prints the
+ *   error to the screen if in development.
+ */
+const errorHandler = (res) => (e) => {
+  log.error(e);
+  if (config.app.env === "development") res.status(500).json({ error: e.toString() });
+  else res.status(500).json({ error: "Internal server error." });
+};
+
 module.exports = {
   validate,
-  errorHandler,
   idParamValidator,
   adminValidator,
+  errorHandler,
 };

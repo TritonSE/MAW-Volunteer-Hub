@@ -1,19 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from "react";
-import { useTable, useSortBy, useGlobalFilter, useAsyncDebounce } from "react-table";
+import React, { useState, useEffect } from "react";
+import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import "../styles/UserList.css";
 
 // Define a default UI for filtering
 function GlobalFilter({ globalFilter, setGlobalFilter }) {
-  const [searchVal, setSearchVal] = useState(globalFilter);
-  const onChange = useAsyncDebounce((d_value) => {
-    setGlobalFilter(d_value || undefined);
-  }, 100);
-
   // Allows the enter key to be used to start a search
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      onChange(searchVal);
+      setGlobalFilter(globalFilter);
     }
   };
 
@@ -21,22 +16,16 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
     <div className="user_search_bar">
       <input
         className="user_search_input"
-        value={searchVal || ""}
-        onChange={(e) => {
-          setSearchVal(e.target.value);
-        }}
-        onKeyPress={(e) => {
-          handleKeyPress(e);
-        }}
+        value={globalFilter || ""}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        onKeyPress={(e) => handleKeyPress(e)}
         placeholder="Search by name"
       />
       <button
         className="user_search_button"
         type="button"
         aria-label="Search"
-        onClick={() => {
-          onChange(searchVal);
-        }}
+        onClick={() => setGlobalFilter(globalFilter)}
       />
     </div>
   );
@@ -48,7 +37,14 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
  * @param {function} updateMyData function for updating user data
  * @returns
  */
-function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModal }) {
+function UserList({
+  tableHeaders,
+  userData,
+  updateMyData,
+  handleConfirmationModal,
+  filter,
+  setFilter,
+}) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
    * NOTE: This format only applies for the hard-coded user information used for V1
@@ -97,6 +93,9 @@ function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModa
     useGlobalFilter,
     useSortBy
   );
+
+  useEffect(() => setGlobalFilter(filter), [filter]);
+
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
       if (direction) {
@@ -155,13 +154,16 @@ function UserList({ tableHeaders, userData, updateMyData, handleConfirmationModa
             style={showAdmin ? { color: "#0057b8" } : {}}
             onClick={() => setShowAdmin(true)}
           >
-            Admin
+            Admins
           </button>
         </div>
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
+          setGlobalFilter={(f) => {
+            setGlobalFilter(f);
+            setFilter(f);
+          }}
         />
       </div>
       <div className="table-container">

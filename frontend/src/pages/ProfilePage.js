@@ -115,8 +115,10 @@ function ProfilePage() {
     const res = await api_pfp_upload(file, JSON.stringify(corrected_crop));
     if (res && res.success) {
       setUser(res.user);
-      setIsCurrentUser(res.sameUser);
-      if (res.user._id === currentUser._id) setCurrentUser(res.user);
+      if (res.user._id === currentUser._id) {
+        setIsCurrentUser(true);
+        setCurrentUser(res.user);
+      }
     } else {
       setPFPErrorModalOpen("Failed to upload file, please try again.");
     }
@@ -214,7 +216,14 @@ function ProfilePage() {
             <>
               <button type="button">
                 <label htmlFor="pfp_input">
-                  +
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="34"
+                    height="34"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+                  </svg>
                   <input
                     id="pfp_input"
                     className="hidden"

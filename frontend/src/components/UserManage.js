@@ -95,6 +95,7 @@ export default function UserManage() {
     height: window.innerHeight,
   });
   const [hasFetched, setHasFetched] = useState(false);
+  const [filter, setFilter] = useState("");
 
   const navigate = useNavigate();
 
@@ -156,6 +157,8 @@ export default function UserManage() {
           userData={userData}
           updateMyData={updateMyData}
           handleConfirmationModal={handleConfirmationModal}
+          filter={filter}
+          setFilter={setFilter}
         />
       ) : (
         <UserCardList
@@ -163,12 +166,15 @@ export default function UserManage() {
           VerifyButtonCell={VerifyButtonCell}
           updateMyData={updateMyData}
           handleConfirmationModal={handleConfirmationModal}
+          filter={filter}
+          setFilter={setFilter}
         />
       )}
       <Modal
         isOpen={modalState.isOpen}
         contentLabel="Account Access"
         className="access_notification"
+        overlayClassName="access_notification_overlay"
       >
         <div className="notification_contents">
           {modalState.name ?? "User"} has been given access.

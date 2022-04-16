@@ -115,14 +115,8 @@ tr:nth-child(2n) .people_table_data_end {
   padding: 1px 63px 1px 10px;
 
   font-family: Lato;
-  font-style: normal;
-  font-weight: 300;
   font-size: 12px;
   line-height: 14px;
-}
-
-.user_search_input:focus {
-  font-weight: normal;
 }
 
 .people_table_controls {
@@ -152,7 +146,7 @@ tr:nth-child(2n) .people_table_data_end {
     height: calc(100vh - 380px);
   }
   .people_table_controls {
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     margin-top: 25px;
   }
