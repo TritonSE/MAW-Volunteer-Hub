@@ -1,0 +1,44 @@
+.add_roles {
+  height: 23px;
+  width: 23px;
+
+  border-radius: 50%;
+  box-shadow: 0 6px 14px rgba(26, 104, 191, 0.1);
+  background: #ffffff;
+  border: 1px solid var(--primary-blue);
+  font-size: 20px;
+  color: var(--primary-blue);
+  margin-left: 25px;
+  padding: 0;
+}
+
+.add_roles > svg {
+  width: 11px;
+  height: 15px;
+  fill: var(--primary-blue);
+}
+
+.add_roles:hover {
+  cursor: pointer;
+  background: var(--background-grey);
+}
+
+.roles_container {
+  background: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  box-sizing: border-box;
+  width: 40%;
+  padding-left: 35px;
+  padding-bottom: 20px;
+}
+
+.roles_header {
+  display: flex;
+  align-items: center;
+}
+
+.roles_scroller {
+  display: flex;
+  height: 34px;
+}

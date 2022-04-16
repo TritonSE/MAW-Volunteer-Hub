@@ -10,6 +10,8 @@ import { API_ENDPOINTS } from "../constants/links";
 import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
+import ProfileRoles from "../components/ProfileRoles";
+
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
@@ -441,6 +443,7 @@ function ProfilePage() {
           </button>
         </div>
       </Modal>
+      <ProfileRoles roles={currentUser.roles} />
     </div>
   );
 }

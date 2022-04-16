@@ -14,6 +14,8 @@ function AssignBtn({ label, onClick }) {
         return "btn_assign btn_meeter";
       case "Allow Access":
         return "btn_assign btn_access";
+      case "Primary Admin":
+        return "btn_assign btn_pAdmin";
     }
     return "btn_assign btn_none";
   }
