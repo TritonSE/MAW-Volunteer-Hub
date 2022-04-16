@@ -47,11 +47,7 @@ function SideNav({ tabs, manage }) {
 
   return (
     <div className="side_nav_layout">
-      <ScrollContainer
-        className="side_nav_buttons"
-        vertical={false}
-        horizontal={!(windowWidth > 550)}
-      >
+      <ScrollContainer className="side_nav_buttons" vertical={false}>
         {tabs.map((tab, tab_id) => (
           <Link
             to={tab.tab_route}

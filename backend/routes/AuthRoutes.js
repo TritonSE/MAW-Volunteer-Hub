@@ -32,6 +32,11 @@ router.post("/login", validate(["email", "password", "remember"], []), (req, res
       return;
     }
 
+    if (!user.verified) {
+      res.status(401).json({ error: "Account not yet verified." });
+      return;
+    }
+
     req.login(user, { session: false }, (error) => {
       if (error) {
         errorHandler(res)(error);

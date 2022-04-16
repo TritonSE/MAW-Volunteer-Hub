@@ -1,9 +1,7 @@
 .side_nav_layout {
   display: flex;
   flex-direction: row;
-  background-color: white;
-  min-height: calc(100vh - 73px);
-  height: max-content;
+  /* height: max-content; */
 }
 
 .side_nav_buttons {
@@ -16,7 +14,7 @@
   align-self: flex-start;
   position: sticky;
   top: 0;
-  height: 90vh;
+  height: calc(100vh - 73px);
   min-width: 225px;
 }
 
@@ -61,6 +59,8 @@
 
 .side_nav_display {
   width: calc(100vw - 190px);
+  height: calc(100vh - 73px);
+  overflow-y: auto;
 }
 
 .arrow {
@@ -91,6 +91,7 @@
     box-shadow: none;
     align-self: unset;
     overflow: auto;
+    z-index: 998;
   }
 
   .side_nav_links {
