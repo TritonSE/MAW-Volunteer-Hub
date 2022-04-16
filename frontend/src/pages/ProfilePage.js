@@ -11,6 +11,7 @@ import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } f
 import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
+import ProfileCompleted from "../components/ProfleCompleted";
 
 import "../styles/ProfilePage.css";
 
@@ -443,7 +444,10 @@ function ProfilePage() {
           </button>
         </div>
       </Modal>
-      <ProfileRoles roles={currentUser.roles} />
+      <div className="user_stats">
+        <ProfileRoles roles={currentUser.roles} admin={currentUser.admin} />
+        <ProfileCompleted tasks={currentUser.__v} />
+      </div>
     </div>
   );
 }
