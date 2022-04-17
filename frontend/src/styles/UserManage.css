@@ -1,59 +1,19 @@
-.access_notification_overlay {
-  z-index: 999;
-  position: fixed;
-  inset: 0px;
-  background-color: rgba(255, 255, 255, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-}
-
-.access_notification {
-  position: relative;
-  width: 95vw;
-  max-width: 400px;
-  height: 95vh;
-  max-height: 200px;
-  background: #ffffff;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-  /* identical to box height */
-
-  text-align: center;
-}
-
-.notification_contents {
-  width: 400px;
-  max-width: 100%;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.confirmation_btn {
-  font-size: 14px;
-  line-height: 17px;
-  /* identical to box height */
-
-  text-align: center;
-
-  height: 30px;
-  width: 100px;
-  color: #ffffff;
-  background: #1a68bf;
-  border-radius: 3px;
-  margin-top: 20px;
-  border: 1px solid #1a68bf;
-  cursor: pointer;
+.role_btn {
+  min-width: 105px;
+  max-height: 31px;
   font-family: "Lato", sans-serif;
+  font-size: 14px;
+  box-sizing: border-box;
+  box-shadow: 1px 5px 8px rgba(0, 87, 184, 0.1);
+  border-radius: 20px;
+  padding: 7px 16px;
+  cursor: pointer;
+  color: black;
+  background: #ffffff;
+}
+
+.role_btn.access {
+  color: white;
+  background: var(--primary-blue);
+  border: 1px solid white;
 }

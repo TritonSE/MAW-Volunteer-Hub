@@ -1,0 +1,54 @@
+/*
+ * DEFAULT
+ */
+.maw-ui_modal-overlay {
+  z-index: 1000;
+  position: fixed;
+  inset: 0px;
+  background-color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+.maw-ui_modal {
+  width: 95vw;
+  max-width: 466px;
+  height: 95vh;
+  max-height: 278px;
+  padding: 21px 25px;
+  border: none;
+  outline: 0;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+
+/*
+ * THIN VARIANT
+ */
+.maw-ui_modal.thin {
+  max-height: 202px;
+}
+
+/*
+ * NOSHAPE VARIANT
+ */
+.maw-ui_modal.noshape {
+  width: unset;
+  max-width: unset;
+  height: unset;
+  max-height: unset;
+}
+
+/*
+ * COLUMN VARIANT
+ */
+.maw-ui_modal-container.column {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,43 @@
+/*
+ * DEFAULT
+ */
+.maw-ui_button {
+  border-radius: 3px;
+  min-width: 103px;
+  height: 26px;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-weight: normal;
+  transition: opacity 0.1s;
+}
+.maw-ui_button:disabled {
+  opacity: 0.5;
+}
+
+/*
+ * PRIMARY VARIANT
+ */
+.maw-ui_button.primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+
+/*
+ * ERROR VARIANT
+ */
+.maw-ui_button.error {
+  background: #ff797d;
+  color: white;
+  border: none;
+}
+
+/*
+ * FULLWIDTH VARIANT
+ */
+.maw-ui_button.fullwidth {
+  width: 100%;
+}

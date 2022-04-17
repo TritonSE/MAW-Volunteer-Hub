@@ -1,5 +1,11 @@
 import React, { useEffect, useState, useContext } from "react";
-import Modal from "react-modal";
+
+import Button from "./base/Button";
+import Input from "./base/Input";
+import Modal from "./base/Modal";
+
+import { FileStructure, ModalVariantsManager } from "./Contexts";
+
 import {
   api_category_create,
   api_category_delete,
@@ -8,10 +14,8 @@ import {
   api_file_update,
   api_file_delete,
 } from "../api";
-import { FileStructure, ModalVariantsManager } from "./Contexts";
-import "../styles/ModalVariants.css";
 
-Modal.setAppElement("#root");
+import "../styles/ModalVariants.css";
 
 function ModalVariants() {
   /**
@@ -86,7 +90,7 @@ function ModalVariants() {
     },
     delete_file: {
       title: " ",
-      className: "thin",
+      is_thin: true,
       name: false,
       has_upload: false,
       action_button: false,
@@ -125,7 +129,7 @@ function ModalVariants() {
     },
     delete_category: {
       title: " ",
-      className: "thin",
+      is_thin: true,
       name: false,
       has_upload: false,
       action_button: false,
@@ -145,37 +149,33 @@ function ModalVariants() {
     },
     error: {
       title: "Error",
-      className: "thin",
+      is_thin: true,
       name: false,
       has_upload: false,
       action_button: false,
       custom: (
         <>
           <br />
-          <div className="wishgranting_modal_center">{errorMessage}</div>
+          <div className="center">{errorMessage}</div>
           <br />
-          <div className="wishgranting_modal_center thin center">
-            <button
-              type="button"
-              className="wishgranting_modal_button primary"
-              onClick={() => setErrorMessage()}
-            >
+          <div className="center thin center">
+            <Button variant="primary" onClick={() => setErrorMessage()}>
               Okay
-            </button>
+            </Button>
           </div>
         </>
       ),
     },
     progress: {
       title: "Progress",
-      className: "thin",
+      is_thin: true,
       has_close: false,
       name: false,
       has_upload: false,
       action_button: false,
       custom: (
         <>
-          <div className="wishgranting_modal_center">
+          <div className="center">
             <div
               className={`wishgranting_progress ${progress}`}
               role="progressbar"
@@ -238,8 +238,7 @@ function ModalVariants() {
       }}
       contentLabel={variant.title}
       style={{ content: variant.style ?? {} }}
-      className={`wishgranting_react_modal ${variant.className ?? ""}`}
-      overlayClassName={`wishgranting_react_modal ${variant.className ?? ""}`}
+      variant={variant?.is_thin ? "thin" : ""}
     >
       <div className="wishgranting_modal">
         <div className="wishgranting_modal_header">
@@ -281,9 +280,7 @@ function ModalVariants() {
           <input type="submit" hidden /> {/* Form submits on enter key */}
           <div className={variant.name ? "" : "hidden"}>
             <div className="wishgranting_modal_label">{(variant.name ?? {}).title}</div>
-            <input
-              type="text"
-              id="wishgranting_addfile_filename"
+            <Input
               placeholder={(variant.name ?? {}).placeholder}
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -294,40 +291,29 @@ function ModalVariants() {
           {variant.has_upload ? (
             <>
               <div className="wishgranting_modal_label">Upload File</div>
-              <input type="file" id="wishgranting_addfile_upload" onChange={file_upload} />
+              <input type="file" onChange={file_upload} />
             </>
           ) : null}
           {variant.center ? (
-            <div className="wishgranting_modal_center halfheight column">
-              <div className="wishgranting_modal_center">{variant.center.title}</div>
+            <div className="center halfheight column">
               <br />
-              <div className="wishgranting_modal_center thin">
-                <button
-                  type="button"
-                  className="wishgranting_modal_button"
-                  onClick={() => setOpen(false)}
-                >
+              <div className="center">{variant.center.title}</div>
+              <br />
+              <div className="center thin">
+                <Button type="button" onClick={() => setOpen(false)}>
                   Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="wishgranting_modal_button error"
-                  disabled={!submitEnabled}
-                >
+                </Button>
+                <Button type="submit" variant="error" disabled={!submitEnabled}>
                   {variant.center.action_button.title}
-                </button>
+                </Button>
               </div>
             </div>
           ) : null}
           {variant.action_button ? (
             <div className="wishgranting_modal_bottom">
-              <button
-                type="submit"
-                className="wishgranting_modal_button primary"
-                disabled={!submitEnabled}
-              >
+              <Button type="submit" variant="primary" disabled={!submitEnabled}>
                 {variant.action_button.title}
-              </button>
+              </Button>
             </div>
           ) : null}
           {variant.custom || null}

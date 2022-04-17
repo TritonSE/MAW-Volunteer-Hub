@@ -124,73 +124,22 @@
 }
 
 /* Modal styles */
-
-/* Style reset to make modal container 
- * flex (lets me center actual modal) 
- */
-.profile-page-modal-overlay {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(255, 255, 255, 0.75);
-  z-index: 1001;
-  height: 100vh;
-}
-.profile-page-modal {
+.profile-page-modal > div {
   max-width: 400px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  margin: 5px;
-  outline: 0;
 }
-
-.profile-page-modal > h1 {
-  font-family: Lato;
-  font-style: normal;
+.profile-page-modal h1 {
   font-weight: normal;
   font-size: 16px;
   line-height: 22px;
-  text-align: center;
-  margin-top: 40px;
-  margin-left: 10px;
-  margin-right: 10px;
-
-  color: black;
+  margin: 40px 10px 0;
 }
 .close-button {
-  position: absolute;
-  top: 25px;
-  right: 25px;
   border: none;
   background: none;
   background: url(../../public/img/close-modal.svg) no-repeat;
   height: 15px;
   width: 15px;
   cursor: pointer;
-}
-.modal-button {
-  cursor: pointer;
-  border-radius: 3px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-  height: 26px;
-  width: 100%;
-  color: black;
-  transition: opacity 0.1s;
 }
 .modal-button.small {
   width: 105px !important;
@@ -199,50 +148,27 @@
 .modal-button.waiting {
   opacity: 0.5;
 }
-.button-primary {
-  color: white;
-  background-color: rgba(0, 87, 184, 0.9);
-  border: 1px solid rgba(0, 87, 184, 0.9);
-  margin-bottom: 20px;
+
+.profile-change-modal {
+  width: 300px;
+  padding: 20px 50px 0;
+  box-sizing: unset;
 }
-.button-secondary {
-  border: 1px solid black;
-  background: white;
-  line-height: 14px;
-}
-.button-danger {
-  color: white;
-  background: var(--secondary-red);
-  border: 1px solid var(--secondary-red);
-  line-height: 14px;
-}
-.change-pass-form {
-  max-width: 300px;
-  margin: 50px 30px 30px;
-}
-@media only screen and (max-width: 450px) {
-  .change-pass-form {
-    margin: 30px 10px 0px;
-  }
-}
-.change-pass-form > input {
-  background: white;
-  border: 1px solid black;
-  margin-bottom: 14px;
-  padding-left: 5px;
-  line-height: 14px;
+.profile-change-modal .header,
+.profile-delete-modal .header {
   width: 100%;
-  height: 28px;
-  color: var(--blackish);
-  box-sizing: border-box;
-  font-family: "Lato", sans-serif;
+  margin-bottom: 20px;
+  display: flex;
 }
-.change-pass-form > .button-primary {
-  margin-top: 14px;
-  box-sizing: border-box;
-  height: 28px;
-  line-height: 14px;
+.profile-change-modal .header .title,
+.profile-delete-modal .header .title {
+  flex: 1;
+  font-weight: bold;
 }
+.profile-change-modal input {
+  margin-bottom: 14px;
+}
+
 .delete-button-container {
   width: 100%;
   display: flex;

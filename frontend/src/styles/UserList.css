@@ -172,3 +172,8 @@ tr:nth-child(2n) .people_table_data_end {
 .btn_table_control:hover {
   cursor: pointer;
 }
+
+.user_link {
+  color: black;
+  text-decoration: none;
+}

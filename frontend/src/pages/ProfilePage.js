@@ -1,9 +1,12 @@
 /* eslint no-restricted-globals: off */
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Modal from "react-modal";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+
+import Button from "../components/base/Button";
+import Input from "../components/base/Input";
+import Modal from "../components/base/Modal";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
@@ -11,8 +14,6 @@ import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } f
 import { CurrentUser } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
-
-Modal.setAppElement(document.getElementById("root"));
 
 function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
@@ -239,8 +240,8 @@ function ProfilePage() {
               </button>
 
               <Modal
+                variant="center noshape column"
                 className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
                 isOpen={pfpModalOpen}
                 onRequestClose={() => {
                   if (!dragActive) {
@@ -273,27 +274,22 @@ function ProfilePage() {
                 </ReactCrop>
                 <br />
                 <div className="modal-flex-crop">
-                  <button
-                    type="button"
-                    className="modal-button button-nomargin change-password-button"
-                    onClick={() => setPFPModalOpen(false)}
-                  >
+                  <Button variant="fullwidth" onClick={() => setPFPModalOpen(false)}>
                     Cancel
-                  </button>
+                  </Button>
                   <span>&nbsp;</span>
-                  <button
-                    type="button"
-                    className="modal-button button-primary button-nomargin"
-                    onClick={do_upload}
+                  <Button
+                    variant="primary fullwidth"
+                    onClick={() => do_upload()}
                     style={{ opacity }}
                   >
                     Upload
-                  </button>
+                  </Button>
                 </div>
               </Modal>
               <Modal
+                variant="center noshape column"
                 className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
                 isOpen={Boolean(pfpErrorModalOpen)}
                 onRequestClose={() => setPFPErrorModalOpen(false)}
                 contentLabel="Profile picture error"
@@ -301,13 +297,9 @@ function ProfilePage() {
                 <h1 className="modal-title-crop">Error:</h1>
                 <span>{pfpErrorModalOpen}</span>
                 <br />
-                <button
-                  type="button"
-                  className="modal-button button-primary button-nomargin"
-                  onClick={() => setPFPErrorModalOpen(false)}
-                >
+                <Button variant="primary" onClick={() => setPFPErrorModalOpen(false)}>
                   Okay
-                </button>
+                </Button>
               </Modal>
             </>
           )}
@@ -322,23 +314,14 @@ function ProfilePage() {
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          {isCurrentUser && (
-            <button
-              type="button"
-              className="change-password-button"
-              onClick={() => setPassModalOpen(true)}
-            >
-              Change Password
-            </button>
-          )}
+          {isCurrentUser && <Button onClick={() => setPassModalOpen(true)}>Change Password</Button>}
           {currentUser && currentUser.admin && (
-            <button
-              type="button"
-              className="delete-account-button"
-              onClick={() => setDeleteModalOpen(true)}
-            >
-              Delete Profile
-            </button>
+            <>
+              <span>&nbsp;&nbsp;&nbsp;</span>
+              <Button variant="error" onClick={() => setDeleteModalOpen(true)}>
+                Delete Profile
+              </Button>
+            </>
           )}
         </div>
         {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
@@ -346,32 +329,34 @@ function ProfilePage() {
 
       {/* Change Password and Delete Profile Modals */}
       <Modal
-        className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        className="profile-change-modal"
         isOpen={passModalOpen}
         onRequestClose={() => setPassModalOpen(false)}
-        contentLabel="Change Password Modal"
+        contentLabel="Change password"
       >
-        <button
-          className="close-button"
-          aria-label="close-button"
-          type="button"
-          onClick={() => setPassModalOpen(false)}
-        />
+        <div className="header">
+          <div className="title">Change Password</div>
+          <button
+            type="button"
+            className="close-button"
+            aria-label="close-button"
+            onClick={() => setPassModalOpen(false)}
+          />
+        </div>
         <form className="change-pass-form" onSubmit={change_password}>
-          <input
+          <Input
             placeholder="Enter old password"
             type="password"
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
           />
-          <input
+          <Input
             placeholder="Enter new password"
             type="password"
             value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
-          <input
+          <Input
             placeholder="Reenter new password"
             type="password"
             value={confirmPass}
@@ -385,41 +370,36 @@ function ProfilePage() {
             {changePassResponse}
           </div>
 
-          <button className="modal-button button-primary" type="submit">
+          <Button type="submit" variant="primary fullwidth">
             Change password
-          </button>
+          </Button>
         </form>
       </Modal>
 
       <Modal
-        className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        variant="thin column"
+        className="profile-delete-modal"
         isOpen={deleteModalOpen}
         onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Account Modal"
       >
-        <h1>Are you sure you want to delete this profile?</h1>
-        <button
-          className="close-button"
-          aria-label="close-button"
-          type="button"
-          onClick={() => setDeleteModalOpen(false)}
-        />
-        <div className="delete-button-container">
+        <div className="header">
+          <div className="title">&nbsp;</div>
           <button
-            className="modal-button small button-secondary"
             type="button"
+            className="close-button"
+            aria-label="close-button"
             onClick={() => setDeleteModalOpen(false)}
-          >
-            Cancel
-          </button>
-          <button
-            className="modal-button small button-danger"
-            type="button"
-            onClick={delete_account}
-          >
+          />
+        </div>
+        <br />
+        <div className="center">Are you sure you want to delete this profile?</div>
+        <br />
+        <div className="delete-button-container">
+          <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
+          <Button variant="error" onClick={() => delete_account()}>
             Delete
-          </button>
+          </Button>
         </div>
       </Modal>
 

@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Modal from "react-modal";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { Link, useNavigate } from "react-router-dom";
+
+import Button from "./base/Button";
+import Modal from "./base/Modal";
+
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
-import AssignBtn from "./AssignBtn";
+
 import { SITE_PAGES } from "../constants/links";
+/* import ROLES from "../constants/roles"; */
+
 import { api_user_all, api_user_verify } from "../api";
 
 import "../styles/UserManage.css";
-
-Modal.setAppElement(document.getElementById("root"));
 
 function VerifyButtonCell({
   isVerified: initialVerified,
@@ -32,33 +35,46 @@ function VerifyButtonCell({
     setIsVerifiedState(true);
   }
 
+  /*
   function handleRoleBtnClick(label) {
-    if (label === "Allow Access") {
-      // setIsOpen(true);
-      handleConfirmationModal({ name: userName, isOpen: true });
-      handleVerifyUser();
-      // setIsVerifiedState(true);
-      // setUserData(null);
-      // updateLocal(id, userData, setUserData);
-    }
+    // TODO
   }
+  */
 
   if (!isVerifiedState) {
     return (
       <ScrollContainer className="assign_btn_container" vertical={false}>
-        <AssignBtn
-          label="Allow Access"
-          key={Math.random()}
-          onClick={() => handleRoleBtnClick("Allow Access")}
-        />
+        <button
+          type="button"
+          className="role_btn access"
+          onClick={() => {
+            handleConfirmationModal({ name: userName, isOpen: true });
+            handleVerifyUser();
+          }}
+        >
+          Allow Access
+        </button>
       </ScrollContainer>
     );
   }
   return (
     <ScrollContainer className="assign_btn_container" vertical={false}>
-      {/* {buttonLabels.map((label) => (
-            <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick(label)} />
-          ))} */}
+      {/*
+      {
+        buttonLabels.map((label) => (
+          <button
+            key={label}
+            className="role_btn"
+            style={{
+              border: `1px solid ${ROLES.find((role) => (role.name === label)).color}`,
+            }}
+            onClick={() => handleRoleBtnClick(label)}
+          >
+            {label}
+          </button>
+        ))
+      }
+      */}
     </ScrollContainer>
   );
 }
@@ -170,21 +186,17 @@ export default function UserManage() {
           setFilter={setFilter}
         />
       )}
-      <Modal
-        isOpen={modalState.isOpen}
-        contentLabel="Account Access"
-        className="access_notification"
-        overlayClassName="access_notification_overlay"
-      >
+      <Modal isOpen={modalState.isOpen} contentLabel="Account Access" variant="thin center">
         <div className="notification_contents">
           {modalState.name ?? "User"} has been given access.
-          <button
-            type="button"
-            className="confirmation_btn"
+          <br />
+          <br />
+          <Button
+            variant="primary"
             onClick={() => handleConfirmationModal({ name: "", isOpen: false })}
           >
             Okay
-          </button>
+          </Button>
         </div>
       </Modal>
     </div>
