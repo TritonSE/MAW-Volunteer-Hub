@@ -15,7 +15,7 @@
 .evt_modal {
   position: absolute;
   width: 600px;
-  height: 460px;
+  min-height: 460px;
   border-radius: 10px;
   outline: 0;
   font-family: "Lato", sans-serif;
@@ -37,6 +37,13 @@
 .evt_modal_header h1 {
   font-size: 18px;
   color: #ffffff;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  flex: 3;
+}
+.evt_modal_header div {
+  flex: 2;
 }
 .evt_modal_header button {
   background: transparent;
@@ -147,6 +154,7 @@
 .evt_modal_guests div {
   border-left: 0.5px solid #000000;
   padding-left: 8px;
+  margin-bottom: 20px;
 }
 .evt_modal_guests label {
   display: flex;
@@ -156,7 +164,9 @@
 .evt_modal_content input[type="checkbox"] {
   width: 0;
   height: 0;
-  display: none;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
 }
 .evt_modal_content input[type="checkbox"] ~ .calendar_checkbox {
   width: 14px;
@@ -175,6 +185,9 @@
   background-repeat: no-repeat;
   background-position: 3px center;
   border: none;
+}
+.evt_modal_content input[type="checkbox"]:focus ~ .calendar_checkbox {
+  outline: rgb(0, 95, 204) auto 1px;
 }
 .evt_modal_content input[type="checkbox"]:disabled ~ .calendar_checkbox {
   opacity: 0.25;

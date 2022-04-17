@@ -7,6 +7,18 @@ import ViewEventModal from "../components/ViewEventModal";
 import ROLES from "../constants/roles";
 import "../styles/CalendarPage.css";
 
+/*
+ * Current TODOs:
+ *   - Repeating events
+ *   - Fix occasional addition of event when clicking on existing event
+ *   - Change volunteer listing in admin view event modal to waste less space
+ *   - "Assign volunteers" and volunteer listing modal
+ *   - Better indication that an event is in multiple calendars
+ *   - Mobile support/overall better responsiveness
+ *   - Style cleanups
+ *   - Memory leak testing/performance tuning
+ *   - Keyboard shortcuts
+ */
 function CalendarPage() {
   const [currentUser] = useContext(CurrentUser);
 
@@ -31,18 +43,16 @@ function CalendarPage() {
 
     if (!currentUser.admin && !ev.volunteers.some((vol) => vol._id === currentUser._id)) {
       return {
-        style: {
-          background: "white",
-          color: css.color,
-          border: `1px solid ${css.color}`,
-        },
-        calendar: css,
+        background: "white",
+        color: css.color,
+        border: `1px solid ${css.color}`,
       };
     }
-    return {
-      style: css,
-      calendar: css,
-    };
+    return css;
+  }
+
+  function sanitize_calendars(cals) {
+    return cals.map((incal) => calendars.find((outcal) => incal === outcal.name));
   }
 
   function sanitize_event(ev) {
@@ -50,7 +60,8 @@ function CalendarPage() {
       ...ev,
       from: new Date(ev.from),
       to: new Date(ev.to),
-      ...style_from_event(ev),
+      calendar: sanitize_calendars(ev.calendars),
+      style: style_from_event(ev),
     };
   }
 
@@ -135,7 +146,7 @@ function CalendarPage() {
         }}
         onAddEvent={(val) => {
           setEventAcquire(val);
-          if (isEditing) setViewModal(val);
+          if (isEditing) setViewModal(sanitize_event(val));
         }}
         isEditing={isEditing}
       />

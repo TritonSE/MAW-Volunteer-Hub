@@ -2,6 +2,10 @@
   width: 300px !important;
   height: unset;
 }
+.view_modal.evt_modal.admin {
+  display: flex;
+  flex-direction: column;
+}
 
 .view_modal .spots_filled {
   font-size: 14px;
@@ -42,9 +46,10 @@
 }
 
 .view_modal .role_listing {
-  margin-right: 5px;
-  margin-bottom: 10px;
   text-align: left;
+}
+.view_modal .role_listing:not(:last-child) {
+  margin-bottom: 10px;
 }
 .view_modal .circle {
   display: inline-block;
@@ -65,9 +70,14 @@
 }
 
 .view_modal .evt_modal_content .columns {
+  width: 100%;
   display: flex;
+  justify-content: space-between;
 }
 
+.view_modal .evt_modal_content .columns div {
+  flex: 1;
+}
 .view_modal .evt_modal_content .columns .indented {
   margin-left: 40px;
 }
@@ -86,11 +96,12 @@
   background: linear-gradient(91.79deg, #5286c0 0.19%, #0057b8 100%);
   font-size: 18px;
   color: white;
-  margin-top: 18px;
+  margin-top: 36px;
 }
 
 .view_modal .evt_modal_scroll {
-  height: 24%;
+  min-height: 200px;
+  flex: 1;
   overflow: auto;
 }
 
@@ -104,6 +115,10 @@
   box-sizing: border-box;
   float: left;
   font-size: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  background: white;
+  font-family: "Lato", sans-serif;
 }
 .view_modal .evt_modal_smallbox:nth-child(2n + 1) {
   margin: 15px 30px;
@@ -132,6 +147,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 180px;
   height: 90%;
 }
 
@@ -191,6 +207,7 @@
   width: 95vw;
   max-width: 466px;
   height: 95vh;
+  min-height: 0;
   max-height: 202px;
 }
 .evt_modal.confirm button {
@@ -227,4 +244,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.view_modal .response_view {
+  height: 200px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+.view_modal .response_view_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+}
+.view_modal .response_view_header button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.view_modal .response_view_header button.spacer {
+  opacity: 0;
+}
+.view_modal .response_view_header h1 {
+  flex: 1;
+  font-size: 20px;
+  font-weight: normal;
 }

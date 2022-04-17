@@ -26,7 +26,7 @@ router.get("/all", (req, res) =>
     })
     .then((events) => {
       res.json(events);
-      EventModel.updateMany(
+      return EventModel.updateMany(
         {
           to: {
             $lte: new Date(),
@@ -78,6 +78,21 @@ router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
 
 router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
   EventModel.findById(req.params.id)
+    .populate("volunteers")
+    .populate({
+      path: "guests",
+      populate: {
+        path: "with",
+        model: "user",
+      },
+    })
+    .populate({
+      path: "responses",
+      populate: {
+        path: "volunteer",
+        model: "user",
+      },
+    })
     .then((event) => {
       /*
        * Note: mongoose strict mode is enabled by default, meaning any

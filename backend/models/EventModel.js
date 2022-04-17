@@ -36,7 +36,20 @@ const EventSchema = new mongoose.Schema({
   calendars: {
     type: [String],
     required: true,
-    validate: [(arr) => arr.length > 0, "Event must be part of at least one calendar."],
+    validate: [
+      {
+        validator: (arr) => arr.length > 0,
+        msg: "Event must be part of at least one calendar.",
+      },
+      /*
+       * If events' calendars should be checked individually for validity,
+       *   it can be done like this:
+
+      {
+        validator: (arr) => arr.every((cal) => ...)
+      }
+      */
+    ],
   },
   number_needed: {
     type: Number,

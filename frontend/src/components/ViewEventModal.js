@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
-import { useArrayState } from "@cubedoodl/react-simple-scheduler";
+import {
+  DateFormatter,
+  DateRangeFormatter,
+  useArrayState,
+} from "@cubedoodl/react-simple-scheduler";
 import ROLES from "../constants/roles";
 import { api_calendar_delete, api_calendar_respond } from "../api";
 import { CurrentUser } from "./Contexts";
@@ -169,6 +173,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   const [hasGuests, setHasGuests] = useState(false);
   const [guests, setGuests, addGuest, deleteGuest] = useArrayState([]);
   const [response, setResponse] = useState("");
+  const [responseView, setResponseView] = useState();
 
   const [hasChanges, setHasChanges] = useState(-1);
   const [confirmModal, setConfirmModal] = useState(0);
@@ -236,7 +241,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           overlayClassName="evt_modal_overlay"
         >
           <div className="evt_modal_header">
-            <h1>{event.name}</h1>
+            <h1 title={event.name}>{event.name}</h1>
             <div>
               <button type="button" onClick={() => editEvent()}>
                 <img alt="Edit event" src="/img/filelisting_edit.svg" />
@@ -261,11 +266,8 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               <div>
                 <div className="prop">
                   <img alt="Event time" src="/img/calendar_time.svg" />
-                  Wed Apr 13 | 11:00 AM - 1:00 PM
-                  {/*
-                <DateFormatter date={event.from} fmt="x o d | " />
-                <DateRangeFormatter from={event.from} to={event.to} />
-                */}
+                  <DateFormatter date={event.from} fmt="x o d | " />
+                  <DateRangeFormatter from={event.from} to={event.to} />
                 </div>
                 <div className="question_info small_indented">Repeat schedule</div>
                 <div className="prop">
@@ -273,9 +275,9 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   {event.location}
                 </div>
                 <br />
-                <div className="prop list underlined">
+                <div className="prop list">
                   <img src="/img/calendar_send.svg" alt="Send to" />
-                  <div>
+                  <div title={event.calendars.join(", ")}>
                     {event.calendars.map((name) => {
                       const css = ROLES.find((cal) => cal.name === name);
 
@@ -310,22 +312,48 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           </div>
           <div className="evt_modal_separator">Question Responses</div>
           <div className="evt_modal_scroll">
-            {event.responses.map((resp) => (
-              <div className="evt_modal_smallbox">
-                <div className="name">{resp.volunteer.name}</div>
-                <div className="content">
-                  <Abbreviator
-                    content={resp.response}
-                    maxLength={95 - resp.volunteer.name.length}
-                  />
+            {!responseView ? (
+              <>
+                {event.responses.map((resp) => (
+                  <button
+                    key={resp._id}
+                    type="button"
+                    className="evt_modal_smallbox"
+                    onClick={() => setResponseView(resp)}
+                  >
+                    <div className="name">{resp.volunteer.name}</div>
+                    <div className="content">
+                      <Abbreviator
+                        content={resp.response}
+                        maxLength={80 - 3 * resp.volunteer.name.length}
+                      />
+                    </div>
+                  </button>
+                ))}
+                {event.responses.length === 0 ? (
+                  <div className="evt_modal_center">
+                    <div>No responses yet.</div>
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <div className="response_view">
+                <div className="response_view_header">
+                  <button type="button" onClick={() => setResponseView()}>
+                    <img src="/img/calendar_chevron.svg" alt="Go back" />
+                  </button>
+                  <h1>{responseView.volunteer.name}</h1>
+                  <button type="button" className="spacer">
+                    <img src="/img/calendar_chevron.svg" alt="Go back" />
+                  </button>
+                </div>
+                <div className="response_view_content">
+                  {responseView.response}
+                  <br />
+                  <br />
                 </div>
               </div>
-            ))}
-            {event.responses.length === 0 ? (
-              <div className="evt_modal_center">
-                <div>No responses yet.</div>
-              </div>
-            ) : null}
+            )}
           </div>
         </Modal>
 
@@ -351,7 +379,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
         overlayClassName="evt_modal_overlay"
       >
         <div className="evt_modal_header">
-          <h1>{event.name}</h1>
+          <h1 title={event.name}>{event.name}</h1>
           <button
             type="button"
             onClick={() => {
@@ -370,11 +398,8 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
 
             <div className="prop">
               <img alt="Event time" src="/img/calendar_time.svg" />
-              Wed Apr 13 | 11:00 AM - 1:00 PM
-              {/*
-            <DateFormatter date={event.from} fmt="x o d | " />
-            <DateRangeFormatter from={event.from} to={event.to} />
-            */}
+              <DateFormatter date={event.from} fmt="x o d | " />
+              <DateRangeFormatter from={event.from} to={event.to} />
             </div>
             <div className="prop">
               <img alt="Event time" src="/img/calendar_location.svg" />

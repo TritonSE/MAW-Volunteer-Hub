@@ -97,5 +97,8 @@
 .calendar .react-simple-scheduler .body {
   width: calc(100vw - 200px - 20px - 24px - 21px - 21px);
   /* height: calc(100vh - 70px - 73px - 42px); */
+  /* height: calc(91vh - 70px - 42px); */
+
   height: calc(91vh - 70px - 42px);
+  min-height: calc(576px - 70px);
 }

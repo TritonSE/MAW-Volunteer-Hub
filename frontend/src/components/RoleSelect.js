@@ -35,6 +35,7 @@ export default function RoleSelect({ value, setValue, hasError }) {
       marginLeft: "10px",
       maxWidth: "213px",
       maxHeight: "70px",
+      fontSize: "14px",
     }),
     control: (provided) => ({
       ...provided,
@@ -47,6 +48,15 @@ export default function RoleSelect({ value, setValue, hasError }) {
     indicatorsContainer: (provided) => ({
       ...provided,
       maxHeight: "70px",
+    }),
+    menu: (provided) => ({
+      ...provided,
+      transform: "translateY(-7px)",
+      height: "342px",
+    }),
+    menuList: (provided) => ({
+      ...provided,
+      maxHeight: "339px",
     }),
     option: (provided, state) => {
       const opacity = state.isFocused ? "99" : "66";

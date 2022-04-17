@@ -230,7 +230,9 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <div className="indent">
-                <button type="button">Assign volunteers</button>
+                <button type="button" tabIndex={-1}>
+                  Assign volunteers
+                </button>
               </div>
               <br />
               <img src="/img/calendar_location.svg" alt="Location" />
@@ -261,6 +263,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
                 placeholder="Add a question..."
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
+                maxLength={175}
               />
               <br />
               <br />
