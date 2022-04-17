@@ -10,8 +10,8 @@ function AssignBtn({ label, onClick }) {
         return "btn_assign btn_aGreeter";
       case "Wish Granter":
         return "btn_assign btn_wGranter";
-      case "Meeter":
-        return "btn_assign btn_meeter";
+      case "Mentor":
+        return "btn_assign btn_mentor";
       case "Allow Access":
         return "btn_assign btn_access";
       case "Primary Admin":
