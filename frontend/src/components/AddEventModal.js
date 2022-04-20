@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import { Calendar } from "@cubedoodl/react-simple-scheduler";
 import RoleSelect from "./RoleSelect";
 import DATE_UTILS from "../date";
 import ROLES from "../constants/roles";
@@ -8,13 +9,14 @@ import "../styles/AddEventModal.css";
 
 Modal.setAppElement("#root");
 
-function FormInput({ type, placeholder, step, onChange, value, setValue, error, setError }) {
+function FormInput({ type, placeholder, step, min, onChange, value, setValue, error, setError }) {
   return (
     <input
       type={type}
       placeholder={placeholder}
       className={error ? "error" : ""}
       step={step}
+      min={min}
       value={value}
       onChange={
         onChange ??
@@ -52,6 +54,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [over18, setOver18] = useState(false);
   const [under18, setUnder18] = useState(false);
 
+  const [calendarVisible, setCalendarVisible] = useState(false);
   const [animationPlaying, setAnimationPlaying] = useState(false);
 
   function on_open() {
@@ -88,10 +91,12 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setUnder18(currentEvent?.under18 ?? false);
   }
 
+  /*
   function change_date(e) {
     setFrom(DATE_UTILS.copy_ymd(from, e.target.value));
     setTo(DATE_UTILS.copy_ymd(to, e.target.value));
   }
+  */
 
   function change_time(e) {
     setFrom(DATE_UTILS.copy_time(from, e.target.value));
@@ -120,7 +125,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       setErrorTo(true);
       has_err = true;
     }
-    if (!numberNeeded) {
+    if (!numberNeeded || numberNeeded < 0) {
       setErrorNumberNeeded(true);
       has_err = true;
     }
@@ -184,11 +189,27 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <img src="/img/calendar_date.svg" alt="Date" />
-              <FormInput
+              <input
                 type="date"
                 value={DATE_UTILS.format_ymd(from)}
-                onChange={(e) => change_date(e)}
+                onFocus={() => setCalendarVisible(true)}
+                readOnly
               />
+              {from && calendarVisible ? (
+                <Calendar
+                  selected={from}
+                  setSelected={setFrom}
+                  style={{
+                    container: {
+                      position: "absolute",
+                      top: "158px",
+                      padding: "10px",
+                      marginLeft: "26px",
+                      border: "1px solid var(--primary-blue)",
+                    },
+                  }}
+                />
+              ) : null}
               <br />
               <img src="/img/calendar_time.svg" alt="Time" />
               <FormInput
@@ -223,6 +244,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               <FormInput
                 type="number"
                 placeholder="# of volunteers needed"
+                min={0}
                 value={numberNeeded ?? ""}
                 setValue={setNumberNeeded}
                 error={errorNumberNeeded}

@@ -36,8 +36,8 @@ export default [
   },
   {
     name: "Speaker's Bureau",
-    background: "#BCC6C8",
-    color: "#5C6C70",
+    background: "#9CC6C8",
+    color: "#2C6C70",
   },
   {
     name: "Las Estrellas",

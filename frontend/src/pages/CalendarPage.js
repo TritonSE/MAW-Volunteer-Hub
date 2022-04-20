@@ -18,6 +18,10 @@ import "../styles/CalendarPage.css";
  *   - Style cleanups
  *   - Memory leak testing/performance tuning
  *   - Keyboard shortcuts
+ *
+ *   - Fix number input taking negative values
+ *   - Fix input/time inputs
+ *   - Fix color scheme
  */
 function CalendarPage() {
   const [currentUser] = useContext(CurrentUser);
@@ -62,6 +66,10 @@ function CalendarPage() {
       to: new Date(ev.to),
       calendar: sanitize_calendars(ev.calendars),
       style: style_from_event(ev),
+      volunteers: ev.volunteers.map((vol) => ({
+        ...vol,
+        guests: ev.guests.filter((guest) => guest.with._id === vol._id),
+      })),
     };
   }
 

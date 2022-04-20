@@ -12,46 +12,66 @@ import "../styles/AddEventModal.css";
 import "../styles/ViewEventModal.css";
 
 function GuestsContainer({ guests, addGuest, deleteGuest }) {
-  /*
-   * TODO: Validation
-   */
+  const [name, setName] = useState("");
+  const [relation, setRelation] = useState("");
+
+  const [nameError, setNameError] = useState(false);
+  const [relationError, setRelationError] = useState(false);
+
+  useEffect(() => setNameError(false), [name]);
+  useEffect(() => setRelationError(false), [relation]);
+
   return (
     <div className="guests_container">
-      {guests.map((guest) => (
-        <div key={guest.id}>
-          <div className="guests_flex">
-            <div>
-              <input
-                placeholder="Guest's name"
-                defaultValue={guest.name}
-                onChange={(e) => {
-                  guest.name = e.target.value;
-                }}
-              />
-              <input
-                placeholder="Guest's relationship to you"
-                defaultValue={guest.relation}
-                onChange={(e) => {
-                  guest.relation = e.target.value;
-                }}
-              />
-            </div>
-            <div>
+      <form className="guest_form" onSubmit={(e) => e.preventDefault()}>
+        <input
+          placeholder="Guest's name"
+          className={nameError ? "error" : ""}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          placeholder="Guest's relationship to you"
+          className={relationError ? "error" : ""}
+          value={relation}
+          onChange={(e) => setRelation(e.target.value)}
+        />
+        <button
+          type="button"
+          className="fullwidth"
+          onClick={() => {
+            let has_error = 0;
+            if (name.trim() === "") {
+              setNameError(true);
+              has_error = 1;
+            }
+            if (relation.trim() === "") {
+              setRelationError(true);
+              has_error = 1;
+            }
+            if (has_error) return;
+
+            addGuest({ name, relation });
+            setName("");
+            setRelation("");
+          }}
+        >
+          Add
+        </button>
+      </form>
+      {guests.length > 0 ? (
+        <div className="chips">
+          {guests.map((guest) => (
+            <div key={guest.name + guest.relation} className="chip">
+              {guest.name}
               <button type="button" onClick={() => deleteGuest(guest)}>
-                <img alt="Delete guest" src="/img/filelisting_delete.svg" />
+                x
               </button>
             </div>
-          </div>
-          <hr />
+          ))}
         </div>
-      ))}
-
-      <button type="button" onClick={() => addGuest({ id: Math.random(), name: "", relation: "" })}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24">
-          <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
-        </svg>
-        <span>Add more guests</span>
-      </button>
+      ) : null}
+      <div>Total number of guests: {guests.length}</div>
     </div>
   );
 }
@@ -177,13 +197,14 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
 
   const [hasChanges, setHasChanges] = useState(-1);
   const [confirmModal, setConfirmModal] = useState(0);
+  const [volModal, setVolModal] = useState(false);
 
   useEffect(() => {
     const tmp = event.guests.filter((guest) => guest.with._id === currentUser._id);
     if (tmp.length > 0) {
       setGuests(tmp);
       setHasGuests(true);
-    } else setGuests([{ name: "", relation: "" }]);
+    }
 
     setResponse(
       event.responses
@@ -277,15 +298,19 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <br />
                 <div className="prop list">
                   <img src="/img/calendar_send.svg" alt="Send to" />
-                  <div title={event.calendars.join(", ")}>
+                  <div className="role_container">
                     {event.calendars.map((name) => {
                       const css = ROLES.find((cal) => cal.name === name);
 
                       return (
                         <div key={name}>
                           <div className="role_listing">
-                            <div className="circle" style={{ background: css.color }} />
-                            {name}
+                            <div
+                              className="circle"
+                              style={{ background: css.color }}
+                              title={name}
+                            />
+                            {/* TODO */}
                           </div>
                         </div>
                       );
@@ -302,7 +327,13 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   {event.over18 ? "Guests 18+ only" : ""}
                   {event.under18 ? "Guests under 18 allowed" : ""}
                 </div>
-                <div className="prop underlined">View who is going</div>
+                <button
+                  type="button"
+                  className="prop unstyled underlined"
+                  onClick={() => setVolModal(true)}
+                >
+                  View who is going
+                </button>
                 <div className="question_info smallskip">
                   {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
                 </div>
@@ -364,6 +395,61 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           saveResponse={(val) => save_response(val)}
           deleteEvent={() => delete_event()}
         />
+
+        <Modal
+          isOpen={volModal}
+          onRequestClose={() => setVolModal(false)}
+          className="view_modal evt_modal nonadmin"
+          overlayClassName="evt_modal_overlay"
+        >
+          <div className="evt_modal_header">
+            <h1>Attendees</h1>
+            <button type="button" onClick={() => setVolModal(false)}>
+              <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
+            </button>
+          </div>
+          <div className="evt_modal_content">
+            <div className="columns">
+              <div>
+                <div className="gentle">
+                  {event.volunteers.length} Volunteer{event.volunteers.length !== 1 ? "s" : ""}
+                </div>
+                <br />
+                {event.volunteers.map((vol) => (
+                  <div>
+                    <div className="very-gentle">{vol.name}</div>
+                    <div className="indented">
+                      {vol.guests.map((guest) => (
+                        <>
+                          {guest.name}
+                          <br />
+                        </>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div>
+                <div className="gentle">
+                  {event.guests.length} Guest{event.guests.length !== 1 ? "s" : ""}
+                </div>
+                <br />
+                {event.volunteers.map((vol) => (
+                  <div>
+                    <br />
+                    {vol.guests.map((guest) => (
+                      <>
+                        {guest.relation}
+                        <br />
+                      </>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          {event.volunteers.length > 0 ? <br /> : null}
+        </Modal>
       </>
     );
   }
@@ -390,7 +476,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
           </button>
         </div>
-        <div className="evt_modal_content">
+        <div className="evt_modal_content nonflex">
           <div>
             <div className="spots_filled">
               {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
@@ -427,7 +513,6 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             {hasGuests && (
               <GuestsContainer guests={guests} addGuest={addGuest} deleteGuest={deleteGuest} />
             )}
-            <br />
 
             {event.question ? (
               <>

@@ -1,6 +1,7 @@
 .view_modal.evt_modal.nonadmin {
   width: 300px !important;
   height: unset;
+  min-height: unset;
 }
 .view_modal.evt_modal.admin {
   display: flex;
@@ -45,6 +46,9 @@
   margin-left: 24px;
 }
 
+.view_modal .role_container {
+  display: flex;
+}
 .view_modal .role_listing {
   text-align: left;
 }
@@ -52,11 +56,9 @@
   margin-bottom: 10px;
 }
 .view_modal .circle {
-  display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  margin-right: 5px;
 }
 
 .view_modal label {
@@ -69,6 +71,9 @@
   cursor: pointer;
 }
 
+.view_modal .evt_modal_content.nonflex {
+  display: block;
+}
 .view_modal .evt_modal_content .columns {
   width: 100%;
   display: flex;
@@ -159,9 +164,11 @@
 }
 
 .view_modal .guests_container {
-  max-height: 20vh;
   margin-top: 11px;
   overflow: auto;
+}
+.view_modal .guests_container .guest_form {
+  margin-bottom: 10px;
 }
 .view_modal .guests_container input {
   background: white;
@@ -171,36 +178,57 @@
   margin-bottom: 11px;
   width: 100%;
 }
+.view_modal .guests_container input.error {
+  border: 1px solid red;
+}
 .view_modal .guests_container input:focus {
   border: 1px solid black;
 }
 .view_modal .guests_container input:last-child {
   margin-bottom: 0;
 }
-.view_modal .guests_container button {
-  color: #75787b;
+.view_modal .guests_container button.fullwidth {
+  width: 100%;
+  background: var(--primary-blue);
   border: none;
-  display: flex;
+  color: white;
+}
+
+.view_modal .guests_container .chips {
+  width: 100%;
+  height: 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+.view_modal .guests_container .chips .chip {
+  min-width: 80px;
+  height: 27px;
+  background: #8dc8e866;
+  font-size: 12px;
+
+  display: inline-flex;
   align-items: center;
-  justify-content: space-around;
-  width: fit-content;
-}
-.view_modal .guests_container button svg {
-  width: 14px;
-  height: 14px;
-  fill: #1a68bf;
-  border: 1px solid #1a68bf;
-  border-radius: 14px;
-  padding: 5px;
-  margin-right: 9px;
-}
-.view_modal .guests_container .guests_flex {
-  display: flex;
-  align-items: center;
-}
-.view_modal .guests_container .guests_flex button {
-  margin-left: 5px;
+  justify-content: space-between;
+
   border: 1px solid black;
+  border-radius: 20px;
+
+  box-sizing: border-box;
+  padding-left: 20px;
+  margin-right: 6px;
+}
+.view_modal .guests_container .chips .chip button {
+  width: unset;
+  height: unset;
+  border: none;
+  padding: 0;
+  padding-right: 10px;
+  margin: 0;
+  margin-left: 10px;
+  float: right;
+  background: transparent;
 }
 
 .evt_modal.confirm {
@@ -269,4 +297,11 @@
   flex: 1;
   font-size: 20px;
   font-weight: normal;
+}
+
+.view_modal .gentle {
+  color: var(--grey);
+}
+.view_modal .very-gentle {
+  font-weight: lighter;
 }
