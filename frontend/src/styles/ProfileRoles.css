@@ -105,3 +105,7 @@
   font-size: 16px;
   line-height: 17px;
 }
+
+.add_roles_form > .modal-button {
+  margin-top: 15px;
+}

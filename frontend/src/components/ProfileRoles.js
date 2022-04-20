@@ -23,6 +23,7 @@ export default function ProfileRoles(props) {
 
   const adminRoles = ["Primary Admin", "Secondary Admin"];
 
+  // Dummy method that collects new roles.
   const addRoles = (e) => {
     e.preventDefault();
     console.log(selectedRoles);
@@ -31,7 +32,7 @@ export default function ProfileRoles(props) {
   return (
     <div className="roles_container">
       <div className="roles_header">
-        <h2>Role</h2>
+        <h2>Roles</h2>
         {/* Taken from ProfilePage.js and ProfilePage.css */}
         {props.admin ? (
           <button type="button" className="add_roles" onClick={() => setRolesModalOpen(true)}>

@@ -12,6 +12,7 @@ import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
 import ProfileCompleted from "../components/ProfleCompleted";
+import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
 
@@ -446,9 +447,12 @@ function ProfilePage() {
       </Modal>
       <div>
         {user.roles ? (
-          <div className="user_stats">
-            <ProfileRoles roles={user.roles} admin={currentUser.admin} />
-            <ProfileCompleted tasks={user.__v} />
+          <div>
+            <div className="user_stats">
+              <ProfileRoles roles={user.roles} admin={currentUser.admin} />
+              <ProfileCompleted tasks={user.__v} />
+            </div>
+            <ProfileActivities />
           </div>
         ) : (
           "Loading..."
