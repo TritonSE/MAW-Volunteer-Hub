@@ -18,7 +18,7 @@ export default function ProfileRoles(props) {
     "Special Events",
     "Translator",
     "Speaker's Bureau",
-    "Las Estrallas",
+    "Las Estrellas",
   ];
 
   const adminRoles = ["Primary Admin", "Secondary Admin"];

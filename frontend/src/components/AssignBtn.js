@@ -6,16 +6,30 @@ function AssignBtn({ label, onClick }) {
     switch (label) {
       case "Assign Role":
         return "btn_assign btn_role";
-      case "Airport Greeter":
-        return "btn_assign btn_aGreeter";
       case "Wish Granter":
         return "btn_assign btn_wGranter";
+      case "Airport Greeter":
+        return "btn_assign btn_aGreeter";
       case "Mentor":
         return "btn_assign btn_mentor";
+      case "Volunteer":
+        return "btn_assign btn_volunteer";
+      case "Office":
+        return "btn_assign btn_office";
+      case "Special Events":
+        return "btn_assign btn_speciale";
+      case "Translator":
+        return "btn_assign btn_translator";
+      case "Speaker's Bureau":
+        return "btn_assign btn_speaker";
+      case "Las Estrellas":
+        return "btn_assign btn_las";
       case "Allow Access":
         return "btn_assign btn_access";
       case "Primary Admin":
         return "btn_assign btn_pAdmin";
+      case "Secondary Admin":
+        return "btn_assign btn_sAdmin";
     }
     return "btn_assign btn_none";
   }

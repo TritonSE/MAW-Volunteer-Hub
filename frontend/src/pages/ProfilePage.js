@@ -444,9 +444,15 @@ function ProfilePage() {
           </button>
         </div>
       </Modal>
-      <div className="user_stats">
-        <ProfileRoles roles={currentUser.roles} admin={currentUser.admin} />
-        <ProfileCompleted tasks={currentUser.__v} />
+      <div>
+        {user.roles ? (
+          <div className="user_stats">
+            <ProfileRoles roles={user.roles} admin={currentUser.admin} />
+            <ProfileCompleted tasks={user.__v} />
+          </div>
+        ) : (
+          "Loading..."
+        )}
       </div>
     </div>
   );

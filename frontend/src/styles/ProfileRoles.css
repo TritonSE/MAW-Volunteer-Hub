@@ -64,9 +64,9 @@
 }
 
 .close_button {
-  position: absolute;
-  top: 25px;
-  right: 25px;
+  position: relative;
+  left: 85%;
+  top: 45px;
   border: none;
   background: none;
   background: url(../../public/img/close-modal.svg) no-repeat;
