@@ -1,6 +1,5 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const json5 = require("json5");
 
 const router = express.Router();
 
@@ -9,7 +8,7 @@ const router = express.Router();
 
 const UserModel = require("../models/UserModel");
 const { idOfCurrentUser } = require("../util/userUtil");
-const { validate } = require("../util/RouteUtils");
+const { validate, errorHandler } = require("../util/RouteUtils");
 
 function validateIdParam(req, res) {
   if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -148,7 +147,7 @@ router.put("/edit/:id", async (req, res, next) => {
 });
 
 router.patch("/set-roles/:id", validate(["roles"], []), async (req, res) => {
-  const roles = json5.parse(req.body.roles);
+  const roles = JSON.parse(req.body.roles);
   const keyroles = [
     "Wish Granter",
     "Volunteer",
@@ -162,33 +161,21 @@ router.patch("/set-roles/:id", validate(["roles"], []), async (req, res) => {
     "Primary Admin",
     "Secondary Admin",
   ];
-  if (JSON.stringify(Object.keys(roles)) === JSON.stringify(keyroles)) {
-    const roles_user = [];
-    Object.keys(roles).forEach(async (key) => {
-      if (roles[key]) {
-        await roles_user.push(key);
-      }
-    });
-    await UserModel.findByIdAndUpdate(req.params.id, { roles: roles_user }).catch((error) => {
-      console.log(error);
-      res.status(400).json({ error: "User not found" });
-    });
-  } else {
-    res.status(400).json({ erorr: "Malformed request" });
-  }
+  UserModel.findById(req.user._id)
+    .then((user) => {
+      roles.forEach((role) => {
+        if (user.roles.indexOf(role) === -1 && keyroles.indexOf(role) !== -1) user.roles.push(role);
+      });
+      return user.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res));
 });
 
 router.get("/role/:role", async (req, res) => {
-  const role = req.params.role;
-  await UserModel.find({ roles: role })
-    .then((users) => {
-      res.send(users);
-      return users;
-    })
-    .catch((error) => {
-      console.log(error);
-      res.status(400).json({ error: "Malformed request" });
-    });
+  UserModel.find({ roles: req.params.rolerole })
+    .then((users) => res.json(users))
+    .catch(errorHandler(res));
 });
 
 module.exports = router;

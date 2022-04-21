@@ -25,7 +25,6 @@
     "express": "^4.17.1",
     "file-type": "^17.1.1",
     "http-errors": "^1.7.2",
-    "json5": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
     "jws": "^4.0.0",
     "mime-types": "^2.1.34",
