@@ -158,6 +158,24 @@
   margin-bottom: 20px;
 }
 
+.evt_modal .react-simple-calendar {
+  position: absolute;
+  top: 158px;
+  padding: 10px;
+  margin-left: 26px;
+  border: 1px solid var(--primary-blue);
+  z-index: 100001;
+  font-family: "Lato", sans-serif;
+}
+.evt_modal .date_picker_overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+}
+
 .evt_modal_guests div {
   border-left: 0.5px solid #000000;
   padding-left: 8px;

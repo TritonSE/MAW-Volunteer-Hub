@@ -30,7 +30,6 @@ function FormInput({ type, placeholder, step, min, onChange, value, setValue, er
 }
 
 export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEvent, isEditing }) {
-  /* TODO: Clean up, this feels unnecessary */
   const [name, setName] = useState("");
   const [errorName, setErrorName] = useState();
 
@@ -91,16 +90,19 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setUnder18(currentEvent?.under18 ?? false);
   }
 
-  /*
-  function change_date(e) {
-    setFrom(DATE_UTILS.copy_ymd(from, e.target.value));
-    setTo(DATE_UTILS.copy_ymd(to, e.target.value));
-  }
-  */
+  function change_time(e, kind) {
+    if (e.target.value.trim() === "") return;
 
-  function change_time(e) {
-    setFrom(DATE_UTILS.copy_time(from, e.target.value));
-    setTo(DATE_UTILS.copy_time(to, e.target.value));
+    const d = new Date(from);
+    const arr = e.target.value.split(":");
+    d.setHours(Number.parseInt(arr[0], 10));
+    d.setMinutes(Number.parseInt(arr[1], 10));
+
+    if (kind === 0) setFrom(d);
+    else {
+      setTo(d);
+      setErrorTo(false);
+    }
   }
 
   async function add_event(e) {
@@ -108,7 +110,6 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
 
     let has_err = false;
 
-    /* TODO: Clean up, this feels unnecessary */
     if (!name || name.trim() === "") {
       setErrorName(true);
       has_err = true;
@@ -121,7 +122,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       setErrorFrom(true);
       has_err = true;
     }
-    if (!to || to.toString().trim() === "") {
+    if (!to || to.toString().trim() === "" || to < from) {
       setErrorTo(true);
       has_err = true;
     }
@@ -196,19 +197,15 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
                 readOnly
               />
               {from && calendarVisible ? (
-                <Calendar
-                  selected={from}
-                  setSelected={setFrom}
-                  style={{
-                    container: {
-                      position: "absolute",
-                      top: "158px",
-                      padding: "10px",
-                      marginLeft: "26px",
-                      border: "1px solid var(--primary-blue)",
-                    },
-                  }}
-                />
+                <>
+                  <div
+                    role="presentation"
+                    className="date_picker_overlay"
+                    onClick={() => setCalendarVisible(false)}
+                    onKeyDown={() => setCalendarVisible(false)}
+                  />
+                  <Calendar selected={from} setSelected={setFrom} />
+                </>
               ) : null}
               <br />
               <img src="/img/calendar_time.svg" alt="Time" />
@@ -216,7 +213,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
                 type="time"
                 step={60}
                 value={DATE_UTILS.format_time(from, false, false, true)}
-                onChange={(e) => change_time(e)}
+                onChange={(e) => change_time(e, 0)}
                 error={errorFrom}
                 setError={setErrorFrom}
               />
@@ -225,7 +222,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
                 type="time"
                 step={60}
                 value={DATE_UTILS.format_time(to, false, false, true)}
-                onChange={(e) => change_time(e, false)}
+                onChange={(e) => change_time(e, 1)}
                 error={errorTo}
                 setError={setErrorTo}
               />
