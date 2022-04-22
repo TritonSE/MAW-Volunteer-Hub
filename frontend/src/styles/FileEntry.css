@@ -30,6 +30,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  width: calc(100% - 20px - 150px);
+  flex: 0;
+}
+
+.filelisting_accordion_entry .filelisting_flex_center {
+  width: calc(100% - 20px - 50px);
+}
+
+.filelisting_flex_center_name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .filelisting_button {
@@ -37,6 +49,7 @@
   border: 0;
   cursor: pointer;
   margin-right: 6px;
+  padding: 1px 6px;
 }
 
 .filelisting_separator {
@@ -72,6 +85,9 @@
   transition: top 0.4s;
   width: 100%;
 }
+.filelisting_no_files {
+  font-family: "Lato", sans-serif;
+}
 
 /* if the file entry & file listing is displaying for the search modal */
 .search-modal {
@@ -86,7 +102,11 @@
     width: 8vw;
   }
   .filelisting_accordion {
-    margin-left: 12%;
-    width: calc(100% - 12%);
+    margin-left: 30px;
+    width: calc(100% - 30px);
+  }
+
+  .filelisting_flex_center {
+    width: calc(100% - 20px - 150px);
   }
 }

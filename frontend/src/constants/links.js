@@ -12,6 +12,7 @@ const SITE_PAGES = {
 const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  SIGNOUT: "/auth/signout",
   TOKEN: "/auth/token",
 
   FILE_UPLOAD: "/file/upload",
@@ -27,6 +28,17 @@ const API_ENDPOINTS = {
   CATEGORY_CREATE: "/category/create",
   CATEGORY_UPDATE: "/category/edit",
   CATEGORY_DOWNLOAD: "/category/download",
+
+  USER_INFO: "/user/info",
+  USER_ALL: "/user/users",
+  USER_VERIFY: "/user/verify",
+  USER_PROMOTE: "/user/promote",
+  USER_DELETE: "/user/delete",
+  USER_UPDATE_PASS: "/user/updatepass",
+  USER_EDIT: "/user/edit",
+
+  PFP_GET: "/user/pfp",
+  PFP_UPLOAD: "/user/pfp/upload",
 };
 
 const SIDENAV_STEPS = [
@@ -44,7 +56,9 @@ const SIDENAV_ROUTES = [
   "wish-closeout",
 ];
 
-const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
+// const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
+const MANAGE_STEPS = ["People"];
 
-const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+// const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+const MANAGE_ROUTES = ["people"];
 export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };

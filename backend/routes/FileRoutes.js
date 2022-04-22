@@ -1,58 +1,53 @@
 const express = require("express");
-const multer = require("multer");
-const fs = require("fs").promises;
 const mime = require("mime-types");
 
 let ft = import("file-type").then((module) => {
   ft = module;
 });
 
-const { uploadFile, getFileStream, deleteFileAWS } = require("../util/S3Util");
+const { upload, getObject, deleteFileAWS } = require("../util/S3Util");
 const Category = require("../models/CategoryModel");
 const File = require("../models/FileModel");
-const { validate, errorHandler } = require("../util/RouteUtils");
+const { validate, idParamValidator, adminValidator, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
-const upload = multer({ dest: "server_uploads/" });
 
-router.post("/upload", upload.single("file"), validate(["name", "category"]), (req, res) => {
-  uploadFile(req.file)
-    .then((result) =>
-      Promise.all([
-        Category.findById(req.body.category),
-        File.create({
-          name: req.body.name,
-          userID: req.user._id,
-          Category_ID: req.body.category,
-          S3_ID: result.key,
-        }),
-        fs.unlink(req.file.path),
-      ])
-    )
+router.post("/upload", upload.single("file"), validate(["name", "category"]), (req, res) =>
+  Promise.all([
+    Category.findById(req.body.category),
+    File.create({
+      name: req.body.name,
+      userID: req.user._id,
+      Category_ID: req.body.category,
+      S3_ID: req.file.key,
+    }),
+  ])
     .then(([category, file]) => {
       category.Files.push(file);
       return category.save();
     })
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
-router.get("/display/:id", validate([], ["id"]), (req, res) => {
+router.get("/display/:id", idParamValidator(false, "file"), (req, res) =>
   File.findById(req.params.id)
     .then((file) => {
-      const stream = getFileStream(file.S3_ID);
-      return Promise.all([file, ft.fileTypeFromStream(stream)]);
+      const obj = getObject(file.S3_ID);
+      obj.on("httpHeaders", (_code, headers) => {
+        res.set("Content-Length", headers["content-length"]);
+      });
+      return Promise.all([file, ft.fileTypeFromStream(obj.createReadStream())]);
     })
     .then(([file, type]) => {
-      const stream = getFileStream(file.S3_ID);
       if (type && type.mime) res.set("Content-Type", type.mime);
       else res.set("Content-Type", mime.lookup(file.name));
-      stream.pipe(res);
+      getObject(file.S3_ID).createReadStream().pipe(res);
     })
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
-router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
+router.delete("/delete/:id", adminValidator, idParamValidator(false, "file"), (req, res) =>
   File.findById(req.params.id)
     .then((file) =>
       Promise.all([
@@ -71,28 +66,31 @@ router.delete("/delete/:id", validate([], ["id"]), (req, res) => {
       return cat.save();
     })
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
 router.patch(
   "/update/:id",
+  adminValidator,
   upload.single("file"),
   validate(["updated_file_name"], ["id"]),
-  (req, res) => {
+  idParamValidator(false, "file"),
+  (req, res) =>
     File.findById(req.params.id)
       .then((file) => {
-        const arr = [file];
-        if (req.file) {
-          arr.push(uploadFile(req.file), deleteFileAWS(file.S3_ID));
-        }
-        return Promise.all(arr);
-      })
-      .then(([file, result]) => {
+        const old = file.S3_ID;
+
         Object.assign(file, {
-          S3_ID: result ? result.key : file.S3_ID,
+          S3_ID: req.file ? req.file.key : old,
           name: req.body.updated_file_name ?? file.name,
         });
-        return Promise.all([file, Category.findById(file.Category_ID), file.save()]);
+
+        return Promise.all([
+          file,
+          Category.findById(file.Category_ID),
+          file.save(),
+          req.file ? deleteFileAWS(old) : null,
+        ]);
       })
       .then(([file, category]) => {
         const arr = category.Files.slice();
@@ -101,20 +99,19 @@ router.patch(
         return category.save();
       })
       .then(() => res.json({ success: true }))
-      .catch(errorHandler(res));
-  }
+      .catch(errorHandler(res))
 );
 
-router.get("/search/:name", validate([], ["name"]), (req, res) => {
+router.get("/search/:name", validate([], ["name"]), (req, res) =>
   File.find({ name: req.params.name })
     .then((file) => res.json(file))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
-router.get("/all", (_req, res) => {
+router.get("/all", (req, res) =>
   File.find()
     .then((file) => res.json(file))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
 module.exports = router;

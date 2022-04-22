@@ -1,5 +1,3 @@
-/* eslint no-alert: "off" */
-
 /**
  * Component displaying information about a
  *   specific file or folder, as well as
@@ -7,7 +5,8 @@
  *   each
  */
 
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { CurrentUser } from "./Contexts";
 import "../styles/FileEntry.css";
 
 function evt_wrapper(func) {
@@ -17,7 +16,7 @@ function evt_wrapper(func) {
 
 function UnmemoizedFileAccordion({ children }) {
   if (!children || children.length === 0)
-    children = [<div>There are no files in this category.</div>];
+    children = [<div className="filelisting_no_files">There are no files in this category.</div>];
 
   function compute_top(i) {
     return (i + 1) * 60 + "px";
@@ -47,11 +46,15 @@ function UnmemoizedFileAccordion({ children }) {
 }
 const FileAccordion = React.memo(UnmemoizedFileAccordion);
 
-function FileButton({ description, image, onClick, className }) {
+function FileButton({ description, image, adminOnly, onClick, className }) {
+  const [currentUser] = useContext(CurrentUser);
+
   function fix_bubbling(e) {
     e.stopPropagation();
     onClick(e);
   }
+
+  if (adminOnly && (!currentUser || !currentUser.admin)) return null;
 
   return (
     <button
@@ -74,14 +77,17 @@ function FileListing({
   style,
   children,
   searchModal = false,
+  adminOnly,
 }) {
-  return (
+  const [currentUser] = useContext(CurrentUser);
+
+  return (adminOnly && currentUser && currentUser.admin) || !adminOnly ? (
     <div
       className={`filelisting
-        ${noalternate ? " no_nth_child" : ""}
-        ${onClick !== undefined ? " pointer " : ""}
-        ${className !== undefined ? className : ""}
-        ${searchModal ? " search-modal" : ""}`}
+          ${noalternate ? " no_nth_child" : ""}
+          ${onClick !== undefined ? " pointer " : ""}
+          ${className !== undefined ? className : ""}
+          ${searchModal ? " search-modal" : ""}`}
       onClick={onClick ?? (() => {})}
       style={style !== undefined ? style : {}}
       role="presentation"
@@ -94,11 +100,13 @@ function FileListing({
             onClick={evt_wrapper(onDownloadFile)}
           />
         )}
-        {name}
+        <span className="filelisting_flex_center_name" title={name}>
+          {name}
+        </span>
       </div>
       <div className="filelisting_flex_center">{children}</div>
     </div>
-  );
+  ) : null;
 }
 
 function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile, searchModal = false }) {
@@ -107,11 +115,13 @@ function FileEntry({ name, onDownloadFile, onEditFile, onDeleteFile, searchModal
       <FileButton
         description="Edit file"
         image="/img/filelisting_edit.svg"
+        adminOnly
         onClick={evt_wrapper(onEditFile)}
       />
       <FileButton
         description="Delete file"
         image="/img/filelisting_delete.svg"
+        adminOnly
         onClick={evt_wrapper(onDeleteFile)}
       />
     </FileListing>
@@ -155,16 +165,19 @@ function FileCategory({
         <FileButton
           description="Add file"
           image="/img/filelisting_add.svg"
+          adminOnly
           onClick={evt_wrapper(onAddFile)}
         />
         <FileButton
           description="Edit file"
           image="/img/filelisting_edit.svg"
+          adminOnly
           onClick={evt_wrapper(onEditCategory)}
         />
         <FileButton
           description="Delete file"
           image="/img/filelisting_delete.svg"
+          adminOnly
           onClick={evt_wrapper(onDeleteCategory)}
         />
         <div className="filelisting_separator" />

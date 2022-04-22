@@ -1,36 +1,32 @@
-import React, { useEffect, useState, useContext } from "react";
-import { useOutletContext } from "react-router-dom";
+import React, { useContext } from "react";
 import { FileEntry, FileCategory, FileListing, FileButton } from "./FileEntry";
-import { api_category_download, api_file_display } from "../auth";
-import ModalVariants from "./ModalVariants";
-import "../styles/WishGrantingPage.css";
-import FileStructure from "./FileStructure";
+import { api_category_download } from "../api";
+import { API_ENDPOINTS } from "../constants/links";
+import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
+import "../styles/WishStep.css";
 
 function WishStep({ index, stepName }) {
   /**
    * STATE
    */
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalVariant, setModalVariant] = useState("add_file");
-  const [name, setName] = useState("");
-  const [activeListing, setActiveListing] = useState();
-  const [structure, getStructure] = useContext(FileStructure);
-
-  const rerender = useOutletContext();
+  const [structure] = useContext(FileStructure);
+  const {
+    modalVariant: [_modalVariant, setModalVariant],
+    open: [_modalOpen, setModalOpen],
+    errorMessage: [_errorMessage, setErrorMessage],
+    progress: [_progress, setProgress],
+    name: [_name, setName],
+    activeListing: [_activeListing, setActiveListing],
+    categoryParent: [_categoryParent, setCategoryParent],
+  } = useContext(ModalVariantsManager);
+  const [currentUser] = useContext(CurrentUser);
 
   /**
    * UTILITY FUNCTIONS
    */
-  async function download_file(file) {
-    const res = await api_file_display(file._id);
-    if (res && !res.error) {
-      const url = window.URL.createObjectURL(res);
-      window.open(url);
-      window.URL.revokeObjectURL(url);
-    }
-  }
   async function download_all_files(cat) {
-    const res = await api_category_download(cat._id);
+    setProgress(0);
+    const res = await api_category_download(cat._id, setProgress);
     if (res && !res.error) {
       const a = document.createElement("a");
       const url = window.URL.createObjectURL(res);
@@ -40,25 +36,18 @@ function WishStep({ index, stepName }) {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
+    } else {
+      setModalVariant();
+      setErrorMessage("Unable to reach server, please try again.");
     }
   }
   function show_modal(variant, new_name = "", new_activeListing = null) {
     setModalVariant(variant);
     setName(new_name);
     setActiveListing(new_activeListing);
+    setCategoryParent(stepName);
     setModalOpen(true);
   }
-  async function hide_modal() {
-    getStructure();
-    setModalOpen(false);
-    setName("");
-    setActiveListing(null);
-  }
-
-  /**
-   * HOOK
-   */
-  useEffect(hide_modal, [rerender]);
 
   /**
    * RENDER
@@ -83,7 +72,11 @@ function WishStep({ index, stepName }) {
               onClick={() => show_modal("add_category")}
             />
           }
+          adminOnly
         />
+        {(!currentUser || !currentUser.admin) && (structure[stepName] ?? []).length === 0 && (
+          <div className="wishgranting_no_files">Files coming soon!</div>
+        )}
         {(structure[stepName] ?? []).map((cat) => (
           <FileCategory
             name={cat.name}
@@ -98,7 +91,7 @@ function WishStep({ index, stepName }) {
               <FileEntry
                 name={f.name}
                 key={f._id + f.name}
-                onDownloadFile={() => download_file(f)}
+                onDownloadFile={() => window.open(`${API_ENDPOINTS.FILE_DISPLAY}/${f._id}`)}
                 onEditFile={() => show_modal("edit_file", f.name, f)}
                 onDeleteFile={() => show_modal("delete_file", "", f)}
               />
@@ -107,16 +100,6 @@ function WishStep({ index, stepName }) {
         ))}
       </div>
       <br />
-      <ModalVariants
-        modalVariant={modalVariant}
-        open={modalOpen}
-        setOpen={setModalOpen}
-        name={name}
-        setName={setName}
-        activeListing={activeListing}
-        categoryParent={stepName}
-        onClose={() => hide_modal()}
-      />
     </div>
   );
 }

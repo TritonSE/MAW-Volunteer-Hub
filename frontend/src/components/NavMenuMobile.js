@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import { PAGES } from "../constants/pages";
 import "../styles/NavMenuMobile.css";
 import Search from "./Search";
 import history from "../history";
+import { CurrentUser } from "./Contexts";
 
 /*
   Mobile NavBar Menu component, with modified dropdown navigation menu & search bar.
@@ -12,17 +13,8 @@ import history from "../history";
   -desktopDropdown: whether the profile/menu icon dropdown was open in the desktop view
   -setDesktopDropdown: toggle the profile/menu icon dropdown 
 */
-function NavMenuMobile({
-  showResults,
-  setShowResults,
-  input,
-  setInput,
-  filteredFiles,
-  setFilteredFiles,
-  desktopDropdown,
-  setDesktopDropdown,
-  isAdmin,
-}) {
+function NavMenuMobile({ showResults, setShowResults, desktopDropdown, setDesktopDropdown }) {
+  const [currentUser] = useContext(CurrentUser);
   const [active, setActive] = useState(history.location.pathname.split("/")[1]);
 
   useEffect(
@@ -39,14 +31,7 @@ function NavMenuMobile({
       otherwise, display the logo, single search icon, and menu */}
       {showResults === true ? (
         <div className="mobileSearchBarComponent">
-          <Search
-            showResults={showResults}
-            setShowResults={setShowResults}
-            input={input}
-            setInput={setInput}
-            filteredFiles={filteredFiles}
-            setFilteredFiles={setFilteredFiles}
-          />
+          <Search onBlur={() => setShowResults(false)} />
         </div>
       ) : (
         <div className="search-mobile">
@@ -60,7 +45,7 @@ function NavMenuMobile({
             <button
               type="button"
               className="search-button-mobile"
-              onClick={() => setShowResults((prevState) => !prevState)}
+              onClick={() => setShowResults(true)}
             >
               <img src="/img/searchbar.svg" alt="Search" className="searchbar-icon-mobile" />
             </button>
@@ -72,7 +57,7 @@ function NavMenuMobile({
         <button
           type="button"
           className="dropdown-button-mobile"
-          onClick={() => setDesktopDropdown((prevState) => !prevState)}
+          onClick={() => setDesktopDropdown(true)}
         >
           <img src="/img/hamburger.svg" alt="Hamburger menu dropdown" className="hamburger" />
         </button>
@@ -86,7 +71,7 @@ function NavMenuMobile({
             <button
               type="button"
               className="exit-dropdown-mobile"
-              onClick={() => setDesktopDropdown((prevState) => !prevState)}
+              onClick={() => setDesktopDropdown(false)}
             >
               <img
                 src="../img/close_menu_btn.svg"
@@ -100,13 +85,14 @@ function NavMenuMobile({
 
           <div className="pages-container-mobile">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && isAdmin) || !needs_admin ? (
+              (needs_admin && currentUser && currentUser.admin) || !needs_admin ? (
                 <NavLink
                   key={route}
                   className={`page-links-mobile ${
                     active.trim() !== "" && route.indexOf(active) > -1 ? "underline-mobile" : ""
                   }`}
                   to={route}
+                  onClick={() => setDesktopDropdown(false)}
                 >
                   {page}
                 </NavLink>
@@ -118,15 +104,15 @@ function NavMenuMobile({
 
           <NavLink
             className="view-profile-link-mobile"
-            to={SITE_PAGES.PROFILE}
-            onClick={() => setDesktopDropdown((prevState) => !prevState)}
+            to={`${SITE_PAGES.PROFILE}/`}
+            onClick={() => setDesktopDropdown(false)}
           >
             View your profile
           </NavLink>
           <NavLink
             className="signout-link-mobile"
-            to={SITE_PAGES.LOGIN}
-            onClick={() => setDesktopDropdown((prevState) => !prevState)}
+            to={SITE_PAGES.SIGNOUT}
+            onClick={() => setDesktopDropdown(false)}
           >
             <span>Sign Out</span>
             <img

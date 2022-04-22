@@ -1,19 +1,14 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from "react";
-import { useTable, useSortBy, useGlobalFilter, useAsyncDebounce } from "react-table";
+import React, { useState, useEffect } from "react";
+import { useTable, useSortBy, useGlobalFilter } from "react-table";
 import "../styles/UserList.css";
 
 // Define a default UI for filtering
 function GlobalFilter({ globalFilter, setGlobalFilter }) {
-  const [searchVal, setSearchVal] = useState(globalFilter);
-  const onChange = useAsyncDebounce((d_value) => {
-    setGlobalFilter(d_value || undefined);
-  }, 100);
-
   // Allows the enter key to be used to start a search
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
-      onChange(searchVal);
+      setGlobalFilter(globalFilter);
     }
   };
 
@@ -21,22 +16,16 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
     <div className="user_search_bar">
       <input
         className="user_search_input"
-        value={searchVal || ""}
-        onChange={(e) => {
-          setSearchVal(e.target.value);
-        }}
-        onKeyPress={(e) => {
-          handleKeyPress(e);
-        }}
+        value={globalFilter || ""}
+        onChange={(e) => setGlobalFilter(e.target.value)}
+        onKeyPress={(e) => handleKeyPress(e)}
         placeholder="Search by name"
       />
       <button
         className="user_search_button"
         type="button"
         aria-label="Search"
-        onClick={() => {
-          onChange(searchVal);
-        }}
+        onClick={() => setGlobalFilter(globalFilter)}
       />
     </div>
   );
@@ -45,11 +34,20 @@ function GlobalFilter({ globalFilter, setGlobalFilter }) {
 /**
  * @param {Array} tableHeaders Array containing header objects with corresponding accessors
  * @param {Array} userData Array containing user information to be displayed
+ * @param {function} updateMyData function for updating user data
  * @returns
  */
-function UserList({ tableHeaders, userData }) {
+function UserList({
+  tableHeaders,
+  userData,
+  updateMyData,
+  handleConfirmationModal,
+  filter,
+  setFilter,
+}) {
   const [showAdmin, setShowAdmin] = useState(false);
   /**
+   * NOTE: This format only applies for the hard-coded user information used for V1
    * userData should be formated as such:
    * const userData = [
    *    {
@@ -62,7 +60,7 @@ function UserList({ tableHeaders, userData }) {
    * ]
    */
 
-  const data = React.useMemo(() => userData, []);
+  const data = React.useMemo(() => userData, [userData]);
 
   /**
    * tableHeaders should be formatted as such:
@@ -82,17 +80,21 @@ function UserList({ tableHeaders, userData }) {
     rows,
     prepareRow,
     state: { globalFilter },
-    visibleColumns,
     preGlobalFilteredRows,
     setGlobalFilter,
   } = useTable(
     {
       columns,
       data,
+      updateMyData, // will be available in cell render
+      handleConfirmationModal, // for showing confirm modal
+      autoResetGlobalFilter: false,
     },
     useGlobalFilter,
     useSortBy
   );
+
+  useEffect(() => setGlobalFilter(filter), [filter]);
 
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
@@ -118,10 +120,10 @@ function UserList({ tableHeaders, userData }) {
   };
 
   // Determine if a row should be displayed based on which tab the table is on.
-  // Uses the name of the user to check to see if the user is an admin.
+  // Uses the id of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
-  const separateAdmin = (userName) => {
-    const isAdmin = userData.some((user) => user.Name === userName && user.Admin);
+  const separateAdmin = (id) => {
+    const isAdmin = userData.some((user) => user._id === id && user.admin);
 
     if (isAdmin && showAdmin) {
       return true;
@@ -152,22 +154,17 @@ function UserList({ tableHeaders, userData }) {
             style={showAdmin ? { color: "#0057b8" } : {}}
             onClick={() => setShowAdmin(true)}
           >
-            Admin
+            Admins
           </button>
         </div>
-        <table>
-          <thead>
-            <tr>
-              <th colSpan={visibleColumns.length}>
-                <GlobalFilter
-                  preGlobalFilteredRows={preGlobalFilteredRows}
-                  globalFilter={globalFilter}
-                  setGlobalFilter={setGlobalFilter}
-                />
-              </th>
-            </tr>
-          </thead>
-        </table>
+        <GlobalFilter
+          preGlobalFilteredRows={preGlobalFilteredRows}
+          globalFilter={globalFilter}
+          setGlobalFilter={(f) => {
+            setGlobalFilter(f);
+            setFilter(f);
+          }}
+        />
       </div>
       <div className="table-container">
         <table className="people_table" {...getTableProps()}>
@@ -195,7 +192,7 @@ function UserList({ tableHeaders, userData }) {
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
-              return separateAdmin(row.original.Name) ? (
+              return separateAdmin(row.original._id) ? (
                 <tr {...row.getRowProps()} key={Math.random()}>
                   {row.cells.map((cell, colIndex) => (
                     <td

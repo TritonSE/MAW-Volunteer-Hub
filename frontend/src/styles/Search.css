@@ -62,6 +62,7 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.15);
+  z-index: 999;
 }
 
 .results-container {
@@ -93,6 +94,7 @@
   align-items: center;
   width: 500px;
   margin-top: 210px;
+  text-align: center;
 }
 
 .sad-face {

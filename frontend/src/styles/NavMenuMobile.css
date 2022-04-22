@@ -46,9 +46,9 @@
 
 /* Navigation Dropdown Menu styles */
 .dropdown-container-mobile {
-  position: absolute;
+  position: fixed;
   width: 100%;
-  height: calc(100% + 30px);
+  height: 100%;
   top: 0;
   bottom: 0;
   left: 0;

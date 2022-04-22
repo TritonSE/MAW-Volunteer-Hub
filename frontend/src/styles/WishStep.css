@@ -3,7 +3,7 @@
  */
 
 .wishgranting {
-  min-height: 100vh;
+  min-height: 100%;
   background: var(--background-grey);
 }
 
@@ -33,8 +33,7 @@
 
 .wishgranting_categories {
   position: relative;
-  margin-left: 60px;
-  margin-right: 60px;
+  margin: 0 60px;
 }
 
 .wishgranting_newcategory {
@@ -46,4 +45,18 @@
   border-color: #8ac4e4;
   /* TODO */
   /* border-image-source: linear-gradient(170.51deg, #8DC8E8 -12.27%, rgba(26, 104, 191, 0.6) 45.67%, rgba(26, 104, 191, 0.6) 85.79%); */
+}
+
+.wishgranting_no_files {
+  width: 100%;
+  text-align: center;
+}
+
+/**
+ * MEDIA QUERIES
+ */
+@media only screen and (max-width: 500px) {
+  .wishgranting_categories {
+    margin: 0 15px;
+  }
 }

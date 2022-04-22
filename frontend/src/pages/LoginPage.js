@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { token_set, api_login, api_signup } from "../auth";
+import { api_login, api_signup } from "../api";
 import { SITE_PAGES } from "../constants/links";
+import { CurrentUser } from "../components/Contexts";
 import "../index.css";
 import "../styles/LoginPage.css";
 
@@ -35,47 +36,83 @@ function PasswordField({ name, placeholder, className, onChange }) {
   );
 }
 
-function LoginPage({ setIsAuth, setIsAdmin }) {
+function LoginPage() {
+  const [_currentUser, setCurrentUser] = useContext(CurrentUser);
+
   const [isLogin, setIsLogin] = useState(true);
   const [successState, setSuccessState] = useState(-1);
   const [modalOpen, setModalOpen] = useState(false);
   const [doRemember, setDoRemember] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rpassword, setRPassword] = useState("");
 
+  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
 
-  function validate() {
-    if (isLogin) return email && password;
-    return name && email && password && rpassword && password === rpassword;
+  function validate(is_submit = false) {
+    // This is a very simple regex to avoid performance degradation
+    //   on longer strings -- More complex validation is done server-
+    //   side.
+    const email_regex = /\S+@\S+\.\S+/;
+
+    if (!is_submit) {
+      if (isLogin) return email_regex.test(email) && password;
+      return name && email_regex.test(email) && password && rpassword && password === rpassword;
+    }
+
+    let errors_obj = {
+      email: !email_regex.test(email),
+      password: !password.trim(),
+    };
+
+    if (!isLogin) {
+      errors_obj = {
+        name: !name.trim(),
+        ...errors_obj,
+        rpassword: !rpassword.trim() || password !== rpassword,
+      };
+    }
+
+    setErrors(errors_obj);
+    return Object.values(errors_obj).indexOf(true) === -1;
   }
 
   async function handle_submit(e) {
     e.preventDefault();
 
     if (successState < 1) {
+      if (!validate(true)) return;
+
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
+      setIsWaiting(true);
       const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
-      const success = Boolean(res && !res.error);
+      const success = Boolean(res && res.success);
+      setIsWaiting(false);
 
       if (isLogin) {
         setSuccessState(success);
-        setIsAuth(success);
 
-        if (success) {
-          setIsAdmin(res.admin);
-          token_set(res.token, doRemember);
+        if (res.user) {
+          setCurrentUser(res.user);
+          window.scrollTo(0, 0);
           navigate(SITE_PAGES.HOME);
+        } else {
+          setErrorMessage(res.error);
         }
       } else {
         // TODO: This lets the user log in immediately
         //   after signing up, for debug purposes
         setSuccessState(-1);
-        setModalOpen(success);
+
+        // api.js guarantees that res will have an error object on failure
+        setModalOpen(success ? true : res.error);
       }
     }
   }
@@ -84,35 +121,50 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
     setSuccessState(-1);
   }, [email, password]);
 
+  useEffect(() => {
+    document.title = "Log In - Make-a-Wish San Diego";
+  }, []);
+
   return (
     <div className="login">
-      <img alt="Make-a-Wish Logo" src="/img/login_logo.svg" className="login_logo" />
+      <img alt="Make-a-Wish Logo" src="/img/login_logo.png" className="login_logo" />
       <form className="login_box" onSubmit={handle_submit} method="POST">
         <div className="login_form">
           <input
             name="name"
             placeholder="Full Name"
-            className={isLogin ? "hidden" : ""}
+            className={`
+              ${isLogin ? "hidden" : ""}
+              ${errors.name ? "error" : ""}
+            `}
             onChange={(e) => setName(e.target.value)}
           />
           <input
             name="email"
             placeholder="Email"
             type="email"
+            className={`
+              ${errors.email ? "error" : ""}
+            `}
             onChange={(e) => setEmail(e.target.value)}
           />
           <PasswordField
             name="password"
-            className=""
+            className={`
+              ${errors.password ? "error" : ""}
+            `}
             placeholder="Password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
           />
 
           <PasswordField
+            className={`
+              ${isLogin ? "hidden" : ""}
+              ${errors.rpassword ? "error" : ""}
+            `}
             placeholder="Re-enter password"
             type="password"
-            className={isLogin ? "hidden" : ""}
             onChange={(e) => setRPassword(e.target.value)}
           />
           <div className={"login_flex" + (isLogin ? "" : " hidden")}>
@@ -120,52 +172,45 @@ function LoginPage({ setIsAuth, setIsAdmin }) {
               <input
                 type="checkbox"
                 id="remember"
+                name="remember"
                 checked={doRemember}
                 onChange={(e) => setDoRemember(e.target.checked)}
               />
               Keep me signed in
             </label>
-            <a href="#forgot">Forgot password</a>
+            {/* <a href="#forgot">Forgot password</a> */}
+            <span>&nbsp;</span>
           </div>
-          <button type="submit" disabled={!validate()}>
+          <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
             {isLogin ? "Login" : "Create new account"}
           </button>
         </div>
-        {isLogin && !successState ? (
-          <div className="login_errorbox">
-            {/*
-             * Security-wise, it's generally a
-             *   good idea to not tell the user
-             *   what specifically about the
-             *   login went wrong.
-             */}
-            Invalid email or password.
-          </div>
-        ) : null}
+        {isLogin && !successState ? <div className="login_errorbox">{errorMessage}</div> : null}
         <button type="button" className="login_switch" onClick={() => setIsLogin(!isLogin)}>
           {isLogin ? "Create new account" : "I already have an account"}
         </button>
       </form>
 
       <Modal
-        isOpen={modalOpen}
+        isOpen={Boolean(modalOpen)}
         onRequestClose={() => setModalOpen(false)}
         className="login_react_modal"
       >
         <div className="login_flex login_form login_modal">
           <div className="login_flex nomargin">
-            <div>&nbsp;</div>
+            {modalOpen === true ? <div>&nbsp;</div> : <h3>Error</h3>}
             <button
               type="button"
               className="login_button_unstyled"
               onClick={() => setModalOpen(false)}
             >
-              <img src="/close-modal.svg" alt="Close modal" />
+              <img src="/img/close-modal.svg" alt="Close modal" />
             </button>
           </div>
           <div className="login_modal_content">
-            Your account has been created! Once an admin confirms, you will be notified via email
-            and be able to access the website.
+            {modalOpen === true
+              ? "Your account has been created! Once an admin confirms, you will be notified via email and be able to access the website."
+              : modalOpen}
           </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
             Okay
