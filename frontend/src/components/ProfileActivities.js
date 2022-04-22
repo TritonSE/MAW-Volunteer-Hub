@@ -4,35 +4,36 @@ import { useTable } from "react-table";
 
 import "../styles/ProfileActivities.css";
 
+const data = [
+  { Date: "02/15/21", Event: "Backyard Makeover", Hours: 2 },
+  { Date: "02/15/21", Event: "Backyard Makeover1", Hours: 3 },
+  { Date: "02/15/21", Event: "Backyard Makeover2", Hours: 4 },
+  { Date: "02/15/21", Event: "Backyard Makeover3", Hours: 5 },
+  { Date: "02/15/21", Event: "Backyard Makeover4", Hours: 6 },
+  { Date: "02/15/21", Event: "Backyard Makeover5", Hours: 7 },
+  { Date: "02/15/21", Event: "Backyard Makeover6", Hours: 8 },
+  { Date: "02/15/21", Event: "Backyard Makeover7", Hours: 9 },
+  { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11 },
+];
+
+// Pass in through props?
+const columns = [
+  {
+    Header: "Date",
+    accessor: "Date",
+  },
+  {
+    Header: "Event",
+    accessor: "Event",
+  },
+  {
+    Header: "Hours",
+    accessor: "Hours",
+  },
+];
+
 export default function ProfileActivities(props) {
   // Dummy Data. When the backend routes are done, the data should be passed in through props.
-  const data = [
-    { Date: "02/15/21", Event: "Backyard Makeover", Hours: 2 },
-    { Date: "02/15/21", Event: "Backyard Makeover1", Hours: 3 },
-    { Date: "02/15/21", Event: "Backyard Makeover2", Hours: 4 },
-    { Date: "02/15/21", Event: "Backyard Makeover3", Hours: 5 },
-    { Date: "02/15/21", Event: "Backyard Makeover4", Hours: 6 },
-    { Date: "02/15/21", Event: "Backyard Makeover5", Hours: 7 },
-    { Date: "02/15/21", Event: "Backyard Makeover6", Hours: 8 },
-    { Date: "02/15/21", Event: "Backyard Makeover7", Hours: 9 },
-    { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11 },
-  ];
-
-  // Pass in through props?
-  const columns = [
-    {
-      Header: "Date",
-      accessor: "Date",
-    },
-    {
-      Header: "Event",
-      accessor: "Event",
-    },
-    {
-      Header: "Hours",
-      accessor: "Hours",
-    },
-  ];
 
   const tableInstance = useTable({ columns, data });
 
