@@ -74,6 +74,19 @@
 .view_modal .evt_modal_content.nonflex {
   display: block;
 }
+.view_modal .evt_modal_content.scroll {
+  background: #f3f3f3;
+  height: 50vh;
+  overflow: auto;
+}
+.view_modal .evt_modal_content.scroll input {
+  position: fixed;
+  width: 240px;
+  border: 1px solid black;
+}
+.view_modal .evt_modal_content.scroll .spacer {
+  height: 30px;
+}
 .view_modal .evt_modal_content .columns {
   width: 100%;
   display: flex;

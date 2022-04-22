@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { Calendar } from "@cubedoodl/react-simple-scheduler";
 import RoleSelect from "./RoleSelect";
+import AssignModal from "./AssignModal";
 import DATE_UTILS from "../date";
 import ROLES from "../constants/roles";
 import { api_calendar_new, api_calendar_update } from "../api";
@@ -36,14 +37,16 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [calendars, setCalendars] = useState([]);
   const [errorCalendars, setErrorCalendars] = useState();
 
-  const [from, setFrom] = useState();
+  const [from, setFrom] = useState(new Date());
   const [errorFrom, setErrorFrom] = useState();
 
-  const [to, setTo] = useState();
+  const [to, setTo] = useState(new Date());
   const [errorTo, setErrorTo] = useState();
 
   const [numberNeeded, setNumberNeeded] = useState();
   const [errorNumberNeeded, setErrorNumberNeeded] = useState();
+
+  const [volunteers, setVolunteers] = useState([]);
 
   const [loc, setLoc] = useState();
   const [errorLoc, setErrorLoc] = useState();
@@ -53,8 +56,11 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [over18, setOver18] = useState(false);
   const [under18, setUnder18] = useState(false);
 
+  const [assignModal, setAssignModal] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [animationPlaying, setAnimationPlaying] = useState(false);
+
+  useEffect(() => setTo(DATE_UTILS.copy_time(from, to)), [from]);
 
   function on_open() {
     setName(currentEvent?.name ?? "");
@@ -81,6 +87,8 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
 
     setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
+
+    setVolunteers(currentEvent?.volunteers ?? []);
 
     setLoc(currentEvent?.location ?? "");
     setErrorLoc();
@@ -138,11 +146,12 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     if (has_err) return;
 
     const args = {
-      from,
-      to,
+      from: from.toISOString(),
+      to: to.toISOString(),
       name,
-      calendars,
+      calendars: JSON.stringify(calendars.map((cal) => cal.name)),
       number_needed: numberNeeded,
+      volunteers: JSON.stringify(volunteers.map((vol) => vol._id)),
       location: loc,
       question,
       over18,
@@ -249,7 +258,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <div className="indent">
-                <button type="button" tabIndex={-1}>
+                <button type="button" onClick={() => setAssignModal(true)}>
                   Assign volunteers
                 </button>
               </div>
@@ -360,6 +369,12 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
         </svg>
         <h1>Event Created</h1>
       </div>
+      <AssignModal
+        isOpen={assignModal}
+        setOpen={setAssignModal}
+        volunteers={volunteers}
+        setVolunteers={setVolunteers}
+      />
     </>
   );
 }

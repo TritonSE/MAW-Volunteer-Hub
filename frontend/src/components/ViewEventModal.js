@@ -337,7 +337,6 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <div className="question_info smallskip">
                   {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
                 </div>
-                <button type="button">Assign volunteers</button>
               </div>
             </div>
           </div>
@@ -416,16 +415,17 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 </div>
                 <br />
                 {event.volunteers.map((vol) => (
-                  <div>
+                  <div key={vol._id}>
                     <div className="very-gentle">{vol.name}</div>
                     <div className="indented">
                       {vol.guests.map((guest) => (
-                        <>
+                        <span key={guest._id}>
                           {guest.name}
                           <br />
-                        </>
+                        </span>
                       ))}
                     </div>
+                    <br />
                   </div>
                 ))}
               </div>
@@ -435,14 +435,15 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 </div>
                 <br />
                 {event.volunteers.map((vol) => (
-                  <div>
+                  <div key={vol._id}>
                     <br />
                     {vol.guests.map((guest) => (
-                      <>
+                      <span key={guest._id}>
                         {guest.relation}
                         <br />
-                      </>
+                      </span>
                     ))}
+                    <br />
                   </div>
                 ))}
               </div>

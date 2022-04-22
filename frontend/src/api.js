@@ -171,14 +171,9 @@ const api_pfp_upload = (pfp, crop) =>
  */
 const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
 
-const api_calendar_new = (args) =>
+const api_calendar_new = (data) =>
   api_call(API_ENDPOINTS.CALENDAR_NEW, {
-    data: {
-      ...args,
-      from: args.from.toISOString(),
-      to: args.to.toISOString(),
-      calendars: JSON.stringify(args.calendars.map((cal) => cal.name)),
-    },
+    data,
     method: "PUT",
   });
 
@@ -187,14 +182,9 @@ const api_calendar_delete = (id) =>
     method: "DELETE",
   });
 
-const api_calendar_update = (id, args) =>
+const api_calendar_update = (id, data) =>
   api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
-    data: {
-      ...args,
-      from: args.from.toISOString(),
-      to: args.to.toISOString(),
-      calendars: JSON.stringify(args.calendars.map((cal) => cal.name)),
-    },
+    data,
     method: "PATCH",
   });
 

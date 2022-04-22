@@ -7,6 +7,20 @@ const EventModel = require("../models/EventModel");
 const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
 const log = require("../util/Logger");
 
+/*
+ * TODO: Investigate better ways of doing this
+ */
+const sanitize = (body) => {
+  const out = body;
+  if (body.calendars) {
+    out.calendars = JSON.parse(body.calendars);
+  }
+  if (body.volunteers) {
+    body.volunteers = JSON.parse(body.volunteers);
+  }
+  return out;
+};
+
 router.get("/all", (req, res) =>
   EventModel.find()
     .populate("volunteers")
@@ -65,7 +79,7 @@ router.put(
   "/new",
   validate(["from", "to", "name", "calendars", "number_needed", "location"], []),
   (req, res) =>
-    EventModel.create(req.body)
+    EventModel.create(sanitize(req.body))
       .then((event) => res.json({ event }))
       .catch(errorHandler(res))
 );
@@ -99,11 +113,30 @@ router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
        *   properties passed via req.body that are not listed in the
        *   event schema will not be saved to the database
        */
-      Object.entries(req.body).forEach(([key, value]) => {
+      Object.entries(sanitize(req.body)).forEach(([key, value]) => {
         event[key] = value;
       });
       return event.save();
     })
+    .then((event) =>
+      event
+        .populate("volunteers")
+        .populate({
+          path: "guests",
+          populate: {
+            path: "with",
+            model: "user",
+          },
+        })
+        .populate({
+          path: "responses",
+          populate: {
+            path: "volunteer",
+            model: "user",
+          },
+        })
+        .execPopulate()
+    )
     .then((event) => res.json({ event }))
     .catch(errorHandler(res))
 );

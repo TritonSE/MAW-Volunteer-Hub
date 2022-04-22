@@ -114,13 +114,6 @@ EventSchema.pre("save", function save(next) {
       next(new Error("Invalid event end date."));
     }
   }
-  if (this.calendars && this.isModified("calendars")) {
-    try {
-      this.calendars = JSON.parse(this.calendars);
-    } catch (e) {
-      next(e);
-    }
-  }
 
   next();
 });
