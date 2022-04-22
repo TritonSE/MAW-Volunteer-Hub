@@ -7,9 +7,6 @@ const EventModel = require("../models/EventModel");
 const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
 const log = require("../util/Logger");
 
-/*
- * TODO: Investigate better ways of doing this
- */
 const sanitize = (body) => {
   const out = body;
   if (body.calendars) {
@@ -21,8 +18,8 @@ const sanitize = (body) => {
   return out;
 };
 
-router.get("/all", (req, res) =>
-  EventModel.find()
+const populate = (event) =>
+  event
     .populate("volunteers")
     .populate({
       path: "guests",
@@ -37,7 +34,10 @@ router.get("/all", (req, res) =>
         path: "volunteer",
         model: "user",
       },
-    })
+    });
+
+router.get("/all", (req, res) =>
+  populate(EventModel.find())
     .then((events) => {
       res.json(events);
       return EventModel.updateMany(
@@ -91,22 +91,7 @@ router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
 );
 
 router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
-  EventModel.findById(req.params.id)
-    .populate("volunteers")
-    .populate({
-      path: "guests",
-      populate: {
-        path: "with",
-        model: "user",
-      },
-    })
-    .populate({
-      path: "responses",
-      populate: {
-        path: "volunteer",
-        model: "user",
-      },
-    })
+  populate(EventModel.findById(req.params.id))
     .then((event) => {
       /*
        * Note: mongoose strict mode is enabled by default, meaning any
@@ -118,25 +103,7 @@ router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
       });
       return event.save();
     })
-    .then((event) =>
-      event
-        .populate("volunteers")
-        .populate({
-          path: "guests",
-          populate: {
-            path: "with",
-            model: "user",
-          },
-        })
-        .populate({
-          path: "responses",
-          populate: {
-            path: "volunteer",
-            model: "user",
-          },
-        })
-        .execPopulate()
-    )
+    .then((event) => populate(event).execPopulate())
     .then((event) => res.json({ event }))
     .catch(errorHandler(res))
 );
