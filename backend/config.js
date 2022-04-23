@@ -20,4 +20,8 @@ module.exports = {
     secret_key: process.env.AWS_SECRET_KEY || "",
     max_file_size: 1.6e7, // 16 MB
   },
+  maw_email: {
+    user: process.env.MAW_EMAIL_USER || "",
+    pass: process.env.MAW_EMAIL_PASS || "",
+  },
 };

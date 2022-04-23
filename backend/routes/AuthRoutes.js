@@ -8,6 +8,8 @@ const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
+const nodemailer = require("nodemailer");
+
 router.post("/signup", (req, res, next) =>
   passport.authenticate("signup", { session: false }, (resp, user) => {
     if ((resp && resp.errors) || !user) {
@@ -17,6 +19,36 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
+
+
+      //nodemailer
+      async function sendEmail(){
+        
+
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: config.maw_email,
+        });
+
+        const data = {
+          from: "",
+          to: "",
+          subject: "test",
+          text: "Plaintext version of the message",
+          html: "<p>HTML version of the message</p>",
+        }
+  
+        const info = await transporter.sendMail(data);
+
+        console.log("Message sent: %s", info.messageId);
+
+      }
+
+      sendEmail().catch(console.error);
+
+
       res.json({
         success: true,
         user: user.toJSON(),
