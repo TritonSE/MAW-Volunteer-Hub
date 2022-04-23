@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 
-import Button from "./base/Button";
-import Input from "./base/Input";
-import Modal from "./base/Modal";
+import Modal from "./Modal";
 
 import { FileStructure, ModalVariantsManager } from "./Contexts";
 
@@ -159,9 +157,13 @@ function ModalVariants() {
           <div className="center">{errorMessage}</div>
           <br />
           <div className="center thin center">
-            <Button variant="primary" onClick={() => setErrorMessage()}>
+            <button
+              type="button"
+              className="maw-ui_button primary"
+              onClick={() => setErrorMessage()}
+            >
               Okay
-            </Button>
+            </button>
           </div>
         </>
       ),
@@ -280,7 +282,8 @@ function ModalVariants() {
           <input type="submit" hidden /> {/* Form submits on enter key */}
           <div className={variant.name ? "" : "hidden"}>
             <div className="wishgranting_modal_label">{(variant.name ?? {}).title}</div>
-            <Input
+            <input
+              className="maw-ui_input"
               placeholder={(variant.name ?? {}).placeholder}
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -296,24 +299,24 @@ function ModalVariants() {
           ) : null}
           {variant.center ? (
             <div className="center halfheight column">
-              <br />
               <div className="center">{variant.center.title}</div>
               <br />
+              <br />
               <div className="center thin">
-                <Button type="button" onClick={() => setOpen(false)}>
+                <button type="button" className="maw-ui_button" onClick={() => setOpen(false)}>
                   Cancel
-                </Button>
-                <Button type="submit" variant="error" disabled={!submitEnabled}>
+                </button>
+                <button type="submit" className="maw-ui_button error" disabled={!submitEnabled}>
                   {variant.center.action_button.title}
-                </Button>
+                </button>
               </div>
             </div>
           ) : null}
           {variant.action_button ? (
             <div className="wishgranting_modal_bottom">
-              <Button type="submit" variant="primary" disabled={!submitEnabled}>
+              <button type="submit" className="maw-ui_button primary" disabled={!submitEnabled}>
                 {variant.action_button.title}
-              </Button>
+              </button>
             </div>
           ) : null}
           {variant.custom || null}

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { Link, useNavigate } from "react-router-dom";
 
-import Button from "./base/Button";
-import Modal from "./base/Modal";
+import Modal from "./Modal";
 
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
@@ -191,12 +190,13 @@ export default function UserManage() {
           {modalState.name ?? "User"} has been given access.
           <br />
           <br />
-          <Button
-            variant="primary"
+          <button
+            type="button"
+            className="maw-ui_button primary"
             onClick={() => handleConfirmationModal({ name: "", isOpen: false })}
           >
             Okay
-          </Button>
+          </button>
         </div>
       </Modal>
     </div>

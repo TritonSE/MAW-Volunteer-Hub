@@ -4,9 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
-import Button from "../components/base/Button";
-import Input from "../components/base/Input";
-import Modal from "../components/base/Modal";
+import Modal from "../components/Modal";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
@@ -274,17 +272,22 @@ function ProfilePage() {
                 </ReactCrop>
                 <br />
                 <div className="modal-flex-crop">
-                  <Button variant="fullwidth" onClick={() => setPFPModalOpen(false)}>
+                  <button
+                    type="button"
+                    className="maw-ui_button fullwidth"
+                    onClick={() => setPFPModalOpen(false)}
+                  >
                     Cancel
-                  </Button>
+                  </button>
                   <span>&nbsp;</span>
-                  <Button
-                    variant="primary fullwidth"
+                  <button
+                    type="button"
+                    className="maw-ui_button primary fullwidth"
                     onClick={() => do_upload()}
                     style={{ opacity }}
                   >
                     Upload
-                  </Button>
+                  </button>
                 </div>
               </Modal>
               <Modal
@@ -297,9 +300,13 @@ function ProfilePage() {
                 <h1 className="modal-title-crop">Error:</h1>
                 <span>{pfpErrorModalOpen}</span>
                 <br />
-                <Button variant="primary" onClick={() => setPFPErrorModalOpen(false)}>
+                <button
+                  type="button"
+                  className="maw-ui_button primary"
+                  onClick={() => setPFPErrorModalOpen(false)}
+                >
                   Okay
-                </Button>
+                </button>
               </Modal>
             </>
           )}
@@ -314,13 +321,21 @@ function ProfilePage() {
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
-          {isCurrentUser && <Button onClick={() => setPassModalOpen(true)}>Change Password</Button>}
+          {isCurrentUser && (
+            <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
+              Change Password
+            </button>
+          )}
           {currentUser && currentUser.admin && (
             <>
               <span>&nbsp;&nbsp;&nbsp;</span>
-              <Button variant="error" onClick={() => setDeleteModalOpen(true)}>
+              <button
+                type="button"
+                className="maw-ui_button error"
+                onClick={() => setDeleteModalOpen(true)}
+              >
                 Delete Profile
-              </Button>
+              </button>
             </>
           )}
         </div>
@@ -335,7 +350,7 @@ function ProfilePage() {
         contentLabel="Change password"
       >
         <div className="header">
-          <div className="title">Change Password</div>
+          <h3 className="title">Change Password</h3>
           <button
             type="button"
             className="close-button"
@@ -344,19 +359,22 @@ function ProfilePage() {
           />
         </div>
         <form className="change-pass-form" onSubmit={change_password}>
-          <Input
+          <input
+            className="maw-ui_input"
             placeholder="Enter old password"
             type="password"
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
           />
-          <Input
+          <input
+            className="maw-ui_input"
             placeholder="Enter new password"
             type="password"
             value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
-          <Input
+          <input
+            className="maw-ui_input"
             placeholder="Reenter new password"
             type="password"
             value={confirmPass}
@@ -370,9 +388,11 @@ function ProfilePage() {
             {changePassResponse}
           </div>
 
-          <Button type="submit" variant="primary fullwidth">
+          <br />
+
+          <button type="submit" className="maw-ui_button primary fullwidth">
             Change password
-          </Button>
+          </button>
         </form>
       </Modal>
 
@@ -392,14 +412,16 @@ function ProfilePage() {
             onClick={() => setDeleteModalOpen(false)}
           />
         </div>
-        <br />
         <div className="center">Are you sure you want to delete this profile?</div>
         <br />
+        <br />
         <div className="delete-button-container">
-          <Button onClick={() => setDeleteModalOpen(false)}>Cancel</Button>
-          <Button variant="error" onClick={() => delete_account()}>
+          <button type="button" className="maw-ui_button" onClick={() => setDeleteModalOpen(false)}>
+            Cancel
+          </button>
+          <button type="button" className="maw-ui_button error" onClick={() => delete_account()}>
             Delete
-          </Button>
+          </button>
         </div>
       </Modal>
 
@@ -413,7 +435,7 @@ function ProfilePage() {
         <h1>{responseModalOpen}</h1>
         <div className="delete-button-container">
           <button
-            className="modal-button small button-primary"
+            className="maw-ui_button primary"
             type="button"
             onClick={() => setResponseModalOpen()}
           >

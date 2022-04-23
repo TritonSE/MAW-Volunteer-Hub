@@ -151,7 +151,7 @@
 
 .profile-change-modal {
   width: 300px;
-  padding: 20px 50px 0;
+  height: unset;
   box-sizing: unset;
 }
 .profile-change-modal .header,
@@ -164,6 +164,7 @@
 .profile-delete-modal .header .title {
   flex: 1;
   font-weight: bold;
+  margin: 0;
 }
 .profile-change-modal input {
   margin-bottom: 14px;

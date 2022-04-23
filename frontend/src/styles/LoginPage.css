@@ -5,14 +5,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  background-color: var(--background-grey);
   background-image: url("../../public/img/login_background.svg");
   background-size: 100vw;
   background-position: center bottom;
   background-repeat: no-repeat;
 
-  --box-padding-small: 5vw;
-  --box-width-small: calc(100vw - 5vw - (var(--box-padding-small) * 2));
+  --box-width-small: calc(100vw - 5vw - 10vw);
 }
 
 .login_logo {
@@ -66,8 +64,6 @@
   background: rgba(0, 87, 184, 0.9);
   color: #ffffff;
   border: 0;
-
-  font-family: "Lato" !important;
 
   opacity: 1;
   transition: opacity 0.1s;
@@ -165,23 +161,6 @@
   margin-top: auto;
 }
 
-.ReactModal__Overlay {
-  background: rgba(0, 0, 0, 0.3) !important;
-}
-.ReactModal__Content.login_react_modal {
-  background: var(--background-grey);
-  position: absolute;
-  width: 462px;
-  height: 202px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  left: calc(50vw - (462px / 2)) !important;
-  top: calc(50vh - (202px / 2)) !important;
-  padding-top: 21px !important;
-  padding-bottom: 21px !important;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
-}
 .login_modal {
   height: 100%;
   text-align: center;
@@ -240,8 +219,8 @@
   }
   .login_box {
     width: var(--box-width-small);
-    padding-left: var(--box-padding-small);
-    padding-right: var(--box-padding-small);
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
   .login input:not([type="checkbox"]) {
     width: calc(var(--box-width-small) - 50px - 2px - 5px);
