@@ -75,7 +75,7 @@
   display: block;
 }
 .view_modal .evt_modal_content.scroll {
-  background: #f3f3f3;
+  background: #f9f9f9;
   height: 50vh;
   overflow: auto;
 }
@@ -317,4 +317,11 @@
 }
 .view_modal .very-gentle {
   font-weight: lighter;
+}
+
+.view_modal .assign_pfp {
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+  margin: 0 8px 0 4px;
 }

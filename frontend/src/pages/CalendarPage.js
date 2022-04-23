@@ -12,16 +12,11 @@ import "../styles/CalendarPage.css";
  *   - Repeating events
  *   - Fix occasional addition of event when clicking on existing event
  *   - Change volunteer listing in admin view event modal to waste less space
- *   - "Assign volunteers" and volunteer listing modal
  *   - Better indication that an event is in multiple calendars
  *   - Mobile support/overall better responsiveness
- *   - Style cleanups
+ *   - Style cleanups (e.g. color scheme)
  *   - Memory leak testing/performance tuning
  *   - Keyboard shortcuts
- *
- *   - Fix number input taking negative values
- *   - Fix input/time inputs
- *   - Fix color scheme
  */
 function CalendarPage() {
   const [currentUser] = useContext(CurrentUser);

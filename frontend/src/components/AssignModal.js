@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { api_user_all } from "../api";
+import { API_ENDPOINTS } from "../constants/links";
 import "../styles/AddEventModal.css";
 import "../styles/ViewEventModal.css";
 
@@ -54,6 +55,13 @@ export default function AssignModal({ isOpen, setOpen, volunteers, setVolunteers
                     setVolunteers(cpy);
                   }
                 }}
+              />
+              <img
+                className="assign_pfp"
+                src={`${API_ENDPOINTS.PFP_GET}/${user._id}/${new Date(
+                  user.profilePictureModified
+                ).getTime()}`}
+                alt={user.name}
               />
               <div className="calendar_checkbox" />
               <span>{user.name}</span>
