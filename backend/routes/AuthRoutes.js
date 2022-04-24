@@ -2,11 +2,57 @@ const express = require("express");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
+
 const config = require("../config");
 const UserModel = require("../models/UserModel");
 const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
+
+const region = config.amazon_ses.region;
+const accessKeyId = config.amazon_ses.access_key;
+const secretAccessKey = config.amazon_ses.secret_key;
+
+const client = new SESv2Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
+
+async function sendEmail() {
+  try {
+    const message = {
+      Content: {
+        Simple: {
+          Body: {
+            Text: {
+              Data: "Hello",
+            },
+          },
+
+          Subject: {
+            Data: "Test",
+          },
+        },
+      },
+      Destination: {
+        ToAddresses: ["aksarava@ucsd.edu"],
+      },
+      FromEmailAddress: "MAWVolunteerHub@gmail.com",
+      FromEmailAddressIdentityArn:
+        "arn:aws:ses:us-west-1:141769618659:identity/MAWVolunteerHub@gmail.com",
+    };
+
+    const command = new SendEmailCommand(message);
+    const response = await client.send(command);
+    console.log(response);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 router.post("/signup", (req, res, next) =>
   passport.authenticate("signup", { session: false }, (resp, user) => {
@@ -17,6 +63,9 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
+      // email sending
+      sendEmail();
+
       res.json({
         success: true,
         user: user.toJSON(),

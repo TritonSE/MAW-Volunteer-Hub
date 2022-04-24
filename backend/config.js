@@ -20,4 +20,9 @@ module.exports = {
     secret_key: process.env.AWS_SECRET_KEY || "",
     max_file_size: 1.6e7, // 16 MB
   },
+  amazon_ses: {
+    region: process.env.AWS_EMAIL_REGION || "",
+    access_key: process.env.AWS_ACCESS_KEY || "",
+    secret_key: process.env.AWS_SECRET_KEY || "",
+  },
 };
