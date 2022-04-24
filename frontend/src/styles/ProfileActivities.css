@@ -7,6 +7,7 @@
 .activities_table {
   box-sizing: border-box;
   width: 100%;
+  overflow: auto;
 
   background: white;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
@@ -15,5 +16,65 @@
 }
 
 .activities_table > tbody {
-  height: 40vh;
+  height: 30vh;
+}
+
+.activities_table {
+  border-spacing: 0;
+}
+
+.activities_table_header {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: left;
+  padding: 12.5px 0px 12.5px 20px;
+
+  box-sizing: border-box;
+  width: 33%;
+
+  color: #101010;
+  background: #e5eef8;
+}
+
+.activities_table_header.start {
+  border-radius: 15px 0px 0px 15px;
+}
+
+.activities_table_header.end {
+  border-radius: 0px 15px 15px 0px;
+  text-align: center;
+}
+
+.activities_table_data {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  box-sizing: border-box;
+
+  color: #000000;
+
+  padding: 15px 0px 10px 15px;
+  text-align: left;
+  width: 33%;
+  text-overflow: auto;
+}
+
+.activities_table_data.start {
+  border-radius: 13px 0px 0px 13px;
+}
+
+.activities_table_data.end {
+  border-radius: 0px 13px 13px 0px;
+  text-align: center;
+}
+
+tr:nth-child(2n) .activities_table_data_start,
+tr:nth-child(2n) .activities_table_data,
+tr:nth-child(2n) .activities_table_data_end {
+  background: rgba(187, 188, 188, 0.2);
 }
