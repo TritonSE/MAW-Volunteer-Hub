@@ -22,7 +22,7 @@ module.exports = {
   },
   amazon_ses: {
     region: process.env.AWS_EMAIL_REGION || "",
-    access_key: process.env.AWS_ACCESS_KEY || "",
-    secret_key: process.env.AWS_SECRET_KEY || "",
+    access_key: process.env.AWS_EMAIL_ACCESS_KEY || "",
+    secret_key: process.env.AWS_EMAIL_SECRET_KEY || "",
   },
 };
