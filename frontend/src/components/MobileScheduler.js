@@ -1,16 +1,21 @@
 import React from "react";
-import { DateFormatter, dateFunctions } from "@cubedoodl/react-simple-scheduler";
+import {
+  DateFormatter,
+  DateRangeFormatter,
+  dateFunctions,
+} from "@cubedoodl/react-simple-scheduler";
 import "../styles/MobileScheduler.css";
 
 export default function MobileScheduler({ events, onRequestEdit }) {
   const sorted = events.sort((a, b) => a.from - b.from);
-  let last;
+  let last = new Date(0);
 
   return (
     <div className="mobile_scheduler">
       {sorted.map((evt, ind) => {
-        const show_date = !last || !dateFunctions.compare_dates(last, evt.from);
-        const show_month = !last || last.getMonth() !== evt.from.getMonth();
+        const show_date = !dateFunctions.compare_dates(last, evt.from);
+        const show_month = last.getMonth() !== evt.from.getMonth();
+        const show_ticker = last < dateFunctions.TODAY && evt.from >= dateFunctions.TODAY;
         last = evt.from;
 
         return (
@@ -22,6 +27,12 @@ export default function MobileScheduler({ events, onRequestEdit }) {
                 <span className="format">
                   <DateFormatter date={evt.from} fmt="O Y" />
                 </span>
+                <div className="line" />
+              </div>
+            )}
+            {show_ticker && (
+              <div className="ticker">
+                <div className="ball" />
                 <div className="line" />
               </div>
             )}
@@ -42,7 +53,12 @@ export default function MobileScheduler({ events, onRequestEdit }) {
                 style={evt.style}
                 onClick={() => onRequestEdit(evt)}
               >
-                {evt.name}
+                <div>
+                  <div className="range">
+                    <DateRangeFormatter from={evt.from} to={evt.to} />
+                  </div>
+                  <div className="name">{evt.name}</div>
+                </div>
               </button>
             </div>
           </span>

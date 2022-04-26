@@ -295,7 +295,6 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   <img alt="Event time" src="/img/calendar_location.svg" />
                   {event.location}
                 </div>
-                <br />
                 <div className="prop list">
                   <img src="/img/calendar_send.svg" alt="Send to" />
                   <div className="role_container" title={event.calendars.join(", ")}>

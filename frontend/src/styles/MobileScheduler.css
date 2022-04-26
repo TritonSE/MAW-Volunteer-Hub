@@ -1,5 +1,7 @@
 .mobile_scheduler {
   width: 90vw;
+  max-height: calc(100vh - 161px);
+  overflow: auto;
   background: white;
   margin-top: 10px;
   padding: 20px;
@@ -23,6 +25,23 @@
   margin: 0 10px;
 }
 
+.mobile_scheduler .ticker {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.mobile_scheduler .ticker .ball {
+  width: 10px;
+  height: 10px;
+  border-radius: 10px;
+  background: var(--primary-blue);
+}
+.mobile_scheduler .ticker .line {
+  height: 2px;
+  background: var(--primary-blue);
+  flex: 1;
+}
+
 .mobile_scheduler .event {
   display: flex;
 }
@@ -37,13 +56,21 @@
 .mobile_scheduler .event .box {
   display: flex;
   align-items: center;
+  text-align: left;
   flex: 1;
 
   min-height: 52px;
   padding: 10px;
+  margin-bottom: 5px;
   box-sizing: border-box;
   border: none;
   border-radius: 6px;
   font-family: "Lato", sans-serif;
   font-size: 16px;
+}
+.mobile_scheduler .event .box .name {
+  font-weight: 600;
+}
+.mobile_scheduler .event .box .range {
+  font-size: 11px;
 }

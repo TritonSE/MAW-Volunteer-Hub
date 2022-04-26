@@ -12,7 +12,7 @@ import "../styles/CalendarPage.css";
  * Current TODOs:
  *   - Repeating events (this will take some work)
  *   - Fix occasional addition of event when clicking on existing event
- *   - Mobile support/overall better responsiveness
+ *   - Fix modal sizing on mobile
  *   - Style cleanups (e.g. color scheme)
  *   - Memory leak testing/performance tuning
  *   - Keyboard shortcuts
@@ -101,37 +101,40 @@ function CalendarPage() {
             <div>New Event</div>
           </button>
         )}
-        <Calendar selected={selected} setSelected={setSelected} />
-        <div className="calendars_list">
-          <div className="calendars_header">View calendars</div>
-          {calendars.map((cal) => (
-            <label key={cal.name} className="calendar_label" htmlFor={cal.name}>
-              <div>
-                <input
-                  type="checkbox"
-                  id={cal.name}
-                  checked={cal.enabled}
-                  onChange={(e) => {
-                    cal.enabled = e.target.checked;
-
-                    events.forEach((evt) => {
-                      evt.style = style_from_event(evt);
-                    });
-
-                    setRerender(Math.random());
-                  }}
-                />
-                <div
-                  className="calendar_checkbox"
-                  style={{ "--checked-color": cal.color ?? "#00BAB3" }}
-                />
-              </div>
-              <div>{cal.name}</div>
-            </label>
-          ))}
-        </div>
-        {windowWidth < 500 && (
+        {windowWidth < 600 ? (
           <MobileScheduler events={events} onRequestEdit={(evt) => setViewModal(evt)} />
+        ) : (
+          <>
+            <Calendar selected={selected} setSelected={setSelected} />
+            <div className="calendars_list">
+              <div className="calendars_header">View calendars</div>
+              {calendars.map((cal) => (
+                <label key={cal.name} className="calendar_label" htmlFor={cal.name}>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={cal.name}
+                      checked={cal.enabled}
+                      onChange={(e) => {
+                        cal.enabled = e.target.checked;
+
+                        events.forEach((evt) => {
+                          evt.style = style_from_event(evt);
+                        });
+
+                        setRerender(Math.random());
+                      }}
+                    />
+                    <div
+                      className="calendar_checkbox"
+                      style={{ "--checked-color": cal.color ?? "#00BAB3" }}
+                    />
+                  </div>
+                  <div>{cal.name}</div>
+                </label>
+              ))}
+            </div>
+          </>
         )}
       </div>
       <Scheduler

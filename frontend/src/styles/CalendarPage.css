@@ -101,7 +101,7 @@
   min-height: calc(576px - 70px);
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 600px) {
   .calendar {
     justify-content: center;
   }

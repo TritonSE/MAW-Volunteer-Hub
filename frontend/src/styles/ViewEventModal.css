@@ -345,3 +345,12 @@
   border-radius: 32px;
   margin: 0 8px 0 4px;
 }
+
+@media only screen and (max-width: 600px) {
+  .view_modal .evt_modal_content .columns {
+    display: block;
+  }
+  .view_modal .evt_modal_content .columns .indented {
+    margin-left: 0;
+  }
+}
