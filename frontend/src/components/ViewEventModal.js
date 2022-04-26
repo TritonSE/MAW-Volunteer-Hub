@@ -298,7 +298,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <br />
                 <div className="prop list">
                   <img src="/img/calendar_send.svg" alt="Send to" />
-                  <div className="role_container">
+                  <div className="role_container" title={event.calendars.join(", ")}>
                     {event.calendars.map((name) => {
                       const css = ROLES.find((cal) => cal.name === name);
 
@@ -310,6 +310,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                               style={{ background: css.color }}
                               title={name}
                             />
+                            {name}
                             {/* TODO */}
                           </div>
                         </div>

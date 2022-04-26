@@ -48,8 +48,18 @@
 
 .view_modal .role_container {
   display: flex;
+  max-width: 220px;
+  padding: 10px 0;
+  overflow: auto;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 76%,
+    rgba(226, 226, 226, 1) 100%
+  );
 }
 .view_modal .role_listing {
+  white-space: nowrap;
   text-align: left;
 }
 .view_modal .role_listing:not(:last-child) {
@@ -59,6 +69,8 @@
   width: 10px;
   height: 10px;
   border-radius: 5px;
+  display: inline-block;
+  margin: 0 5px 0;
 }
 
 .view_modal label {
@@ -79,8 +91,16 @@
   height: 50vh;
   overflow: auto;
 }
-.view_modal .evt_modal_content.scroll input {
-  position: fixed;
+.view_modal input.searchbar {
+  width: 252px;
+  border: none;
+  border-bottom: 1.5px solid #bbbcbc;
+  padding: 7px;
+  font-family: "Lato", sans-serif;
+  outline: 0;
+  box-sizing: border-box;
+  background: #ffffff;
+  margin-left: 30px;
   width: 240px;
   border: 1px solid black;
 }

@@ -33,6 +33,7 @@
   padding: 12px;
   padding-bottom: 24px;
   border-radius: 8px;
+  margin: 0 auto;
 }
 .calendar .react-simple-calendar .head .month {
   font-size: 14px;
@@ -43,10 +44,10 @@
 }
 
 .calendar .calendars_list {
-  width: 100%;
+  width: 200px;
   background: white;
   border-radius: 8px;
-  margin-top: 25px;
+  margin: 25px auto 0;
   padding: 10px 14px;
   box-sizing: border-box;
   font-size: 14px;
@@ -96,9 +97,15 @@
 }
 .calendar .react-simple-scheduler .body {
   width: calc(100vw - 200px - 20px - 24px - 21px - 21px);
-  /* height: calc(100vh - 70px - 73px - 42px); */
-  /* height: calc(91vh - 70px - 42px); */
-
   height: calc(91vh - 70px - 42px);
   min-height: calc(576px - 70px);
+}
+
+@media only screen and (max-width: 500px) {
+  .calendar {
+    justify-content: center;
+  }
+  .calendar .react-simple-scheduler {
+    display: none;
+  }
 }

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Calendar, Scheduler, useArrayState } from "@cubedoodl/react-simple-scheduler";
 import { api_calendar_all } from "../api";
 import { CurrentUser } from "../components/Contexts";
+import MobileScheduler from "../components/MobileScheduler";
 import AddEventModal from "../components/AddEventModal";
 import ViewEventModal from "../components/ViewEventModal";
 import ROLES from "../constants/roles";
@@ -9,10 +10,8 @@ import "../styles/CalendarPage.css";
 
 /*
  * Current TODOs:
- *   - Repeating events
+ *   - Repeating events (this will take some work)
  *   - Fix occasional addition of event when clicking on existing event
- *   - Change volunteer listing in admin view event modal to waste less space
- *   - Better indication that an event is in multiple calendars
  *   - Mobile support/overall better responsiveness
  *   - Style cleanups (e.g. color scheme)
  *   - Memory leak testing/performance tuning
@@ -22,6 +21,7 @@ function CalendarPage() {
   const [currentUser] = useContext(CurrentUser);
 
   const [_rerender, setRerender] = useState();
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [selected, setSelected] = useState(new Date());
   const [events, setEvents, addEvent, deleteEvent] = useArrayState();
   const [eventAcquire, setEventAcquire] = useState();
@@ -38,7 +38,8 @@ function CalendarPage() {
   );
 
   function style_from_event(ev) {
-    const css = calendars.find((cal) => cal.name === ev.calendars[0]) ?? calendars[0];
+    const css =
+      calendars.find((cal) => cal.enabled && ev.calendars.includes(cal.name)) ?? calendars[0];
 
     if (!currentUser.admin && !ev.volunteers.some((vol) => vol._id === currentUser._id)) {
       return {
@@ -67,6 +68,15 @@ function CalendarPage() {
       })),
     };
   }
+
+  useEffect(() => {
+    function resize() {
+      setWindowWidth(window.innerWidth);
+    }
+
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, []);
 
   useEffect(async () => {
     const res = await api_calendar_all();
@@ -103,6 +113,11 @@ function CalendarPage() {
                   checked={cal.enabled}
                   onChange={(e) => {
                     cal.enabled = e.target.checked;
+
+                    events.forEach((evt) => {
+                      evt.style = style_from_event(evt);
+                    });
+
                     setRerender(Math.random());
                   }}
                 />
@@ -115,6 +130,9 @@ function CalendarPage() {
             </label>
           ))}
         </div>
+        {windowWidth < 500 && (
+          <MobileScheduler events={events} onRequestEdit={(evt) => setViewModal(evt)} />
+        )}
       </div>
       <Scheduler
         events={events}
