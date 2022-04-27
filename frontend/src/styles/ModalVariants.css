@@ -1,26 +1,9 @@
-.wishgranting_modal h3 {
-  margin: 0;
-}
-.wishgranting_modal_close {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-.wishgranting_modal_label {
+.maw-ui_modal .label {
   margin-bottom: 12px;
   font-weight: bold;
 }
-.wishgranting_modal_header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
 
-.wishgranting_modal input[type="file"] {
-  font-family: "Lato", sans-serif;
-}
-.wishgranting_modal input[type="file"]::file-selector-button {
+.maw-ui_modal input[type="file"]::file-selector-button {
   width: 103px;
   height: 26px;
   background: white;
@@ -30,22 +13,8 @@
   border: 1px solid black;
   cursor: pointer;
 }
-.wishgranting_modal input[type="file"]::after {
+.maw-ui_modal input[type="file"]::after {
   display: none;
-}
-
-.wishgranting_modal_bottom {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-}
-
-.wishgranting_modal .column {
-  flex-direction: column;
-}
-.wishgranting_modal .thin {
-  width: 245px;
-  justify-content: space-between;
 }
 
 /*
@@ -60,7 +29,7 @@
   }
 }
 
-.wishgranting_progress {
+.progress {
   --hue: 220;
   --holesize: 65%;
   --track-bg: hsl(233, 34%, 92%);
@@ -73,7 +42,6 @@
   justify-content: center;
   font-weight: 700;
   font-size: 18px;
-  font-family: "Lato", sans-serif;
 
   background: conic-gradient(
     hsl(var(--hue) 100% 70%),
@@ -83,7 +51,7 @@
   );
 }
 
-.wishgranting_progress_inner {
+.progress_inner {
   width: 90px;
   height: 90px;
   border-radius: 45px;
@@ -94,9 +62,9 @@
   justify-content: center;
 }
 
-.wishgranting_progress.indeterminate {
+.progress.indeterminate {
   animation: indeterminate 1s infinite ease-in-out;
 }
-.wishgranting_progress.indeterminate .wishgranting_progress_inner {
+.progress.indeterminate .progress_inner {
   animation: indeterminate 1s reverse infinite ease-in-out;
 }

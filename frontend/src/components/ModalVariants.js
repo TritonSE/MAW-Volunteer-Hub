@@ -22,6 +22,7 @@ function ModalVariants() {
   const [fileContents, setFileContents] = useState();
   const [variant, setVariant] = useState({});
   const [submitEnabled, setSubmitEnabled] = useState(true);
+  const [nameError, setNameError] = useState(false);
 
   const [_structure, getStructure] = useContext(FileStructure);
   const {
@@ -88,12 +89,15 @@ function ModalVariants() {
     },
     delete_file: {
       title: " ",
-      is_thin: true,
-      name: false,
-      has_upload: false,
-      action_button: false,
+      class_name: "thin",
       center: {
-        title: "Are you sure you want to delete this file?",
+        title: (
+          <div>
+            <br />
+            Are you sure you want to delete this file?
+            <br />
+          </div>
+        ),
         action_button: {
           title: "Delete",
         },
@@ -127,10 +131,7 @@ function ModalVariants() {
     },
     delete_category: {
       title: " ",
-      is_thin: true,
-      name: false,
-      has_upload: false,
-      action_button: false,
+      class_name: "thin",
       center: {
         title: (
           <div>
@@ -147,10 +148,7 @@ function ModalVariants() {
     },
     error: {
       title: "Error",
-      is_thin: true,
-      name: false,
-      has_upload: false,
-      action_button: false,
+      class_name: "thin",
       custom: (
         <>
           <br />
@@ -170,20 +168,17 @@ function ModalVariants() {
     },
     progress: {
       title: "Progress",
-      is_thin: true,
+      class_name: "thin",
       has_close: false,
-      name: false,
-      has_upload: false,
-      action_button: false,
       custom: (
         <>
           <div className="center">
             <div
-              className={`wishgranting_progress ${progress}`}
+              className={`progress ${progress}`}
               role="progressbar"
               style={{ "--progress": `${typeof progress === "number" ? progress : 50}%` }}
             >
-              <div className="wishgranting_progress_inner">
+              <div className="progress_inner">
                 {progress === "indeterminate" ? "Loading..." : Math.floor(progress) + "%"}
               </div>
             </div>
@@ -228,8 +223,33 @@ function ModalVariants() {
     setName(e.target.files[0].name);
   }
   function validate() {
-    /* TODO */
+    if (name.trim() === "") {
+      setNameError(true);
+      return false;
+    }
     return true;
+  }
+  async function handle_submit(e) {
+    e.preventDefault();
+    if (validate()) {
+      setSubmitEnabled(false);
+      const res = await variant.on_submit({
+        name,
+        activeListing,
+        fileContents,
+        categoryParent,
+      });
+      setSubmitEnabled(true);
+      if (!res || res.error) {
+        setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
+      } else {
+        getStructure();
+        setOpen(false);
+        setName("");
+        setActiveListing(null);
+        setFileContents();
+      }
+    }
   }
 
   return (
@@ -239,89 +259,52 @@ function ModalVariants() {
         if (variant.has_close === undefined) setOpen(false);
       }}
       contentLabel={variant.title}
-      style={{ content: variant.style ?? {} }}
-      variant={variant?.is_thin ? "thin" : ""}
+      className={variant?.class_name}
+      title={variant?.title}
+      hasClose={variant?.has_close}
+      actionButton={variant?.action_button?.title}
+      actionButtonProps={{ type: "submit", disabled: !submitEnabled, onClick: handle_submit }}
     >
-      <div className="wishgranting_modal">
-        <div className="wishgranting_modal_header">
-          <h3>{variant.title}</h3>
-          {variant.has_close === undefined && (
-            <button
-              type="button"
-              className="wishgranting_modal_close"
-              onClick={() => setOpen(false)}
-            >
-              <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
-            </button>
-          )}
+      <form onSubmit={handle_submit}>
+        <input type="submit" hidden /> {/* Form submits on enter key */}
+        <div className={variant.name ? "" : "hidden"}>
+          <div className="label">{(variant.name ?? {}).title}</div>
+          <input
+            className={`maw-ui_input ${nameError ? "error" : ""}`}
+            placeholder={(variant.name ?? {}).placeholder}
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+              setNameError(false);
+            }}
+          />
+          <br />
+          <br />
         </div>
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            if (validate()) {
-              setSubmitEnabled(false);
-              const res = await variant.on_submit({
-                name,
-                activeListing,
-                fileContents,
-                categoryParent,
-              });
-              setSubmitEnabled(true);
-              if (!res || res.error) {
-                setErrorMessage(res ? res.error : "Unable to reach server, please try again.");
-              } else {
-                getStructure();
-                setOpen(false);
-                setName("");
-                setActiveListing(null);
-                setFileContents();
-              }
-            }
-          }}
-        >
-          <input type="submit" hidden /> {/* Form submits on enter key */}
-          <div className={variant.name ? "" : "hidden"}>
-            <div className="wishgranting_modal_label">{(variant.name ?? {}).title}</div>
-            <input
-              className="maw-ui_input"
-              placeholder={(variant.name ?? {}).placeholder}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        {variant.has_upload && (
+          <>
+            <div className="label">Upload File</div>
+            <input type="file" onChange={file_upload} />
+          </>
+        )}
+        {variant.center && (
+          <>
+            <div className="center">{variant.center.title}</div>
             <br />
             <br />
-          </div>
-          {variant.has_upload ? (
-            <>
-              <div className="wishgranting_modal_label">Upload File</div>
-              <input type="file" onChange={file_upload} />
-            </>
-          ) : null}
-          {variant.center ? (
-            <div className="center halfheight column">
-              <div className="center">{variant.center.title}</div>
-              <br />
-              <br />
-              <div className="center thin">
-                <button type="button" className="maw-ui_button" onClick={() => setOpen(false)}>
-                  Cancel
-                </button>
-                <button type="submit" className="maw-ui_button error" disabled={!submitEnabled}>
-                  {variant.center.action_button.title}
-                </button>
-              </div>
-            </div>
-          ) : null}
-          {variant.action_button ? (
-            <div className="wishgranting_modal_bottom">
-              <button type="submit" className="maw-ui_button primary" disabled={!submitEnabled}>
-                {variant.action_button.title}
+            <div className="center">
+              <button type="button" className="maw-ui_button" onClick={() => setOpen(false)}>
+                Cancel
+              </button>
+              <div className="spacer" />
+              <button type="submit" className="maw-ui_button error" disabled={!submitEnabled}>
+                {variant.center.action_button.title}
               </button>
             </div>
-          ) : null}
-          {variant.custom || null}
-        </form>
-      </div>
+          </>
+        )}
+        {variant.custom || null}
+      </form>
     </Modal>
   );
 }

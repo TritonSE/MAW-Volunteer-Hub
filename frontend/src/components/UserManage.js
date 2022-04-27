@@ -185,11 +185,18 @@ export default function UserManage() {
           setFilter={setFilter}
         />
       )}
-      <Modal isOpen={modalState.isOpen} contentLabel="Account Access" variant="thin center">
-        <div className="notification_contents">
-          {modalState.name ?? "User"} has been given access.
-          <br />
-          <br />
+      <Modal
+        isOpen={modalState.isOpen}
+        onRequestClose={() => handleConfirmationModal({ name: "", isOpen: false })}
+        contentLabel="Account Access"
+        className="thin"
+        title=" "
+      >
+        <br />
+        <div className="center">{modalState.name ?? "User"} has been given access.</div>
+        <br />
+        <br />
+        <div className="center">
           <button
             type="button"
             className="maw-ui_button primary"

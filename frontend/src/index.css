@@ -63,6 +63,10 @@ input {
   text-align: center;
 }
 
+.spacer {
+  width: 32px;
+}
+
 /*
  * SITEWIDE STYLES
  */
@@ -105,6 +109,9 @@ input.maw-ui_input {
   border-radius: 3px;
   font-family: "Lato", sans-serif;
   font-size: 14px;
+}
+input.maw-ui_input.error {
+  border: 1px solid var(--secondary-red);
 }
 input.maw-ui_input.underline {
   border: none;
@@ -162,6 +169,7 @@ input.maw-ui_input.underline:focus {
   width: 100vw;
   height: 100vh;
 }
+
 .maw-ui_modal {
   width: 95vw;
   max-width: 466px;
@@ -186,13 +194,35 @@ input.maw-ui_input.underline:focus {
   height: unset;
   max-height: unset;
 }
-.maw-ui_modal-container.flex {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-}
-.maw-ui_modal-container.column {
+
+.maw-ui_modal-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
+
+.maw-ui_modal-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.maw-ui_modal-header h3 {
+  margin: 0;
+}
+.maw-ui_modal-header button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.maw-ui_modal-content {
+  flex: 1;
+}
+
+.maw-ui_modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
