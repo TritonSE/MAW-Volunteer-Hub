@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
+import Modal from "../components/Modal";
 import { api_login, api_signup } from "../api";
 import { SITE_PAGES } from "../constants/links";
 import { CurrentUser } from "../components/Contexts";
-import "../index.css";
 import "../styles/LoginPage.css";
-
-Modal.setAppElement("#root");
 
 function PasswordField({ name, placeholder, className, onChange }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -117,9 +114,7 @@ function LoginPage() {
     }
   }
 
-  useEffect(() => {
-    setSuccessState(-1);
-  }, [email, password]);
+  useEffect(() => setSuccessState(-1), [email, password]);
 
   useEffect(() => {
     document.title = "Log In - Make-a-Wish San Diego";
@@ -181,7 +176,11 @@ function LoginPage() {
             {/* <a href="#forgot">Forgot password</a> */}
             <span>&nbsp;</span>
           </div>
-          <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
+          <button
+            type="submit"
+            disabled={!validate()}
+            className={`maw-ui_button ${isWaiting ? "waiting" : ""}`}
+          >
             {isLogin ? "Login" : "Create new account"}
           </button>
         </div>
@@ -194,9 +193,9 @@ function LoginPage() {
       <Modal
         isOpen={Boolean(modalOpen)}
         onRequestClose={() => setModalOpen(false)}
-        className="login_react_modal"
+        className="thin flex"
       >
-        <div className="login_flex login_form login_modal">
+        <div className="login_flex login_form login_modal nomargin">
           <div className="login_flex nomargin">
             {modalOpen === true ? <div>&nbsp;</div> : <h3>Error</h3>}
             <button
@@ -212,7 +211,11 @@ function LoginPage() {
               ? "Your account has been created! Once an admin confirms, you will be notified via email and be able to access the website."
               : modalOpen}
           </div>
-          <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
+          <button
+            type="button"
+            className="maw-ui_button primary"
+            onClick={() => setModalOpen(false)}
+          >
             Okay
           </button>
         </div>

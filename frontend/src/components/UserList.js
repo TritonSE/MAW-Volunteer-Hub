@@ -119,23 +119,6 @@ function UserList({
     return "";
   };
 
-  // Determine if a row should be displayed based on which tab the table is on.
-  // Uses the id of the user to check to see if the user is an admin.
-  // NOTE: This could be problematic if users have the same name. Emails should work though.
-  const separateAdmin = (id) => {
-    const isAdmin = userData.some((user) => user._id === id && user.admin);
-
-    if (isAdmin && showAdmin) {
-      return true;
-    }
-
-    if (!isAdmin && !showAdmin) {
-      return true;
-    }
-
-    return false;
-  };
-
   return (
     <div className="user_list_layout">
       <div className="people_table_controls">
@@ -170,12 +153,11 @@ function UserList({
         <table className="people_table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
+              <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, colIndex) => (
                   <th
                     className={`people_table_header ${getColTitle(colIndex)}`}
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    key={Math.random()}
                   >
                     {column.render("Header")}
                     {/* This ternary operator should be removed to allow sorting for all columns */}
@@ -190,22 +172,23 @@ function UserList({
             ))}
           </thead>
           <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return separateAdmin(row.original._id) ? (
-                <tr {...row.getRowProps()} key={Math.random()}>
-                  {row.cells.map((cell, colIndex) => (
-                    <td
-                      {...cell.getCellProps()}
-                      className={`people_table_data ${getColTitle(colIndex)}`}
-                      key={Math.random()}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  ))}
-                </tr>
-              ) : null;
-            })}
+            {rows
+              .filter((user) => user.original.admin === showAdmin)
+              .map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell, colIndex) => (
+                      <td
+                        {...cell.getCellProps()}
+                        className={`people_table_data ${getColTitle(colIndex)}`}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>

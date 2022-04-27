@@ -47,12 +47,12 @@ function SideNav({ tabs, manage }) {
 
   return (
     <div className="side_nav_layout">
-      <ScrollContainer className="side_nav_buttons" vertical={false}>
+      <ScrollContainer className="side_nav_buttons column" vertical={false}>
         {tabs.map((tab, tab_id) => (
           <Link
             to={tab.tab_route}
             key={tab.tab_name}
-            className={`side_nav_links${
+            className={`side_nav_links center column ${
               tab_id === compute_route_tab() ? " side_nav_selected" : ""
             }`}
             onClick={() => setSelected(tab_id)}

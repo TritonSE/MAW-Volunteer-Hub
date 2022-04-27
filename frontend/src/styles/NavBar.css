@@ -1,8 +1,6 @@
 /* Navigation bar container styles */
 
 .container {
-  font-family: Lato;
-  font-weight: 400;
   font-size: 14px;
   background: var(--blue-gradient);
   padding: 16px 28px 17px 26px;

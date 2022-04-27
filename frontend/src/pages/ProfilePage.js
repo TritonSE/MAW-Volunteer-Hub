@@ -1,9 +1,10 @@
 /* eslint no-restricted-globals: off */
 import React, { useEffect, useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Modal from "react-modal";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+
+import Modal from "../components/Modal";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
@@ -12,8 +13,6 @@ import { CurrentUser } from "../components/Contexts";
 
 import "../styles/ProfilePage.css";
 
-Modal.setAppElement(document.getElementById("root"));
-
 function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -21,7 +20,6 @@ function ProfilePage() {
   const [shouldRedirect, setShouldRedirect] = useState(0);
   const [changePassResponse, setChangePassResponse] = useState();
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
-  const [pfpErrorModalOpen, setPFPErrorModalOpen] = useState(false);
   const [opacity, setOpacity] = useState(1);
   const [crop, setCrop] = useState({ aspect: 1 });
   const [upImg, setUpImg] = useState();
@@ -80,13 +78,13 @@ function ProfilePage() {
     // accept="image/*" on the <input> should prevent this
     //   from ever executing
     if (e.target.files[0].type.indexOf("image") === -1) {
-      setPFPErrorModalOpen("File is not an image (.jpg, .png, .gif, etc.).");
+      setResponseModalOpen("File is not an image (.jpg, .png, .gif, etc.).");
       return;
     }
 
     // 16 MB maximum, same as multer on backend
     if (e.target.files[0].size > 1.6e7) {
-      setPFPErrorModalOpen(
+      setResponseModalOpen(
         `File is too large (${Math.round(e.target.files[0].size / 1e6)} MB), maximum is 16 MB.`
       );
       return;
@@ -120,7 +118,7 @@ function ProfilePage() {
         setCurrentUser(res.user);
       }
     } else {
-      setPFPErrorModalOpen("Failed to upload file, please try again.");
+      setResponseModalOpen("Failed to upload file, please try again.");
     }
     setOpacity(1);
     setPFPModalOpen(false);
@@ -214,7 +212,7 @@ function ProfilePage() {
           />
           {isCurrentUser && (
             <>
-              <button type="button">
+              <button type="button" className="center">
                 <label htmlFor="pfp_input">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -239,8 +237,7 @@ function ProfilePage() {
               </button>
 
               <Modal
-                className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
+                className="modal-container center column"
                 isOpen={pfpModalOpen}
                 onRequestClose={() => {
                   if (!dragActive) {
@@ -249,65 +246,49 @@ function ProfilePage() {
                   }
                 }}
                 contentLabel="Change profile picture"
+                title="Crop Profile Picture"
               >
-                <h1 className="modal-title-crop">Crop Profile Picture</h1>
-                <span className="modal-subtitle-crop">Click and drag to crop</span>
-                <ReactCrop
-                  crop={crop}
-                  aspect={1}
-                  minWidth={10}
-                  ruleOfThirds
-                  onChange={(_c, pc) => setCrop(pc)}
-                  onComplete={(_c, pc) => setCrop(pc)}
-                  onDragStart={() => setDragActive(true)}
-                  onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
-                >
-                  <img
-                    alt="Crop modal"
-                    src={upImg}
-                    style={{
-                      maxHeight: "calc(100vh - 180px)",
-                    }}
-                    onLoad={fix_crop}
-                  />
-                </ReactCrop>
-                <br />
-                <div className="modal-flex-crop">
-                  <button
-                    type="button"
-                    className="modal-button button-nomargin change-password-button"
-                    onClick={() => setPFPModalOpen(false)}
+                <div className="modal-crop-column">
+                  <span className="modal-subtitle-crop">Click and drag to crop</span>
+                  <ReactCrop
+                    crop={crop}
+                    aspect={1}
+                    minWidth={10}
+                    ruleOfThirds
+                    onChange={(_c, pc) => setCrop(pc)}
+                    onComplete={(_c, pc) => setCrop(pc)}
+                    onDragStart={() => setDragActive(true)}
+                    onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
                   >
-                    Cancel
-                  </button>
-                  <span>&nbsp;</span>
-                  <button
-                    type="button"
-                    className="modal-button button-primary button-nomargin"
-                    onClick={do_upload}
-                    style={{ opacity }}
-                  >
-                    Upload
-                  </button>
+                    <img
+                      alt="Crop modal"
+                      src={upImg}
+                      style={{
+                        maxHeight: "calc(100vh - 180px)",
+                      }}
+                      onLoad={fix_crop}
+                    />
+                  </ReactCrop>
+                  <br />
+                  <div className="modal-flex-crop">
+                    <button
+                      type="button"
+                      className="maw-ui_button fullwidth"
+                      onClick={() => setPFPModalOpen(false)}
+                    >
+                      Cancel
+                    </button>
+                    <span>&nbsp;</span>
+                    <button
+                      type="button"
+                      className="maw-ui_button primary fullwidth"
+                      onClick={() => do_upload()}
+                      style={{ opacity }}
+                    >
+                      Upload
+                    </button>
+                  </div>
                 </div>
-              </Modal>
-              <Modal
-                className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
-                isOpen={Boolean(pfpErrorModalOpen)}
-                onRequestClose={() => setPFPErrorModalOpen(false)}
-                contentLabel="Profile picture error"
-              >
-                <h1 className="modal-title-crop">Error:</h1>
-                <span>{pfpErrorModalOpen}</span>
-                <br />
-                <button
-                  type="button"
-                  className="modal-button button-primary button-nomargin"
-                  onClick={() => setPFPErrorModalOpen(false)}
-                >
-                  Okay
-                </button>
               </Modal>
             </>
           )}
@@ -323,22 +304,21 @@ function ProfilePage() {
         </div>
         <div className="profile-buttons-container">
           {isCurrentUser && (
-            <button
-              type="button"
-              className="change-password-button"
-              onClick={() => setPassModalOpen(true)}
-            >
+            <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
               Change Password
             </button>
           )}
           {currentUser && currentUser.admin && (
-            <button
-              type="button"
-              className="delete-account-button"
-              onClick={() => setDeleteModalOpen(true)}
-            >
-              Delete Profile
-            </button>
+            <>
+              <span>&nbsp;&nbsp;&nbsp;</span>
+              <button
+                type="button"
+                className="maw-ui_button error"
+                onClick={() => setDeleteModalOpen(true)}
+              >
+                Delete Profile
+              </button>
+            </>
           )}
         </div>
         {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
@@ -346,32 +326,29 @@ function ProfilePage() {
 
       {/* Change Password and Delete Profile Modals */}
       <Modal
-        className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        className="profile-change-modal"
         isOpen={passModalOpen}
         onRequestClose={() => setPassModalOpen(false)}
-        contentLabel="Change Password Modal"
+        contentLabel="Change password"
+        title="Change Password"
       >
-        <button
-          className="close-button"
-          aria-label="close-button"
-          type="button"
-          onClick={() => setPassModalOpen(false)}
-        />
         <form className="change-pass-form" onSubmit={change_password}>
           <input
+            className="maw-ui_input"
             placeholder="Enter old password"
             type="password"
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
           />
           <input
+            className="maw-ui_input"
             placeholder="Enter new password"
             type="password"
             value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
           <input
+            className="maw-ui_input"
             placeholder="Reenter new password"
             type="password"
             value={confirmPass}
@@ -385,56 +362,51 @@ function ProfilePage() {
             {changePassResponse}
           </div>
 
-          <button className="modal-button button-primary" type="submit">
+          <br />
+
+          <button type="submit" className="maw-ui_button primary fullwidth">
             Change password
           </button>
         </form>
       </Modal>
 
       <Modal
-        className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        className="thin"
         isOpen={deleteModalOpen}
         onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Account Modal"
+        title=" "
       >
-        <h1>Are you sure you want to delete this profile?</h1>
-        <button
-          className="close-button"
-          aria-label="close-button"
-          type="button"
-          onClick={() => setDeleteModalOpen(false)}
-        />
-        <div className="delete-button-container">
-          <button
-            className="modal-button small button-secondary"
-            type="button"
-            onClick={() => setDeleteModalOpen(false)}
-          >
+        <br />
+        <div className="center">Are you sure you want to delete this profile?</div>
+        <br />
+        <br />
+        <div className="center">
+          <button type="button" className="maw-ui_button" onClick={() => setDeleteModalOpen(false)}>
             Cancel
           </button>
-          <button
-            className="modal-button small button-danger"
-            type="button"
-            onClick={delete_account}
-          >
+          <div className="spacer" />
+          <button type="button" className="maw-ui_button error" onClick={() => delete_account()}>
             Delete
           </button>
         </div>
       </Modal>
 
       <Modal
-        className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
         isOpen={Boolean(responseModalOpen)}
         onRequestClose={() => setResponseModalOpen()}
         contentLabel="Response"
+        className="thin"
+        title="Error"
       >
-        <h1>{responseModalOpen}</h1>
-        <div className="delete-button-container">
+        <br />
+        <div className="center">{responseModalOpen}</div>
+        <br />
+        <br />
+        <div className="center">
           <button
-            className="modal-button small button-primary"
             type="button"
+            className="maw-ui_button primary"
             onClick={() => setResponseModalOpen()}
           >
             Okay

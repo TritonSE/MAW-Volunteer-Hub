@@ -1,69 +1,9 @@
-.ReactModal__Overlay.wishgranting_react_modal {
-  z-index: 1000;
-  position: fixed;
-  inset: 0px;
-  background-color: rgba(255, 255, 255, 0.75);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
-}
-.ReactModal__Content.wishgranting_react_modal {
-  width: 95vw;
-  max-width: 466px;
-  height: 95vh;
-  max-height: 278px;
-  padding-top: 21px !important;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
-  border: none !important;
-  background: white;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
-  border-radius: 10px !important;
-  box-sizing: border-box;
-  position: relative;
-}
-.ReactModal__Content.wishgranting_react_modal.thin {
-  max-height: 202px !important;
-}
-.wishgranting_modal {
-  font-family: "Lato", sans-serif;
-}
-.wishgranting_modal h3 {
-  margin: 0;
-}
-.wishgranting_modal_close {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-.wishgranting_modal_label {
+.maw-ui_modal .label {
   margin-bottom: 12px;
   font-weight: bold;
 }
-.wishgranting_modal_header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
 
-.wishgranting_modal input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-  height: 28px;
-  padding: 0;
-  padding: 7px;
-  border: 1px solid #0057b8;
-  font-family: "Lato" !important;
-  border-radius: 3px;
-  font-size: 14px;
-}
-.wishgranting_modal input[type="file"] {
-  font-family: "Lato", sans-serif;
-}
-.wishgranting_modal input[type="file"]::file-selector-button {
+.maw-ui_modal input[type="file"]::file-selector-button {
   width: 103px;
   height: 26px;
   background: white;
@@ -73,61 +13,8 @@
   border: 1px solid black;
   cursor: pointer;
 }
-.wishgranting_modal input[type="file"]::after {
+.maw-ui_modal input[type="file"]::after {
   display: none;
-}
-
-.wishgranting_modal_bottom {
-  position: absolute;
-  bottom: 32px;
-  right: 32px;
-}
-
-.wishgranting_modal_button {
-  border-radius: 3px;
-  width: 103px;
-  height: 26px;
-  font-family: "Lato", sans-serif;
-  cursor: pointer;
-  border: 1px solid black;
-  background: white;
-  color: black;
-  font-weight: normal;
-  transition: opacity 0.1s;
-}
-.wishgranting_modal_button.primary {
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-}
-.wishgranting_modal_button.error {
-  background: #ff797d;
-  color: white;
-  border: none;
-}
-.wishgranting_modal_button:disabled {
-  opacity: 0.5;
-}
-
-.wishgranting_modal_center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.wishgranting_modal_center.halfheight {
-  height: calc(202px / 2);
-}
-.wishgranting_modal_center.column {
-  flex-direction: column;
-}
-.wishgranting_modal_center.thin {
-  width: 245px;
-  justify-content: space-between;
-}
-.wishgranting_modal_center.center {
-  justify-content: center;
-  width: 100%;
 }
 
 /*
@@ -142,7 +29,7 @@
   }
 }
 
-.wishgranting_progress {
+.progress {
   --hue: 220;
   --holesize: 65%;
   --track-bg: hsl(233, 34%, 92%);
@@ -155,7 +42,6 @@
   justify-content: center;
   font-weight: 700;
   font-size: 18px;
-  font-family: "Lato", sans-serif;
 
   background: conic-gradient(
     hsl(var(--hue) 100% 70%),
@@ -165,7 +51,7 @@
   );
 }
 
-.wishgranting_progress_inner {
+.progress_inner {
   width: 90px;
   height: 90px;
   border-radius: 45px;
@@ -176,12 +62,9 @@
   justify-content: center;
 }
 
-.wishgranting_progress.indeterminate {
+.progress.indeterminate {
   animation: indeterminate 1s infinite ease-in-out;
 }
-.wishgranting_progress.indeterminate .wishgranting_progress_inner {
+.progress.indeterminate .progress_inner {
   animation: indeterminate 1s reverse infinite ease-in-out;
-}
-
-.wishgranting_progress.done {
 }

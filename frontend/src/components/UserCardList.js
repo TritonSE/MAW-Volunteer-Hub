@@ -5,19 +5,21 @@ import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
   return (
-    <div className="user_card" key={Math.random()}>
-      <div className="card_col">
+    <div className="user_card">
+      <div className="card_col column">
         <Link
-          className="card_item_top"
+          className="card_item_top column"
           aria-label="user_profile"
           to={`${SITE_PAGES.PROFILE}/${user._id}`}
           target="_blank"
         >
           {user.name}
         </Link>
-        <div className="card_item_bottom">Assignments Completed: {user.completed ?? "N/A"}</div>
+        <div className="card_item_bottom column">
+          Assignments Completed: {user.completed ?? "N/A"}
+        </div>
       </div>
-      <div className="card_col">
+      <div className="card_col column">
         {/* <div className="card_item_top">{user.roles}</div> */}
         <VerifyButtonCell
           row={{ index: row }}
@@ -67,54 +69,11 @@ function UserCardSearch({ filter, setFilter }) {
 function UserCardList({ userData, filter, setFilter, ...props }) {
   const [showAdmin, setShowAdmin] = useState(false);
 
-  // Separates admins from volunteers
-  const separateAdmin = (id) => {
-    let isAdmin = false;
-
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i]._id === id) {
-        isAdmin = userData[i].admin;
-      }
-    }
-
-    if (isAdmin && showAdmin) {
-      return true;
-    }
-
-    if (!isAdmin && !showAdmin) {
-      return true;
-    }
-
-    return false;
-  };
-
-  // Determine if a user should be displayed.
-  // Mainly considers the name search variable stored in filter
-  const displayUser = (id, userName) => {
-    if (userName && filter !== "") {
-      if (separateAdmin(id) && userName.toLowerCase().includes(filter.toLowerCase())) {
-        return true;
-      }
-
-      return false;
-    }
-
-    return separateAdmin(id);
-  };
-
-  const getButtonHeader = (ind) => {
-    if ((ind === 0 && !showAdmin) || (ind === 1 && showAdmin)) {
-      return " selected";
-    }
-
-    return "";
-  };
-
   return (
-    <div className="user_mobile_display">
+    <div className="user_mobile_display column">
       <div className="user_toggle">
         <button
-          className={`toggle_btn${getButtonHeader(0)}`}
+          className={`toggle_btn ${!showAdmin ? "selected" : ""}`}
           type="button"
           aria-label="volunteer"
           onClick={() => setShowAdmin(false)}
@@ -122,7 +81,7 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
           Volunteers
         </button>
         <button
-          className={`toggle_btn${getButtonHeader(1)}`}
+          className={`toggle_btn ${showAdmin ? "selected" : ""}`}
           type="button"
           aria-label="volunteer"
           onClick={() => setShowAdmin(true)}
@@ -134,13 +93,17 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
         </button> */}
       </div>
       <UserCardSearch filter={filter} setFilter={setFilter} />
-      <div className="card_list">
-        {userData.map(
-          (user, i) =>
-            displayUser(user._id, user.name) && (
-              <UserCard user={user} key={Math.random()} row={i} {...props} />
-            )
-        )}
+      <div className="card_list column">
+        {userData
+          .filter(
+            (user) =>
+              user.name &&
+              user.name.toLowerCase().includes(filter.toLowerCase()) &&
+              user.admin === showAdmin
+          )
+          .map((user, i) => (
+            <UserCard key={user._id} user={user} row={i} {...props} />
+          ))}
       </div>
     </div>
   );

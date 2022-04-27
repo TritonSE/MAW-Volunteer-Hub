@@ -5,14 +5,12 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  background-color: var(--background-grey);
   background-image: url("../../public/img/login_background.svg");
   background-size: 100vw;
   background-position: center bottom;
   background-repeat: no-repeat;
 
-  --box-padding-small: 5vw;
-  --box-width-small: calc(100vw - 5vw - (var(--box-padding-small) * 2));
+  --box-width-small: calc(100vw - 5vw - 10vw);
 }
 
 .login_logo {
@@ -49,8 +47,6 @@
 
   border: 1px solid #000000;
 
-  font-family: "Lato" !important;
-
   margin-bottom: 16px;
 }
 .login input.error:not([type="checkbox"]),
@@ -66,8 +62,6 @@
   background: rgba(0, 87, 184, 0.9);
   color: #ffffff;
   border: 0;
-
-  font-family: "Lato" !important;
 
   opacity: 1;
   transition: opacity 0.1s;
@@ -124,7 +118,6 @@
   width: 100%;
   margin-bottom: 16px;
   font-size: 12px;
-  font-family: "Lato", sans-serif;
 }
 .login_flex.nomargin {
   margin: 0;
@@ -159,33 +152,14 @@
   padding: 10px;
   background: var(--secondary-red);
   text-align: center;
-  font-family: "Lato", sans-serif;
   font-size: 10pt;
   color: white;
   margin-top: auto;
 }
 
-.ReactModal__Overlay {
-  background: rgba(0, 0, 0, 0.3) !important;
-}
-.ReactModal__Content.login_react_modal {
-  background: var(--background-grey);
-  position: absolute;
-  width: 462px;
-  height: 202px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  left: calc(50vw - (462px / 2)) !important;
-  top: calc(50vh - (202px / 2)) !important;
-  padding-top: 21px !important;
-  padding-bottom: 21px !important;
-  padding-left: 25px !important;
-  padding-right: 25px !important;
-}
 .login_modal {
   height: 100%;
   text-align: center;
-  font-family: "Lato", sans-serif;
   font-size: 16px;
 }
 .login_modal_content {
@@ -200,16 +174,6 @@
 .login_button_unstyled {
   background: transparent;
   border: none;
-  cursor: pointer;
-}
-.login_button_round {
-  width: 103px;
-  height: 26px;
-  background: var(--primary-blue);
-  border: 3px solid var(--primary-blue);
-  border-radius: 3px;
-  color: white;
-  font-family: "Lato", sans-serif;
   cursor: pointer;
 }
 
@@ -240,8 +204,8 @@
   }
   .login_box {
     width: var(--box-width-small);
-    padding-left: var(--box-padding-small);
-    padding-right: var(--box-padding-small);
+    padding-left: 5vw;
+    padding-right: 5vw;
   }
   .login input:not([type="checkbox"]) {
     width: calc(var(--box-width-small) - 50px - 2px - 5px);
