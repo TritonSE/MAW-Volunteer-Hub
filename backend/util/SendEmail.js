@@ -1,8 +1,6 @@
 const { SESv2Client, SendEmailCommand } = require("@aws-sdk/client-sesv2");
 const config = require("../config");
 
-const MAW_EMAIL = "MAWVolunteerHub@gmail.com";
-
 const region = config.amazon_ses.region;
 const accessKeyId = config.amazon_ses.access_key;
 const secretAccessKey = config.amazon_ses.secret_key;
