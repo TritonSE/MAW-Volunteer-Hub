@@ -15,7 +15,7 @@
 .evt_modal {
   position: absolute;
   width: 600px;
-  max-width: 100vw;
+  max-width: 90vw;
   min-height: 460px;
   border-radius: 10px;
   outline: 0;

@@ -11,8 +11,6 @@ import "../styles/CalendarPage.css";
 /*
  * Current TODOs:
  *   - Repeating events (this will take some work)
- *   - Fix occasional addition of event when clicking on existing event
- *   - Fix modal sizing on mobile
  *   - Style cleanups (e.g. color scheme)
  *   - Memory leak testing/performance tuning
  *   - Keyboard shortcuts

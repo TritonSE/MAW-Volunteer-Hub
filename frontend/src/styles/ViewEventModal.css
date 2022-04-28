@@ -347,7 +347,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .view_modal .evt_modal_content .columns {
+  .view_modal .evt_modal_content .columns:not(.non_responsive) {
     display: block;
   }
   .view_modal .evt_modal_content .columns .indented {

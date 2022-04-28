@@ -408,7 +408,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             </button>
           </div>
           <div className="evt_modal_content">
-            <div className="columns">
+            <div className="columns non_responsive">
               <div>
                 <div className="gentle">
                   {event.volunteers.length} Volunteer{event.volunteers.length !== 1 ? "s" : ""}

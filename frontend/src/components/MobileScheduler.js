@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   DateFormatter,
   DateRangeFormatter,
@@ -7,16 +7,25 @@ import {
 import "../styles/MobileScheduler.css";
 
 export default function MobileScheduler({ events, onRequestEdit }) {
+  const [height, setHeight] = useState(-1);
+  const scrollRef = useRef();
+
   const sorted = events.sort((a, b) => a.from - b.from);
   let last = new Date(0);
 
+  useEffect(() => {
+    if (height > -1) scrollRef.current.scrollTo(0, height);
+  }, [height]);
+
   return (
-    <div className="mobile_scheduler">
+    <div className="mobile_scheduler" ref={scrollRef}>
       {sorted.map((evt, ind) => {
         const show_date = !dateFunctions.compare_dates(last, evt.from);
         const show_month = last.getMonth() !== evt.from.getMonth();
         const show_ticker = last < dateFunctions.TODAY && evt.from >= dateFunctions.TODAY;
         last = evt.from;
+
+        if (show_ticker && height === -1) setHeight((ind + 2) * 53);
 
         return (
           <span key={evt._id}>
