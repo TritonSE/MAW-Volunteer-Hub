@@ -177,7 +177,8 @@ export default function UserManage() {
         overlayClassName="access_notification_overlay"
       >
         <div className="notification_contents">
-          {modalState.name ?? "User"} has been given access.
+          {modalState.name ?? "User"} has been given access and will be sent a notification via
+          email.
           <button
             type="button"
             className="confirmation_btn"
