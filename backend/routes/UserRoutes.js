@@ -150,31 +150,71 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
 /**
  * ROLES
  */
-router.patch("/set-roles/:id", validate(["roles"], []), async (req, res) => {
-  const roles = JSON.parse(req.body.roles);
-  const keyroles = [
-    "Wish Granter",
-    "Volunteer",
-    "Mentor",
-    "Airport Greeter",
-    "Office",
-    "Special Events",
-    "Translator",
-    "Speaker's Bureau",
-    "Las Estrellas",
-    "Primary Admin",
-    "Secondary Admin",
-  ];
-  UserModel.findById(req.user._id)
-    .then((user) => {
-      roles.forEach((role) => {
-        if (user.roles.indexOf(role) === -1 && keyroles.indexOf(role) !== -1) user.roles.push(role);
-      });
-      return user.save();
-    })
-    .then(() => res.json({ success: true }))
-    .catch(errorHandler(res));
-});
+// Take a list of roles, roles, of what the final role state should be
+router.patch(
+  "/set-roles/:id",
+  idParamValidator(),
+  validate(["roles"], []),
+  primaryAdminValidator,
+  (req, res) => {
+    const roles = JSON.parse(req.body.roles);
+    const keyroles = [
+      "Wish Granter",
+      "Volunteer",
+      "Mentor",
+      "Airport Greeter",
+      "Office",
+      "Special Events",
+      "Translator",
+      "Speaker's Bureau",
+      "Las Estrellas",
+      "Primary Admin",
+      "Secondary Admin",
+    ];
+    // validate roles based on keyroles
+    const validRoles = roles.every((element) => keyroles.indexOf(element) !== -1);
+
+    if (!validRoles) return res.status(400).json("Invalid roles input");
+
+    UserModel.findById(req.params.id)
+      .then((user) => {
+        if (user.roles.indexOf("Primary Admin") !== -1 && roles.indexOf("Primary Admin") === -1) {
+          // throw an error if they are trying to remove primary admin from an account that isn't their own
+          if (user.id !== req.user.id) {
+            return res.status(403).json("Unable to remove Primary Status from another users");
+          }
+          // only allow yourself to remove admin if there is at least one other primary admin
+          UserModel.find({ admin: 2 }).then((users) => {
+            if (users.length <= 1) {
+              return res
+                .status(403)
+                .json("Unable to remove Primary Admin Status from final primary admin.");
+            }
+          });
+        }
+
+        // Reset user admin state based on highest level of admin found in role array
+        user.admin = 0;
+
+        if (roles.indexOf("Secondary Admin") !== -1) {
+          user.admin = 1;
+          roles.splice(roles.indexOf("Secondary Admin"), 1);
+        }
+
+        // Primary Admin state validated as middleware and p.a. removal handled by first if
+        if (roles.indexOf("Primary Admin") !== -1) {
+          user.admin = 2;
+          roles.splice(roles.indexOf("Primary Admin"), 1);
+        }
+
+        user.roles = roles;
+        user.save();
+        return res.json({ success: true });
+      })
+      .catch(errorHandler(res));
+    return res.json(500);
+  }
+);
 
 router.get("/role/:role", async (req, res) => {
   UserModel.find({ roles: req.params.rolerole })
