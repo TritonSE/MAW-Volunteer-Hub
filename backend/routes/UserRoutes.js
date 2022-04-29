@@ -7,7 +7,12 @@ const router = express.Router();
 
 const config = require("../config");
 const UserModel = require("../models/UserModel");
-const { validate, errorHandler, idParamValidator, adminValidator } = require("../util/RouteUtils");
+const {
+  validate,
+  errorHandler,
+  idParamValidator,
+  primaryAdminValidator,
+} = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 
 const upload = multer({
@@ -34,19 +39,19 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
+router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.put("/promote/:id", idParamValidator(), adminValidator, (req, res) =>
+router.put("/promote/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { admin: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.delete("/delete/:id", idParamValidator(), adminValidator, (req, res) =>
+router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
@@ -142,6 +147,9 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
     .catch(errorHandler(res));
 });
 
+/**
+ * ROLES
+ */
 router.patch("/set-roles/:id", validate(["roles"], []), async (req, res) => {
   const roles = JSON.parse(req.body.roles);
   const keyroles = [
