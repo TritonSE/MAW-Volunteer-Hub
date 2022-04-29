@@ -54,7 +54,8 @@ function FileButton({ description, image, adminOnly, onClick, className }) {
     onClick(e);
   }
 
-  if (adminOnly && (!currentUser || !currentUser.admin)) return null;
+  if (adminOnly && (!currentUser || !(currentUser.admin === 1 || currentUser.admin === 2)))
+    return null;
 
   return (
     <button
@@ -81,7 +82,8 @@ function FileListing({
 }) {
   const [currentUser] = useContext(CurrentUser);
 
-  return (adminOnly && currentUser && currentUser.admin) || !adminOnly ? (
+  return (adminOnly && currentUser && (currentUser.admin === 1 || currentUser.admin === 2)) ||
+    !adminOnly ? (
     <div
       className={`filelisting
           ${noalternate ? " no_nth_child" : ""}
