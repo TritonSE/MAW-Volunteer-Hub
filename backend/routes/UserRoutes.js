@@ -11,6 +11,7 @@ const {
   validate,
   errorHandler,
   idParamValidator,
+  adminValidator,
   primaryAdminValidator,
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
@@ -155,7 +156,7 @@ router.patch(
   "/set-roles/:id",
   idParamValidator(),
   validate(["roles"], []),
-  primaryAdminValidator,
+  adminValidator,
   (req, res) => {
     const roles = JSON.parse(req.body.roles);
     const keyroles = [
@@ -172,54 +173,69 @@ router.patch(
       "Secondary Admin",
     ];
     // validate roles based on keyroles
-    const validRoles = roles.every((element) => keyroles.indexOf(element) !== -1);
-
-    if (!validRoles) return res.status(400).json("Invalid roles input");
+    if (!roles.every((element) => keyroles.includes(element))) {
+      res.status(400).json({ error: "Invalid roles input." });
+      return;
+    }
 
     UserModel.findById(req.params.id)
       .then((user) => {
-        if (user.roles.indexOf("Primary Admin") !== -1 && roles.indexOf("Primary Admin") === -1) {
+        const is_primary = user.roles.includes("Primary Admin");
+        const will_be_primary = roles.includes("Primary Admin");
+        if (is_primary && !will_be_primary) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
-          if (user.id !== req.user.id) {
-            return res.status(403).json("Unable to remove Primary Status from another users");
+          if (user._id.toString() !== req.user._id.toString()) {
+            throw new AggregateError("Unable to remove primary admin status from another user.");
           }
           // only allow yourself to remove admin if there is at least one other primary admin
-          UserModel.find({ admin: 2 }).then((users) => {
-            if (users.length <= 1) {
-              return res
-                .status(403)
-                .json("Unable to remove Primary Admin Status from final primary admin.");
-            }
-          });
+          return Promise.all([user, UserModel.find({ admin: 2 })]);
+        }
+        if (!is_primary && will_be_primary && req.user.admin < 2) {
+          throw new AggregateError("Insufficient permissions to make user a primary admin.");
+        }
+        return Promise.all([user, null]);
+      })
+      .then(([user, primary_admins]) => {
+        if (primary_admins && primary_admins.length <= 1) {
+          throw new AggregateError(
+            "Unable to remove primary admin status from final primary admin."
+          );
         }
 
         // Reset user admin state based on highest level of admin found in role array
         user.admin = 0;
 
-        if (roles.indexOf("Secondary Admin") !== -1) {
+        if (roles.includes("Secondary Admin")) {
           user.admin = 1;
           roles.splice(roles.indexOf("Secondary Admin"), 1);
         }
 
         // Primary Admin state validated as middleware and p.a. removal handled by first if
-        if (roles.indexOf("Primary Admin") !== -1) {
+        if (roles.includes("Primary Admin")) {
           user.admin = 2;
           roles.splice(roles.indexOf("Primary Admin"), 1);
         }
 
         user.roles = roles;
-        user.save();
-        return res.json({ success: true });
+        return user.save();
       })
-      .catch(errorHandler(res));
-    return res.json(500);
+      .then(() => res.json({ success: true }))
+      .catch((err) => {
+        // Use Promise-specific error type to give the user an error message
+        //   for bad input data (rather than just "Internal server error.")
+        if (err instanceof AggregateError) {
+          res.status(403).json({ error: err });
+        } else {
+          errorHandler(res);
+        }
+      });
   }
 );
 
-router.get("/role/:role", async (req, res) => {
-  UserModel.find({ roles: req.params.rolerole })
+router.get("/role/:role", (req, res) =>
+  UserModel.find({ roles: req.params.role })
     .then((users) => res.json(users))
-    .catch(errorHandler(res));
-});
+    .catch(errorHandler(res))
+);
 
 module.exports = router;
