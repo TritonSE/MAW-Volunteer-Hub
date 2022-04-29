@@ -180,7 +180,7 @@ router.patch(
 
     UserModel.findById(req.params.id)
       .then((user) => {
-        const is_primary = user.roles.includes("Primary Admin");
+        const is_primary = user.admin === 2;
         const will_be_primary = roles.includes("Primary Admin");
         if (is_primary && !will_be_primary) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
