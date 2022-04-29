@@ -67,6 +67,14 @@ const EventSchema = new mongoose.Schema({
   /**
    * OPTIONAL ARGS
    */
+  repeat: {
+    type: Number,
+    default: 0,
+    validate: [
+      (num) => !Number.isNaN(Number.parseInt(num, 10)) || num < 0 || num > 6,
+      "Event's repetition value must be in range 0 to 6",
+    ],
+  },
   over18: {
     type: Boolean,
     default: false,

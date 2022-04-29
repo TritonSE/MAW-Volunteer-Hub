@@ -29,6 +29,16 @@
   cursor: pointer;
 }
 
+.calendar .calendar_modal_toggle {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+
 .calendar .react-simple-calendar {
   padding: 12px;
   padding-bottom: 24px;
@@ -104,6 +114,14 @@
 @media only screen and (max-width: 600px) {
   .calendar {
     justify-content: center;
+  }
+  .calendar .mobile_row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .calendar .calendar_new {
+    margin: 0;
   }
   .calendar .react-simple-scheduler {
     display: none;

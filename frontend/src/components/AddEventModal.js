@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { Calendar } from "@cubedoodl/react-simple-scheduler";
+import ReactSelect from "react-select";
+import { Calendar, DateFormatter } from "@cubedoodl/react-simple-scheduler";
 import RoleSelect from "./RoleSelect";
 import AssignModal from "./AssignModal";
 import DATE_UTILS from "../date";
@@ -43,6 +44,8 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [to, setTo] = useState(new Date());
   const [errorTo, setErrorTo] = useState();
 
+  const [repeat, setRepeat] = useState();
+
   const [numberNeeded, setNumberNeeded] = useState();
   const [errorNumberNeeded, setErrorNumberNeeded] = useState();
 
@@ -59,6 +62,45 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [assignModal, setAssignModal] = useState(false);
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [animationPlaying, setAnimationPlaying] = useState(false);
+
+  const repetitionOptions = [
+    {
+      value: 0,
+      label: "Does not repeat",
+    },
+    {
+      value: 1,
+      label: "Daily",
+    },
+    {
+      value: 2,
+      label: (
+        <>
+          Weekly on <DateFormatter date={from} fmt="X" />
+        </>
+      ),
+    },
+    {
+      value: 3,
+      label: (
+        <>
+          Bi-Weekly on <DateFormatter date={from} fmt="X" />
+        </>
+      ),
+    },
+    {
+      value: 4,
+      label: (
+        <>
+          Annually on <DateFormatter date={from} fmt="O d" />
+        </>
+      ),
+    },
+    {
+      value: 5,
+      label: "Every Weekday (Mon-Fri)",
+    },
+  ];
 
   useEffect(() => setTo(DATE_UTILS.copy_time(from, to)), [from]);
 
@@ -84,6 +126,12 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
 
     setTo(currentEvent?.to ? new Date(currentEvent.to) : DATE_UTILS.walk_hour(new Date(), 1));
     setErrorTo();
+
+    if (currentEvent?.repeat) {
+      setRepeat(repetitionOptions.find((rep) => rep.value === currentEvent.repeat));
+    } else {
+      setRepeat(repetitionOptions[0]);
+    }
 
     setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
@@ -153,6 +201,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       number_needed: numberNeeded,
       volunteers: JSON.stringify(volunteers.map((vol) => vol._id)),
       location: loc,
+      repeat: repeat.value,
       question,
       over18,
       under18,
@@ -237,14 +286,25 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <div className="indent">
-                <select>
-                  <option>Does not repeat</option>
-                  <option>Daily</option>
-                  <option>Weekly on Saturday</option>
-                  <option>Bi-Weekly on Saturday</option>
-                  <option>Annually on February 14</option>
-                  <option>Every Weekday (Mon-Fri)</option>
-                </select>
+                <ReactSelect
+                  options={repetitionOptions}
+                  value={repeat}
+                  onChange={(newVal) => setRepeat(newVal)}
+                  styles={{
+                    container: (provided) => ({
+                      ...provided,
+                      flex: "1",
+                      marginBottom: "10px",
+                      maxWidth: "216px",
+                      maxHeight: "70px",
+                      fontSize: "14px",
+                    }),
+                    control: (provided) => ({
+                      ...provided,
+                      border: "1px solid black !important",
+                    }),
+                  }}
+                />
               </div>
               <img src="/img/calendar_people.svg" alt="People" />
               <FormInput
