@@ -1,4 +1,4 @@
-const MAW_EMAIL = "MAWVolunteerHub@gmail.com";
+const config = require("../config");
 
 const EmailTemplate = {
   Content: {
@@ -21,14 +21,12 @@ const EmailTemplate = {
     ToAddresses: [],
   },
 
-  FeedbackForwardingEmailAddress: MAW_EMAIL,
-  FeedbackForwardingEmailAddressIdentityArn:
-    "arn:aws:ses:us-west-1:141769618659:identity/MAWVolunteerHub@gmail.com",
+  FeedbackForwardingEmailAddress: config.amazon_ses.email,
+  FeedbackForwardingEmailAddressIdentityArn: config.amazon_ses.emailid_arn,
 
-  FromEmailAddress: MAW_EMAIL,
-  FromEmailAddressIdentityArn:
-    "arn:aws:ses:us-west-1:141769618659:identity/MAWVolunteerHub@gmail.com",
-  ReplytToAddresses: [MAW_EMAIL],
+  FromEmailAddress: config.amazon_ses.email,
+  FromEmailAddressIdentityArn: config.amazon_ses.emailid_arn,
+  ReplytToAddresses: [config.amazon_ses.email],
 };
 
 module.exports = {

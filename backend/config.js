@@ -24,5 +24,7 @@ module.exports = {
     region: process.env.AWS_EMAIL_REGION || "",
     access_key: process.env.AWS_EMAIL_ACCESS_KEY || "",
     secret_key: process.env.AWS_EMAIL_SECRET_KEY || "",
+    email: "MAWVolunteerHub@gmail.com",
+    emailid_arn: "arn:aws:ses:us-west-1:141769618659:identity/MAWVolunteerHub@gmail.com",
   },
 };
