@@ -1,7 +1,19 @@
-.table_header {
+.header_container {
+  width: 80vw;
+  display: flex;
+  justify-content: space-between;
   position: relative;
   top: 75px;
   left: 50px;
+}
+
+.manually_log_activity {
+  display: flex;
+  align-items: center;
+}
+
+.manually_log_activity > .add_roles {
+  margin-left: 10px;
 }
 
 .activities_table {
@@ -77,4 +89,82 @@ tr:nth-child(2n) .activities_table_data_start,
 tr:nth-child(2n) .activities_table_data,
 tr:nth-child(2n) .activities_table_data_end {
   background: rgba(187, 188, 188, 0.2);
+}
+
+.log_activity_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: white;
+  width: 50vw;
+  height: 40vh;
+  padding: 20px 30px 0px 30px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+}
+
+.close_button {
+  position: relative;
+  left: 90%;
+}
+
+.log_activity_form > input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 8%;
+  padding-left: 5px;
+}
+
+.log_activity_form > button {
+  margin-top: 25px;
+  position: relative;
+  left: 75%;
+  box-sizing: border-box;
+  width: 25%;
+}
+
+.form_prompt {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.log_activity_form > h2 {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+@media only screen and (max-width: 500px) {
+  .log_activity_form {
+    width: 50vw;
+    height: 50vh;
+  }
+
+  .close_button {
+    left: 80%;
+  }
+}
+
+@media only screen and (max-width: 750px) {
+  .header_container {
+    width: 70vw;
+    align-items: center;
+  }
+
+  .manually_log_activity > h2,
+  .header_container > h2 {
+    font-size: 18px;
+    width: 100px;
+  }
+}
+
+@media only screen and (max-height: 720px) {
+  .log_activity_form {
+    height: 60vh;
+  }
 }

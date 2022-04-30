@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from "react";
+import React, { useState } from "react";
 import { useTable } from "react-table";
+import Modal from "react-modal";
 
 import "../styles/ProfileActivities.css";
 
@@ -57,6 +58,10 @@ const columns = [
 
 export default function ProfileActivities(props) {
   const tableInstance = useTable({ columns, data });
+  const [logModalOpen, setLogModalOpen] = useState(false);
+  const [activityDate, setActivityDate] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [eventDuration, setEventDuration] = useState("");
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
@@ -70,9 +75,30 @@ export default function ProfileActivities(props) {
     return "";
   };
 
+  const logActivity = (e) => {
+    e.preventDefault();
+    console.log(activityDate);
+    console.log(eventName);
+    console.log(eventDuration);
+  };
+
   return (
     <div>
-      <h2 className="table_header">Activity Log</h2>
+      <div className="header_container">
+        <h2>Activity Log</h2>
+        <div className="manually_log_activity">
+          <h2>Manually Log Activity</h2>
+          {props.admin ? (
+            <div />
+          ) : (
+            <button type="button" className="add_roles" onClick={() => setLogModalOpen(true)}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </div>
       <table className="activities_table" {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -119,6 +145,45 @@ export default function ProfileActivities(props) {
           }
         </tbody>
       </table>
+
+      <Modal
+        className="log_activity_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={logModalOpen}
+        onRequestClose={() => setLogModalOpen(false)}
+        contentLabel="Manually Log Activity"
+      >
+        <button
+          className="close_button"
+          aria-label="close_button"
+          type="button"
+          onClick={() => setLogModalOpen(false)}
+        />
+        <form className="log_activity_form" onSubmit={(e) => logActivity(e)}>
+          <h2>Log New Activity</h2>
+          <p className="form_prompt">Date:</p>
+          <input
+            type="text"
+            placeholder="Enter date of event"
+            onChange={(e) => setActivityDate(e.target.value)}
+          />
+          <p className="form_prompt">Event Name:</p>
+          <input
+            type="text"
+            placeholder="Enter the event name"
+            onChange={(e) => setEventName(e.target.value)}
+          />
+          <p className="form_prompt">Hours:</p>
+          <input
+            type="text"
+            placeholder="Enter number of hours volunteered"
+            onChange={(e) => setEventDuration(e.target.value)}
+          />
+          <button className="modal-button button-primary" type="submit">
+            Add
+          </button>
+        </form>
+      </Modal>
     </div>
   );
 }
