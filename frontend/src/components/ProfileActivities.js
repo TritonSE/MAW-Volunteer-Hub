@@ -36,6 +36,15 @@ const data = [
   { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11, Id: "BackyardMakeOver123" },
 ];
 
+// Method stubs. Waiting on backend routes.
+const editActivity = (props) => {
+  console.log(props);
+};
+
+const deleteActivity = (props) => {
+  console.log(props);
+};
+
 // Pass in through props?
 const columns = [
   {
@@ -50,10 +59,20 @@ const columns = [
     Header: "Hours",
     accessor: "Hours",
   },
-  // {
-  //   Header: "",
-  //   accessor: "Id",
-  // },
+  {
+    Header: "",
+    accessor: "edit",
+    Cell: (props) => (
+      <div className="edit_activity_container">
+        <button type="button" onClick={() => editActivity(props.cell.row)}>
+          <img src="/img/filelisting_edit.svg" alt="" />
+        </button>
+        <button type="button" onClick={() => deleteActivity(props.cell.row)}>
+          <img src="/img/filelisting_delete.svg" alt="" />
+        </button>
+      </div>
+    ),
+  },
 ];
 
 export default function ProfileActivities(props) {
