@@ -1,7 +1,7 @@
 import React from "react";
 import "../styles/AssignBtn.css";
 
-function AssignBtn({ label, onClick }) {
+function AssignBtn({ label, onClick, onDelete, admin }) {
   function btnType() {
     switch (label) {
       case "Assign Role":
@@ -35,9 +35,16 @@ function AssignBtn({ label, onClick }) {
   }
 
   return (
-    <button type="button" className={btnType()} onClick={() => onClick()}>
-      {label}
-    </button>
+    <div className="assign_btn_layout">
+      <button type="button" className={btnType()} onClick={() => onClick()}>
+        {label}
+      </button>
+      {admin ? (
+        <button type="button" className="delete_role" onClick={() => onDelete()}>
+          x
+        </button>
+      ) : null}
+    </div>
   );
 }
 export default AssignBtn;

@@ -52,6 +52,8 @@ export default function ProfileRoles(props) {
                 label={role}
                 key={Math.random()}
                 onClick={() => alert(role + " clicked")}
+                onDelete={() => alert(role + " deleted")}
+                admin={props.admin}
               />
             ))
           : ["No Roles"]}

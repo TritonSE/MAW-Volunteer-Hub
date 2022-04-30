@@ -1,9 +1,13 @@
+.assign_btn_layout {
+  display: flex;
+}
+
 .btn_assign {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   min-width: 105px;
-  margin-right: 10px;
+  margin-left: 5px;
 
   font-family: Lato;
   font-style: normal;
@@ -52,17 +56,17 @@
 }
 
 .btn_aGreeter {
-  min-width: 135px;
+  min-width: 140px;
   border: 1px solid #ffb549;
 }
 
 .btn_wGranter {
-  min-width: 120px;
+  min-width: 125px;
   border: 1px solid #00bab3;
 }
 
 .btn_mentor {
-  min-width: 80px;
+  min-width: 90px;
   border: 1px solid #8dc8e8;
 }
 
@@ -72,7 +76,7 @@
 }
 
 .btn_volunteer {
-  min-width: 100px;
+  min-width: 105px;
   border: 1px solid #ff585d;
 }
 
@@ -82,12 +86,12 @@
 }
 
 .btn_speciale {
-  min-width: 125px;
+  min-width: 130px;
   border: 1px solid #e09eff;
 }
 
 .btn_translator {
-  min-width: 100px;
+  min-width: 105px;
   border: 1px solid #0057b8;
 }
 
@@ -105,8 +109,23 @@
   min-width: 145px;
   border: 1px solid #3cba00;
 }
+
 .assign_btn_container {
   display: flex;
   max-width: 212px;
   flex-direction: row;
+}
+
+.delete_role {
+  background: transparent;
+  border: 0px;
+  position: relative;
+  color: white;
+  right: 25px;
+  width: 0px;
+}
+
+.delete_role:hover {
+  color: gray;
+  cursor: pointer;
 }
