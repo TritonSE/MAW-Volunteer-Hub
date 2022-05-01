@@ -185,21 +185,19 @@ router.patch(
         if (is_primary && !will_be_primary) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
           if (user._id.toString() !== req.user._id.toString()) {
-            throw new AggregateError("Unable to remove primary admin status from another user.");
+            throw new URIError("Unable to remove primary admin status from another user.");
           }
           // only allow yourself to remove admin if there is at least one other primary admin
           return Promise.all([user, UserModel.find({ admin: 2 })]);
         }
         if (!is_primary && will_be_primary && req.user.admin < 2) {
-          throw new AggregateError("Insufficient permissions to make user a primary admin.");
+          throw new URIError("Insufficient permissions to make user a primary admin.");
         }
         return Promise.all([user, null]);
       })
       .then(([user, primary_admins]) => {
         if (primary_admins && primary_admins.length <= 1) {
-          throw new AggregateError(
-            "Unable to remove primary admin status from final primary admin."
-          );
+          throw new URIError("Unable to remove primary admin status from final primary admin.");
         }
 
         // Reset user admin state based on highest level of admin found in role array
@@ -221,10 +219,10 @@ router.patch(
       })
       .then(() => res.json({ success: true }))
       .catch((err) => {
-        // Use Promise-specific error type to give the user an error message
+        // Use specific error type to give the user an error message
         //   for bad input data (rather than just "Internal server error.")
-        if (err instanceof AggregateError) {
-          res.status(403).json({ error: err });
+        if (err instanceof URIError) {
+          res.status(403).json({ error: err.message });
         } else {
           errorHandler(res);
         }
