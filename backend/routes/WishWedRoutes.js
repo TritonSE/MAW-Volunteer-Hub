@@ -1,7 +1,6 @@
 const express = require("express");
-const { count } = require("../models/WishWednesday");
 const WishWedSchema = require("../models/WishWednesday");
-const { validate, adminValidator, idParamValidator, errorHandler } = require("../util/RouteUtils");
+const { validate, adminValidator, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
