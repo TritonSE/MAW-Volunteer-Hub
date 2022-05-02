@@ -85,7 +85,7 @@ function NavMenuMobile({ showResults, setShowResults, desktopDropdown, setDeskto
 
           <div className="pages-container-mobile">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              (needs_admin && currentUser && currentUser.admin) || !needs_admin ? (
+              (needs_admin && currentUser && currentUser.admin === 2) || !needs_admin ? (
                 <NavLink
                   key={route}
                   className={`page-links-mobile ${

@@ -25,7 +25,7 @@ import UserManage from "./components/UserManage";
 const MANAGE_COMPONENTS = [<UserManage />, <div>Message</div>, <div>Wish Wednesday</div>];
 
 function ProtectedRoute({
-  needsAdmin = false,
+  needsPrimaryAdmin = false,
   dest = SITE_PAGES.LOGIN,
   children = null,
   useChildren = false,
@@ -46,7 +46,7 @@ function ProtectedRoute({
     }, [currentUser]);
   }
 
-  if (!currentUser || (!currentUser.admin && needsAdmin)) {
+  if (!currentUser || (currentUser.admin !== 2 && needsPrimaryAdmin)) {
     if (hasFired) return <Navigate to={dest} />;
     return null;
   }
@@ -92,7 +92,7 @@ function App() {
             path={SITE_PAGES.MANAGE}
             element={
               <ProtectedRoute
-                needsAdmin
+                needsPrimaryAdmin
                 dest={SITE_PAGES.WISH_GRANTING}
                 useChildren
                 doCheck={false}

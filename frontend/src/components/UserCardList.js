@@ -73,7 +73,7 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
 
     for (let i = 0; i < userData.length; i++) {
       if (userData[i]._id === id) {
-        isAdmin = userData[i].admin;
+        isAdmin = userData[i].admin === 1 || userData[i].admin === 2;
       }
     }
 
