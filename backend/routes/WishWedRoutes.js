@@ -1,21 +1,21 @@
 const express = require("express");
 const WishWedSchema = require("../models/WishWednesday");
-const { validate, adminValidator, errorHandler } = require("../util/RouteUtils");
+const { validate, primaryAdminValidator, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
-router.post("/add/", adminValidator, validate(["message"]), async (req, res) => {
+router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) => {
   WishWedSchema.create({
-    Message: req.body.message,
+    message: req.body.message,
   })
     .then(res.json({ result: "success" }))
     .catch(errorHandler(res));
 });
 
-router.get("/latest/", adminValidator, (req, res) => {
+router.get("/latest/", (req, res) => {
   WishWedSchema.find({})
-    .sort({ _id: -1 })
-    .limit(2)
+    .sort({ createdAt: "desc" })
+    .limit(1)
     .then((doc) => res.json(doc))
     .catch(errorHandler(res));
 });

@@ -4,7 +4,7 @@ module.exports = mongoose.model(
   "WishWedSchema",
   new mongoose.Schema(
     {
-      Message: {
+      message: {
         type: String,
         required: true,
       },
