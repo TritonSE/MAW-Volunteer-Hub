@@ -30,9 +30,10 @@ const UserSchema = new Schema(
       unique: true,
       match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,24})+$/,
     },
+    // Integer value. 0 = regular user, 1 = secondary admin, 2 = primary admin, >= 3 is regular user
     admin: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
     },
     active: {
       type: Boolean,

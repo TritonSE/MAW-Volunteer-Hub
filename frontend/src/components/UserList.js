@@ -55,7 +55,7 @@ function UserList({
    *        Roles: []             // Contains user's roles via AssignBtn components
    *        Completed: 0          // Number of assignments completed
    *        Start: "Date"         // Day volunter started
-   *        Admin: {bool}         // True: is admin; False: not admin
+   *        Admin: {Num}         // 1 == secondary admin, 2 == primary admin, other = regular user
    *    },
    * ]
    */
@@ -123,7 +123,9 @@ function UserList({
   // Uses the id of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
   const separateAdmin = (id) => {
-    const isAdmin = userData.some((user) => user._id === id && user.admin);
+    const isAdmin = userData.some(
+      (user) => user._id === id && (user.admin === 1 || user.admin === 2)
+    );
 
     if (isAdmin && showAdmin) {
       return true;

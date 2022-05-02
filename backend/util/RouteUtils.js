@@ -50,10 +50,21 @@ const idParamValidator =
 
 /**
  * A middleware to check whether the current
- *   user is an admin.
+ *   user is an admin. Passes when the user
+ *   is a primary or secondary admin.
  */
 const adminValidator = (req, res, next) => {
-  if (req.user && req.user.admin) next();
+  // don't want to just do req.user.admin because returns true if >= 3)
+  if (req.user && (req.user.admin === 1 || req.user.admin === 2)) next();
+  else res.status(403).json({ error: "Access denied." });
+};
+
+/**
+ * A middleware to check whether the current
+ *   user is a primary admin.
+ */
+const primaryAdminValidator = (req, res, next) => {
+  if (req.user && req.user.admin === 2) next();
   else res.status(403).json({ error: "Access denied." });
 };
 
@@ -71,5 +82,6 @@ module.exports = {
   validate,
   idParamValidator,
   adminValidator,
+  primaryAdminValidator,
   errorHandler,
 };

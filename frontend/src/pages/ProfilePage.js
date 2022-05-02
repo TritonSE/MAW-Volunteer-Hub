@@ -331,7 +331,7 @@ function ProfilePage() {
               Change Password
             </button>
           )}
-          {currentUser && currentUser.admin && (
+          {currentUser && currentUser.admin === 2 && (
             <button
               type="button"
               className="delete-account-button"
