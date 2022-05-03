@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/HomePage.css";
 import { api_wish_wednesday } from "../api";
 
-function HomePage({ date }) {
+function HomePage() {
   const [message, setmessage] = useState("");
-  const set = () =>
-    setmessage(api_wish_wednesday().message)
-      ? api_wish_wednesday()
-      : setmessage("Something Went Wrong");
+  const [date, setdate] = useState("");
+
+  useEffect(() => {
+    api_wish_wednesday().then((res) => {
+      setmessage(res[0].message || "");
+    });
+  }, []);
+
+  useEffect(() => {
+    api_wish_wednesday().then((res) => {
+      setdate(res[0].createdAt || "");
+    });
+  }, []);
 
   return (
     <div className="home-container">
@@ -17,7 +26,8 @@ function HomePage({ date }) {
       </div>
       <div>
         <p id="wish-wednesday-title">
-          Wish Wednesday [{date}]
+          Wish Wednesday [{new Date(date).toLocaleString("default", { month: "long" })}{" "}
+          {new Date(date).getDate()} {new Date(date).getFullYear()}]
           <button className="edit-button" type="submit">
             <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
           </button>
