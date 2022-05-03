@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
-import { Calendar, Scheduler, useArrayState } from "@cubedoodl/react-simple-scheduler";
+import {
+  Calendar,
+  Scheduler,
+  MobileScheduler,
+  useArrayState,
+} from "@cubedoodl/react-simple-scheduler";
 import { api_calendar_all } from "../api";
 import { CurrentUser } from "../components/Contexts";
-import MobileScheduler from "../components/MobileScheduler";
 import AddEventModal from "../components/AddEventModal";
 import ViewEventModal from "../components/ViewEventModal";
 import ROLES from "../constants/roles";
@@ -11,33 +15,34 @@ import "../styles/CalendarPage.css";
 
 Modal.setAppElement("#root");
 
-/*
- * Current TODOs:
- *   - Repeating events (this will take some work)
- *   - Style cleanups (e.g. color scheme)
- *   - Memory leak testing/performance tuning
- *   - Keyboard shortcuts
- */
-function CalendarsList({ calendars, events, setEvents, styleFromEvent }) {
+function CalendarsList({
+  calendars,
+  calEnabled,
+  setCalEnabled,
+  events,
+  setEvents,
+  styleFromEvent,
+}) {
   return (
     <div className="calendars_list">
       <div className="calendars_header">View calendars</div>
-      {calendars.map((cal) => (
+      {calendars.map((cal, ind) => (
         <label key={cal.name} className="calendar_label" htmlFor={cal.name}>
           <div>
             <input
               type="checkbox"
               id={cal.name}
-              checked={cal.enabled}
+              checked={calEnabled[ind]}
               onChange={(e) => {
+                const arr = calEnabled.map((en, subind) => {
+                  if (subind === ind) return e.target.checked;
+                  return en;
+                });
+                setCalEnabled(arr);
                 setEvents(
                   events.map((evt) => {
                     const out = { ...evt };
-                    const subcal = out.calendar.find((tmp) => tmp.name === cal.name);
-                    if (subcal) {
-                      subcal.enabled = e.target.checked;
-                      out.style = styleFromEvent(out);
-                    }
+                    out.style = styleFromEvent(out, arr);
                     return out;
                   })
                 );
@@ -68,18 +73,37 @@ function CalendarPage() {
   const [calendarModal, setCalendarModal] = useState(false);
   const [tempEvent, setTempEvent] = useState();
 
-  const [calendars, setCalendars] = useState(
-    ROLES.map((role) => ({
-      ...role,
-      enabled: true,
-    }))
-  );
+  const [calendars] = useState(ROLES);
+  const [calEnabled, setCalEnabled] = useState(ROLES.map(() => true));
 
-  function style_from_event(ev) {
-    const css =
-      calendars.find((cal) => cal.enabled && ev.calendars.includes(cal.name)) ?? calendars[0];
+  function unify_event(evt) {
+    const HOUR_IN_MS = 60 * 60 * 1000;
+    const DAY_IN_MS = 24 * HOUR_IN_MS;
+    let rep = evt.repetitions.find(
+      (tmp) =>
+        /* 23-hour check is done to fix an odd client-side inaccuracy/rounding error */
+        Math.abs(tmp.date.getTime() - evt.from.getTime()) < DAY_IN_MS - HOUR_IN_MS
+    );
+    if (!rep) {
+      rep = {
+        date: evt.from,
+        attendees: [],
+      };
+    }
 
-    if (!currentUser.admin && !ev.volunteers.some((vol) => vol._id === currentUser._id)) {
+    return {
+      ...rep,
+      ...evt,
+    };
+  }
+
+  function style_from_event(ev_unprocessed, en = calEnabled) {
+    const ev = unify_event(ev_unprocessed);
+    const css = calendars.find((cal, ind) => en[ind] && ev.calendars.includes(cal.name));
+
+    if (!css) return { display: "none" };
+
+    if (!currentUser.admin && !ev.attendees.some((att) => att.volunteer._id === currentUser._id)) {
       return {
         background: "white",
         color: css.color,
@@ -90,7 +114,13 @@ function CalendarPage() {
   }
 
   function sanitize_calendars(cals) {
-    return cals.map((incal) => calendars.find((outcal) => incal === outcal.name));
+    return cals.map((incal) => {
+      const outcal = calendars.findIndex((tmp) => incal === tmp.name);
+      return {
+        ...calendars[outcal],
+        enabled: () => calEnabled[outcal],
+      };
+    });
   }
 
   function sanitize_event(ev) {
@@ -99,11 +129,11 @@ function CalendarPage() {
       from: new Date(ev.from),
       to: new Date(ev.to),
       calendar: sanitize_calendars(ev.calendars),
-      style: style_from_event(ev),
-      volunteers: ev.volunteers.map((vol) => ({
-        ...vol,
-        guests: ev.guests.filter((guest) => guest.with._id === vol._id),
+      repetitions: ev.repetitions.map((rep) => ({
+        ...rep,
+        date: new Date(rep.date),
       })),
+      style: (e) => style_from_event(e),
     };
   }
 
@@ -117,7 +147,6 @@ function CalendarPage() {
   }, []);
 
   useEffect(async () => {
-    setCalendars([...calendars]);
     const res = await api_calendar_all();
     if (res && res instanceof Array) {
       setEvents(res.map(sanitize_event));
@@ -155,15 +184,21 @@ function CalendarPage() {
           </div>
         )}
         {windowWidth < 600 ? (
-          <MobileScheduler events={events} onRequestEdit={(evt) => setViewModal(evt)} />
+          <MobileScheduler
+            events={events}
+            onRequestEdit={(evt) => setViewModal(unify_event(evt))}
+          />
         ) : (
           <>
             <Calendar selected={selected} setSelected={setSelected} />
+            <div className="calendar_spacer" />
             <CalendarsList
               calendars={calendars}
+              calEnabled={calEnabled}
+              setCalEnabled={setCalEnabled}
               events={events}
               setEvents={setEvents}
-              styleFromEvent={(evt) => style_from_event(evt)}
+              styleFromEvent={(evt, arr) => style_from_event(evt, arr)}
             />
           </>
         )}
@@ -189,7 +224,7 @@ function CalendarPage() {
           addEvent(tmp);
           setTempEvent(tmp);
         }}
-        onRequestEdit={(evt) => setViewModal(evt)}
+        onRequestEdit={(evt) => setViewModal(unify_event(evt))}
       />
 
       <AddEventModal
@@ -201,7 +236,7 @@ function CalendarPage() {
         }}
         onAddEvent={(val) => {
           setEventAcquire(val);
-          if (isEditing) setViewModal(sanitize_event(val));
+          if (isEditing) setViewModal(unify_event(sanitize_event(val)));
         }}
         isEditing={isEditing}
       />
@@ -215,12 +250,19 @@ function CalendarPage() {
           setAddModal(viewModal);
         }}
       />
-      <Modal isOpen={calendarModal} onRequestClose={() => setCalendarModal(false)}>
+      <Modal
+        isOpen={calendarModal}
+        onRequestClose={() => setCalendarModal(false)}
+        className="calendar_modal"
+        overlayClassName="calendar_modal_overlay"
+      >
         <CalendarsList
           calendars={calendars}
+          calEnabled={calEnabled}
+          setCalEnabled={setCalEnabled}
           events={events}
           setEvents={setEvents}
-          styleFromEvent={(evt) => style_from_event(evt)}
+          styleFromEvent={(evt, arr) => style_from_event(evt, arr)}
         />
       </Modal>
     </main>

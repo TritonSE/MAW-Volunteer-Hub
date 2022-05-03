@@ -93,7 +93,7 @@ export default function RoleSelect({ value, setValue, hasError }) {
       allowSelectAll
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
-      placeholder="Send event to..."
+      placeholder="Add event to..."
       onChange={(newVal) => {
         if (newVal.includes(rolesAdj[0])) {
           if (hasAll) {

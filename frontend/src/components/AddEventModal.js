@@ -90,6 +90,10 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     },
     {
       value: 4,
+      label: "Monthly",
+    },
+    {
+      value: 5,
       label: (
         <>
           Annually on <DateFormatter date={from} fmt="O d" />
@@ -97,7 +101,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       ),
     },
     {
-      value: 5,
+      value: 6,
       label: "Every Weekday (Mon-Fri)",
     },
   ];
@@ -136,7 +140,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
 
-    setVolunteers(currentEvent?.volunteers ?? []);
+    setVolunteers((currentEvent?.attendees ?? []).map((att) => att.volunteer));
 
     setLoc(currentEvent?.location ?? "");
     setErrorLoc();
@@ -199,12 +203,25 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       name,
       calendars: JSON.stringify(calendars.map((cal) => cal.name)),
       number_needed: numberNeeded,
-      volunteers: JSON.stringify(volunteers.map((vol) => vol._id)),
       location: loc,
+
       repeat: repeat.value,
-      question,
+      repetitions: JSON.stringify([
+        {
+          date: from.toISOString(),
+          attendees: JSON.stringify(
+            volunteers.map((vol) => ({
+              volunteer: vol._id,
+              guests: "[]",
+              response: "",
+            }))
+          ),
+        },
+      ]),
+
       over18,
       under18,
+      question,
     };
 
     const res = await (isEditing

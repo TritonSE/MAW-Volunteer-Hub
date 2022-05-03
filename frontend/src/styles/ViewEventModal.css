@@ -10,7 +10,7 @@
 
 .view_modal .spots_filled {
   font-size: 14px;
-  color: #bbbcbc;
+  color: #9b9cac;
 }
 
 .view_modal .prop {
@@ -35,7 +35,7 @@
 }
 
 .view_modal .question_info {
-  color: #bbbcbc;
+  color: #9b9cac;
   font-size: 12px;
   margin-top: 4px;
 }
@@ -51,12 +51,14 @@
   max-width: 220px;
   padding: 10px 0;
   overflow: auto;
+  /*
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 1) 0%,
     rgba(255, 255, 255, 1) 76%,
     rgba(226, 226, 226, 1) 100%
   );
+  */
 }
 .view_modal .role_listing {
   white-space: nowrap;
@@ -85,6 +87,9 @@
 
 .view_modal .evt_modal_content.nonflex {
   display: block;
+}
+.view_modal .evt_modal_content.nonflex.spaced {
+  margin-bottom: 8px;
 }
 .view_modal .evt_modal_content.scroll {
   background: #f9f9f9;

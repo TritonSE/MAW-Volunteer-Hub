@@ -199,18 +199,19 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   const [confirmModal, setConfirmModal] = useState(0);
   const [volModal, setVolModal] = useState(false);
 
+  const [guestsCount, setGuestsCount] = useState(0);
+
   useEffect(() => {
-    const tmp = event.guests.filter((guest) => guest.with._id === currentUser._id);
-    if (tmp.length > 0) {
-      setGuests(tmp);
+    const ind = event.attendees.findIndex((att) => att.volunteer._id === currentUser._id);
+
+    if (ind > -1 && event.attendees[ind].guests.length > 0) {
+      setGuests(event.attendees[ind].guests);
       setHasGuests(true);
     }
 
-    setResponse(
-      event.responses
-        ? event.responses.find((resp) => resp.volunteer._id === currentUser._id)?.response ?? ""
-        : ""
-    );
+    setResponse(event.attendees[ind]?.response ?? "");
+
+    setGuestsCount(event.attendees.reduce((prev, next) => prev + next.guests.length, 0));
   }, []);
 
   useEffect(() => setHasChanges(hasChanges + 1), [hasGuests, guests, response]);
@@ -234,7 +235,13 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
       }
     }
 
-    const res = await api_calendar_respond(event._id, going, hasGuests ? guests : null, response);
+    const res = await api_calendar_respond(
+      event._id,
+      going,
+      event.from.toISOString(),
+      guests,
+      response
+    );
     if (res && !res.error) {
       changeEvent();
       setIsOpen(false);
@@ -290,7 +297,25 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   <DateFormatter date={event.from} fmt="x o d | " />
                   <DateRangeFormatter from={event.from} to={event.to} />
                 </div>
-                <div className="question_info small_indented">Repeat schedule</div>
+                <div className="question_info small_indented">
+                  {
+                    [
+                      "Does not repeat",
+                      "Daily",
+                      <>
+                        Weekly on <DateFormatter date={event.from} fmt="X" />
+                      </>,
+                      <>
+                        Bi-Weekly on <DateFormatter date={event.from} fmt="X" />
+                      </>,
+                      "Monthly",
+                      <>
+                        Annually on <DateFormatter date={event.from} fmt="O d" />
+                      </>,
+                      "Every Weekday (Mon-Fri)",
+                    ][event.repeat]
+                  }
+                </div>
                 <div className="prop">
                   <img alt="Event time" src="/img/calendar_location.svg" />
                   {event.location}
@@ -310,7 +335,6 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                               title={name}
                             />
                             {name}
-                            {/* TODO */}
                           </div>
                         </div>
                       );
@@ -335,7 +359,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   View who is going
                 </button>
                 <div className="question_info smallskip">
-                  {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
+                  {guestsCount + event.attendees.length}/{event.number_needed} spots filled
                 </div>
               </div>
             </div>
@@ -344,23 +368,25 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           <div className="evt_modal_scroll">
             {!responseView ? (
               <>
-                {event.responses.map((resp) => (
-                  <button
-                    key={resp._id}
-                    type="button"
-                    className="evt_modal_smallbox"
-                    onClick={() => setResponseView(resp)}
-                  >
-                    <div className="name">{resp.volunteer.name}</div>
-                    <div className="content">
-                      <Abbreviator
-                        content={resp.response}
-                        maxLength={80 - 3 * resp.volunteer.name.length}
-                      />
-                    </div>
-                  </button>
-                ))}
-                {event.responses.length === 0 ? (
+                {event.attendees
+                  .filter((att) => att.response.length > 0)
+                  .map((att) => (
+                    <button
+                      key={att.volunteer._id}
+                      type="button"
+                      className="evt_modal_smallbox"
+                      onClick={() => setResponseView(att)}
+                    >
+                      <div className="name">{att.volunteer.name}</div>
+                      <div className="content">
+                        <Abbreviator
+                          content={att.response}
+                          maxLength={80 - 3 * att.volunteer.name.length}
+                        />
+                      </div>
+                    </button>
+                  ))}
+                {event.attendees.filter((att) => att.response.length > 0).length === 0 ? (
                   <div className="evt_modal_center">
                     <div>No responses yet.</div>
                   </div>
@@ -411,14 +437,14 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             <div className="columns non_responsive">
               <div>
                 <div className="gentle">
-                  {event.volunteers.length} Volunteer{event.volunteers.length !== 1 ? "s" : ""}
+                  {event.attendees.length} Volunteer{event.attendees.length !== 1 ? "s" : ""}
                 </div>
                 <br />
-                {event.volunteers.map((vol) => (
-                  <div key={vol._id}>
-                    <div className="very-gentle">{vol.name}</div>
+                {event.attendees.map((att) => (
+                  <div key={att.volunteer._id}>
+                    <div className="very-gentle">{att.volunteer.name}</div>
                     <div className="indented">
-                      {vol.guests.map((guest) => (
+                      {att.guests.map((guest) => (
                         <span key={guest._id}>
                           {guest.name}
                           <br />
@@ -431,13 +457,13 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               </div>
               <div>
                 <div className="gentle">
-                  {event.guests.length} Guest{event.guests.length !== 1 ? "s" : ""}
+                  {guestsCount} Guest{guestsCount !== 1 ? "s" : ""}
                 </div>
                 <br />
-                {event.volunteers.map((vol) => (
-                  <div key={vol._id}>
+                {event.attendees.map((att) => (
+                  <div key={att.volunteer._id}>
                     <br />
-                    {vol.guests.map((guest) => (
+                    {att.guests.map((guest) => (
                       <span key={guest._id}>
                         {guest.relation}
                         <br />
@@ -449,7 +475,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               </div>
             </div>
           </div>
-          {event.volunteers.length > 0 ? <br /> : null}
+          {event.attendees.length > 0 ? <br /> : null}
         </Modal>
       </>
     );
@@ -477,10 +503,10 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
           </button>
         </div>
-        <div className="evt_modal_content nonflex">
+        <div className="evt_modal_content nonflex spaced">
           <div>
             <div className="spots_filled">
-              {event.volunteers.length + event.guests.length}/{event.number_needed} spots filled
+              {guestsCount + event.attendees.length}/{event.number_needed} spots filled
             </div>
 
             <div className="prop">
@@ -525,7 +551,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <textarea
                   placeholder="Type your response here..."
                   defaultValue={
-                    event.responses.find((resp) => resp.volunteer._id === currentUser._id)?.response
+                    event.attendees.find((att) => att.volunteer._id === currentUser._id)?.response
                   }
                   onChange={(e) => setResponse(e.target.value)}
                 />
@@ -534,7 +560,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           </div>
         </div>
         <div className="evt_modal_footer">
-          {!event.volunteers.some((vol) => vol._id === currentUser._id) ? (
+          {!event.attendees.some((att) => att.volunteer._id === currentUser._id) ? (
             <button type="button" onClick={() => save_response(true)}>
               Going
             </button>

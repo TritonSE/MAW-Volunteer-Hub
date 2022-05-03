@@ -1,20 +1,50 @@
 const mongoose = require("mongoose");
 
 const GuestSchema = new mongoose.Schema({
-  with: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
-  },
   name: String,
   relation: String,
 });
 
-const ResponseSchema = new mongoose.Schema({
+const AttendeeSchema = new mongoose.Schema({
   volunteer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  response: String,
+  guests: {
+    type: [GuestSchema],
+    default: [],
+  },
+  response: {
+    type: String,
+    default: "",
+  },
+});
+
+const RepeatedEventSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+  },
+  attendees: {
+    type: [AttendeeSchema],
+    default: [],
+  },
+  completed: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+RepeatedEventSchema.pre("save", function save(next) {
+  if (this.date && this.isModified("date")) {
+    this.date = new Date(this.date);
+
+    if (this.date === "Invalid Date") {
+      next(new Error("Invalid repeated event date."));
+    }
+  }
+
+  next();
 });
 
 const EventSchema = new mongoose.Schema({
@@ -65,16 +95,24 @@ const EventSchema = new mongoose.Schema({
   },
 
   /**
-   * OPTIONAL ARGS
+   * EVENT REPETITION
    */
   repeat: {
     type: Number,
     default: 0,
     validate: [
-      (num) => !Number.isNaN(Number.parseInt(num, 10)) || num < 0 || num > 6,
+      (num) => !Number.isNaN(Number.parseInt(num, 10)) && num >= 0 && num <= 6,
       "Event's repetition value must be in range 0 to 6",
     ],
   },
+  repetitions: {
+    type: [RepeatedEventSchema],
+    default: [],
+  },
+
+  /**
+   * OPTIONAL ARGS
+   */
   over18: {
     type: Boolean,
     default: false,
@@ -83,27 +121,9 @@ const EventSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  volunteers: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "user",
-    },
-  ],
-  guests: {
-    type: [GuestSchema],
-    default: [],
-  },
   question: {
     type: String,
     default: "",
-  },
-  responses: {
-    type: [ResponseSchema],
-    default: [],
-  },
-  completed: {
-    type: Boolean,
-    default: false,
   },
 });
 
