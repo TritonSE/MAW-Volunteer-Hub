@@ -8,6 +8,8 @@ const { validate, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
+const sendEmailFunction = require("../util/SendEmail");
+
 router.post("/signup", (req, res, next) =>
   passport.authenticate("signup", { session: false }, (resp, user) => {
     if ((resp && resp.errors) || !user) {
@@ -17,6 +19,16 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
+      // email sending
+      sendEmailFunction
+        .sendEmailSignup(user)
+        .then((emailResponse) => {
+          console.log(emailResponse);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
       res.json({
         success: true,
         user: user.toJSON(),

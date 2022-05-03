@@ -16,6 +16,8 @@ const {
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 
+const sendEmailFunction = require("../util/SendEmail");
+
 const upload = multer({
   dest: "server_uploads/",
   fileFilter: (req, file, cb) => cb(null, file.mimetype.indexOf("image") > -1),
@@ -42,7 +44,19 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
 
 router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-    .then(() => res.status(200).json({ success: true }))
+    .then((user) => {
+      // email sending
+      sendEmailFunction
+        .sendEmailVerify(user)
+        .then((emailResponse) => {
+          console.log(emailResponse);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      res.status(200).json({ success: true });
+    })
     .catch(errorHandler(res))
 );
 
