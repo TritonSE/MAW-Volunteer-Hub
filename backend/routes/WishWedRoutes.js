@@ -12,7 +12,7 @@ router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) =>
     .catch(errorHandler(res));
 });
 
-router.get("/latest/", (req, res) => {
+router.get("/latest", (req, res) => {
   WishWedSchema.find({})
     .sort({ createdAt: "desc" })
     .limit(1)

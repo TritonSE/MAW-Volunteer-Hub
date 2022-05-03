@@ -1,7 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/HomePage.css";
+import { api_wish_wednesday } from "../api";
 
-function HomePage({ text, date }) {
+function HomePage({ date }) {
+  const [message, setmessage] = useState("");
+  const set = () =>
+    setmessage(api_wish_wednesday().message)
+      ? api_wish_wednesday()
+      : setmessage("Something Went Wrong");
+
   return (
     <div className="home-container">
       <div className="top-header">
@@ -16,14 +23,13 @@ function HomePage({ text, date }) {
           </button>
         </p>
         <img src="/img/filler-img.png" alt="Wish wednesday header" className="body-image" />
-        <p>{text}</p>
+        <p>{message}</p>
       </div>
     </div>
   );
 }
 
 HomePage.defaultProps = {
-  text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
   date: "mm/dd/yyyy",
 };
 
