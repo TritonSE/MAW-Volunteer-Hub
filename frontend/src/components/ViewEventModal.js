@@ -556,7 +556,9 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   onChange={(e) => setResponse(e.target.value)}
                 />
               </>
-            ) : null}
+            ) : (
+              <br />
+            )}
           </div>
         </div>
         <div className="evt_modal_footer">
