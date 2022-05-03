@@ -63,52 +63,60 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [calendarVisible, setCalendarVisible] = useState(false);
   const [animationPlaying, setAnimationPlaying] = useState(false);
 
-  const repetitionOptions = [
+  const [repetitionOptions, setRepetitionOptions] = useState([
     {
       value: 0,
       label: "Does not repeat",
     },
-    {
-      value: 1,
-      label: "Daily",
-    },
-    {
-      value: 2,
-      label: (
-        <>
-          Weekly on <DateFormatter date={from} fmt="X" />
-        </>
-      ),
-    },
-    {
-      value: 3,
-      label: (
-        <>
-          Bi-Weekly on <DateFormatter date={from} fmt="X" />
-        </>
-      ),
-    },
-    {
-      value: 4,
-      label: "Monthly",
-    },
-    {
-      value: 5,
-      label: (
-        <>
-          Annually on <DateFormatter date={from} fmt="O d" />
-        </>
-      ),
-    },
-    {
-      value: 6,
-      label: "Every Weekday (Mon-Fri)",
-    },
-  ];
+  ]);
 
   useEffect(() => setTo(DATE_UTILS.copy_time(from, to)), [from]);
 
   function on_open() {
+    const from_tmp = currentEvent?.from ? new Date(currentEvent.from) : new Date();
+    const rep_tmp = [
+      {
+        value: 0,
+        label: "Does not repeat",
+      },
+      {
+        value: 1,
+        label: "Daily",
+      },
+      {
+        value: 2,
+        label: (
+          <>
+            Weekly on <DateFormatter date={from_tmp} fmt="X" />
+          </>
+        ),
+      },
+      {
+        value: 3,
+        label: (
+          <>
+            Bi-Weekly on <DateFormatter date={from_tmp} fmt="X" />
+          </>
+        ),
+      },
+      {
+        value: 4,
+        label: "Monthly",
+      },
+      {
+        value: 5,
+        label: (
+          <>
+            Annually on <DateFormatter date={from_tmp} fmt="O d" />
+          </>
+        ),
+      },
+      {
+        value: 6,
+        label: "Every Weekday (Mon-Fri)",
+      },
+    ];
+
     setName(currentEvent?.name ?? "");
     setErrorName();
 
@@ -125,16 +133,18 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     }
     setErrorCalendars();
 
-    setFrom(currentEvent?.from ? new Date(currentEvent.from) : new Date());
+    setFrom(from_tmp);
     setErrorFrom();
 
     setTo(currentEvent?.to ? new Date(currentEvent.to) : DATE_UTILS.walk_hour(new Date(), 1));
     setErrorTo();
 
+    setRepetitionOptions(rep_tmp);
+
     if (currentEvent?.repeat) {
-      setRepeat(repetitionOptions.find((rep) => rep.value === currentEvent.repeat));
+      setRepeat(rep_tmp.find((rep) => rep.value === currentEvent.repeat) ?? rep_tmp[0]);
     } else {
-      setRepeat(repetitionOptions[0]);
+      setRepeat(rep_tmp[0]);
     }
 
     setNumberNeeded(currentEvent?.number_needed ?? "");
@@ -168,6 +178,9 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   async function add_event(e) {
     e.preventDefault();
 
+    /*
+     * VALIDATION
+     */
     let has_err = false;
 
     if (!name || name.trim() === "") {
@@ -197,6 +210,63 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
 
     if (has_err) return;
 
+    /*
+     * VOLUNTEER ASSIGNMENT
+     */
+    const HOUR_IN_MS = 60 * 60 * 1000;
+    const DAY_IN_MS = 24 * HOUR_IN_MS;
+    const repetitions = currentEvent?.repetitions ?? [];
+    const rep_ind = repetitions.findIndex(
+      (tmp) =>
+        /* 23-hour check is done to fix an odd client-side inaccuracy/rounding error */
+        Math.abs(tmp.date.getTime() - from.getTime()) < DAY_IN_MS - HOUR_IN_MS
+    );
+
+    if (rep_ind > -1) {
+      const tmp = [...volunteers];
+      /*
+       * If the volunteer has already responded (and may have guests),
+       *   do not overwrite
+       */
+      repetitions[rep_ind].attendees.forEach((att) => {
+        const ind = tmp.findIndex((vol) => vol._id === att.volunteer._id);
+        if (ind > -1) {
+          tmp.splice(ind, 1);
+        }
+      });
+      /*
+       * Merge the existing attendee list with the
+       *   newly-assigned volunteers
+       */
+      repetitions[rep_ind].attendees.push(
+        ...tmp.map((vol) => ({
+          volunteer: vol,
+          guests: [],
+          response: "",
+        }))
+      );
+      repetitions[rep_ind].attendees = repetitions[rep_ind].attendees.map((att) => ({
+        ...att,
+        volunteer: att.volunteer._id,
+        guests: JSON.stringify(att.guests),
+      }));
+      repetitions[rep_ind].attendees = JSON.stringify(repetitions[rep_ind].attendees);
+    } else {
+      repetitions.push({
+        date: from.toISOString(),
+        attendees: JSON.stringify(
+          volunteers.map((vol) => ({
+            volunteer: vol._id,
+            guests: "[]",
+            response: "",
+          }))
+        ),
+      });
+    }
+
+    /*
+     * API REQUEST
+     */
     const args = {
       from: from.toISOString(),
       to: to.toISOString(),
@@ -206,18 +276,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       location: loc,
 
       repeat: repeat.value,
-      repetitions: JSON.stringify([
-        {
-          date: from.toISOString(),
-          attendees: JSON.stringify(
-            volunteers.map((vol) => ({
-              volunteer: vol._id,
-              guests: "[]",
-              response: "",
-            }))
-          ),
-        },
-      ]),
+      repetitions: JSON.stringify(repetitions),
 
       over18,
       under18,
