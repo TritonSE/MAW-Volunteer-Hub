@@ -7,6 +7,7 @@ import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
 import { SITE_PAGES } from "../constants/links";
 import { api_user_all, api_user_verify } from "../api";
+import { api_update_roles } from "../auth";
 
 import "../styles/UserManage.css";
 
@@ -19,8 +20,27 @@ function VerifyButtonCell({
   column: { id },
   updateMyData,
   handleConfirmationModal,
+  roles,
+  user_id,
 }) {
   const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
+  const [rolesModalOpen, setRolesModalOpen] = useState(false);
+
+  const [selectedRoles, setSelectedRoles] = useState(roles);
+
+  const nonAdminRoles = [
+    "Wish Granter",
+    "Volunteer",
+    "Mentor",
+    "Airport Greeter",
+    "Office",
+    "Special Events",
+    "Translator",
+    "Speaker's Bureau",
+    "Las Estrellas",
+  ];
+
+  const adminRoles = ["Primary Admin", "Secondary Admin"];
 
   useEffect(() => {
     setIsVerifiedState(initialVerified);
@@ -43,6 +63,12 @@ function VerifyButtonCell({
     }
   }
 
+  function addRoles(e) {
+    e.preventDefault();
+    console.log(selectedRoles);
+    api_update_roles(user_id, selectedRoles);
+  }
+
   if (!isVerifiedState) {
     return (
       <ScrollContainer className="assign_btn_container" vertical={false}>
@@ -55,11 +81,71 @@ function VerifyButtonCell({
     );
   }
   return (
-    <ScrollContainer className="assign_btn_container" vertical={false}>
-      {/* {buttonLabels.map((label) => (
-            <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick(label)} />
-          ))} */}
-    </ScrollContainer>
+    <div>
+      <ScrollContainer className="assign_btn_container" vertical={false}>
+        {roles.length === 0 ? (
+          <div>
+            <AssignBtn
+              label="Assign Role"
+              key={Math.random()}
+              onClick={() => setRolesModalOpen(true)}
+            />
+          </div>
+        ) : (
+          <div>
+            {roles.map((label) => (
+              <AssignBtn
+                label={label}
+                key={Math.random()}
+                onClick={() => handleRoleBtnClick(label)}
+              />
+            ))}
+          </div>
+        )}
+      </ScrollContainer>
+      {/* Taken from Profile Page DUPLICATE FROM ProfileRoles.js */}
+      <Modal
+        className="add_roles_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={rolesModalOpen}
+        onRequestClose={() => setRolesModalOpen(false)}
+        contentLabel="Add Roles Modal"
+      >
+        <button
+          className="close_button"
+          aria-label="close_button"
+          type="button"
+          onClick={() => setRolesModalOpen(false)}
+        />
+        <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
+          <h2>Assign Role</h2>
+          {nonAdminRoles.map((role) => (
+            <div className="role_choice" key={Math.random()}>
+              <input
+                type="checkbox"
+                checked={selectedRoles.includes(role)}
+                onChange={() => setSelectedRoles([...selectedRoles, role])}
+              />
+              <label htmlFor="role_label">{role}</label>
+            </div>
+          ))}
+          <p className="admin_roles_separator">Admin</p>
+          {adminRoles.map((role) => (
+            <div className="role_choice" key={Math.random()}>
+              <input
+                type="checkbox"
+                checked={selectedRoles.includes(role)}
+                onChange={() => setSelectedRoles([...selectedRoles, role])}
+              />
+              <label htmlFor="role_label">{role}</label>
+            </div>
+          ))}
+          <button className="modal-button button-primary" type="submit">
+            Assign
+          </button>
+        </form>
+      </Modal>
+    </div>
   );
 }
 
@@ -78,7 +164,13 @@ const headers = [
     Header: "",
     accessor: "verified",
     Cell: (props) => (
-      <VerifyButtonCell {...props} isVerified={props.value} name={props.row.original.name} />
+      <VerifyButtonCell
+        {...props}
+        isVerified={props.value}
+        name={props.row.original.name}
+        roles={props.row.original.roles}
+        user_id={props.row.original._id}
+      />
     ),
   },
   {

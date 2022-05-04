@@ -224,6 +224,15 @@ async function api_pfp_upload(pfp, crop) {
   return res;
 }
 
+async function api_update_roles(id, roles) {
+  const res = await api_call(`${API_ENDPOINTS.SET_ROLES}/${id}`, {
+    data: { roles },
+    method: "PATCH",
+    type: "application/json",
+  });
+  return res;
+}
+
 export {
   api_validtoken,
   api_login,
@@ -249,4 +258,5 @@ export {
   api_user_updatepass,
   api_user_edit,
   api_pfp_upload,
+  api_update_roles,
 };
