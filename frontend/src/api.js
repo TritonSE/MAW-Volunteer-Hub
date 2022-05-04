@@ -166,6 +166,8 @@ const api_pfp_upload = (pfp, crop) =>
     type: "multipart/form-data",
   });
 
+const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
+
 export {
   api_validtoken,
   api_login,
@@ -190,4 +192,5 @@ export {
   api_user_updatepass,
   api_user_edit,
   api_pfp_upload,
+  api_wish_wednesday,
 };

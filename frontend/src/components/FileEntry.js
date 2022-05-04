@@ -30,7 +30,7 @@ function UnmemoizedFileAccordion({ children }) {
       <div className="filelisting_accordion">
         {children.map((child, i) => (
           <div
-            key={child.props.name ?? child.props.children}
+            key={`${child.props.name} ${child?.key}`}
             className={`filelisting_accordion_entry${i % 2 === 1 ? " is_odd" : ""}`}
             style={{
               top: `calc(var(--is-expanded) * ${compute_top(i)})`,
@@ -54,7 +54,8 @@ function FileButton({ description, image, adminOnly, onClick, className }) {
     onClick(e);
   }
 
-  if (adminOnly && (!currentUser || !currentUser.admin)) return null;
+  if (adminOnly && (!currentUser || !(currentUser.admin === 1 || currentUser.admin === 2)))
+    return null;
 
   return (
     <button
@@ -81,13 +82,16 @@ function FileListing({
 }) {
   const [currentUser] = useContext(CurrentUser);
 
-  return (adminOnly && currentUser && currentUser.admin) || !adminOnly ? (
+  return (adminOnly && currentUser && (currentUser.admin === 1 || currentUser.admin === 2)) ||
+    !adminOnly ? (
     <div
-      className={`filelisting
-          ${noalternate ? " no_nth_child" : ""}
-          ${onClick !== undefined ? " pointer " : ""}
-          ${className !== undefined ? className : ""}
-          ${searchModal ? " search-modal" : ""}`}
+      className={
+        `filelisting` +
+        `${noalternate ? " no_nth_child" : ""}` +
+        `${onClick !== undefined ? " pointer " : ""}` +
+        `${className !== undefined ? className : ""}` +
+        `${searchModal ? " search-modal" : ""}`
+      }
       onClick={onClick ?? (() => {})}
       style={style !== undefined ? style : {}}
       role="presentation"

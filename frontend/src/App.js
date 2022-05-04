@@ -18,6 +18,7 @@ import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
+import HomePage from "./pages/HomePage";
 
 import "./App.css";
 
@@ -27,7 +28,7 @@ import UserManage from "./components/UserManage";
 const MANAGE_COMPONENTS = [<UserManage />, <div>Message Page</div>, <WishWednesday />];
 
 function ProtectedRoute({
-  needsAdmin = false,
+  needsPrimaryAdmin = false,
   dest = SITE_PAGES.LOGIN,
   children = null,
   useChildren = false,
@@ -48,7 +49,7 @@ function ProtectedRoute({
     }, [currentUser]);
   }
 
-  if (!currentUser || (!currentUser.admin && needsAdmin)) {
+  if (!currentUser || (currentUser.admin !== 2 && needsPrimaryAdmin)) {
     if (hasFired) return <Navigate to={dest} />;
     return null;
   }
@@ -94,7 +95,7 @@ function App() {
             path={SITE_PAGES.MANAGE}
             element={
               <ProtectedRoute
-                needsAdmin
+                needsPrimaryAdmin
                 dest={SITE_PAGES.WISH_GRANTING}
                 useChildren
                 doCheck={false}
@@ -115,7 +116,17 @@ function App() {
             ))}
           </Route>
           {/* Redirect to Manage Page, only when authenticated */}
-          <Route exact path="/" element={<Navigate to={SITE_PAGES.MANAGE} />} />
+          <Route
+            exact
+            path={SITE_PAGES.HOME}
+            element={
+              <ProtectedRoute needsAdmin={false} dest={SITE_PAGES.HOME} useChildren doCheck={false}>
+                <PageLayout>
+                  <HomePage />
+                </PageLayout>
+              </ProtectedRoute>
+            }
+          />
           {/* Wish Granting Page */}
           <Route
             path={SITE_PAGES.WISH_GRANTING}
