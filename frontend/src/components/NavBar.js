@@ -59,7 +59,7 @@ function NavBar() {
 
           <div className="pages-container">
             {Object.entries(PAGES).map(([page, { route, needs_admin }]) =>
-              !needs_admin || (currentUser && currentUser.admin) ? (
+              !needs_admin || (currentUser && currentUser.admin === 2) ? (
                 <NavLink
                   key={route}
                   className={`page-links ${

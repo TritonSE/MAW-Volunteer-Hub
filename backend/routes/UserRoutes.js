@@ -7,7 +7,13 @@ const router = express.Router();
 
 const config = require("../config");
 const UserModel = require("../models/UserModel");
-const { validate, errorHandler, idParamValidator, adminValidator } = require("../util/RouteUtils");
+const {
+  validate,
+  errorHandler,
+  idParamValidator,
+  adminValidator,
+  primaryAdminValidator,
+} = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 
 const upload = multer({
@@ -35,19 +41,19 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/verify/:id", idParamValidator(), adminValidator, (req, res) =>
+router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.put("/promote/:id", idParamValidator(), adminValidator, (req, res) =>
+router.put("/promote/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { admin: true })
     .then(() => res.status(200).json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.delete("/delete/:id", idParamValidator(), adminValidator, (req, res) =>
+router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
@@ -142,5 +148,93 @@ router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
     .then(([user]) => res.json({ success: true, user }))
     .catch(errorHandler(res));
 });
+
+/**
+ * ROLES
+ */
+// Take a list of roles, roles, of what the final role state should be
+router.patch(
+  "/set-roles/:id",
+  idParamValidator(),
+  validate(["roles"], []),
+  adminValidator,
+  (req, res) => {
+    const roles = JSON.parse(req.body.roles);
+    const keyroles = [
+      "Wish Granter",
+      "Volunteer",
+      "Mentor",
+      "Airport Greeter",
+      "Office",
+      "Special Events",
+      "Translator",
+      "Speaker's Bureau",
+      "Las Estrellas",
+      "Primary Admin",
+      "Secondary Admin",
+    ];
+    // validate roles based on keyroles
+    if (!roles.every((element) => keyroles.includes(element))) {
+      res.status(400).json({ error: "Invalid roles input." });
+      return;
+    }
+
+    UserModel.findById(req.params.id)
+      .then((user) => {
+        const is_primary = user.admin === 2;
+        const will_be_primary = roles.includes("Primary Admin");
+        if (is_primary && !will_be_primary) {
+          // throw an error if they are trying to remove primary admin from an account that isn't their own
+          if (user._id.toString() !== req.user._id.toString()) {
+            throw new URIError("Unable to remove primary admin status from another user.");
+          }
+          // only allow yourself to remove admin if there is at least one other primary admin
+          return Promise.all([user, UserModel.find({ admin: 2 })]);
+        }
+        if (!is_primary && will_be_primary && req.user.admin < 2) {
+          throw new URIError("Insufficient permissions to make user a primary admin.");
+        }
+        return Promise.all([user, null]);
+      })
+      .then(([user, primary_admins]) => {
+        if (primary_admins && primary_admins.length <= 1) {
+          throw new URIError("Unable to remove primary admin status from final primary admin.");
+        }
+
+        // Reset user admin state based on highest level of admin found in role array
+        user.admin = 0;
+
+        if (roles.includes("Secondary Admin")) {
+          user.admin = 1;
+          roles.splice(roles.indexOf("Secondary Admin"), 1);
+        }
+
+        // Primary Admin state validated as middleware and p.a. removal handled by first if
+        if (roles.includes("Primary Admin")) {
+          user.admin = 2;
+          roles.splice(roles.indexOf("Primary Admin"), 1);
+        }
+
+        user.roles = roles;
+        return user.save();
+      })
+      .then(() => res.json({ success: true }))
+      .catch((err) => {
+        // Use specific error type to give the user an error message
+        //   for bad input data (rather than just "Internal server error.")
+        if (err instanceof URIError) {
+          res.status(403).json({ error: err.message });
+        } else {
+          errorHandler(res);
+        }
+      });
+  }
+);
+
+router.get("/role/:role", (req, res) =>
+  UserModel.find({ roles: req.params.role })
+    .then((users) => res.json(users))
+    .catch(errorHandler(res))
+);
 
 module.exports = router;

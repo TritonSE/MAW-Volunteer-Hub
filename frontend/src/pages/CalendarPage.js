@@ -56,6 +56,7 @@ function CalendarsList({
           <div>{cal.name}</div>
         </label>
       ))}
+      {calendars.length === 0 && <>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No roles.</>}
     </div>
   );
 }
@@ -73,7 +74,9 @@ function CalendarPage() {
   const [calendarModal, setCalendarModal] = useState(false);
   const [tempEvent, setTempEvent] = useState();
 
-  const [calendars] = useState(ROLES);
+  const [calendars] = useState(
+    currentUser.admin > 0 ? ROLES : ROLES.filter((role) => currentUser.roles.includes(role.name))
+  );
   const [calEnabled, setCalEnabled] = useState(ROLES.map(() => true));
 
   function unify_event(evt) {
@@ -156,7 +159,7 @@ function CalendarPage() {
   return (
     <main className="calendar" role="main">
       <div>
-        {currentUser.admin && (
+        {currentUser.admin > 0 && (
           <div className="mobile_row">
             <button
               type="button"
@@ -207,7 +210,7 @@ function CalendarPage() {
         events={events}
         selected={selected}
         setSelected={setSelected}
-        editable={currentUser.admin}
+        editable={currentUser.admin > 0}
         onRequestAdd={(cur) => {
           if (!currentUser.admin) return;
 
