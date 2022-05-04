@@ -158,7 +158,6 @@ router.patch(
   validate(["roles"], []),
   adminValidator,
   (req, res) => {
-    console.log(req.body.roles[1]);
     const roles = JSON.parse(req.body.roles);
     const keyroles = [
       "Wish Granter",

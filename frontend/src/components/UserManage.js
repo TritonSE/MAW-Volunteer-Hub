@@ -66,7 +66,7 @@ function VerifyButtonCell({
   function addRoles(e) {
     e.preventDefault();
     console.log(selectedRoles);
-    api_update_roles(user_id, selectedRoles);
+    api_update_roles(user_id, JSON.stringify(selectedRoles));
   }
 
   if (!isVerifiedState) {

@@ -41,6 +41,7 @@ const API_ENDPOINTS = {
   PFP_UPLOAD: "/user/pfp/upload",
 
   SET_ROLES: "/user/set-roles",
+
   WISH_WEDNESDAY: "/wishwed/latest",
 };
 
