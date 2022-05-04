@@ -74,9 +74,10 @@ function WishStep({ index, stepName }) {
           }
           adminOnly
         />
-        {(!currentUser || !currentUser.admin) && (structure[stepName] ?? []).length === 0 && (
-          <div className="wishgranting_no_files">Files coming soon!</div>
-        )}
+        {(!currentUser || !(currentUser.admin === 1 || currentUser.admin === 2)) &&
+          (structure[stepName] ?? []).length === 0 && (
+            <div className="wishgranting_no_files">Files coming soon!</div>
+          )}
         {(structure[stepName] ?? []).map((cat) => (
           <FileCategory
             name={cat.name}
