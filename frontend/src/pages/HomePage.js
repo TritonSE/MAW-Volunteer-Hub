@@ -9,11 +9,6 @@ function HomePage() {
   useEffect(() => {
     api_wish_wednesday().then((res) => {
       setmessage(res[0].message || "");
-    });
-  }, []);
-
-  useEffect(() => {
-    api_wish_wednesday().then((res) => {
       setdate(res[0].createdAt || "");
     });
   }, []);
@@ -26,8 +21,13 @@ function HomePage() {
       </div>
       <div>
         <p id="wish-wednesday-title">
-          Wish Wednesday [{new Date(date).toLocaleString("default", { month: "long" })}{" "}
-          {new Date(date).getDate()} {new Date(date).getFullYear()}]
+          Wish Wednesday [
+          {new Date(date).toLocaleString("default", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+          ]
           <button className="edit-button" type="submit">
             <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
           </button>
