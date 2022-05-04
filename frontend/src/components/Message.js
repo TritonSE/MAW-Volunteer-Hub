@@ -4,6 +4,7 @@ import { default as ReactSelect, components } from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../styles/Message.css";
+import { api_message_email } from "../api";
 
 function Option(props) {
   // Source: https://medium.com/geekculture/creating-multi-select-dropdown-with-checkbox-in-react-792ff2464ef3
@@ -76,11 +77,18 @@ export default function Message() {
   };
 
   // Dummy Method
-  const handleSubmit = () => {
-    console.log("Recipients: ");
+  const handleSubmit = async () => {
+    // console.log("Recipients: ");
     console.log(selectedRecipients);
-    console.log("Subject: " + subject);
-    console.log("Message: " + convertedText);
+    // console.log("Subject: " + subject);
+    // console.log("Message: " + convertedText);
+
+    const roles_to_message = selectedRecipients
+      .map((elem) => elem.label)
+      .filter((elem) => elem !== "All");
+    console.log("ROLES TO MSG", roles_to_message);
+
+    await api_message_email(JSON.stringify(roles_to_message));
   };
 
   return (
@@ -121,7 +129,11 @@ export default function Message() {
             onChange={setConvertedText}
           />
           <div className="button_container">
-            <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
+            <button
+              className="post_announcement"
+              type="submit"
+              onClick={() => selectedRecipients.length !== 0 && handleSubmit()}
+            >
               Post
             </button>
           </div>

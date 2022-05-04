@@ -39,6 +39,8 @@ const API_ENDPOINTS = {
 
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
+
+  MESSAGE: "/user/message",
 };
 
 const SIDENAV_STEPS = [

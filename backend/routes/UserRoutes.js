@@ -250,4 +250,14 @@ router.get("/role/:role", (req, res) =>
     .catch(errorHandler(res))
 );
 
+router.post("/message", (req, res) => {
+  // console.log(req.body);
+  const data = JSON.parse(req.body.roles);
+  console.log(data);
+
+  UserModel.find({ roles: data })
+    .then((users) => console.log(users))
+    .catch(errorHandler(res));
+});
+
 module.exports = router;

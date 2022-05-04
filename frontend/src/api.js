@@ -166,6 +166,15 @@ const api_pfp_upload = (pfp, crop) =>
     type: "multipart/form-data",
   });
 
+/**
+ * MESSAGING EMAILS
+ */
+const api_message_email = async (roles_to_message) =>
+  api_call(API_ENDPOINTS.MESSAGE, {
+    data: { roles: roles_to_message },
+    method: "POST",
+  });
+
 export {
   api_validtoken,
   api_login,
@@ -190,4 +199,5 @@ export {
   api_user_updatepass,
   api_user_edit,
   api_pfp_upload,
+  api_message_email,
 };
