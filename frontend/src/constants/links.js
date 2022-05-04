@@ -41,6 +41,7 @@ const API_ENDPOINTS = {
   PFP_UPLOAD: "/user/pfp/upload",
 
   WISH_WEDNESDAY: "/wishwed/latest",
+  WISH_WEDNESDAY_ADD: "/wishwed/add",
 };
 
 const SIDENAV_STEPS = [

@@ -8,6 +8,7 @@ import {
   api_file_update,
   api_file_delete,
 } from "../api";
+import history from "../history";
 import { FileStructure, ModalVariantsManager } from "./Contexts";
 import "../styles/ModalVariants.css";
 
@@ -187,6 +188,31 @@ function ModalVariants() {
             </div>
           </div>
           <br />
+        </>
+      ),
+    },
+    wish_wednesday_success: {
+      title: " ",
+      custom: (
+        <>
+          <br />
+          <div className="wishgranting_modal_center">
+            Your Wish Wednesday post has successfully been created! All users will be able to see
+            this most recent post on the home page.
+          </div>
+          <br />
+          <div className="wishgranting_modal_center thin center">
+            <button
+              type="button"
+              className="wishgranting_modal_button primary"
+              onClick={() => {
+                history.push("/");
+                setOpen(false);
+              }}
+            >
+              View
+            </button>
+          </div>
         </>
       ),
     },

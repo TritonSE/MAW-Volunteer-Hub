@@ -5,6 +5,7 @@ const { validate, primaryAdminValidator, errorHandler } = require("../util/Route
 const router = express.Router();
 
 router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) => {
+  // need to sanitize html here
   WishWedSchema.create({
     message: req.body.message,
   })
