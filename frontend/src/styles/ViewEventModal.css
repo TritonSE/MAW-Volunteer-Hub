@@ -47,20 +47,15 @@
 }
 
 .view_modal .role_container {
-  display: flex;
   max-width: 220px;
-  padding: 10px 0;
-  overflow: auto;
-  /*
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 1) 76%,
-    rgba(226, 226, 226, 1) 100%
-  );
-  */
+  max-height: 22px;
+  padding-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #bbbcbc;
+  overflow: hidden;
 }
 .view_modal .role_listing {
+  float: left;
   white-space: nowrap;
   text-align: left;
 }
@@ -73,6 +68,15 @@
   border-radius: 5px;
   display: inline-block;
   margin: 0 5px 0;
+}
+
+.view_modal .tooltip {
+  position: absolute;
+  max-width: 250px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  color: white;
+  padding: 6px 10px;
 }
 
 .view_modal label {

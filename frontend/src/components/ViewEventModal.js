@@ -200,6 +200,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   const [volModal, setVolModal] = useState(false);
 
   const [guestsCount, setGuestsCount] = useState(0);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   useEffect(() => {
     const ind = event.attendees.findIndex((att) => att.volunteer._id === currentUser._id);
@@ -322,24 +323,30 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 </div>
                 <div className="prop list">
                   <img src="/img/calendar_send.svg" alt="Send to" />
-                  <div className="role_container" title={event.calendars.join(", ")}>
-                    {event.calendars.map((name) => {
+                  <div
+                    className="role_container"
+                    onMouseOver={() => setTooltipVisible(true)}
+                    onFocus={() => setTooltipVisible(true)}
+                    onMouseOut={() => setTooltipVisible(false)}
+                    onBlur={() => setTooltipVisible(false)}
+                  >
+                    {event.calendars.slice(0, 1).map((name) => {
                       const css = ROLES.find((cal) => cal.name === name);
 
                       return (
-                        <div key={name}>
-                          <div className="role_listing">
-                            <div
-                              className="circle"
-                              style={{ background: css.color }}
-                              title={name}
-                            />
-                            {name}
-                          </div>
+                        <div key={name} className="role_listing">
+                          <div className="circle" style={{ background: css.color }} title={name} />
+                          {name}
                         </div>
                       );
                     })}
+                    {event.calendars.length > 1 && (
+                      <span className="gentle">... ({event.calendars.length - 1} more)</span>
+                    )}
                   </div>
+                </div>
+                <div className="tooltip" style={!tooltipVisible ? { visibility: "hidden" } : {}}>
+                  {event.calendars.join(", ")}
                 </div>
               </div>
               <div className="indented">
