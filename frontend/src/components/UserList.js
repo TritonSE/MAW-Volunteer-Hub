@@ -94,7 +94,9 @@ function UserList({
     useSortBy
   );
 
-  useEffect(() => setGlobalFilter(filter), [filter]);
+  useEffect(() => {
+    setGlobalFilter(filter);
+  }, [filter]);
 
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
