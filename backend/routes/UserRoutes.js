@@ -252,14 +252,14 @@ router.get("/role/:role", (req, res) =>
 
 router.post("/message", (req, res) => {
   // console.log(req.body);
-  const role_list = JSON.parse(req.body.roles);
-  console.log(role_list);
+  const roles_to_message = JSON.parse(req.body.roles);
+  console.log(roles_to_message);
 
   const html = req.body.html;
 
   const subject = req.body.subject;
 
-  UserModel.find({ roles: { $in: role_list } })
+  UserModel.find({ roles: { $in: roles_to_message } })
     .then((users) => {
       const emails = users.map((elem) => elem.email);
       console.log(emails);

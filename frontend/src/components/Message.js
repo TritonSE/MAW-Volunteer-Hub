@@ -76,12 +76,12 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
-  // Dummy Method
+  // when "Post" is clicked, handle email sending
   const handleSubmit = async () => {
     // console.log("Recipients: ");
-    console.log(selectedRecipients);
+    // console.log(selectedRecipients);
     // console.log("Subject: " + subject);
-    console.log("Message: " + convertedText);
+    // console.log("Message: " + convertedText);
 
     const roles_to_message = selectedRecipients
       .map((elem) => elem.label)
