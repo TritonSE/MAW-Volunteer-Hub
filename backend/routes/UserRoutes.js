@@ -252,11 +252,29 @@ router.get("/role/:role", (req, res) =>
 
 router.post("/message", (req, res) => {
   // console.log(req.body);
-  const data = JSON.parse(req.body.roles);
-  console.log(data);
+  const role_list = JSON.parse(req.body.roles);
+  console.log(role_list);
 
-  UserModel.find({ roles: data })
-    .then((users) => console.log(users))
+  const html = req.body.html;
+
+  const subject = req.body.subject;
+
+  UserModel.find({ roles: { $in: role_list } })
+    .then((users) => {
+      const emails = users.map((elem) => elem.email);
+      console.log(emails);
+
+      // console.log(users);
+
+      sendEmailFunction
+        .sendEmailMessage(emails, html, subject)
+        .then((emailResponse) => {
+          console.log(emailResponse);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
     .catch(errorHandler(res));
 });
 

@@ -81,14 +81,14 @@ export default function Message() {
     // console.log("Recipients: ");
     console.log(selectedRecipients);
     // console.log("Subject: " + subject);
-    // console.log("Message: " + convertedText);
+    console.log("Message: " + convertedText);
 
     const roles_to_message = selectedRecipients
       .map((elem) => elem.label)
       .filter((elem) => elem !== "All");
     console.log("ROLES TO MSG", roles_to_message);
 
-    await api_message_email(JSON.stringify(roles_to_message));
+    await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
   };
 
   return (

@@ -169,9 +169,9 @@ const api_pfp_upload = (pfp, crop) =>
 /**
  * MESSAGING EMAILS
  */
-const api_message_email = async (roles_to_message) =>
+const api_message_email = async (roles, html, subject) =>
   api_call(API_ENDPOINTS.MESSAGE, {
-    data: { roles: roles_to_message },
+    data: { roles, html, subject },
     method: "POST",
   });
 

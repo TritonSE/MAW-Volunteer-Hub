@@ -71,4 +71,15 @@ module.exports = {
     const res = await client.send(command);
     return res;
   },
+  // Email message in html form when a message is posted
+  sendEmailMessage: async (users, html, subject) => {
+    const message = JSON.parse(JSON.stringify(EmailTemplate));
+    message.Content.Simple.Body.Html.Data = html;
+    message.Content.Simple.Subject.Data = subject;
+    message.Destination.ToAddresses = users;
+
+    const command = new SendEmailCommand(message);
+    const res = await client.send(command);
+    return res;
+  },
 };
