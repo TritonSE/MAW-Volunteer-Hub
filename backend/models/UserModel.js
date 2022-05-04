@@ -2,6 +2,25 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 
+const ManualEventSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  hours: {
+    type: Number,
+    required: true,
+    validate: [
+      (num) => !Number.isNaN(Number.parseInt(num, 10)) && num >= 0,
+      "Event must have a valid number of volunteers needed.",
+    ],
+  },
+});
+
 const UserSchema = new mongoose.Schema(
   {
     verified: {
@@ -48,6 +67,13 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       // required: true
     },
+    /**
+     * MANUAL EVENT 
+     */
+    manualEvents: {
+      type: [ManualEventSchema],
+      default: [],
+    },
     events: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -55,6 +81,7 @@ const UserSchema = new mongoose.Schema(
       },
     ],
   },
+  
   { timestamps: true }
 );
 

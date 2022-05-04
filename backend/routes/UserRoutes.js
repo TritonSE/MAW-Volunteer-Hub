@@ -237,4 +237,35 @@ router.get("/role/:role", (req, res) =>
     .catch(errorHandler(res))
 );
 
+router.post("/newmanual/:id",(req, res) =>
+    UserModel.findById(req.params.id)
+      .then((user) => {
+        const date = new Date(req.body.date);
+        const title = new String(req.body.title);
+        const hours = new Number(req.body.hours);
+        rep = {
+          date,
+          title,
+          hours,
+        };
+        user.manualEvents.push(rep);
+        
+      })
+      .then(() => res.json({ success: true }))
+      .catch(errorHandler)
+);
+
+router.post("/delmanual/:id/:title",(req, res) =>
+    UserModel.findById(req.params.id)
+      .then((user) => {
+        let index = user.manualEvents.findIndex(
+          (title) => title === req.params.title 
+        );
+        user.manualEvents.splice(index, 1)
+      })
+      .then(() => res.json({ success: true }))
+      .catch(errorHandler)
+);
+
+
 module.exports = router;
