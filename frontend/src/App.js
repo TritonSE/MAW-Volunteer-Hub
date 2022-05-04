@@ -36,10 +36,13 @@ function ProtectedRoute({
   const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
   if (doCheck) {
-    useEffect(async () => {
-      const res = await api_validtoken();
-      setCurrentUser(res ? res.user : null);
-      setHasFired(true);
+    useEffect(() => {
+      async function handleAPI() {
+        const res = await api_validtoken();
+        setCurrentUser(res ? res.user : null);
+        setHasFired(true);
+      }
+      handleAPI();
     }, []);
   } else {
     useEffect(() => {
@@ -57,9 +60,12 @@ function ProtectedRoute({
 function SignoutHelper() {
   const [_currentUser, setCurrentUser] = useContext(CurrentUser);
 
-  useEffect(async () => {
-    await api_signout();
-    setCurrentUser();
+  useEffect(() => {
+    async function handleSignOut() {
+      await api_signout();
+      setCurrentUser();
+    }
+    handleSignOut();
   }, []);
 
   return <Navigate to={SITE_PAGES.LOGIN} />;

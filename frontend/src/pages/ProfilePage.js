@@ -170,19 +170,22 @@ function ProfilePage() {
     return () => window.removeEventListener("resize", fix_crop);
   }, [imgRef]);
 
-  useEffect(async () => {
-    if (!id) {
-      setUser(currentUser);
-      setIsCurrentUser(true);
-    } else {
-      const res = await api_user_info(id ?? "");
-      if (!res || !res.user) setIs404(true);
-      else {
-        setIs404(false);
-        setUser(res.user);
-        setIsCurrentUser(res.user._id === currentUser._id);
+  useEffect(() => {
+    async function handleAPI() {
+      if (!id) {
+        setUser(currentUser);
+        setIsCurrentUser(true);
+      } else {
+        const res = await api_user_info(id ?? "");
+        if (!res || !res.user) setIs404(true);
+        else {
+          setIs404(false);
+          setUser(res.user);
+          setIsCurrentUser(res.user._id === currentUser._id);
+        }
       }
     }
+    handleAPI();
   }, [id]);
 
   useEffect(() => {
