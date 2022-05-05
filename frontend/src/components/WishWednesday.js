@@ -1,6 +1,5 @@
 import React, { useState, useContext } from "react";
 import ReactQuill from "react-quill";
-import history from "../history";
 import "react-quill/dist/quill.snow.css";
 import "../styles/WishWednesday.css";
 import { ModalVariantsManager } from "./Contexts";
@@ -13,7 +12,6 @@ export default function WishWednesday() {
     modalVariant: [_modalVariant, setModalVariant],
     open: [_modalOpen, setModalOpen],
     errorMessage: [_error, setErrorMessage],
-    activeListing: [_activeListing, setActiveListing],
   } = useContext(ModalVariantsManager);
 
   const modules = {
@@ -42,7 +40,7 @@ export default function WishWednesday() {
         setModalOpen(true);
         setConvertedText("");
       })
-      .catch((err) => {
+      .catch((_err) => {
         setModalVariant();
         setErrorMessage("Unable to reach server, please try again.");
         setModalOpen(true);
