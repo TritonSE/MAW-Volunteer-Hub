@@ -47,7 +47,6 @@ function VerifyButtonCell({
   }, [initialVerified]);
 
   function handleVerifyUser() {
-    // console.log({ index, id });
     updateMyData(index, id, true);
     setIsVerifiedState(true);
   }
@@ -63,9 +62,7 @@ function VerifyButtonCell({
     }
   }
 
-  function addRoles(e) {
-    e.preventDefault();
-    console.log(selectedRoles);
+  function addRoles() {
     api_update_roles(user_id, JSON.stringify(selectedRoles));
   }
 
@@ -82,17 +79,15 @@ function VerifyButtonCell({
   }
   return (
     <div>
-      <ScrollContainer className="assign_btn_container" vertical={false}>
+      <div>
         {roles.length === 0 ? (
-          <div>
-            <AssignBtn
-              label="Assign Role"
-              key={Math.random()}
-              onClick={() => setRolesModalOpen(true)}
-            />
-          </div>
+          <AssignBtn
+            label="Assign Role"
+            key={Math.random()}
+            onClick={() => setRolesModalOpen(true)}
+          />
         ) : (
-          <div>
+          <ScrollContainer className="assign_btn_container" vertical={false}>
             {roles.map((label) => (
               <AssignBtn
                 label={label}
@@ -100,9 +95,9 @@ function VerifyButtonCell({
                 onClick={() => handleRoleBtnClick(label)}
               />
             ))}
-          </div>
+          </ScrollContainer>
         )}
-      </ScrollContainer>
+      </div>
       {/* Taken from Profile Page DUPLICATE FROM ProfileRoles.js */}
       <Modal
         className="add_roles_modal"
@@ -117,7 +112,7 @@ function VerifyButtonCell({
           type="button"
           onClick={() => setRolesModalOpen(false)}
         />
-        <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
+        <form className="add_roles_form" onSubmit={() => addRoles()}>
           <h2>Assign Role</h2>
           {nonAdminRoles.map((role) => (
             <div className="role_choice" key={Math.random()}>

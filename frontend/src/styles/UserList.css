@@ -48,7 +48,9 @@ tbody tr {
   box-sizing: border-box;
 }
 .people_table_header.start {
-  width: 200px !important;
+  /* width: 200px !important; */
+  box-sizing: border-box;
+  width: 33%;
   border-radius: 11px 0px 0px 11px;
 }
 .people_table_header.end {
@@ -65,6 +67,9 @@ tbody tr {
   line-height: 17px;
 }
 .people_table_data.start {
+  box-sizing: border-box;
+  /* Should be adjusted when the rest of the table is implemented */
+  width: 20%;
   text-align: left;
   padding-left: 50px;
   border-radius: 8px 0px 0px 8px;

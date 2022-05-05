@@ -26,6 +26,8 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
           updateMyData={updateMyData}
           isVerified={user.verified}
           name={user.name}
+          roles={user.roles}
+          user_id={user._id}
         />
         <div className="card_item_bottom">Volunteer Start: {user.start ?? "N/A"}</div>
       </div>
