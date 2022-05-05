@@ -250,7 +250,9 @@ router.get("/role/:role", (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.post("/message", (req, res) => {
+// *validate if roles are valid, error response, regular response, res.json
+// *move list of roles into separate file?
+router.post("/message", adminValidator, (req, res) => {
   // console.log(req.body);
   const roles_to_message = JSON.parse(req.body.roles);
   console.log(roles_to_message);
@@ -266,14 +268,17 @@ router.post("/message", (req, res) => {
 
       // console.log(users);
 
-      sendEmailFunction
-        .sendEmailMessage(emails, html, subject)
-        .then((emailResponse) => {
-          console.log(emailResponse);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      // only send email if there are user(s) in role(s)
+      if (users.length !== 0) {
+        sendEmailFunction
+          .sendEmailMessage(emails, html, subject)
+          .then((emailResponse) => {
+            console.log(emailResponse);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     })
     .catch(errorHandler(res));
 });

@@ -32,6 +32,7 @@ export default function Message() {
     ],
   };
 
+  // *move into separate file?
   const recipients = [
     { label: "All", value: 1 },
     { label: "Volunteer", value: 2 },
@@ -76,6 +77,7 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
+  //* modal saying email sent & clear form?
   // when "Post" is clicked, handle email sending
   const handleSubmit = async () => {
     // console.log("Recipients: ");
@@ -83,12 +85,14 @@ export default function Message() {
     // console.log("Subject: " + subject);
     // console.log("Message: " + convertedText);
 
-    const roles_to_message = selectedRecipients
-      .map((elem) => elem.label)
-      .filter((elem) => elem !== "All");
-    console.log("ROLES TO MSG", roles_to_message);
+    if (selectedRecipients !== null && selectedRecipients.length !== 0) {
+      const roles_to_message = selectedRecipients
+        .map((elem) => elem.label)
+        .filter((elem) => elem !== "All");
+      console.log("ROLES TO MSG", roles_to_message);
 
-    await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
+      await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
+    }
   };
 
   return (
@@ -129,11 +133,7 @@ export default function Message() {
             onChange={setConvertedText}
           />
           <div className="button_container">
-            <button
-              className="post_announcement"
-              type="submit"
-              onClick={() => selectedRecipients.length !== 0 && handleSubmit()}
-            >
+            <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
               Post
             </button>
           </div>
