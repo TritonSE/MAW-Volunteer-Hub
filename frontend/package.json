@@ -9,6 +9,7 @@
     "axios": "^0.26.0",
     "babel-polyfill": "^6.26.0",
     "history": "^5.2.0",
+    "html-react-parser": "^1.4.12",
     "http-proxy-middleware": "^2.0.2",
     "react": "^16.10.0",
     "react-dom": "^16.10.0",

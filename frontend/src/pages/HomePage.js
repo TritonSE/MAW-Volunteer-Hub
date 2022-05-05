@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/HomePage.css";
+import parse from "html-react-parser";
 import { api_wish_wednesday } from "../api";
 
 function HomePage() {
@@ -33,7 +34,7 @@ function HomePage() {
             */}
           </p>
           <img src="/img/filler-img.png" alt="Wish wednesday header" className="body-image" />
-          <p>{message}</p>
+          <div>{parse(message)}</div>
         </div>
       )}
     </div>

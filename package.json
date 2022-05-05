@@ -16,7 +16,8 @@
     "start": "cd backend && node ./bin/www"
   },
   "dependencies": {
-    "node-pre-gyp": "^0.17.0"
+    "node-pre-gyp": "^0.17.0",
+    "sanitize-html": "^2.7.0"
   },
   "devDependencies": {
     "concurrently": "^6.0.1"
