@@ -28,7 +28,9 @@ export default function WishWednesday() {
   function handleWishWednesdayPost() {
     // ensure there is no empty post
     if (!convertedText) {
-      alert("Cannot create an empty wish wednesday post!");
+      setModalVariant();
+      setErrorMessage("Cannot create an empty Wish Wednesday post");
+      return;
     }
 
     api_wish_wednesday_add(convertedText)
