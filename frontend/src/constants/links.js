@@ -47,6 +47,8 @@ const API_ENDPOINTS = {
   CALENDAR_DELETE: "/cal/del",
   CALENDAR_UPDATE: "/cal/upd",
   CALENDAR_RESPOND: "/cal/res",
+
+  WISH_WEDNESDAY: "/wishwed/latest",
 };
 
 const SIDENAV_STEPS = [

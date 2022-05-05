@@ -199,6 +199,8 @@ const api_calendar_respond = (id, going, date, guests, response) =>
     method: "POST",
   });
 
+const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
+
 export {
   api_validtoken,
   api_login,
@@ -228,4 +230,5 @@ export {
   api_calendar_delete,
   api_calendar_update,
   api_calendar_respond,
+  api_wish_wednesday,
 };
