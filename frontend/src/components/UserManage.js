@@ -51,6 +51,16 @@ function VerifyButtonCell({
     setIsVerifiedState(true);
   }
 
+  function changeSelectionStatus(role) {
+    if (selectedRoles.indexOf(role) !== -1) {
+      const tempRoles = selectedRoles.filter((aRole) => aRole !== role);
+      setSelectedRoles(tempRoles);
+    } else {
+      const tempRoles = [...selectedRoles, role];
+      setSelectedRoles(tempRoles);
+    }
+  }
+
   function handleRoleBtnClick(label) {
     if (label === "Allow Access") {
       // setIsOpen(true);
@@ -63,7 +73,9 @@ function VerifyButtonCell({
   }
 
   function addRoles() {
-    api_update_roles(user_id, JSON.stringify(selectedRoles));
+    console.log("Adding");
+    console.log(selectedRoles.slice(1));
+    api_update_roles(user_id, JSON.stringify(selectedRoles.slice(1)));
   }
 
   if (!isVerifiedState) {
@@ -79,25 +91,19 @@ function VerifyButtonCell({
   }
   return (
     <div>
-      <div>
-        {roles.length === 0 ? (
+      <ScrollContainer className="assign_btn_container" vertical={false}>
+        {roles.map((label) => (
           <AssignBtn
-            label="Assign Role"
+            label={label}
             key={Math.random()}
-            onClick={() => setRolesModalOpen(true)}
+            onClick={
+              label === "Assign Role"
+                ? () => setRolesModalOpen(true)
+                : () => handleRoleBtnClick(label)
+            }
           />
-        ) : (
-          <ScrollContainer className="assign_btn_container" vertical={false}>
-            {roles.map((label) => (
-              <AssignBtn
-                label={label}
-                key={Math.random()}
-                onClick={() => handleRoleBtnClick(label)}
-              />
-            ))}
-          </ScrollContainer>
-        )}
-      </div>
+        ))}
+      </ScrollContainer>
       {/* Taken from Profile Page DUPLICATE FROM ProfileRoles.js */}
       <Modal
         className="add_roles_modal"
@@ -119,7 +125,7 @@ function VerifyButtonCell({
               <input
                 type="checkbox"
                 checked={selectedRoles.includes(role)}
-                onChange={() => setSelectedRoles([...selectedRoles, role])}
+                onChange={() => changeSelectionStatus(role)}
               />
               <label htmlFor="role_label">{role}</label>
             </div>
@@ -130,7 +136,7 @@ function VerifyButtonCell({
               <input
                 type="checkbox"
                 checked={selectedRoles.includes(role)}
-                onChange={() => setSelectedRoles([...selectedRoles, role])}
+                onChange={() => changeSelectionStatus(role)}
               />
               <label htmlFor="role_label">{role}</label>
             </div>
@@ -163,7 +169,7 @@ const headers = [
         {...props}
         isVerified={props.value}
         name={props.row.original.name}
-        roles={props.row.original.roles}
+        roles={["Assign Role", ...props.row.original.roles]}
         user_id={props.row.original._id}
       />
     ),
