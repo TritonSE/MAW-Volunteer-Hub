@@ -1,3 +1,4 @@
+/* eslint jsx-a11y/no-autofocus: off */
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ReactSelect from "react-select";
@@ -11,11 +12,23 @@ import "../styles/AddEventModal.css";
 
 Modal.setAppElement("#root");
 
-function FormInput({ type, placeholder, step, min, onChange, value, setValue, error, setError }) {
+function FormInput({
+  type,
+  placeholder,
+  autoFocus,
+  step,
+  min,
+  onChange,
+  value,
+  setValue,
+  error,
+  setError,
+}) {
   return (
     <input
       type={type}
       placeholder={placeholder}
+      autoFocus={autoFocus}
       className={error ? "error" : ""}
       step={step}
       min={min}
@@ -305,18 +318,19 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
         className="evt_modal"
         overlayClassName="evt_modal_overlay highest"
       >
-        <form onSubmit={add_event}>
+        <form onSubmit={add_event} id="aria_modal_form">
           <div className="evt_modal_header">
             <h1>{isEditing ? "Edit" : "Create"} an Event</h1>
             <button type="button" onClick={() => setCurrentEvent()}>
               <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
             </button>
           </div>
-          <div className="evt_modal_content">
+          <div className="evt_modal_content" aria-describedby="aria_modal_form">
             <div>
               <FormInput
                 type="text"
                 placeholder="Event Name"
+                autoFocus
                 value={name}
                 setValue={setName}
                 error={errorName}

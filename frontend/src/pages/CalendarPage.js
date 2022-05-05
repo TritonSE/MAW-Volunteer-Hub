@@ -141,6 +141,8 @@ function CalendarPage() {
   }
 
   useEffect(() => {
+    document.title = "Calendar - Make-a-Wish San Diego";
+
     function resize() {
       setWindowWidth(window.innerWidth);
     }
