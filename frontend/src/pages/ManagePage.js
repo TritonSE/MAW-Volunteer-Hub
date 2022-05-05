@@ -7,7 +7,6 @@ function ManagePage() {
     tab_route: MANAGE_ROUTES[ind],
     tab_name: name,
   }));
-
   useEffect(() => {
     document.title = "Manage - Make-a-Wish San Diego";
   }, []);
