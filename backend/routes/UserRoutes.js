@@ -263,13 +263,13 @@ router.post("/message", adminValidator, (req, res) => {
 
   UserModel.find({ roles: { $in: roles_to_message } })
     .then((users) => {
-      const emails = users.map((elem) => elem.email);
-      console.log(emails);
-
       // console.log(users);
 
       // only send email if there are user(s) in role(s)
       if (users.length !== 0) {
+        const emails = users.map((elem) => elem.email);
+        console.log(emails);
+
         sendEmailFunction
           .sendEmailMessage(emails, html, subject)
           .then((emailResponse) => {
