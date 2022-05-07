@@ -185,9 +185,24 @@ export default function Message() {
       <Modal
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
-        className="message_react_modal"
+        className="login_react_modal"
       >
-        <div className="message_modal">{modalText}</div>
+        <div className="login_flex login_form login_modal">
+          <div className="login_flex nomargin">
+            {modalOpen === true ? <div>&nbsp;</div> : <h3>Error</h3>}
+            <button
+              type="button"
+              className="login_button_unstyled"
+              onClick={() => setModalOpen(false)}
+            >
+              <img src="/img/close-modal.svg" alt="Close modal" />
+            </button>
+          </div>
+          <div className="login_modal_content">{modalOpen === true ? modalText : modalOpen}</div>
+          <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
+            Okay
+          </button>
+        </div>
       </Modal>
     </div>
   );

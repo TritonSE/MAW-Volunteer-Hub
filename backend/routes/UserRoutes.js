@@ -263,21 +263,21 @@ router.post("/message", adminValidator, (req, res) => {
 
   UserModel.find({ roles: { $in: roles_to_message } })
     .then((users) => {
-      console.log(users);
+      // console.log(users);
 
       const emails = users.map((elem) => elem.email);
-      console.log(emails);
+      // console.log(emails);
 
       sendEmailFunction
         .sendEmailMessage(emails, html, subject)
-        .then((emailResponse) => {
+        .then(() => {
           // emailResponse inside parentheses
-          console.log(emailResponse);
+          // console.log(emailResponse);
           res.json({ success: true });
         })
         .catch((err) => {
+          // console.log(err);
           res.status(400).json(err);
-          console.log(err);
         });
     })
     .catch(errorHandler(res));
