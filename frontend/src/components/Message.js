@@ -1,10 +1,13 @@
 /* eslint-disable import/no-named-default */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { default as ReactSelect, components } from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import "../styles/Message.css";
+import Modal from "react-modal";
 import { api_message_email } from "../api";
+
+Modal.setAppElement("#root");
 
 function Option(props) {
   // Source: https://medium.com/geekculture/creating-multi-select-dropdown-with-checkbox-in-react-792ff2464ef3
@@ -77,7 +80,9 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
-  //* modal saying email sent & clear form?
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalText, setModalText] = useState("");
+
   // when "Post" is clicked, handle email sending
   const handleSubmit = async () => {
     // console.log("Recipients: ");
@@ -85,15 +90,40 @@ export default function Message() {
     // console.log("Subject: " + subject);
     // console.log("Message: " + convertedText);
 
-    if (selectedRecipients !== null && selectedRecipients.length !== 0) {
+    if (
+      selectedRecipients !== null &&
+      selectedRecipients.length !== 0 &&
+      subject !== "" &&
+      convertedText !== ""
+    ) {
       const roles_to_message = selectedRecipients
         .map((elem) => elem.label)
         .filter((elem) => elem !== "All");
-      console.log("ROLES TO MSG", roles_to_message);
+      // console.log("ROLES TO MSG", roles_to_message);
 
-      await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
+      const res = await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
+
+      // console.log(res);
+      if (res && res.success) {
+        // clear fields if success
+        setConvertedText("");
+        setSubject("");
+        setSelectedRecipients(null);
+        setModalText("The message was successfully sent via email!");
+      } else {
+        setModalText("There was an error sending the message via email.");
+      }
+
+      setModalOpen(true);
     }
   };
+
+  const isQuillEmpty = (text) =>
+    // console.log(text);
+    text.replace(/<(.|\n)*?>/g, "").trim().length === 0 && !text.includes("<img");
+
+  const isRecipientsEmpty = (recipients_list) =>
+    recipients_list === null || recipients_list.length === 0;
 
   return (
     <div className="msg_layout">
@@ -124,6 +154,7 @@ export default function Message() {
               type="text"
               className="subject_line"
               onChange={(e) => setSubject(e.target.value)}
+              value={subject}
             />
           </div>
           <ReactQuill
@@ -133,12 +164,31 @@ export default function Message() {
             onChange={setConvertedText}
           />
           <div className="button_container">
-            <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>
+            <button
+              className="post_announcement_message"
+              type="submit"
+              onClick={() => handleSubmit()}
+            >
               Post
             </button>
+            {(isRecipientsEmpty(selectedRecipients) ||
+              subject === "" ||
+              isQuillEmpty(convertedText)) && (
+              <p className="emptyfields">
+                Some field(s) are empty. Please make sure all fields are specified.
+              </p>
+            )}
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={modalOpen}
+        onRequestClose={() => setModalOpen(false)}
+        className="message_react_modal"
+      >
+        <div className="message_modal">{modalText}</div>
+      </Modal>
     </div>
   );
 }

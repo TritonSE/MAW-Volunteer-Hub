@@ -255,7 +255,7 @@ router.get("/role/:role", (req, res) =>
 router.post("/message", adminValidator, (req, res) => {
   // console.log(req.body);
   const roles_to_message = JSON.parse(req.body.roles);
-  console.log(roles_to_message);
+  // console.log(roles_to_message);
 
   const html = req.body.html;
 
@@ -263,22 +263,22 @@ router.post("/message", adminValidator, (req, res) => {
 
   UserModel.find({ roles: { $in: roles_to_message } })
     .then((users) => {
-      // console.log(users);
+      console.log(users);
 
-      // only send email if there are user(s) in role(s)
-      if (users.length !== 0) {
-        const emails = users.map((elem) => elem.email);
-        console.log(emails);
+      const emails = users.map((elem) => elem.email);
+      console.log(emails);
 
-        sendEmailFunction
-          .sendEmailMessage(emails, html, subject)
-          .then((emailResponse) => {
-            console.log(emailResponse);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+      sendEmailFunction
+        .sendEmailMessage(emails, html, subject)
+        .then((emailResponse) => {
+          // emailResponse inside parentheses
+          console.log(emailResponse);
+          res.json({ success: true });
+        })
+        .catch((err) => {
+          res.status(400).json(err);
+          console.log(err);
+        });
     })
     .catch(errorHandler(res));
 });
