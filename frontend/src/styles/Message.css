@@ -90,7 +90,7 @@
   flex-direction: column;
   margin-right: 40px;
   align-items: flex-end;
-  height: 36px;
+  height: 50px;
 }
 
 .post_announcement_message {
@@ -114,7 +114,11 @@
 
 .emptyfields {
   font-size: 9px;
-  margin: 0;
+  height: 20px;
+}
+
+.placeholder {
+  height: 20px;
 }
 
 /* Modal styles inherited from LoginPage */

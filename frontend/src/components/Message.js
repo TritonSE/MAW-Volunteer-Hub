@@ -1,5 +1,5 @@
 /* eslint-disable import/no-named-default */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { default as ReactSelect, components } from "react-select";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -80,8 +80,19 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
+  // message sending
   const [modalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
+
+  // if any fields of the message are empty
+  const emptyFields = () => {
+    const text_empty =
+      convertedText.replace(/<(.|\n)*?>/g, "").trim().length === 0 &&
+      !convertedText.includes("<img");
+    const recipients_empty = selectedRecipients === null || selectedRecipients.length === 0;
+    const subject_empty = subject === "";
+    return text_empty || recipients_empty || subject_empty;
+  };
 
   // when "Post" is clicked, handle email sending
   const handleSubmit = async () => {
@@ -90,12 +101,7 @@ export default function Message() {
     // console.log("Subject: " + subject);
     // console.log("Message: " + convertedText);
 
-    if (
-      selectedRecipients !== null &&
-      selectedRecipients.length !== 0 &&
-      subject !== "" &&
-      convertedText !== ""
-    ) {
+    if (!emptyFields()) {
       const roles_to_message = selectedRecipients
         .map((elem) => elem.label)
         .filter((elem) => elem !== "All");
@@ -117,13 +123,6 @@ export default function Message() {
       setModalOpen(true);
     }
   };
-
-  const isQuillEmpty = (text) =>
-    // console.log(text);
-    text.replace(/<(.|\n)*?>/g, "").trim().length === 0 && !text.includes("<img");
-
-  const isRecipientsEmpty = (recipients_list) =>
-    recipients_list === null || recipients_list.length === 0;
 
   return (
     <div className="msg_layout">
@@ -171,12 +170,12 @@ export default function Message() {
             >
               Post
             </button>
-            {(isRecipientsEmpty(selectedRecipients) ||
-              subject === "" ||
-              isQuillEmpty(convertedText)) && (
-              <p className="emptyfields">
+            {emptyFields() ? (
+              <div className="emptyfields">
                 Some field(s) are empty. Please make sure all fields are specified.
-              </p>
+              </div>
+            ) : (
+              <div className="placeholder" />
             )}
           </div>
         </div>
