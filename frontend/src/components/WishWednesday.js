@@ -19,9 +19,9 @@ const modules = {
   imageCompress: {
     quality: 0.7, // default
     maxWidth: 1000,
-    maxHeight: 1000,
+    maxHeight: 800,
     imageType: "image/png", // default
-    debug: true, // default
+    debug: false, // default
     suppressErrorLogging: false, // default
   },
 };
@@ -46,7 +46,6 @@ export default function WishWednesday() {
 
     api_wish_wednesday_add(convertedText)
       .then((res) => {
-        console.log(res);
         if (!res) {
           throw new Error("");
         }
