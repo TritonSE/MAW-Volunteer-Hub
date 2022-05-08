@@ -7,10 +7,18 @@ const router = express.Router();
 
 router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) => {
   // need to sanitize html here
-  const newPost = sanitizeHtml(req.body.message);
+  const cleanText = sanitizeHtml(req.body.message, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    allowedAttributes: {
+      img: ["src", "srcset", "alt", "title", "width", "height", "loading"],
+    },
+    allowedSchemesByTag: {
+      img: ["data"],
+    },
+  });
 
   WishWedSchema.create({
-    message: newPost,
+    message: cleanText,
   })
     .then(res.json({ result: "success" }))
     .catch(errorHandler(res));
