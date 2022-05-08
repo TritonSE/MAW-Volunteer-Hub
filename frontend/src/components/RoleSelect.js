@@ -28,6 +28,30 @@ export default function RoleSelect({ value, setValue, hasError }) {
     [hasAll]
   );
 
+  const MultiValue = React.memo(
+    ({ index }) =>
+      !index && (
+        <div>
+          <div
+            style={{
+              width: "10px",
+              height: "10px",
+              background: value[0].color,
+              display: "inline-block",
+              marginRight: "5px",
+              borderRadius: "5px",
+            }}
+          />
+          {value[0].name.substring(0, 13) + (value[0].name.length > 13 ? "..." : "")}&nbsp;
+          {value.length > 1 ? (
+            <span style={{ color: "#999a9a" }}>
+              <br />({value.length - 1} more)
+            </span>
+          ) : null}
+        </div>
+      )
+  );
+
   const styles = {
     container: (provided) => ({
       ...provided,
@@ -40,7 +64,7 @@ export default function RoleSelect({ value, setValue, hasError }) {
     control: (provided) => ({
       ...provided,
       border: hasError ? "1px solid red" : "1px solid black !important",
-      maxHeight: "70px",
+      height: "40px",
       overflow: "auto",
       position: "relative",
       cursor: "pointer",
@@ -93,6 +117,7 @@ export default function RoleSelect({ value, setValue, hasError }) {
       allowSelectAll
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
+      components={{ MultiValue }}
       placeholder="Add event to..."
       onChange={(newVal) => {
         if (newVal.includes(rolesAdj[0])) {
