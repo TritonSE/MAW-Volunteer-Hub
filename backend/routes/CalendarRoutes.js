@@ -37,41 +37,72 @@ router.get("/all", (req, res) =>
   populate(EventModel.find())
     .then((events) => {
       res.json(events);
-      /* TODO: Fix
-      return EventModel.updateMany(
-        {
-          "repetitions.date": {
-            $lte: new Date(),
-          },
-        },
-        {
-          repetitions: {
-            completed: true,
-          },
+
+      const arr = [];
+      const now = new Date().getTime();
+      let do_push = false;
+
+      events.forEach((evt) => {
+        evt.repetitions.forEach((rep) => {
+          if (rep.date.getTime() <= now) {
+            rep.completed = true;
+            do_push = true;
+          }
+        });
+        if (do_push) {
+          arr.push(evt.save());
+          do_push = false;
         }
-      );
-      */
+      });
+
+      return Promise.all(arr);
     })
     .catch(errorHandler(res))
 );
 
 router.get("/ics/:calendar?", (req, res) =>
-  EventModel.find()
+  populate(EventModel.find())
     .then((events) => {
       const calendar = ical({ name: "Make-a-Wish Volunteers" });
       events
-        .filter((evt) => !req.params.calendar || req.params.calendar === evt.calendar)
-        .forEach((evt) =>
-          calendar.createEvent({
-            start: evt.from,
-            end: evt.to,
-            timezone: "America/Los_Angeles",
-            summary: evt.name,
-            description: evt.question,
-            location: evt.location,
-          })
-        );
-      calendar.serve(res);
+        .filter((evt) => {
+          if (!req.params.calendar) return evt;
+
+          if (Array.isArray(evt.calendar)) {
+            return evt.calendar.includes(req.params.calendar);
+          }
+          return req.params.calendar === evt.calendar;
+        })
+        .forEach((evt) => {
+          evt.repetitions.forEach((rep) => {
+            const end = new Date(rep.date);
+            end.setHours(evt.to.getHours(), evt.to.getMinutes(), 0);
+
+            const cal_event = calendar.createEvent({
+              start: rep.date,
+              end,
+              timezone: "America/Los_Angeles",
+              summary: evt.name,
+              description: evt.question,
+              location: evt.location,
+            });
+
+            rep.attendees.forEach((att) => {
+              cal_event.createAttendee({
+                email: att.volunteer.email,
+                name: att.volunteer.name,
+              });
+              att.guests.forEach((guest) => {
+                cal_event.createAttendee({
+                  with: att.volunteer.name,
+                  name: guest.name,
+                  relation: guest.relation,
+                });
+              });
+            });
+          });
+        });
+      calendar.serve(res, `${req.params.calendar ?? "Make-a-Wish"}.ics`);
     })
     .catch(errorHandler(res))
 );

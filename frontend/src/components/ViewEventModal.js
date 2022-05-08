@@ -568,7 +568,12 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             )}
           </div>
         </div>
-        <div className="evt_modal_footer">
+        <div
+          className="evt_modal_footer"
+          style={{
+            opacity: event.completed ? "0.5" : "1",
+          }}
+        >
           {!event.attendees.some((att) => att.volunteer._id === currentUser._id) ? (
             <button type="button" onClick={() => save_response(true)}>
               Going
