@@ -30,8 +30,8 @@ const app = express();
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(rateLimiter);
-app.use(bodyParser.json({ limit: "1mb" }));
-app.use(bodyParser.urlencoded({ limit: "1mb", extended: false, parameterLimit: 50000 }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: false, parameterLimit: 50000 }));
 
 app.use(cookieParser(config.auth.cookie_secret));
 app.use(express.static(path.join(__dirname, "public")));

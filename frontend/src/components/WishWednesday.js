@@ -1,5 +1,5 @@
-import React, { useState, useContext } from "react";
-import Quill from "react-quill";
+import React, { useState, useContext, useEffect } from "react";
+import ReactQuill, { Quill } from "react-quill";
 import ImageCompress from "quill-image-compress";
 import "react-quill/dist/quill.snow.css";
 import "../styles/WishWednesday.css";
@@ -16,16 +16,16 @@ const modules = {
     ["clean"],
     ["image"],
   ],
-  // imageCompress: {
-  //   quality: 0.7, // default
-  //   maxWidth: 1000, // default
-  //   maxHeight: 1000, // default
-  //   imageType: 'image/jpeg', // default
-  //   debug: true, // default
-  //   suppressErrorLogging: false, // default
-  // }
+  imageCompress: {
+    quality: 0.7, // default
+    maxWidth: 1000,
+    maxHeight: 1000,
+    imageType: "image/png", // default
+    debug: true, // default
+    suppressErrorLogging: false, // default
+  },
 };
-// Quill.register('modules/imageCompress', ImageCompress);
+Quill.register("modules/imageCompress", ImageCompress);
 
 export default function WishWednesday() {
   const [convertedText, setConvertedText] = useState("");
@@ -64,7 +64,7 @@ export default function WishWednesday() {
     <div className="wwed_layout">
       <h2 className="title">Wish Wednesday Announcements</h2>
       <div className="editor_container">
-        <Quill
+        <ReactQuill
           className="md_editor"
           theme="snow"
           modules={modules}

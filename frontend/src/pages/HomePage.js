@@ -24,7 +24,7 @@ function HomePage() {
       </div>
       {!loading && (
         <div>
-          <p id="wish-wednesday-title">
+          <h2 id="wish-wednesday-title">
             Wish Wednesday [{new Date(date).toLocaleDateString("en-US")}]
             {/*
               Temporarily removed due to unspecified functionality
@@ -32,9 +32,8 @@ function HomePage() {
                 <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
               </button> 
             */}
-          </p>
-          <img src="/img/filler-img.png" alt="Wish wednesday header" className="body-image" />
-          <div>{parse(message)}</div>
+          </h2>
+          <div id="wish-wednesday-post">{parse(message)}</div>
         </div>
       )}
     </div>
