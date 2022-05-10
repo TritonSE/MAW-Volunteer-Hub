@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Modal from "react-modal";
 import AssignBtn from "./AssignBtn";
+import { api_update_roles } from "../auth";
 
 import "../styles/ProfileRoles.css";
 
@@ -23,11 +24,24 @@ export default function ProfileRoles(props) {
 
   const adminRoles = ["Primary Admin", "Secondary Admin"];
 
-  // Dummy method that collects new roles.
   const addRoles = (e) => {
     e.preventDefault();
     console.log(selectedRoles);
+    api_update_roles(props.id, JSON.stringify(selectedRoles));
   };
+
+  // Modifies selectedRoles
+  function changeSelectionStatus(role) {
+    // Removes previously selected roles from selectedRoles
+    if (selectedRoles.indexOf(role) !== -1) {
+      const tempRoles = selectedRoles.filter((aRole) => aRole !== role);
+      setSelectedRoles(tempRoles);
+      // Adds newly selected roles to selectedRoles
+    } else {
+      const tempRoles = [...selectedRoles, role];
+      setSelectedRoles(tempRoles);
+    }
+  }
 
   return (
     <div className="roles_container">
@@ -80,7 +94,7 @@ export default function ProfileRoles(props) {
               <input
                 type="checkbox"
                 checked={selectedRoles.includes(role)}
-                onChange={() => setSelectedRoles([...selectedRoles, role])}
+                onChange={() => changeSelectionStatus(role)}
               />
               <label htmlFor="role_label">{role}</label>
             </div>

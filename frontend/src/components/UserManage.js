@@ -57,6 +57,7 @@ function VerifyButtonCell({
       setSelectedRoles(tempRoles);
     } else {
       const tempRoles = [...selectedRoles, role];
+      console.log(tempRoles);
       setSelectedRoles(tempRoles);
     }
   }
@@ -73,8 +74,6 @@ function VerifyButtonCell({
   }
 
   function addRoles() {
-    console.log("Adding");
-    console.log(selectedRoles.slice(1));
     api_update_roles(user_id, JSON.stringify(selectedRoles.slice(1)));
   }
 
@@ -92,17 +91,21 @@ function VerifyButtonCell({
   return (
     <div>
       <ScrollContainer className="assign_btn_container" vertical={false}>
-        {roles.map((label) => (
+        {roles.length === 0 ? (
           <AssignBtn
-            label={label}
+            label="Assign Role"
             key={Math.random()}
-            onClick={
-              label === "Assign Role"
-                ? () => setRolesModalOpen(true)
-                : () => handleRoleBtnClick(label)
-            }
+            onClick={() => setRolesModalOpen(true)}
           />
-        ))}
+        ) : (
+          roles.map((label) => (
+            <AssignBtn
+              label={label}
+              key={Math.random()}
+              onClick={() => handleRoleBtnClick(label)}
+            />
+          ))
+        )}
       </ScrollContainer>
       {/* Taken from Profile Page DUPLICATE FROM ProfileRoles.js */}
       <Modal
@@ -118,7 +121,7 @@ function VerifyButtonCell({
           type="button"
           onClick={() => setRolesModalOpen(false)}
         />
-        <form className="add_roles_form" onSubmit={() => addRoles()}>
+        <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
           <h2>Assign Role</h2>
           {nonAdminRoles.map((role) => (
             <div className="role_choice" key={Math.random()}>
@@ -169,7 +172,7 @@ const headers = [
         {...props}
         isVerified={props.value}
         name={props.row.original.name}
-        roles={["Assign Role", ...props.row.original.roles]}
+        roles={props.row.original.roles}
         user_id={props.row.original._id}
       />
     ),

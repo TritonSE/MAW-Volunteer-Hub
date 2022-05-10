@@ -452,7 +452,7 @@ function ProfilePage() {
         {user.roles ? (
           <div>
             <div className="user_stats">
-              <ProfileRoles roles={user.roles} admin={currentUser.admin === 2} />
+              <ProfileRoles roles={user.roles} admin={currentUser.admin === 2} id={user._id} />
               <ProfileCompleted tasks={user.__v} />
             </div>
             <ProfileActivities />
