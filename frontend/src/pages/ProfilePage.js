@@ -203,6 +203,18 @@ function ProfilePage() {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
 
+  function addAdminRoles() {
+    let roles;
+    if (user.admin === 1) {
+      roles = ["Secondary Admin", ...user.roles];
+    } else if (user.admin === 2) {
+      roles = ["Primary Admin", "Secondary Admin", ...user.roles];
+    } else {
+      roles = user.roles;
+    }
+    return roles;
+  }
+
   return is404 ? (
     <Custom404Page />
   ) : (
@@ -452,7 +464,7 @@ function ProfilePage() {
         {user.roles ? (
           <div>
             <div className="user_stats">
-              <ProfileRoles roles={user.roles} admin={currentUser.admin === 2} id={user._id} />
+              <ProfileRoles roles={addAdminRoles()} admin={currentUser.admin === 2} id={user._id} />
               <ProfileCompleted tasks={user.__v} />
             </div>
             <ProfileActivities />

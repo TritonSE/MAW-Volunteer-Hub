@@ -7,6 +7,7 @@ import "../styles/ProfileRoles.css";
 
 export default function ProfileRoles(props) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
+
   return (
     <div className="roles_container">
       <div className="roles_header">

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
-import RolesModal from "./RolesModal";
 import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
@@ -69,7 +68,6 @@ function UserCardSearch({ filter, setFilter }) {
 
 function UserCardList({ userData, filter, setFilter, ...props }) {
   const [showAdmin, setShowAdmin] = useState(false);
-  const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
   // Separates admins from volunteers
   const separateAdmin = (id) => {

@@ -22,9 +22,11 @@ function VerifyButtonCell({
   handleConfirmationModal,
   roles,
   user_id,
+  admin,
 }) {
   const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
+  const [modifiedRoles, setModifiedRoles] = useState(roles);
 
   useEffect(() => {
     setIsVerifiedState(initialVerified);
@@ -34,6 +36,18 @@ function VerifyButtonCell({
     updateMyData(index, id, true);
     setIsVerifiedState(true);
   }
+
+  function getModifiedRoles() {
+    if (admin === 1) {
+      setModifiedRoles(["Secondary Admin", ...roles]);
+    } else if (admin === 2) {
+      setModifiedRoles(["Primary Admin", "Secondary Admin", ...roles]);
+    }
+  }
+
+  useEffect(() => {
+    getModifiedRoles();
+  }, []);
 
   function handleRoleBtnClick(label) {
     if (label === "Allow Access") {
@@ -60,14 +74,14 @@ function VerifyButtonCell({
   return (
     <div>
       <ScrollContainer className="assign_btn_container" vertical={false}>
-        {roles.length === 0 ? (
+        {modifiedRoles.length === 0 ? (
           <AssignBtn
             label="Assign Role"
             key={Math.random()}
             onClick={() => setRolesModalOpen(true)}
           />
         ) : (
-          roles.map((label) => (
+          modifiedRoles.map((label) => (
             <AssignBtn
               label={label}
               key={Math.random()}
@@ -76,7 +90,12 @@ function VerifyButtonCell({
           ))
         )}
       </ScrollContainer>
-      <RolesModal open={rolesModalOpen} setOpen={setRolesModalOpen} roles={roles} id={user_id} />
+      <RolesModal
+        open={rolesModalOpen}
+        setOpen={setRolesModalOpen}
+        roles={modifiedRoles}
+        id={user_id}
+      />
     </div>
   );
 }
@@ -102,6 +121,7 @@ const headers = [
         name={props.row.original.name}
         roles={props.row.original.roles}
         user_id={props.row.original._id}
+        admin={props.row.original.admin}
       />
     ),
   },
