@@ -5,9 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
+import RolesModal from "./RolesModal";
 import { SITE_PAGES } from "../constants/links";
 import { api_user_all, api_user_verify } from "../api";
-import { api_update_roles } from "../auth";
 
 import "../styles/UserManage.css";
 
@@ -26,22 +26,6 @@ function VerifyButtonCell({
   const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
-  const [selectedRoles, setSelectedRoles] = useState(roles);
-
-  const nonAdminRoles = [
-    "Wish Granter",
-    "Volunteer",
-    "Mentor",
-    "Airport Greeter",
-    "Office",
-    "Special Events",
-    "Translator",
-    "Speaker's Bureau",
-    "Las Estrellas",
-  ];
-
-  const adminRoles = ["Primary Admin", "Secondary Admin"];
-
   useEffect(() => {
     setIsVerifiedState(initialVerified);
   }, [initialVerified]);
@@ -49,17 +33,6 @@ function VerifyButtonCell({
   function handleVerifyUser() {
     updateMyData(index, id, true);
     setIsVerifiedState(true);
-  }
-
-  function changeSelectionStatus(role) {
-    if (selectedRoles.indexOf(role) !== -1) {
-      const tempRoles = selectedRoles.filter((aRole) => aRole !== role);
-      setSelectedRoles(tempRoles);
-    } else {
-      const tempRoles = [...selectedRoles, role];
-      console.log(tempRoles);
-      setSelectedRoles(tempRoles);
-    }
   }
 
   function handleRoleBtnClick(label) {
@@ -71,10 +44,6 @@ function VerifyButtonCell({
       // setUserData(null);
       // updateLocal(id, userData, setUserData);
     }
-  }
-
-  function addRoles() {
-    api_update_roles(user_id, JSON.stringify(selectedRoles.slice(1)));
   }
 
   if (!isVerifiedState) {
@@ -107,48 +76,7 @@ function VerifyButtonCell({
           ))
         )}
       </ScrollContainer>
-      {/* Taken from Profile Page DUPLICATE FROM ProfileRoles.js */}
-      <Modal
-        className="add_roles_modal"
-        overlayClassName="add_roles_modal_overlay"
-        isOpen={rolesModalOpen}
-        onRequestClose={() => setRolesModalOpen(false)}
-        contentLabel="Add Roles Modal"
-      >
-        <button
-          className="close_button"
-          aria-label="close_button"
-          type="button"
-          onClick={() => setRolesModalOpen(false)}
-        />
-        <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
-          <h2>Assign Role</h2>
-          {nonAdminRoles.map((role) => (
-            <div className="role_choice" key={Math.random()}>
-              <input
-                type="checkbox"
-                checked={selectedRoles.includes(role)}
-                onChange={() => changeSelectionStatus(role)}
-              />
-              <label htmlFor="role_label">{role}</label>
-            </div>
-          ))}
-          <p className="admin_roles_separator">Admin</p>
-          {adminRoles.map((role) => (
-            <div className="role_choice" key={Math.random()}>
-              <input
-                type="checkbox"
-                checked={selectedRoles.includes(role)}
-                onChange={() => changeSelectionStatus(role)}
-              />
-              <label htmlFor="role_label">{role}</label>
-            </div>
-          ))}
-          <button className="modal-button button-primary" type="submit">
-            Assign
-          </button>
-        </form>
-      </Modal>
+      <RolesModal open={rolesModalOpen} setOpen={setRolesModalOpen} roles={roles} id={user_id} />
     </div>
   );
 }
