@@ -2,11 +2,19 @@ import React, { useState } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import AssignBtn from "./AssignBtn";
 import RolesModal from "./RolesModal";
+import { api_update_roles } from "../auth";
 
 import "../styles/ProfileRoles.css";
 
 export default function ProfileRoles(props) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
+
+  function deleteRole(role) {
+    const newRoles = props.roles.filter((aRole) => aRole !== role);
+    api_update_roles(props.id, JSON.stringify(newRoles));
+    document.location.reload();
+    alert("The `" + role + "` role has been removed");
+  }
 
   return (
     <div className="roles_container">
@@ -31,7 +39,7 @@ export default function ProfileRoles(props) {
                 label={role}
                 key={Math.random()}
                 onClick={() => alert(role + " clicked")}
-                onDelete={() => alert(role + " deleted")}
+                onDelete={() => deleteRole(role)}
                 admin={props.admin}
               />
             ))

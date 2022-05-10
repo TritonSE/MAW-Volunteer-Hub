@@ -120,12 +120,11 @@
   background: transparent;
   border: 0px;
   position: relative;
-  color: white;
-  right: 25px;
+  color: gray;
+  right: 24px;
   width: 0px;
 }
 
 .delete_role:hover {
-  color: gray;
   cursor: pointer;
 }

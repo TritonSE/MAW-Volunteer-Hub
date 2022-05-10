@@ -284,7 +284,6 @@
 
 .user_stats {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   margin-top: 20px;
 }
@@ -292,5 +291,6 @@
 @media only screen and (max-width: 900px) {
   .user_stats {
     flex-direction: column;
+    align-items: center;
   }
 }
