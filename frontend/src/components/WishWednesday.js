@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import ImageCompress from "quill-image-compress";
 import "react-quill/dist/quill.snow.css";
@@ -35,29 +35,22 @@ export default function WishWednesday() {
     errorMessage: [_error, setErrorMessage],
   } = useContext(ModalVariantsManager);
 
-  function handleWishWednesdayPost() {
-    console.log(convertedText);
+  async function handleWishWednesdayPost() {
     // ensure there is no empty post
     if (!convertedText) {
       setModalVariant();
       setErrorMessage("Cannot create an empty Wish Wednesday post");
       return;
     }
-
-    api_wish_wednesday_add(convertedText)
-      .then((res) => {
-        if (!res) {
-          throw new Error("");
-        }
-        setModalVariant("wish_wednesday_success");
-        setModalOpen(true);
-        setConvertedText("");
-      })
-      .catch((_err) => {
-        setModalVariant();
-        setErrorMessage("Unable to reach server, please try again.");
-        setModalOpen(true);
-      });
+    const res = await api_wish_wednesday_add(convertedText);
+    if (res && !res.error) {
+      setModalVariant("wish_wednesday_success");
+      setConvertedText("");
+    } else {
+      setModalVariant();
+      setErrorMessage("Unable to reach server, please try again.");
+    }
+    setModalOpen(true);
   }
   return (
     <div className="wwed_layout">
@@ -69,6 +62,7 @@ export default function WishWednesday() {
           modules={modules}
           value={convertedText}
           onChange={setConvertedText}
+          bounds=".editor_container"
         />
         <div className="button_container">
           <button

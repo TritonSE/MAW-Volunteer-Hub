@@ -11,9 +11,11 @@ router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) =>
     allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
     allowedAttributes: {
       img: ["src", "srcset", "alt", "title", "width", "height", "loading"],
+      a: ["href"],
     },
     allowedSchemesByTag: {
       img: ["data"],
+      a: ["http", "https", "ftp", "mailto", "tel"],
     },
   });
 

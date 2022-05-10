@@ -119,6 +119,7 @@ export default function Message() {
             modules={modules}
             value={convertedText}
             onChange={setConvertedText}
+            bounds=".message_meta"
           />
           <div className="button_container">
             <button className="post_announcement" type="submit" onClick={() => handleSubmit()}>

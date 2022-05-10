@@ -193,9 +193,9 @@ function ModalVariants() {
     },
     wish_wednesday_success: {
       title: " ",
+      className: "thin",
       custom: (
         <>
-          <br />
           <div className="wishgranting_modal_center">
             Your Wish Wednesday post has successfully been created! All users will be able to see
             this most recent post on the home page.
