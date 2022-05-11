@@ -20,6 +20,7 @@ const AttendeeSchema = new mongoose.Schema({
   },
 });
 
+
 const RepeatedEventSchema = new mongoose.Schema({
   date: {
     type: Date,
