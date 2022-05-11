@@ -13,6 +13,7 @@ const {
   idParamValidator,
   adminValidator,
   primaryAdminValidator,
+  roleValidator,
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 
@@ -250,9 +251,10 @@ router.get("/role/:role", (req, res) =>
     .catch(errorHandler(res))
 );
 
-// *validate if roles are valid, error response, regular response, res.json
-// *move list of roles into separate file?
-router.post("/message", adminValidator, (req, res) => {
+/**
+ * Message sending via email to all user(s) in role(s)
+ */
+router.post("/message", adminValidator, roleValidator, (req, res) => {
   // console.log(req.body);
   const roles_to_message = JSON.parse(req.body.roles);
   // console.log(roles_to_message);

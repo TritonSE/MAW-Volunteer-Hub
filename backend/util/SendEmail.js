@@ -76,7 +76,24 @@ module.exports = {
   sendEmailMessage: async (users, html, subject) => {
     const message = JSON.parse(JSON.stringify(EmailTemplate));
 
-    message.Content.Simple.Body.Html.Data = html;
+    const footer = `
+      <br/>
+      <hr>
+      <footer style="font-size:11px">
+        <p>This email (which may contain commercial content) was sent as a message from a <a href="https://wish.org/sandiego" target="_blank">
+        Make-A-Wish San Diego</a> administrator to one or more of the role(s) you are a part of in MAW. 
+        You can either login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+        website</a> or reply to this email if any action is needed. </p>
+        <p>To opt-out of such emails, you can either reply requesting the removal or deactivation 
+        of your account and associated email address from MAW OR Unsubscribe from messaging emails: 
+        {Unsubscribe}</p> 
+        <br/>
+        <p>Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
+      </footer>`;
+
+    const full_html = html + footer;
+
+    message.Content.Simple.Body.Html.Data = full_html;
     message.Content.Simple.Subject.Data = subject;
     message.Destination.ToAddresses = users;
 

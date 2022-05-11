@@ -6,6 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import "../styles/Message.css";
 import Modal from "react-modal";
 import { api_message_email } from "../api";
+import { ROLES as recipients } from "../constants/EmailRoles_fe";
 
 Modal.setAppElement("#root");
 
@@ -35,21 +36,7 @@ export default function Message() {
     ],
   };
 
-  // *move into separate file?
-  const recipients = [
-    { label: "All", value: 1 },
-    { label: "Volunteer", value: 2 },
-    { label: "Wish Granters", value: 3 },
-    { label: "Mentor", value: 4 },
-    { label: "Airport Greeter", value: 5 },
-    { label: "Office", value: 6 },
-    { label: "Special Events", value: 7 },
-    { label: "Translator", value: 8 },
-    { label: "Speaker's Bureau", value: 9 },
-    { label: "Las Estrallas", value: 10 },
-    { label: "Primary Admin", value: 11 },
-    { label: "Secondary Admin", value: 12 },
-  ];
+  // recipients in EmailRoles_fe.js
 
   const customStyles = {
     control: (base) => ({
@@ -80,7 +67,7 @@ export default function Message() {
     setSelectedRecipients(e);
   };
 
-  // message sending
+  // message sending modal and modal text
   const [modalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
 
@@ -101,6 +88,7 @@ export default function Message() {
     // console.log("Subject: " + subject);
     // console.log("Message: " + convertedText);
 
+    // if fields are empty, don't allow email sending
     if (!emptyFields()) {
       const roles_to_message = selectedRecipients
         .map((elem) => elem.label)
