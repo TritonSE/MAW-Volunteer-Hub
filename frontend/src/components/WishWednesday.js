@@ -29,6 +29,7 @@ Quill.register("modules/imageCompress", ImageCompress);
 
 export default function WishWednesday() {
   const [convertedText, setConvertedText] = useState("");
+  const [rawText, setRawText] = useState("");
   const {
     modalVariant: [_modalVariant, setModalVariant],
     open: [_modalOpen, setModalOpen],
@@ -37,15 +38,17 @@ export default function WishWednesday() {
 
   async function handleWishWednesdayPost() {
     // ensure there is no empty post
-    if (!convertedText) {
+    if (rawText.trim() === "") {
       setModalVariant();
-      setErrorMessage("Cannot create an empty Wish Wednesday post");
+      setErrorMessage("Cannot create an empty Wish Wednesday post.");
       return;
     }
+    console.log(convertedText);
     const res = await api_wish_wednesday_add(convertedText);
     if (res && !res.error) {
       setModalVariant("wish_wednesday_success");
       setConvertedText("");
+      setRawText("");
     } else {
       setModalVariant();
       setErrorMessage("Unable to reach server, please try again.");
@@ -61,7 +64,10 @@ export default function WishWednesday() {
           theme="snow"
           modules={modules}
           value={convertedText}
-          onChange={setConvertedText}
+          onChange={(content, _delta, _src, editor) => {
+            setConvertedText(content);
+            setRawText(editor.getText(content));
+          }}
           bounds=".editor_container"
         />
         <div className="button_container">

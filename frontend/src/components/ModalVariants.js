@@ -261,6 +261,7 @@ function ModalVariants() {
       isOpen={open}
       onRequestClose={() => {
         if (variant.has_close === undefined) setOpen(false);
+        if (errorMessage) setErrorMessage();
       }}
       contentLabel={variant.title}
       style={{ content: variant.style ?? {} }}
@@ -274,7 +275,10 @@ function ModalVariants() {
             <button
               type="button"
               className="wishgranting_modal_close"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                if (errorMessage) setErrorMessage();
+              }}
             >
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>

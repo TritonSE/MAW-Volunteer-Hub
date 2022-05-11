@@ -19,10 +19,15 @@ router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) =>
     },
   });
 
+  if (!cleanText || cleanText.trim() === "") {
+    res.status(400).json({ error: "Invalid Wish Wednesday post contents." });
+    return;
+  }
+
   WishWedSchema.create({
     message: cleanText,
   })
-    .then(res.json({ result: "success" }))
+    .then(res.json({ success: true }))
     .catch(errorHandler(res));
 });
 
