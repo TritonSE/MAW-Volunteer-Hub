@@ -255,13 +255,29 @@ router.post("/newmanual/:id",(req, res) =>
       .catch(errorHandler)
 );
 
-router.post("/delmanual/:id/:title",(req, res) =>
+router.post("/delmanual/:id",(req, res) =>
     UserModel.findById(req.params.id)
       .then((user) => {
         let index = user.manualEvents.findIndex(
-          (title) => title === req.params.title 
+          (title) => title === req.body.title 
         );
-        user.manualEvents.splice(index, 1)
+        user.manualEvents.splice(index, 1);
+      })
+      .then(() => res.json({ success: true }))
+      .catch(errorHandler)
+);
+
+router.patch("/editmanual/:id",(req, res) =>
+    UserModel.findById(req.params.id)
+      .then((user) => {
+        let index = user.manualEvents.findIndex(
+          (title) => title === req.params.body 
+        );
+        let man_event = user.manualEvents[index];
+        Object.entries(sanitize(req.body)).forEach(([key, value]) => {
+          man_event[key] = value;
+        });
+        return user.save();
       })
       .then(() => res.json({ success: true }))
       .catch(errorHandler)
