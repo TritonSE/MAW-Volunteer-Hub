@@ -35,18 +35,6 @@ const RepeatedEventSchema = new mongoose.Schema({
   },
 });
 
-RepeatedEventSchema.pre("save", function save(next) {
-  if (this.date && this.isModified("date")) {
-    this.date = new Date(this.date);
-
-    if (this.date === "Invalid Date") {
-      next(new Error("Invalid repeated event date."));
-    }
-  }
-
-  next();
-});
-
 const EventSchema = new mongoose.Schema({
   /**
    * REQUIRED ARGS
@@ -125,25 +113,6 @@ const EventSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-});
-
-EventSchema.pre("save", function save(next) {
-  if (this.from && this.isModified("from")) {
-    this.from = new Date(this.from);
-
-    if (this.from === "Invalid Date") {
-      next(new Error("Invalid event start date."));
-    }
-  }
-  if (this.to && this.isModified("to")) {
-    this.to = new Date(this.to);
-
-    if (this.to === "Invalid Date") {
-      next(new Error("Invalid event end date."));
-    }
-  }
-
-  next();
 });
 
 module.exports = mongoose.model("event", EventSchema);

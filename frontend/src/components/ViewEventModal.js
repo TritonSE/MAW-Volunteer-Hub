@@ -568,22 +568,30 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             )}
           </div>
         </div>
-        <div
-          className="evt_modal_footer"
-          style={{
-            opacity: event.completed ? "0.5" : "1",
-          }}
-        >
+        <div className="evt_modal_footer">
           {!event.attendees.some((att) => att.volunteer._id === currentUser._id) ? (
-            <button type="button" onClick={() => save_response(true)}>
+            <button
+              type="button"
+              onClick={() => save_response(true)}
+              disabled={event.completed || event.to < new Date()}
+            >
               Going
             </button>
           ) : (
             <div className="evt_modal_spaced">
-              <button type="button" className="unstyled" onClick={() => setConfirmModal(2)}>
+              <button
+                type="button"
+                className="unstyled"
+                onClick={() => setConfirmModal(2)}
+                disabled={event.completed || event.to < new Date()}
+              >
                 Not going
               </button>
-              <button type="button" onClick={() => save_response(true)}>
+              <button
+                type="button"
+                onClick={() => save_response(true)}
+                disabled={event.completed || event.to < new Date()}
+              >
                 Save
               </button>
             </div>

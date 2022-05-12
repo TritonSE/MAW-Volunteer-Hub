@@ -2,10 +2,14 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ReactSelect from "react-select";
-import { Calendar, DateFormatter } from "@cubedoodl/react-simple-scheduler";
+import {
+  Calendar,
+  DateFormatter,
+  dateFunctions,
+  date_format,
+} from "@cubedoodl/react-simple-scheduler";
 import RoleSelect from "./RoleSelect";
 import AssignModal from "./AssignModal";
-import DATE_UTILS from "../date";
 import ROLES from "../constants/roles";
 import { api_calendar_new, api_calendar_update } from "../api";
 import "../styles/AddEventModal.css";
@@ -83,7 +87,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     },
   ]);
 
-  useEffect(() => setTo(DATE_UTILS.copy_time(from, to)), [from]);
+  useEffect(() => setTo(dateFunctions.copy_time(from, to)), [from]);
 
   function on_open() {
     const from_tmp = currentEvent?.from ? new Date(currentEvent.from) : new Date();
@@ -149,7 +153,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setFrom(from_tmp);
     setErrorFrom();
 
-    setTo(currentEvent?.to ? new Date(currentEvent.to) : DATE_UTILS.walk_hour(new Date(), 1));
+    setTo(currentEvent?.to ? new Date(currentEvent.to) : dateFunctions.walk_hour(new Date(), 1));
     setErrorTo();
 
     setRepetitionOptions(rep_tmp);
@@ -226,54 +230,42 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     /*
      * VOLUNTEER ASSIGNMENT
      */
-    const HOUR_IN_MS = 60 * 60 * 1000;
-    const DAY_IN_MS = 24 * HOUR_IN_MS;
-    const repetitions = currentEvent?.repetitions ?? [];
-    const rep_ind = repetitions.findIndex(
-      (tmp) =>
-        /* 23-hour check is done to fix an odd client-side inaccuracy/rounding error */
-        Math.abs(tmp.date.getTime() - from.getTime()) < DAY_IN_MS - HOUR_IN_MS
+    const repetitions = (currentEvent?.repetitions ?? []).map((rep) => ({
+      ...rep,
+      attendees: rep.attendees.map(({ volunteer, guests, response }) => ({
+        volunteer: volunteer._id,
+        guests,
+        response,
+      })),
+    }));
+    const rep = repetitions.find(
+      (tmp) => dateFunctions.difference(tmp.date, from) < dateFunctions.HOUR_IN_MS
     );
 
-    if (rep_ind > -1) {
-      const tmp = [...volunteers];
-      /*
-       * If the volunteer has already responded (and may have guests),
-       *   do not overwrite
-       */
-      repetitions[rep_ind].attendees.forEach((att) => {
-        const ind = tmp.findIndex((vol) => vol._id === att.volunteer._id);
-        if (ind > -1) {
-          tmp.splice(ind, 1);
-        }
-      });
-      /*
-       * Merge the existing attendee list with the
-       *   newly-assigned volunteers
-       */
-      repetitions[rep_ind].attendees.push(
-        ...tmp.map((vol) => ({
-          volunteer: vol,
+    if (rep) {
+      const map = new Map();
+
+      volunteers.forEach(({ _id }) =>
+        map.set(_id, {
+          volunteer: _id,
           guests: [],
           response: "",
-        }))
+        })
       );
-      repetitions[rep_ind].attendees = repetitions[rep_ind].attendees.map((att) => ({
-        ...att,
-        volunteer: att.volunteer._id,
-        guests: JSON.stringify(att.guests),
-      }));
-      repetitions[rep_ind].attendees = JSON.stringify(repetitions[rep_ind].attendees);
+
+      rep.attendees.forEach((att) => {
+        map.set(att.volunteer, att);
+      });
+
+      rep.attendees = Array.from(map.values());
     } else {
       repetitions.push({
         date: from.toISOString(),
-        attendees: JSON.stringify(
-          volunteers.map((vol) => ({
-            volunteer: vol._id,
-            guests: "[]",
-            response: "",
-          }))
-        ),
+        attendees: volunteers.map((vol) => ({
+          volunteer: vol._id,
+          guests: [],
+          response: "",
+        })),
       });
     }
 
@@ -284,12 +276,12 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       from: from.toISOString(),
       to: to.toISOString(),
       name,
-      calendars: JSON.stringify(calendars.map((cal) => cal.name)),
+      calendars: calendars.map((cal) => cal.name),
       number_needed: numberNeeded,
       location: loc,
 
       repeat: repeat.value,
-      repetitions: JSON.stringify(repetitions),
+      repetitions,
 
       over18,
       under18,
@@ -340,7 +332,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               <img src="/img/calendar_date.svg" alt="Date" />
               <input
                 type="date"
-                value={DATE_UTILS.format_ymd(from)}
+                value={date_format(from, "4Y-2n-2d")}
                 onFocus={() => setCalendarVisible(true)}
                 readOnly
               />
@@ -360,7 +352,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               <FormInput
                 type="time"
                 step={60}
-                value={DATE_UTILS.format_time(from, false, false, true)}
+                value={date_format(from, "2H:2M")}
                 onChange={(e) => change_time(e, 0)}
                 error={errorFrom}
                 setError={setErrorFrom}
@@ -369,7 +361,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               <FormInput
                 type="time"
                 step={60}
-                value={DATE_UTILS.format_time(to, false, false, true)}
+                value={date_format(to, "2H:2M")}
                 onChange={(e) => change_time(e, 1)}
                 error={errorTo}
                 setError={setErrorTo}

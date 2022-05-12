@@ -6,27 +6,6 @@ const router = express.Router();
 const EventModel = require("../models/EventModel");
 const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
 
-const sanitize = (body) => {
-  try {
-    const out = body;
-    if (body.calendars) {
-      out.calendars = JSON.parse(body.calendars);
-    }
-    if (body.repetitions) {
-      out.repetitions = JSON.parse(body.repetitions);
-      out.repetitions.forEach((rep) => {
-        rep.attendees = JSON.parse(rep.attendees);
-        rep.attendees.forEach((vol) => {
-          vol.guests = JSON.parse(vol.guests);
-        });
-      });
-    }
-    return out;
-  } catch (e) {
-    return null;
-  }
-};
-
 const populate = (event) =>
   event.populate({
     path: "repetitions.attendees.volunteer",
@@ -111,7 +90,7 @@ router.put(
   "/new",
   validate(["from", "to", "name", "calendars", "number_needed", "location"], []),
   (req, res) =>
-    EventModel.create(sanitize(req.body))
+    EventModel.create(req.body)
       .then((event) => res.json({ event }))
       .catch(errorHandler(res))
 );
@@ -130,7 +109,7 @@ router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
        *   properties passed via req.body that are not listed in the
        *   event schema will not be saved to the database
        */
-      Object.entries(sanitize(req.body)).forEach(([key, value]) => {
+      Object.entries(req.body).forEach(([key, value]) => {
         event[key] = value;
       });
       return event.save();
@@ -150,52 +129,38 @@ router.post(
         const HOUR_IN_MS = 60 * 60 * 1000;
         const DAY_IN_MS = 24 * HOUR_IN_MS;
         const date = new Date(req.body.date);
-        let rep_ind = event.repetitions.findIndex(
+        const rep_ind = event.repetitions.findIndex(
           (tmp) => Math.abs(tmp.date.getTime() - date.getTime()) < DAY_IN_MS - HOUR_IN_MS
         );
-        let rep;
+
+        const att = {
+          volunteer: req.user._id,
+          guests: JSON.parse(req.body.guests),
+          response: (req.body.response ?? "").trim(),
+        };
 
         if (rep_ind > -1) {
-          rep = event.repetitions[rep_ind];
-          const tmp = rep.attendees.findIndex(
-            (att) => att.volunteer._id.toString() === req.user._id
+          const rep = event.repetitions[rep_ind];
+          const att_ind = rep.attendees.findIndex(
+            (tmp) => tmp.volunteer._id.toString() === req.user._id
           );
-
-          /*
-           * Avoid a patchwork edit by removing all of the current volunteer's info
-           * on the current event, then re-adding it as necessary
-           */
-          if (tmp > -1) {
-            rep.attendees.splice(tmp, 1);
+          if (att_ind > -1) {
+            if (req.body.going === "true") {
+              rep.attendees[att_ind] = att;
+            } else {
+              rep.attendees.splice(att_ind, 1);
+              if (rep.attendees.length === 0) {
+                event.repetitions.splice(rep_ind, 1);
+              }
+            }
+          } else if (req.body.going === "true") {
+            rep.attendees.push(att);
           }
-        } else {
-          rep_ind = event.repetitions.length;
-          rep = {
+        } else if (req.body.going === "true") {
+          event.repetitions.push({
             date,
-            attendees: [],
-          };
-          event.repetitions.push(rep);
-        }
-
-        return Promise.all([event.save(), rep_ind]);
-      })
-      .then(([event, rep_ind]) => {
-        const rep = event.repetitions[rep_ind];
-
-        if (req.body.going === "true") {
-          let guests;
-          try {
-            guests = JSON.parse(req.body.guests);
-          } catch (e) {
-            guests = [];
-          }
-          rep.attendees.push({
-            volunteer: req.user._id,
-            guests,
-            response: (req.body.response ?? "").trim(),
+            attendees: [att],
           });
-        } else if (rep.attendees.length === 0) {
-          event.repetitions.splice(rep_ind, 1);
         }
 
         return event.save();

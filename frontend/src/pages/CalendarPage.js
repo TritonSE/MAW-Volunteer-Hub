@@ -5,6 +5,7 @@ import {
   Scheduler,
   MobileScheduler,
   useArrayState,
+  dateFunctions,
 } from "@cubedoodl/react-simple-scheduler";
 import { api_calendar_all } from "../api";
 import { CurrentUser } from "../components/Contexts";
@@ -80,13 +81,7 @@ function CalendarPage() {
   const [calEnabled, setCalEnabled] = useState(ROLES.map(() => true));
 
   function unify_event(evt) {
-    const HOUR_IN_MS = 60 * 60 * 1000;
-    const DAY_IN_MS = 24 * HOUR_IN_MS;
-    let rep = evt.repetitions.find(
-      (tmp) =>
-        /* 23-hour check is done to fix an odd client-side inaccuracy/rounding error */
-        Math.abs(tmp.date.getTime() - evt.from.getTime()) < DAY_IN_MS - HOUR_IN_MS
-    );
+    let rep = evt.repetitions.find((tmp) => dateFunctions.compare_dates(tmp.date, evt.from));
     if (!rep) {
       rep = {
         date: evt.from,
