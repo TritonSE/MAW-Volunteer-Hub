@@ -72,10 +72,7 @@ const EventSchema = new mongoose.Schema({
   number_needed: {
     type: Number,
     required: true,
-    validate: [
-      (num) => !Number.isNaN(Number.parseInt(num, 10)),
-      "Event must have a valid number of volunteers needed.",
-    ],
+    min: [0, "Event must have a valid number of volunteers needed."],
   },
   location: {
     type: String,
@@ -88,10 +85,8 @@ const EventSchema = new mongoose.Schema({
   repeat: {
     type: Number,
     default: 0,
-    validate: [
-      (num) => !Number.isNaN(Number.parseInt(num, 10)) && num >= 0 && num <= 6,
-      "Event's repetition value must be in range 0 to 6",
-    ],
+    min: [0, "Event's repetition value must be in range 0 to 6"],
+    max: [6, "Event's repetition value must be in range 0 to 6"],
   },
   repetitions: {
     type: [RepeatedEventSchema],
