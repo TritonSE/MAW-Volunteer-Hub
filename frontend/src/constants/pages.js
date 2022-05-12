@@ -13,8 +13,4 @@ export const PAGES = {
     route: SITE_PAGES.MANAGE,
     needs_admin: true,
   },
-  Calendar: {
-    route: SITE_PAGES.CALENDAR,
-    needs_admin: false,
-  },
 };
