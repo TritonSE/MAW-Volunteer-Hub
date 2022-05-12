@@ -110,6 +110,13 @@ tr:nth-child(2n) .activities_table_data_end {
 .close_button {
   position: relative;
   left: 90%;
+  top: 45px;
+  border: none;
+  background: none;
+  background: url(../../public/img/close-modal.svg) no-repeat;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
 }
 
 .log_activity_form > input {

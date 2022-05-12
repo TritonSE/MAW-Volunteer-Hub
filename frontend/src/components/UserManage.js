@@ -82,11 +82,7 @@ function VerifyButtonCell({
           />
         ) : (
           modifiedRoles.map((label) => (
-            <AssignBtn
-              label={label}
-              key={Math.random()}
-              onClick={() => handleRoleBtnClick(label)}
-            />
+            <AssignBtn label={label} key={Math.random()} onClick={() => setRolesModalOpen(true)} />
           ))
         )}
       </ScrollContainer>

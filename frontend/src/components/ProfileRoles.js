@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
+import Modal from "react-modal";
 import AssignBtn from "./AssignBtn";
 import RolesModal from "./RolesModal";
 import { api_update_roles } from "../auth";
@@ -8,12 +9,19 @@ import "../styles/ProfileRoles.css";
 
 export default function ProfileRoles(props) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletedRole, setDeletedRole] = useState("");
 
   function deleteRole(role) {
     const newRoles = props.roles.filter((aRole) => aRole !== role);
     api_update_roles(props.id, JSON.stringify(newRoles));
+    setDeletedRole(role);
+    setDeleteModalOpen(true);
+  }
+
+  function closeAndRefresh() {
+    setDeleteModalOpen(false);
     document.location.reload();
-    alert("The `" + role + "` role has been removed");
   }
 
   return (
@@ -38,7 +46,8 @@ export default function ProfileRoles(props) {
               <AssignBtn
                 label={role}
                 key={Math.random()}
-                onClick={() => alert(role + " clicked")}
+                // Display role description when volunteers click?
+                onClick={props.admin ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(role)}
                 admin={props.admin}
               />
@@ -52,6 +61,22 @@ export default function ProfileRoles(props) {
         roles={props.roles}
         id={props.id}
       />
+
+      <Modal
+        className="delete_confirmation_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={deleteModalOpen}
+        onRequestClose={() => closeAndRefresh()}
+        contentLabel="Delete Confirmation Modal"
+      >
+        <button
+          className="close_button_delete"
+          aria-label="close_button_delete"
+          type="button"
+          onClick={() => closeAndRefresh()}
+        />
+        <p>{"The `" + deletedRole + "` role has been removed"}</p>
+      </Modal>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { api_update_roles } from "../auth";
+import "../styles/RolesModal.css";
 
 const nonAdminRoles = [
   "Wish Granter",
@@ -47,8 +48,8 @@ export default function RolesModal(props) {
       contentLabel="Add Roles Modal"
     >
       <button
-        className="close_button"
-        aria-label="close_button"
+        className="roles_close_button"
+        aria-label="roles_close_button"
         type="button"
         onClick={() => props.setOpen(false)}
       />
