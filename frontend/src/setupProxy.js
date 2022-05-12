@@ -44,7 +44,7 @@ module.exports = (app) => {
     })
   );
   app.use(
-    "/cal",
+    "/wishwed",
     createProxyMiddleware({
       target: "http://localhost:5000",
       changeOrigin: true,

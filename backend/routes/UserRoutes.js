@@ -25,7 +25,6 @@ const upload = multer({
 // returns all users
 router.get("/users", (req, res) =>
   UserModel.find()
-    .populate("events")
     .then((users) => res.json({ users }))
     .catch(errorHandler(res))
 );
