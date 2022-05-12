@@ -10,13 +10,14 @@ const ManualEventSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    minlength: 1,
   },
   hours: {
     type: Number,
     required: true,
     validate: [
       (num) => !Number.isNaN(Number.parseInt(num, 10)) && num >= 0,
-      "Event must have a valid number of volunteers needed.",
+      "Event must have a valid duration.",
     ],
   },
 });
@@ -68,20 +69,13 @@ const UserSchema = new mongoose.Schema(
       // required: true
     },
     /**
-     * MANUAL EVENT 
+     * EVENTS
      */
     manualEvents: {
       type: [ManualEventSchema],
       default: [],
     },
-    events: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "event",
-      },
-    ],
   },
-  
   { timestamps: true }
 );
 
