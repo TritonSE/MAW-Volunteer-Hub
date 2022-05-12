@@ -84,8 +84,7 @@ module.exports = {
         Make-A-Wish San Diego</a> administrator to one or more of the role(s) you are a part of in MAW. 
         You can either login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
         website</a> or reply to this email if any action is needed. </p>
-        <p>To opt-out of such emails, you can either reply requesting the removal or deactivation 
-        of your account and associated email address from MAW OR Unsubscribe from messaging emails: 
+        <p>To opt-out of such emails, you can either reply requesting {something} from {something} OR Unsubscribe from messaging emails: 
         {Unsubscribe}</p> 
         <br/>
         <p>Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
@@ -93,8 +92,11 @@ module.exports = {
 
     const full_html = html + footer;
 
+    const intro = "Message from MAW: ";
+    const full_subject = intro + subject;
+
     message.Content.Simple.Body.Html.Data = full_html;
-    message.Content.Simple.Subject.Data = subject;
+    message.Content.Simple.Subject.Data = full_subject;
     message.Destination.ToAddresses = users;
 
     const command = new SendEmailCommand(message);

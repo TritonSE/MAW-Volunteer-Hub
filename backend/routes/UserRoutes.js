@@ -254,7 +254,7 @@ router.get("/role/:role", (req, res) =>
 /**
  * Message sending via email to all user(s) in role(s)
  */
-router.post("/message", adminValidator, roleValidator, (req, res) => {
+router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
   // console.log(req.body);
   const roles_to_message = JSON.parse(req.body.roles);
   // console.log(roles_to_message);
