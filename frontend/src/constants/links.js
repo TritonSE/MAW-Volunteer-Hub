@@ -41,6 +41,7 @@ const API_ENDPOINTS = {
   PFP_UPLOAD: "/user/pfp/upload",
 
   WISH_WEDNESDAY: "/wishwed/latest",
+  WISH_WEDNESDAY_ADD: "/wishwed/add",
 };
 
 const SIDENAV_STEPS = [
@@ -58,9 +59,11 @@ const SIDENAV_ROUTES = [
   "wish-closeout",
 ];
 
-// const MANAGE_STEPS = ["People", "Messages", "Wish Wednesday"];
-const MANAGE_STEPS = ["People"];
-
+// re add message when completed
+// const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 // const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
-const MANAGE_ROUTES = ["people"];
+
+const MANAGE_STEPS = ["People", "Wish Wednesday"];
+const MANAGE_ROUTES = ["people", "wish-wednesday"];
+
 export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };
