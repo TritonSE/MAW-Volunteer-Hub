@@ -50,6 +50,7 @@ export default function ProfileRoles(props) {
                 onClick={props.admin ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(role)}
                 admin={props.admin}
+                profilePage
               />
             ))
           : ["No Roles"]}

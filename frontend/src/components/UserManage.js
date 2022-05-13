@@ -79,10 +79,18 @@ function VerifyButtonCell({
             label="Assign Role"
             key={Math.random()}
             onClick={() => setRolesModalOpen(true)}
+            admin
+            profilePage={false}
           />
         ) : (
           modifiedRoles.map((label) => (
-            <AssignBtn label={label} key={Math.random()} onClick={() => setRolesModalOpen(true)} />
+            <AssignBtn
+              label={label}
+              key={Math.random()}
+              onClick={() => setRolesModalOpen(true)}
+              admin
+              profilePage={false}
+            />
           ))
         )}
       </ScrollContainer>

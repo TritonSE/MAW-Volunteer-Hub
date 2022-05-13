@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: row;
   align-items: flex-start;
+  justify-content: center;
   min-width: 105px;
   margin-left: 5px;
 
@@ -43,6 +44,10 @@
 
 .btn_assign:hover {
   cursor: pointer;
+}
+
+.no_hover:hover {
+  cursor: default;
 }
 
 .btn_access {
@@ -121,7 +126,7 @@
   border: 0px;
   position: relative;
   color: gray;
-  right: 24px;
+  right: 22px;
   width: 0px;
 }
 
