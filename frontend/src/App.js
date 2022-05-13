@@ -16,6 +16,8 @@ import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import CalendarPage from "./pages/CalendarPage";
 import HomePage from "./pages/HomePage";
+import Message from "./components/Message";
+import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 
@@ -23,7 +25,8 @@ import "./App.css";
 
 import UserManage from "./components/UserManage";
 
-const MANAGE_COMPONENTS = [<UserManage />, <div>Message</div>, <div>Wish Wednesday</div>];
+// const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
+const MANAGE_COMPONENTS = [<UserManage />, <WishWednesday />];
 
 function ProtectedRoute({
   needsPrimaryAdmin = false,
@@ -36,10 +39,13 @@ function ProtectedRoute({
   const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
   if (doCheck) {
-    useEffect(async () => {
-      const res = await api_validtoken();
-      setCurrentUser(res ? res.user : null);
-      setHasFired(true);
+    useEffect(() => {
+      async function handleValidation() {
+        const res = await api_validtoken();
+        setCurrentUser(res ? res.user : null);
+        setHasFired(true);
+      }
+      handleValidation();
     }, []);
   } else {
     useEffect(() => {
@@ -57,9 +63,12 @@ function ProtectedRoute({
 function SignoutHelper() {
   const [_currentUser, setCurrentUser] = useContext(CurrentUser);
 
-  useEffect(async () => {
-    await api_signout();
-    setCurrentUser();
+  useEffect(() => {
+    async function handleSignOut() {
+      await api_signout();
+      setCurrentUser();
+    }
+    handleSignOut();
   }, []);
 
   return <Navigate to={SITE_PAGES.LOGIN} />;

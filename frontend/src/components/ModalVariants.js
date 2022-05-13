@@ -8,6 +8,7 @@ import {
   api_file_update,
   api_file_delete,
 } from "../api";
+import history from "../history";
 import { FileStructure, ModalVariantsManager } from "./Contexts";
 import "../styles/ModalVariants.css";
 
@@ -190,6 +191,31 @@ function ModalVariants() {
         </>
       ),
     },
+    wish_wednesday_success: {
+      title: " ",
+      className: "thin",
+      custom: (
+        <>
+          <div className="wishgranting_modal_center">
+            Your Wish Wednesday post has successfully been created! All users will be able to see
+            this most recent post on the home page.
+          </div>
+          <br />
+          <div className="wishgranting_modal_center thin center">
+            <button
+              type="button"
+              className="wishgranting_modal_button primary"
+              onClick={() => {
+                history.push("/");
+                setOpen(false);
+              }}
+            >
+              View
+            </button>
+          </div>
+        </>
+      ),
+    },
   };
 
   /**
@@ -235,6 +261,7 @@ function ModalVariants() {
       isOpen={open}
       onRequestClose={() => {
         if (variant.has_close === undefined) setOpen(false);
+        if (errorMessage) setErrorMessage();
       }}
       contentLabel={variant.title}
       style={{ content: variant.style ?? {} }}
@@ -248,7 +275,10 @@ function ModalVariants() {
             <button
               type="button"
               className="wishgranting_modal_close"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                if (errorMessage) setErrorMessage();
+              }}
             >
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>

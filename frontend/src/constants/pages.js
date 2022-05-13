@@ -15,6 +15,6 @@ export const PAGES = {
   },
   Calendar: {
     route: SITE_PAGES.CALENDAR,
-    needs_admin: false,
+    needs_admin: true,
   },
 };

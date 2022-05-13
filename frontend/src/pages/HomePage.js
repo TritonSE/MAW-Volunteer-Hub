@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/HomePage.css";
+import parse from "html-react-parser";
 import { api_wish_wednesday } from "../api";
 
 function HomePage() {
@@ -23,7 +24,7 @@ function HomePage() {
       </div>
       {!loading && (
         <div>
-          <p id="wish-wednesday-title">
+          <h2 id="wish-wednesday-title">
             Wish Wednesday [{new Date(date).toLocaleDateString("en-US")}]
             {/*
               Temporarily removed due to unspecified functionality
@@ -31,9 +32,8 @@ function HomePage() {
                 <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
               </button> 
             */}
-          </p>
-          <img src="/img/filler-img.png" alt="Wish wednesday header" className="body-image" />
-          <p>{message}</p>
+          </h2>
+          <div id="wish-wednesday-post">{parse(message)}</div>
         </div>
       )}
     </div>

@@ -1,0 +1,53 @@
+.wwed_layout {
+  padding: 0 30px 10px;
+}
+
+.wwed_layout .title {
+  font-family: "Lato";
+  font-weight: 700;
+  font-size: 24px;
+  margin: 25px auto;
+}
+
+.wwed_layout .editor_container {
+  background: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  padding: 5px 35px;
+}
+
+.editor_container .md_editor {
+  margin: 30px 0px;
+}
+
+.md_editor .ql-container,
+.md_editor .ql-toolbar,
+.md_editor .ql-editor {
+  font-family: "Lato", sans-serif;
+}
+
+.editor_container .button_container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.button_container .post_announcement {
+  width: 100px;
+  height: 25px;
+  border-radius: 3px;
+  background: #1a68bf;
+  border: none;
+
+  font-family: "Lato", sans-serif;
+  margin-bottom: 40px;
+
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 795px) {
+  .wwed_layout {
+    height: calc(90vh - 63px);
+  }
+}

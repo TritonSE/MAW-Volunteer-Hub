@@ -25,7 +25,6 @@ const upload = multer({
 // returns all users
 router.get("/users", (req, res) =>
   UserModel.find()
-    .populate("events")
     .then((users) => res.json({ users }))
     .catch(errorHandler(res))
 );
@@ -236,5 +235,77 @@ router.get("/role/:role", (req, res) =>
     .then((users) => res.json(users))
     .catch(errorHandler(res))
 );
+
+router.post("/newmanual/:id", (req, res) => {
+  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+    res.status(403).json({ error: "Access denied. " });
+    return;
+  }
+
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      const date = new Date(req.body.date);
+      const title = req.body.title;
+      const hours = Number.parseInt(req.body.hours, 10);
+
+      if (date === "Invalid Date") {
+        throw new Error("Invalid event date.");
+      }
+      if (title.trim() === "") {
+        throw new Error("Invalid event title.");
+      }
+      if (Number.isNaN(hours) || hours < 0) {
+        throw new Error("Invalid event duration.");
+      }
+
+      user.manualEvents.push({
+        date,
+        title,
+        hours,
+      });
+      return user.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler);
+});
+
+router.delete("/delmanual/:id/:event_id", (req, res) => {
+  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+    res.status(403).json({ error: "Access denied. " });
+    return;
+  }
+
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      const index = user.manualEvents.findIndex(
+        ({ _id }) => _id.toString() === req.params.event_id
+      );
+      user.manualEvents.splice(index, 1);
+      return user.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler);
+});
+
+router.patch("/editmanual/:id/:event_id", (req, res) => {
+  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+    res.status(403).json({ error: "Access denied. " });
+    return;
+  }
+
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      const index = user.manualEvents.findIndex(
+        ({ _id }) => _id.toString() === req.params.event_id
+      );
+      const man_event = user.manualEvents[index];
+      Object.entries(req.body).forEach(([key, value]) => {
+        man_event[key] = value;
+      });
+      return user.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler);
+});
 
 module.exports = router;

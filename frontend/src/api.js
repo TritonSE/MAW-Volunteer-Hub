@@ -210,6 +210,9 @@ const api_calendar_respond = (id, going, date, guests, response) =>
 
 const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
 
+const api_wish_wednesday_add = (message) =>
+  api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
+
 export {
   api_validtoken,
   api_login,
@@ -240,4 +243,5 @@ export {
   api_calendar_update,
   api_calendar_respond,
   api_wish_wednesday,
+  api_wish_wednesday_add,
 };
