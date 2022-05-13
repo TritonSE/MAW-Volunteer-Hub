@@ -24,7 +24,8 @@ import "./App.css";
 
 import UserManage from "./components/UserManage";
 
-const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
+// const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
+const MANAGE_COMPONENTS = [<UserManage />, <WishWednesday />];
 
 function ProtectedRoute({
   needsPrimaryAdmin = false,
@@ -38,12 +39,12 @@ function ProtectedRoute({
 
   if (doCheck) {
     useEffect(() => {
-      async function handleAPI() {
+      async function handleValidation() {
         const res = await api_validtoken();
         setCurrentUser(res ? res.user : null);
         setHasFired(true);
       }
-      handleAPI();
+      handleValidation();
     }, []);
   } else {
     useEffect(() => {

@@ -1,14 +1,33 @@
 const express = require("express");
+const sanitizeHtml = require("sanitize-html");
 const WishWedSchema = require("../models/WishWednesday");
 const { validate, primaryAdminValidator, errorHandler } = require("../util/RouteUtils");
 
 const router = express.Router();
 
 router.post("/add/", primaryAdminValidator, validate(["message"]), (req, res) => {
+  // need to sanitize html here
+  const cleanText = sanitizeHtml(req.body.message, {
+    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img"]),
+    allowedAttributes: {
+      img: ["src", "srcset", "alt", "title", "width", "height", "loading"],
+      a: ["href"],
+    },
+    allowedSchemesByTag: {
+      img: ["data"],
+      a: ["http", "https", "ftp", "mailto", "tel"],
+    },
+  });
+
+  if (!cleanText || cleanText.trim() === "") {
+    res.status(400).json({ error: "Invalid Wish Wednesday post contents." });
+    return;
+  }
+
   WishWedSchema.create({
-    message: req.body.message,
+    message: cleanText,
   })
-    .then(res.json({ result: "success" }))
+    .then(res.json({ success: true }))
     .catch(errorHandler(res));
 });
 

@@ -171,7 +171,7 @@ function ProfilePage() {
   }, [imgRef]);
 
   useEffect(() => {
-    async function handleAPI() {
+    async function handleUserInfo() {
       if (!id) {
         setUser(currentUser);
         setIsCurrentUser(true);
@@ -185,7 +185,7 @@ function ProfilePage() {
         }
       }
     }
-    handleAPI();
+    handleUserInfo();
   }, [id]);
 
   useEffect(() => {

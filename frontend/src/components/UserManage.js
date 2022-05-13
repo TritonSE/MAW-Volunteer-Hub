@@ -150,14 +150,14 @@ export default function UserManage() {
 
   // Get user data from backend
   useEffect(() => {
-    async function handleAPI() {
+    async function fetchUsers() {
       const res = await api_user_all();
       if (res && !res.error) {
         setUserData(res.users);
         setHasFetched(true);
       }
     }
-    handleAPI();
+    fetchUsers();
   }, []);
 
   const updateMyData = (rowIndex, columnId, value) => {
