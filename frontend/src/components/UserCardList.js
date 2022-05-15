@@ -3,7 +3,14 @@ import { Link } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
-function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
+function UserCard({
+  user,
+  row,
+  VerifyButtonCell,
+  updateMyData,
+  updateMyRoles,
+  handleConfirmationModal,
+}) {
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
@@ -24,6 +31,7 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
           column={{ id: "verified" }}
           handleConfirmationModal={handleConfirmationModal}
           updateMyData={updateMyData}
+          updateMyRoles={updateMyRoles}
           isVerified={user.verified}
           name={user.name}
           roles={user.roles}

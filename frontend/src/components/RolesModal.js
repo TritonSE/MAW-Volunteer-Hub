@@ -20,8 +20,18 @@ const adminRoles = ["Primary Admin", "Secondary Admin"];
 export default function RolesModal(props) {
   const [selectedRoles, setSelectedRoles] = useState(props.roles);
 
-  function addRoles() {
-    api_update_roles(props.id, JSON.stringify(selectedRoles));
+  function handleManagePageUpdate() {
+    props.setRoles(selectedRoles);
+    props.updateMyRoles(selectedRoles);
+  }
+
+  function addRoles(e) {
+    e.preventDefault();
+    // Update manage page with local data.
+    api_update_roles(props.id, JSON.stringify(selectedRoles)).then(
+      props.manage ? handleManagePageUpdate() : props.rolesChanged(true)
+    );
+    props.setOpen(false);
   }
 
   // Modifies selectedRoles
@@ -53,7 +63,7 @@ export default function RolesModal(props) {
         type="button"
         onClick={() => props.setOpen(false)}
       />
-      <form className="add_roles_form" onSubmit={() => addRoles()}>
+      <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
         <h2>Assign Role</h2>
         {nonAdminRoles.map((role) => (
           <div className="role_choice" key={Math.random()}>

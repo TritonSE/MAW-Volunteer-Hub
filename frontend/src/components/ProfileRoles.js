@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Modal from "react-modal";
 import AssignBtn from "./AssignBtn";
@@ -11,18 +11,19 @@ export default function ProfileRoles(props) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletedRole, setDeletedRole] = useState("");
+  const [roles, setRoles] = useState(props.roles);
 
   function deleteRole(role) {
     const newRoles = props.roles.filter((aRole) => aRole !== role);
     api_update_roles(props.id, JSON.stringify(newRoles));
     setDeletedRole(role);
     setDeleteModalOpen(true);
+    setRoles(newRoles);
   }
 
-  function closeAndRefresh() {
-    setDeleteModalOpen(false);
-    document.location.reload();
-  }
+  useEffect(() => {
+    setRoles(props.roles);
+  }, [props.roles]);
 
   return (
     <div className="roles_container">
@@ -41,8 +42,8 @@ export default function ProfileRoles(props) {
       </div>
 
       <ScrollContainer className="roles_scroller" vertical={false}>
-        {props.roles.length > 0
-          ? props.roles.map((role) => (
+        {roles.length > 0
+          ? roles.map((role) => (
               <AssignBtn
                 label={role}
                 key={Math.random()}
@@ -59,22 +60,23 @@ export default function ProfileRoles(props) {
       <RolesModal
         open={rolesModalOpen}
         setOpen={setRolesModalOpen}
-        roles={props.roles}
+        roles={roles}
         id={props.id}
+        rolesChanged={props.rolesChanged}
       />
 
       <Modal
         className="delete_confirmation_modal"
         overlayClassName="add_roles_modal_overlay"
         isOpen={deleteModalOpen}
-        onRequestClose={() => closeAndRefresh()}
+        onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Confirmation Modal"
       >
         <button
           className="close_button_delete"
           aria-label="close_button_delete"
           type="button"
-          onClick={() => closeAndRefresh()}
+          onClick={() => setDeleteModalOpen(false)}
         />
         <p>{"The `" + deletedRole + "` role has been removed"}</p>
       </Modal>

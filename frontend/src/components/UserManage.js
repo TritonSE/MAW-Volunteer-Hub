@@ -10,6 +10,7 @@ import { SITE_PAGES } from "../constants/links";
 import { api_user_all, api_user_verify } from "../api";
 
 import "../styles/UserManage.css";
+import { api_user_info } from "../auth";
 
 Modal.setAppElement(document.getElementById("root"));
 
@@ -19,6 +20,7 @@ function VerifyButtonCell({
   row: { index },
   column: { id },
   updateMyData,
+  updateMyRoles,
   handleConfirmationModal,
   roles,
   user_id,
@@ -37,10 +39,14 @@ function VerifyButtonCell({
     setIsVerifiedState(true);
   }
 
+  const handleRolesUpdate = (selectedRoles) => {
+    updateMyRoles(index, "roles", selectedRoles);
+  };
+
   function getModifiedRoles() {
-    if (admin === 1) {
+    if (admin === 1 && roles[1] !== "Secondary Admin") {
       setModifiedRoles(["Secondary Admin", ...roles]);
-    } else if (admin === 2) {
+    } else if (admin === 2 && roles[0] !== "Primary Admin") {
       setModifiedRoles(["Primary Admin", "Secondary Admin", ...roles]);
     }
   }
@@ -66,6 +72,7 @@ function VerifyButtonCell({
         <AssignBtn
           label="Allow Access"
           key={Math.random()}
+          admin
           onClick={() => handleRoleBtnClick("Allow Access")}
         />
       </ScrollContainer>
@@ -99,6 +106,9 @@ function VerifyButtonCell({
         setOpen={setRolesModalOpen}
         roles={modifiedRoles}
         id={user_id}
+        manage
+        setRoles={setModifiedRoles}
+        updateMyRoles={handleRolesUpdate}
       />
     </div>
   );
@@ -187,6 +197,23 @@ export default function UserManage() {
     );
   };
 
+  const updateMyRoles = (rowIndex, columnId, value) => {
+    setUserData((old) =>
+      old.map((row, index) => {
+        if (index === rowIndex) {
+          api_user_info(row._id).then((res) => {
+            if (!res || res.error) navigate(window.location);
+          });
+          return {
+            ...old[rowIndex],
+            [columnId]: value,
+          };
+        }
+        return row;
+      })
+    );
+  };
+
   const handleConfirmationModal = ({ name, isOpen }) => {
     setModalState({ name, isOpen });
   };
@@ -207,6 +234,7 @@ export default function UserManage() {
           tableHeaders={headers}
           userData={userData}
           updateMyData={updateMyData}
+          updateMyRoles={updateMyRoles}
           handleConfirmationModal={handleConfirmationModal}
           filter={filter}
           setFilter={setFilter}
@@ -216,6 +244,7 @@ export default function UserManage() {
           userData={userData}
           VerifyButtonCell={VerifyButtonCell}
           updateMyData={updateMyData}
+          updateMyRoles={updateMyRoles}
           handleConfirmationModal={handleConfirmationModal}
           filter={filter}
           setFilter={setFilter}
