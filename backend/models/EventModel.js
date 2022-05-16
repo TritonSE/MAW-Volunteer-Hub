@@ -21,13 +21,9 @@ const AttendeeSchema = new mongoose.Schema({
 });
 
 const RepeatedEventSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-  },
   attendees: {
-    type: [AttendeeSchema],
-    default: [],
+    type: Map,
+    of: AttendeeSchema,
   },
   completed: {
     type: Boolean,
@@ -89,8 +85,8 @@ const EventSchema = new mongoose.Schema({
     max: [6, "Event's repetition value must be in range 0 to 6"],
   },
   repetitions: {
-    type: [RepeatedEventSchema],
-    default: [],
+    type: Map,
+    of: RepeatedEventSchema,
   },
 
   /**

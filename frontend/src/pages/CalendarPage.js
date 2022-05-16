@@ -5,7 +5,6 @@ import {
   Scheduler,
   MobileScheduler,
   useArrayState,
-  dateFunctions,
 } from "@cubedoodl/react-simple-scheduler";
 import { api_calendar_all } from "../api";
 import { CurrentUser } from "../components/Contexts";
@@ -81,11 +80,11 @@ function CalendarPage() {
   const [calEnabled, setCalEnabled] = useState(ROLES.map(() => true));
 
   function unify_event(evt) {
-    let rep = evt.repetitions.find((tmp) => dateFunctions.compare_dates(tmp.date, evt.from));
+    const date = evt.from.toDateString();
+    let rep = evt.repetitions[date];
     if (!rep) {
       rep = {
-        date: evt.from,
-        attendees: [],
+        attendees: {},
       };
     }
 
@@ -101,7 +100,7 @@ function CalendarPage() {
 
     if (!css) return { display: "none" };
 
-    if (!currentUser.admin && !ev.attendees.some((att) => att.volunteer._id === currentUser._id)) {
+    if (!currentUser.admin && !ev.attendees[currentUser._id]) {
       return {
         background: "white",
         color: css.color,
@@ -127,10 +126,6 @@ function CalendarPage() {
       from: new Date(ev.from),
       to: new Date(ev.to),
       calendar: sanitize_calendars(ev.calendars),
-      repetitions: ev.repetitions.map((rep) => ({
-        ...rep,
-        date: new Date(rep.date),
-      })),
       style: (e) => style_from_event(e),
     };
   }

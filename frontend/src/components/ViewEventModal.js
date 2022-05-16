@@ -202,20 +202,26 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
   const [guestsCount, setGuestsCount] = useState(0);
   const [tooltipVisible, setTooltipVisible] = useState(false);
 
-  useEffect(() => {
-    const ind = event.attendees.findIndex((att) => att.volunteer._id === currentUser._id);
+  const [attendeesArray, setAttendeesArray] = useState([]);
 
-    if (ind > -1 && event.attendees[ind].guests.length > 0) {
-      setGuests(event.attendees[ind].guests);
+  useEffect(() => {
+    const att = event.attendees[currentUser._id];
+
+    if (att && att.guests.length > 0) {
+      setGuests(att.guests);
       setHasGuests(true);
     }
 
-    setResponse(event.attendees[ind]?.response ?? "");
+    setResponse(att?.response ?? "");
 
-    setGuestsCount(event.attendees.reduce((prev, next) => prev + next.guests.length, 0));
+    setGuestsCount(
+      Object.values(event.attendees).reduce((prev, next) => prev + next.guests.length, 0)
+    );
   }, []);
 
   useEffect(() => setHasChanges(hasChanges + 1), [hasGuests, guests, response]);
+
+  useEffect(() => setAttendeesArray(Object.values(event.attendees)), [event]);
 
   async function save_response(going) {
     if (going && hasGuests) {
@@ -239,7 +245,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
     const res = await api_calendar_respond(
       event._id,
       going,
-      event.from.toISOString(),
+      event.from.toDateString(),
       guests,
       response
     );
@@ -366,7 +372,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   View who is going
                 </button>
                 <div className="question_info smallskip">
-                  {guestsCount + event.attendees.length}/{event.number_needed} spots filled
+                  {guestsCount + attendeesArray.length}/{event.number_needed} spots filled
                 </div>
               </div>
             </div>
@@ -375,7 +381,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           <div className="evt_modal_scroll">
             {!responseView ? (
               <>
-                {event.attendees
+                {attendeesArray
                   .filter((att) => att.response.length > 0)
                   .map((att) => (
                     <button
@@ -393,7 +399,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                       </div>
                     </button>
                   ))}
-                {event.attendees.filter((att) => att.response.length > 0).length === 0 ? (
+                {attendeesArray.filter((att) => att.response.length > 0).length === 0 ? (
                   <div className="evt_modal_center">
                     <div>No responses yet.</div>
                   </div>
@@ -444,10 +450,10 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             <div className="columns non_responsive">
               <div>
                 <div className="gentle">
-                  {event.attendees.length} Volunteer{event.attendees.length !== 1 ? "s" : ""}
+                  {attendeesArray.length} Volunteer{attendeesArray.length !== 1 ? "s" : ""}
                 </div>
                 <br />
-                {event.attendees.map((att) => (
+                {attendeesArray.map((att) => (
                   <div key={att.volunteer._id}>
                     <div className="very-gentle">{att.volunteer.name}</div>
                     <div className="indented">
@@ -467,7 +473,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                   {guestsCount} Guest{guestsCount !== 1 ? "s" : ""}
                 </div>
                 <br />
-                {event.attendees.map((att) => (
+                {attendeesArray.map((att) => (
                   <div key={att.volunteer._id}>
                     <br />
                     {att.guests.map((guest) => (
@@ -482,7 +488,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               </div>
             </div>
           </div>
-          {event.attendees.length > 0 ? <br /> : null}
+          {attendeesArray.length > 0 ? <br /> : null}
         </Modal>
       </>
     );
@@ -513,7 +519,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
         <div className="evt_modal_content nonflex spaced">
           <div>
             <div className="spots_filled">
-              {guestsCount + event.attendees.length}/{event.number_needed} spots filled
+              {guestsCount + attendeesArray.length}/{event.number_needed} spots filled
             </div>
 
             <div className="prop">
@@ -557,9 +563,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <br />
                 <textarea
                   placeholder="Type your response here..."
-                  defaultValue={
-                    event.attendees.find((att) => att.volunteer._id === currentUser._id)?.response
-                  }
+                  defaultValue={event.attendees[currentUser._id]?.response}
                   onChange={(e) => setResponse(e.target.value)}
                 />
               </>
@@ -569,29 +573,16 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
           </div>
         </div>
         <div className="evt_modal_footer">
-          {!event.attendees.some((att) => att.volunteer._id === currentUser._id) ? (
-            <button
-              type="button"
-              onClick={() => save_response(true)}
-              disabled={event.completed || event.to < new Date()}
-            >
+          {!event.attendees[currentUser._id] ? (
+            <button type="button" onClick={() => save_response(true)}>
               Going
             </button>
           ) : (
             <div className="evt_modal_spaced">
-              <button
-                type="button"
-                className="unstyled"
-                onClick={() => setConfirmModal(2)}
-                disabled={event.completed || event.to < new Date()}
-              >
+              <button type="button" className="unstyled" onClick={() => setConfirmModal(2)}>
                 Not going
               </button>
-              <button
-                type="button"
-                onClick={() => save_response(true)}
-                disabled={event.completed || event.to < new Date()}
-              >
+              <button type="button" onClick={() => save_response(true)}>
                 Save
               </button>
             </div>

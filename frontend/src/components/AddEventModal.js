@@ -167,7 +167,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
 
-    setVolunteers((currentEvent?.attendees ?? []).map((att) => att.volunteer));
+    setVolunteers(Object.values(currentEvent?.attendees ?? {}).map((att) => att.volunteer));
 
     setLoc(currentEvent?.location ?? "");
     setErrorLoc();
@@ -230,44 +230,24 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     /*
      * VOLUNTEER ASSIGNMENT
      */
-    const repetitions = (currentEvent?.repetitions ?? []).map((rep) => ({
-      ...rep,
-      attendees: rep.attendees.map(({ volunteer, guests, response }) => ({
-        volunteer: volunteer._id,
-        guests,
-        response,
-      })),
-    }));
-    const rep = repetitions.find(
-      (tmp) => dateFunctions.difference(tmp.date, from) < dateFunctions.HOUR_IN_MS
-    );
+    const date = from.toDateString();
+    /* Deep clone via new JS API */
+    const repetitions = structuredClone(currentEvent.repetitions);
+    const rep = repetitions[date] ?? {
+      attendees: {},
+      completed: false,
+    };
 
-    if (rep) {
-      const map = new Map();
+    volunteers.forEach(({ _id }) => {
+      /* Nullish assignment via new JS operator */
+      rep.attendees[_id] ??= {
+        volunteer: _id,
+        guests: [],
+        response: "",
+      };
+    });
 
-      volunteers.forEach(({ _id }) =>
-        map.set(_id, {
-          volunteer: _id,
-          guests: [],
-          response: "",
-        })
-      );
-
-      rep.attendees.forEach((att) => {
-        map.set(att.volunteer, att);
-      });
-
-      rep.attendees = Array.from(map.values());
-    } else {
-      repetitions.push({
-        date: from.toISOString(),
-        attendees: volunteers.map((vol) => ({
-          volunteer: vol._id,
-          guests: [],
-          response: "",
-        })),
-      });
-    }
+    repetitions[date] = rep;
 
     /*
      * API REQUEST

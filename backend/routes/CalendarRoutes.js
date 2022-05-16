@@ -4,13 +4,32 @@ const ical = require("ical-generator");
 const router = express.Router();
 
 const EventModel = require("../models/EventModel");
+const UserModel = require("../models/UserModel");
 const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
 
 const populate = (event) =>
   event.populate({
-    path: "repetitions.attendees.volunteer",
+    path: "repetitions.$*.attendees.$*.volunteer",
     model: "user",
   });
+
+const bulk_modify = (event, remove = false) => {
+  const bulk = UserModel.collection.initializeUnorderedBulkOp();
+  const op = {};
+  op[remove ? "$pull" : "$addToSet"] = {
+    events: event._id,
+  };
+
+  (event?.attendees ?? []).forEach(({ volunteer }) => {
+    bulk.find.updateOne(
+      {
+        _id: volunteer,
+      },
+      op
+    );
+  });
+  return event?.attendees?.length > 0 ? bulk.execute() : null;
+};
 
 router.get("/all", (req, res) =>
   populate(EventModel.find())
@@ -22,8 +41,8 @@ router.get("/all", (req, res) =>
       let do_push = false;
 
       events.forEach((evt) => {
-        evt.repetitions.forEach((rep) => {
-          if (rep.date.getTime() <= now) {
+        Array.from(evt.repetitions.values()).forEach((rep) => {
+          if (new Date(rep.date).getTime() <= now) {
             rep.completed = true;
             do_push = true;
           }
@@ -53,12 +72,14 @@ router.get("/ics/:calendar?", (req, res) =>
           return req.params.calendar === evt.calendar;
         })
         .forEach((evt) => {
-          evt.repetitions.forEach((rep) => {
+          Array.from(evt.repetitions.values()).forEach((rep) => {
+            const start = new Date(rep.date);
             const end = new Date(rep.date);
+            start.setHours(evt.from.getHours(), evt.from.getHours(), 0);
             end.setHours(evt.to.getHours(), evt.to.getMinutes(), 0);
 
             const cal_event = calendar.createEvent({
-              start: rep.date,
+              start,
               end,
               timezone: "America/Los_Angeles",
               summary: evt.name,
@@ -66,7 +87,7 @@ router.get("/ics/:calendar?", (req, res) =>
               location: evt.location,
             });
 
-            rep.attendees.forEach((att) => {
+            Array.from(rep.attendees.values()).forEach((att) => {
               cal_event.createAttendee({
                 email: att.volunteer.email,
                 name: att.volunteer.name,
@@ -91,7 +112,10 @@ router.put(
   validate(["from", "to", "name", "calendars", "number_needed", "location"], []),
   (req, res) =>
     EventModel.create(req.body)
-      .then((event) => res.json({ event }))
+      .then((event) => {
+        res.json({ event });
+        return bulk_modify(event);
+      })
       .catch(errorHandler(res))
 );
 
@@ -112,9 +136,10 @@ router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
       Object.entries(req.body).forEach(([key, value]) => {
         event[key] = value;
       });
-      return event.save();
+
+      return Promise.all([event.save(), bulk_modify(event)]);
     })
-    .then((event) => populate(event).execPopulate())
+    .then(([event]) => populate(event).execPopulate())
     .then((event) => res.json({ event }))
     .catch(errorHandler(res))
 );
@@ -126,44 +151,40 @@ router.post(
   (req, res) =>
     EventModel.findById(req.params.id)
       .then((event) => {
-        const HOUR_IN_MS = 60 * 60 * 1000;
-        const DAY_IN_MS = 24 * HOUR_IN_MS;
-        const date = new Date(req.body.date);
-        const rep_ind = event.repetitions.findIndex(
-          (tmp) => Math.abs(tmp.date.getTime() - date.getTime()) < DAY_IN_MS - HOUR_IN_MS
-        );
-
         const att = {
           volunteer: req.user._id,
-          guests: JSON.parse(req.body.guests),
+          guests: JSON.parse(req.body.guests ?? "[]"),
           response: (req.body.response ?? "").trim(),
         };
-
-        if (rep_ind > -1) {
-          const rep = event.repetitions[rep_ind];
-          const att_ind = rep.attendees.findIndex(
-            (tmp) => tmp.volunteer._id.toString() === req.user._id
-          );
-          if (att_ind > -1) {
-            if (req.body.going === "true") {
-              rep.attendees[att_ind] = att;
-            } else {
-              rep.attendees.splice(att_ind, 1);
-              if (rep.attendees.length === 0) {
-                event.repetitions.splice(rep_ind, 1);
-              }
-            }
-          } else if (req.body.going === "true") {
-            rep.attendees.push(att);
-          }
-        } else if (req.body.going === "true") {
-          event.repetitions.push({
-            date,
-            attendees: [att],
-          });
+        let rep = event.repetitions.get(req.body.date);
+        if (!rep) {
+          rep = {
+            attendees: new Map(),
+            completed: false,
+          };
         }
 
-        return event.save();
+        if (req.body.going === "true") {
+          rep.attendees.set(req.user._id, att);
+        } else {
+          rep.attendees.delete(req.user._id);
+        }
+
+        if (rep.attendees.size > 0) {
+          event.repetitions.set(req.body.date, rep);
+        } else {
+          event.repetitions.delete(req.body.date);
+        }
+
+        return Promise.all([event.save(), UserModel.findById(req.user._id)]);
+      })
+      .then(([event, user]) => {
+        if (req.body.going === "true") {
+          user.events.addToSet(event._id);
+        } else {
+          user.events.pull(event._id);
+        }
+        return user.save();
       })
       .then(() => res.json({ success: true }))
       .catch(errorHandler)
