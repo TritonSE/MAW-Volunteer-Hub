@@ -1,0 +1,105 @@
+main {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact_card {
+  position: relative;
+  border: solid 2px;
+  width: 227px;
+  height: 369px;
+  z-index: 0;
+}
+
+.edit {
+  position: absolute;
+  width: 12.39px;
+  height: 12.39px;
+  left: 5%;
+  top: 3%;
+  cursor: pointer;
+  z-index: 2;
+  margin-right: 5px;
+}
+
+.delete {
+  position: absolute;
+  width: 12.39px;
+  height: 12.39px;
+  left: 32px;
+  top: 3%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.contact_icon {
+  position: absolute;
+  left: 19.74%;
+  right: 19.74%;
+  top: 10.6%;
+  bottom: 51.9%;
+  z-index: 2;
+}
+
+.card_back {
+  position: absolute;
+  width: 229px;
+  height: 125px;
+  left: -0.6%;
+  top: -0.4%;
+  z-index: 1;
+  background-image: url("../../public/img/contact_back.svg");
+}
+
+.card_name {
+  position: absolute;
+  left: 25.44%;
+  margin-bottom: 4px;
+  top: 54.62%;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+}
+
+.grid1 {
+  position: relative;
+  top: 61.32%;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+}
+
+.grid1 > div {
+  font-style: normal;
+  font-weight: 250;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #000000;
+}
+
+.grid2 {
+  position: absolute;
+  left: 10%;
+  top: 82.35%;
+  grid-template-rows: 17px 17px;
+  grid-gap: 10px;
+}
+
+.grid2 > div {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  text-decoration-line: underline;
+  margin-bottom: 18px;
+  color: #000000;
+}
