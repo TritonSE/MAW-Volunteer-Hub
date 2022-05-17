@@ -7,7 +7,13 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
-import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
+import {
+  api_user_info,
+  api_user_updatepass,
+  api_user_delete,
+  api_user_activate,
+  api_pfp_upload,
+} from "../api";
 import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
@@ -22,6 +28,7 @@ function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [responseModalOpen, setResponseModalOpen] = useState();
+  const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(0);
   const [changePassResponse, setChangePassResponse] = useState();
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
@@ -133,6 +140,22 @@ function ProfilePage() {
     setCrop({ aspect: 1 });
   }
 
+  async function deactivate_account() {
+    if (!id) return;
+
+    const res = await api_user_activate(id, !user.active);
+    if (!res || res.error) {
+      setResponseModalOpen((res ?? {}).error ?? "Unable to reach server, please try again.");
+    } else {
+      setDeactivateModalOpen(false);
+
+      const new_data = await api_user_info(id ?? currentUser._id);
+      if (new_data && new_data.user) {
+        setUser(new_data.user);
+      }
+    }
+  }
+
   async function change_password(e) {
     e.preventDefault();
 
@@ -239,7 +262,7 @@ function ProfilePage() {
   return is404 ? (
     <Custom404Page />
   ) : (
-    <div className="profile-page">
+    <div className={`profile-page ${user?.active === false ? "deactivated" : ""}`}>
       <section className="header-section">
         <div className="profile-image">
           <img
@@ -362,6 +385,15 @@ function ProfilePage() {
           <p>{user.email}</p>
         </div>
         <div className="profile-buttons-container">
+          {!isCurrentUser && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setDeactivateModalOpen(true)}
+            >
+              {user.active ? "Deactivate" : "Activate"} Profile
+            </button>
+          )}
           {isCurrentUser && (
             <button
               type="button"
@@ -384,7 +416,39 @@ function ProfilePage() {
         {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
-      {/* Change Password and Delete Profile Modals */}
+      {/* Deactivate Profile, Change Password, and Delete Profile Modals */}
+      <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
+        isOpen={deactivateModalOpen}
+        onRequestClose={() => setDeactivateModalOpen(false)}
+        contentLabel="Deactivate profile modal"
+      >
+        <h1>Are you sure you want to {user.active ? "deactivate" : "activate"} this profile?</h1>
+        <button
+          className="close-button"
+          aria-label="close-button"
+          type="button"
+          onClick={() => setDeactivateModalOpen(false)}
+        />
+        <div className="delete-button-container">
+          <button
+            className="modal-button small button-secondary"
+            type="button"
+            onClick={() => setDeactivateModalOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="modal-button small button-primary"
+            type="button"
+            onClick={deactivate_account}
+          >
+            {user.active ? "Deactivate" : "Activate"}
+          </button>
+        </div>
+      </Modal>
+
       <Modal
         className="profile-page-modal"
         overlayClassName="profile-page-modal-overlay"

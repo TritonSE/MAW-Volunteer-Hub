@@ -37,6 +37,13 @@ router.post("/login", validate(["email", "password", "remember"], []), (req, res
       return;
     }
 
+    if (!user.active) {
+      res.status(403).json({
+        error: "Account marked as inactive. Please contact an administrator to reactivate it.",
+      });
+      return;
+    }
+
     req.login(user, { session: false }, (error) => {
       if (error) {
         errorHandler(res)(error);

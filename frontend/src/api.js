@@ -159,6 +159,11 @@ const api_user_updatepass = (old_pass, new_pass) =>
 
 const api_user_edit = (id) => api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 
+const api_user_activate = (id, active) =>
+  api_call(`${API_ENDPOINTS.USER_ACTIVATE}/${id}`, {
+    data: { active },
+  });
+
 const api_pfp_upload = (pfp, crop) =>
   api_call(API_ENDPOINTS.PFP_UPLOAD, {
     data: { pfp, crop },
@@ -194,6 +199,7 @@ export {
   api_user_delete,
   api_user_updatepass,
   api_user_edit,
+  api_user_activate,
   api_pfp_upload,
   api_wish_wednesday,
   api_wish_wednesday_add,
