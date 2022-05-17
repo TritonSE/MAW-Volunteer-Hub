@@ -166,7 +166,7 @@ function App() {
             path="*"
             element={
               <PageLayout>
-                <ContactCard />
+                <Custom404Page />
               </PageLayout>
             }
           />
