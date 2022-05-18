@@ -232,7 +232,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
      */
     const date = from.toDateString();
     /* Deep clone via new JS API */
-    const repetitions = structuredClone(currentEvent.repetitions);
+    const repetitions = structuredClone(currentEvent.repetitions ?? {});
     const rep = repetitions[date] ?? {
       attendees: {},
       completed: false,

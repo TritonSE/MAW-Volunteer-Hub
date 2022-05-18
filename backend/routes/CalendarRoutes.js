@@ -5,7 +5,7 @@ const router = express.Router();
 
 const EventModel = require("../models/EventModel");
 const UserModel = require("../models/UserModel");
-const { errorHandler, validate, idParamValidator } = require("../util/RouteUtils");
+const { errorHandler, validate, idParamValidator, adminValidator } = require("../util/RouteUtils");
 
 const populate = (event) =>
   event.populate({
@@ -32,17 +32,20 @@ const bulk_modify = (event, remove = false) => {
 };
 
 router.get("/all", (req, res) =>
-  populate(EventModel.find())
-    .then((events) => {
-      res.json(events);
+  Promise.all([UserModel.findById(req.user._id), populate(EventModel.find())])
+    .then(([user, events]) => {
+      res.json(
+        events.filter(
+          (ev) => user.admin > 0 || user.roles.some((role) => ev.calendars.includes(role))
+        )
+      );
 
       const arr = [];
-      const now = new Date().getTime();
       let do_push = false;
 
       events.forEach((evt) => {
         Array.from(evt.repetitions.values()).forEach((rep) => {
-          if (new Date(rep.date).getTime() <= now) {
+          if (new Date(rep.date).getTime() <= Date.now()) {
             rep.completed = true;
             do_push = true;
           }
@@ -59,22 +62,21 @@ router.get("/all", (req, res) =>
 );
 
 router.get("/ics/:calendar?", (req, res) =>
-  populate(EventModel.find())
-    .then((events) => {
-      const calendar = ical({ name: "Make-a-Wish Volunteers" });
+  Promise.all([UserModel.findById(req.user._id), populate(EventModel.find())])
+    .then(([user, events]) => {
+      const calendar = ical({ name: `Make-a-Wish ${req.params.calendar ?? "Calendar"}` });
       events
         .filter((evt) => {
-          if (!req.params.calendar) return evt;
-
-          if (Array.isArray(evt.calendar)) {
-            return evt.calendar.includes(req.params.calendar);
+          if (user.admin === 0 && !user.roles.some((role) => evt.calendars.includes(role))) {
+            return false;
           }
-          return req.params.calendar === evt.calendar;
+
+          return !req.params.calendar || evt.calendars.includes(req.params.calendar);
         })
         .forEach((evt) => {
-          Array.from(evt.repetitions.values()).forEach((rep) => {
-            const start = new Date(rep.date);
-            const end = new Date(rep.date);
+          Array.from(evt.repetitions.entries()).forEach(([date, rep]) => {
+            const start = new Date(date);
+            const end = new Date(date);
             start.setHours(evt.from.getHours(), evt.from.getHours(), 0);
             end.setHours(evt.to.getHours(), evt.to.getMinutes(), 0);
 
@@ -94,9 +96,8 @@ router.get("/ics/:calendar?", (req, res) =>
               });
               att.guests.forEach((guest) => {
                 cal_event.createAttendee({
-                  with: att.volunteer.name,
-                  name: guest.name,
-                  relation: guest.relation,
+                  name: `${guest.name} (${guest.relation} of ${att.volunteer.name})`,
+                  email: att.volunteer.email /* TODO: This is a required field by ical-generator */,
                 });
               });
             });
@@ -109,6 +110,7 @@ router.get("/ics/:calendar?", (req, res) =>
 
 router.put(
   "/new",
+  adminValidator,
   validate(["from", "to", "name", "calendars", "number_needed", "location"], []),
   (req, res) =>
     EventModel.create(req.body)
@@ -119,13 +121,13 @@ router.put(
       .catch(errorHandler(res))
 );
 
-router.delete("/del/:id", idParamValidator(false, "event"), (req, res) =>
+router.delete("/del/:id", idParamValidator(false, "event"), adminValidator, (req, res) =>
   EventModel.findByIdAndDelete(req.params.id)
     .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
 );
 
-router.patch("/upd/:id", idParamValidator(false, "event"), (req, res) =>
+router.patch("/upd/:id", idParamValidator(false, "event"), adminValidator, (req, res) =>
   populate(EventModel.findById(req.params.id))
     .then((event) => {
       /*
@@ -149,8 +151,12 @@ router.post(
   validate(["going", "date"], []),
   idParamValidator(false, "event"),
   (req, res) =>
-    EventModel.findById(req.params.id)
-      .then((event) => {
+    Promise.all([UserModel.findById(req.user._id), EventModel.findById(req.params.id)])
+      .then(([user, event]) => {
+        if (!user.roles.some((role) => event.calendars.includes(role))) {
+          res.status(401).json({ error: "Event is not part of user's calendar." });
+        }
+
         const att = {
           volunteer: req.user._id,
           guests: JSON.parse(req.body.guests ?? "[]"),
@@ -166,8 +172,10 @@ router.post(
 
         if (req.body.going === "true") {
           rep.attendees.set(req.user._id, att);
+          user.events.addToSet(event._id);
         } else {
           rep.attendees.delete(req.user._id);
+          user.events.pull(event._id);
         }
 
         if (rep.attendees.size > 0) {
@@ -176,15 +184,7 @@ router.post(
           event.repetitions.delete(req.body.date);
         }
 
-        return Promise.all([event.save(), UserModel.findById(req.user._id)]);
-      })
-      .then(([event, user]) => {
-        if (req.body.going === "true") {
-          user.events.addToSet(event._id);
-        } else {
-          user.events.pull(event._id);
-        }
-        return user.save();
+        return Promise.all([user.save(), event.save()]);
       })
       .then(() => res.json({ success: true }))
       .catch(errorHandler)
