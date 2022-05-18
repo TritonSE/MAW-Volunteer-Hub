@@ -151,13 +151,6 @@ export default function Message() {
             onChange={setConvertedText}
           />
           <div className="button_container">
-            <button
-              className="post_announcement_message"
-              type="submit"
-              onClick={() => handleSubmit()}
-            >
-              Post
-            </button>
             {emptyFields() ? (
               <div className="emptyfields">
                 Some field(s) are empty. Please make sure all fields are specified.
@@ -165,6 +158,13 @@ export default function Message() {
             ) : (
               <div className="placeholder" />
             )}
+            <button
+              className="post_announcement_message"
+              type="submit"
+              onClick={() => handleSubmit()}
+            >
+              Post
+            </button>
           </div>
         </div>
       </div>

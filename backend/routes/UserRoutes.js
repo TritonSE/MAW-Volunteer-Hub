@@ -271,14 +271,14 @@ router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
       // console.log(emails);
 
       sendEmailFunction
-        .sendEmailMessage(emails, html, subject)
+        .sendEmailMessage(emails, html, subject, roles_to_message)
         .then(() => {
           // emailResponse inside parentheses
           // console.log(emailResponse);
           res.json({ success: true });
         })
         .catch((err) => {
-          // console.log(err);
+          console.log(err);
           res.status(400).json(err);
         });
     })

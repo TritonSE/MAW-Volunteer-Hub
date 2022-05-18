@@ -278,3 +278,12 @@
     flex-direction: column;
   }
 }
+
+@media only screen and (max-width: 325px) {
+  .email-info {
+    height: 50px;
+  }
+  .login_box {
+    height: 300px;
+  }
+}

@@ -73,31 +73,48 @@ module.exports = {
   },
 
   // Email message in html form when a message is posted
-  sendEmailMessage: async (users, html, subject) => {
+  sendEmailMessage: async (users, html, subject, roles) => {
     const message = JSON.parse(JSON.stringify(EmailTemplate));
+
+    const header = `
+    <header>
+      <div style="font-weight:bold; font-style:italic; font-size:12px">
+        You are receiving this message because you are in one or more of the following role(s): ${roles.join(
+          ", "
+        )}
+      </div>
+    </header>
+    <br/>
+    `;
 
     const footer = `
       <br/>
       <hr>
       <footer style="font-size:11px">
-        <p>This email (which may contain commercial content) was sent as a message from a <a href="https://wish.org/sandiego" target="_blank">
-        Make-A-Wish San Diego</a> administrator to one or more of the role(s) you are a part of in MAW. 
-        You can either login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
-        website</a> or reply to this email if any action is needed. </p>
-        <p>To opt-out of such emails, you can either reply requesting {something} from {something} OR Unsubscribe from messaging emails: 
-        {Unsubscribe}</p> 
+        <p>This email (which may contain commercial/marketing/solicitation content) was sent as a message 
+        from a <a href="https://wish.org/sandiego" target="_blank">Make-A-Wish San Diego</a> administrator 
+        to the afformentioned MAW role(s).</p>    
+        <p>You can login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+        Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
+        <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
+        <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or reply to this email.</p>
+        <p>To opt-out of MESSAGING emails, you can Unsubscribe from messaging emails: {Unsubscribe}. 
+        If you want to stop recieving all communication or deactivate your account, you can email
+        MAWVolunteerHub@gmail.com with your request.</p> 
         <br/>
         <p>Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
       </footer>`;
 
-    const full_html = html + footer;
+    const full_html = header + html + footer;
 
-    const intro = "Message from MAW: ";
+    const intro = "Message from Make-A-Wish: ";
     const full_subject = intro + subject;
 
     message.Content.Simple.Body.Html.Data = full_html;
     message.Content.Simple.Subject.Data = full_subject;
     message.Destination.ToAddresses = users;
+    // message.Destination.BccAddresses = users;
+    // message.Destination.CcAddresses = [config.amazon_ses.email]; // UNCOMMENT when merging to production
 
     const command = new SendEmailCommand(message);
     const res = await client.send(command);

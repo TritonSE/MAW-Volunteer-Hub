@@ -24,9 +24,9 @@ const EmailTemplate = {
   FeedbackForwardingEmailAddress: config.amazon_ses.email,
   FeedbackForwardingEmailAddressIdentityArn: config.amazon_ses.emailid_arn,
 
-  FromEmailAddress: config.amazon_ses.email,
+  FromEmailAddress: `Make-A-Wish (MAW) San Diego <${config.amazon_ses.email}>`,
   FromEmailAddressIdentityArn: config.amazon_ses.emailid_arn,
-  ReplytToAddresses: [config.amazon_ses.email],
+  ReplyToAddresses: [config.amazon_ses.email],
 };
 
 module.exports = {

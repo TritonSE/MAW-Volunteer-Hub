@@ -153,7 +153,7 @@ function LoginPage() {
             <p className="email-info">
               &#9432; By providing your email address, you are agreeing to recieve email
               communication from Make-A-Wish San Diego for account-related info, messaging, and
-              events.
+              event invitations/assignments.
             </p>
           )}
           <PasswordField
