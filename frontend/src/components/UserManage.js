@@ -129,7 +129,7 @@ export default function UserManage() {
       const old = [...userData] ?? [];
       const i = old.findIndex((row) => row._id === userId);
 
-      const newData = old.splice(i, 1, {
+      old.splice(i, 1, {
         ...old[i],
         [columnId]: value,
       });
