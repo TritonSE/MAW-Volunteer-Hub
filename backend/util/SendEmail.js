@@ -113,8 +113,8 @@ module.exports = {
     message.Content.Simple.Body.Html.Data = full_html;
     message.Content.Simple.Subject.Data = full_subject;
     message.Destination.ToAddresses = users;
-    // message.Destination.BccAddresses = users;
-    // message.Destination.CcAddresses = [config.amazon_ses.email]; // UNCOMMENT when merging to production
+    // message.Destination.BccAddresses = users; // if we want to BCC instead of TO
+    // message.Destination.CcAddresses = [config.amazon_ses.email]; // UNCOMMENT WHEN MERGING TO PRODUCTION
 
     const command = new SendEmailCommand(message);
     const res = await client.send(command);
