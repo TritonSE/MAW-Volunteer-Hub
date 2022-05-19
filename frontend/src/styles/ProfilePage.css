@@ -4,6 +4,9 @@
   color: black;
   font-family: Lato;
 }
+.profile-page > * > div:not(.profile-buttons-container) {
+  transition: opacity 0.2s, filter 0.2s;
+}
 .profile-page.deactivated > * > div:not(.profile-buttons-container) {
   opacity: 0.6;
   filter: grayscale(1);
