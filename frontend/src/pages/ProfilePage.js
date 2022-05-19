@@ -376,13 +376,17 @@ function ProfilePage() {
           )}
         </div>
         <div className="profile-header-info">
-          <h1>{user.name}</h1>
-          <h2>
-            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
-            {new Date(user.createdAt).getFullYear()}
-          </h2>
-          <br />
-          <p>{user.email}</p>
+          <div>
+            <h1>{user.name}</h1>
+            <p>{user.email}</p>
+          </div>
+          <div>
+            <h2>
+              Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+              {new Date(user.createdAt).getFullYear()}
+            </h2>
+            <p className="deactivated">{!user.active ? "(Deactivated)" : ""}&nbsp;</p>
+          </div>
         </div>
         <div className="profile-buttons-container">
           {!isCurrentUser && (

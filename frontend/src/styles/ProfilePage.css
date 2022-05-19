@@ -58,36 +58,30 @@
 }
 
 .profile-header-info {
-  display: inline-block;
+  display: flex;
+  align-items: flex-end;
   margin: 30px 0 20px 0;
-  height: auto;
-  width: auto;
 }
-.profile-header-info > * {
-  margin: 0 50px 0 0;
-  width: auto;
-  display: inline-block;
-}
-.profile-header-info > h1 {
+.profile-header-info h1 {
   font-size: 30px;
   line-height: 36px;
   font-weight: normal;
+  margin: 0 50px 5px 0;
 }
-.profile-header-info > h2 {
+.profile-header-info h2 {
   font-size: 14px;
-  line-height: 17px;
+  line-height: 41px;
   color: var(--grey);
   font-weight: normal;
+  margin: 0;
 }
-.profile-header-info > p {
+.profile-header-info p {
   font-size: 12px;
   line-height: 14px;
+  margin: 0;
 }
-
-.profile-header-info > p {
-  font-size: 12px;
-  line-height: 14px;
-  margin-right: 150px;
+.profile-header-info p.deactivated {
+  text-align: right;
 }
 
 .profile-buttons-container {
