@@ -17,7 +17,7 @@ Modal.setAppElement(document.getElementById("root"));
 function VerifyButtonCell({
   isVerified: initialVerified,
   name: userName,
-  row: { index },
+  row: { index, original },
   column: { id },
   updateMyData,
   updateMyRoles,
@@ -35,7 +35,7 @@ function VerifyButtonCell({
   }, [initialVerified]);
 
   function handleVerifyUser() {
-    updateMyData(index, id, true);
+    updateMyData(index, id, true, original._id);
     setIsVerifiedState(true);
   }
 
@@ -178,23 +178,23 @@ export default function UserManage() {
     fetchUsers();
   }, []);
 
-  const updateMyData = (rowIndex, columnId, value) => {
+  const updateMyData = (_rowIndex, columnId, value, userId) => {
     // We also turn on the flag to not reset the page
-    setUserData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          // verify user here, reload if fail
-          api_user_verify(row._id).then((res) => {
-            if (!res || res.error) navigate(window.location);
-          });
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
-      })
-    );
+    // we don't use rowIndex because we filter before displaying, so the userData
+    // includes users from both the admin and user lists
+    api_user_verify(userId).then((res) => {
+      if (!res || res.error) navigate(window.location);
+
+      const old = [...userData] ?? [];
+      const i = old.findIndex((row) => row._id === userId);
+
+      old.splice(i, 1, {
+        ...old[i],
+        [columnId]: value,
+      });
+
+      setUserData(old);
+    });
   };
 
   const updateMyRoles = (rowIndex, columnId, value) => {
@@ -257,7 +257,8 @@ export default function UserManage() {
         overlayClassName="access_notification_overlay"
       >
         <div className="notification_contents">
-          {modalState.name ?? "User"} has been given access.
+          {modalState.name ?? "User"} has been given access and will be sent a notification via
+          email.
           <button
             type="button"
             className="confirmation_btn"
