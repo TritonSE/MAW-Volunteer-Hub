@@ -21,8 +21,8 @@ export default function RoleSelect({ value, setValue, hasError }) {
         },
         ...ROLES.map((role) => ({
           ...role,
-          value: role.name,
-          label: role.name,
+          value: role.long_name,
+          label: role.long_name,
         })),
       ]),
     [hasAll]
@@ -42,7 +42,8 @@ export default function RoleSelect({ value, setValue, hasError }) {
               borderRadius: "5px",
             }}
           />
-          {value[0].name.substring(0, 13) + (value[0].name.length > 13 ? "..." : "")}&nbsp;
+          {value[0].long_name.substring(0, 13) + (value[0].long_name.length > 13 ? "..." : "")}
+          &nbsp;
           {value.length > 1 ? (
             <span style={{ color: "#999a9a" }}>
               <br />({value.length - 1} more)

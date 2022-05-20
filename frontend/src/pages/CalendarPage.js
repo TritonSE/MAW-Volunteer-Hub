@@ -27,11 +27,11 @@ function CalendarsList({
     <div className="calendars_list">
       <div className="calendars_header">View calendars</div>
       {calendars.map((cal, ind) => (
-        <label key={cal.name} className="calendar_label" htmlFor={cal.name}>
+        <label key={cal.long_name} className="calendar_label" htmlFor={cal.long_name}>
           <div>
             <input
               type="checkbox"
-              id={cal.name}
+              id={cal.long_name}
               checked={calEnabled[ind]}
               onChange={(e) => {
                 const arr = calEnabled.map((en, subind) => {
@@ -96,7 +96,7 @@ function CalendarPage() {
 
   function style_from_event(ev_unprocessed, en = calEnabled) {
     const ev = unify_event(ev_unprocessed);
-    const css = calendars.find((cal, ind) => en[ind] && ev.calendars.includes(cal.name));
+    const css = calendars.find((cal, ind) => en[ind] && ev.calendars.includes(cal.long_name));
 
     if (!css) return { display: "none" };
 
@@ -112,7 +112,7 @@ function CalendarPage() {
 
   function sanitize_calendars(cals) {
     return cals.map((incal) => {
-      const outcal = calendars.findIndex((tmp) => incal === tmp.name);
+      const outcal = calendars.findIndex((tmp) => incal === tmp.long_name);
       return {
         ...calendars[outcal],
         enabled: () => calEnabled[outcal],

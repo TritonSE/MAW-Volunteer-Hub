@@ -140,7 +140,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     if (currentEvent?.calendars) {
       setCalendars(
         currentEvent.calendars.map((cal_name) => ({
-          ...ROLES.find((role) => role.name === cal_name),
+          ...ROLES.find((role) => role.long_name === cal_name),
           value: cal_name,
           label: cal_name,
         }))
@@ -256,7 +256,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       from: from.toISOString(),
       to: to.toISOString(),
       name,
-      calendars: calendars.map((cal) => cal.name),
+      calendars: calendars.map((cal) => cal.long_name),
       number_needed: numberNeeded,
       location: loc,
 
