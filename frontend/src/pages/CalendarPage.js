@@ -53,7 +53,7 @@ function CalendarsList({
               style={{ "--checked-color": cal.color ?? "#00BAB3" }}
             />
           </div>
-          <div>{cal.name}</div>
+          <div>{cal.long_name}</div>
         </label>
       ))}
       {calendars.length === 0 && <>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No roles.</>}
