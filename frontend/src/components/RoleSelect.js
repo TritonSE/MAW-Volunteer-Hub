@@ -21,7 +21,7 @@ export default function RoleSelect({ value, setValue, hasError }) {
         },
         ...ROLES.map((role) => ({
           ...role,
-          value: role.long_name,
+          value: role.name,
           label: role.long_name,
         })),
       ]),

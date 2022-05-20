@@ -337,7 +337,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                     onBlur={() => setTooltipVisible(false)}
                   >
                     {event.calendars.slice(0, 1).map((name) => {
-                      const css = ROLES.find((cal) => cal.long_name === name);
+                      const css = ROLES.find((cal) => cal.name === name);
 
                       return (
                         <div key={name} className="role_listing">
