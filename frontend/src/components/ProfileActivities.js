@@ -2,72 +2,47 @@
 import React, { useState } from "react";
 import { useTable } from "react-table";
 import Modal from "react-modal";
+import { api_add_event, api_edit_event, api_delete_event } from "../auth";
 
 import "../styles/ProfileActivities.css";
 
-// Dummy Data. When the backend routes are done, the data should be passed in through props.
-const data = [
-  { Date: "02/15/21", Event: "Backyard Makeover", Hours: 2, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover1", Hours: 3, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover2", Hours: 4, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover3", Hours: 5, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover4", Hours: 6, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover5", Hours: 7, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover6", Hours: 8, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover7", Hours: 9, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover", Hours: 2, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover1", Hours: 3, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover2", Hours: 4, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover3", Hours: 5, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover4", Hours: 6, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover5", Hours: 7, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover6", Hours: 8, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover7", Hours: 9, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover", Hours: 2, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover1", Hours: 3, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover2", Hours: 4, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover3", Hours: 5, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover4", Hours: 6, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover5", Hours: 7, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover6", Hours: 8, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover7", Hours: 9, Id: "BackyardMakeOver123" },
-  { Date: "02/15/21", Event: "Backyard Makeover8", Hours: 11, Id: "BackyardMakeOver123" },
-];
+const dateStart = 0;
+const dateEnd = 10;
 
-// Method stubs. Waiting on backend routes.
-const editActivity = (props) => {
-  console.log(props);
+// Formats the date
+const formatDate = (original) => {
+  const trimmed = original.substring(dateStart, dateEnd);
+  const vals = trimmed.split("-");
+  const YEAR = 0;
+  const MONTH = 1;
+  const DAY = 2;
+
+  return vals[MONTH] + "/" + vals[DAY] + "/" + vals[YEAR];
 };
 
-const deleteActivity = (props) => {
-  console.log(props);
-};
-
-// Pass in through props?
 const columns = [
   {
     Header: "Date",
-    accessor: "Date",
+    accessor: "date",
+    Cell: (props) => <div>{formatDate(props.cell.value)}</div>,
   },
   {
     Header: "Event",
-    accessor: "Event",
+    accessor: "title",
   },
   {
     Header: "Hours",
-    accessor: "Hours",
+    accessor: "hours",
   },
   {
     Header: "",
     accessor: "edit",
     Cell: (props) => (
       <div className="edit_activity_container">
-        <button type="button" onClick={() => editActivity(props.cell.row)}>
+        <button type="button" onClick={() => props.editActivity(props.cell.row)}>
           <img src="/img/filelisting_edit.svg" alt="" />
         </button>
-        <button type="button" onClick={() => deleteActivity(props.cell.row)}>
+        <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
           <img src="/img/filelisting_delete.svg" alt="" />
         </button>
       </div>
@@ -76,12 +51,15 @@ const columns = [
 ];
 
 export default function ProfileActivities(props) {
-  const tableInstance = useTable({ columns, data });
   const [logModalOpen, setLogModalOpen] = useState(false);
   const [activityDate, setActivityDate] = useState("");
   const [eventName, setEventName] = useState("");
   const [eventDuration, setEventDuration] = useState("");
+  const [editing, setEditing] = useState(false);
+  const [currActivity, setCurrActivity] = useState({});
 
+  const data = React.useMemo(() => props.events, [props.events]);
+  const tableInstance = useTable({ columns, data });
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = tableInstance;
 
   const getHeaderSuffix = (colIndex) => {
@@ -94,12 +72,76 @@ export default function ProfileActivities(props) {
     return "";
   };
 
-  const logActivity = (e) => {
+  // Closes modal
+  function closeModal() {
+    setEditing(false);
+    setLogModalOpen(false);
+  }
+
+  // Clears all values that are displayed on the add/edit activity form
+  function clearFields() {
+    setActivityDate("");
+    setEventName("");
+    setEventDuration(0);
+  }
+
+  // Adds an activity
+  function logActivity(e) {
     e.preventDefault();
-    console.log(activityDate);
-    console.log(eventName);
-    console.log(eventDuration);
-  };
+    api_add_event(props.id, activityDate, eventName, eventDuration).then((res) => {
+      // console.log(res.success === true);
+    });
+
+    // Call back to ProfilePage.js
+    props.updateEvents(true);
+
+    // Clean up
+    closeModal();
+    clearFields();
+  }
+
+  // Begin the activity editing process
+  function startEditActivity(activity) {
+    // Change to editing mode
+    setEditing(true);
+    setLogModalOpen(true);
+
+    setCurrActivity(activity);
+
+    // Set fields of edit activity form
+    setEventName(activity.original.title);
+    setEventDuration(activity.original.hours);
+    setActivityDate(activity.original.date.substring(dateStart, dateEnd));
+  }
+
+  // Makes an API call to update an activity.
+  function updateActivity(e) {
+    e.preventDefault();
+    api_edit_event(
+      props.id,
+      currActivity.original._id,
+      activityDate,
+      eventName,
+      eventDuration
+    ).then((res) => {
+      // console.log(res.success === true);
+    });
+
+    // Call back to ProfilePage.js to fetch new user data.
+    props.updateEvents(true);
+
+    // Clean up
+    closeModal();
+    clearFields();
+  }
+
+  function deleteActivity(activity) {
+    api_delete_event(props.id, activity.original._id).then((res) => {
+      // console.log(res);
+    });
+
+    props.updateEvents(true);
+  }
 
   return (
     <div>
@@ -134,72 +176,85 @@ export default function ProfileActivities(props) {
           ))}
         </thead>
         {/* Apply the table body props */}
-        <tbody {...getTableBodyProps()}>
-          {
-            // Loop over the table rows
-            rows.map((row) => {
-              // Prepare the row for display
-              prepareRow(row);
-              return (
-                // Apply the row props
-                <tr {...row.getRowProps()}>
-                  {
-                    // Loop over the rows cells
-                    row.cells.map((cell, colIndex) => (
-                      // Apply the cell props
-                      <td
-                        {...cell.getCellProps()}
-                        className={`activities_table_data ${getHeaderSuffix(colIndex)}`}
-                      >
-                        {
-                          // Render the cell contents
-                          cell.render("Cell")
-                        }
-                      </td>
-                    ))
-                  }
-                </tr>
-              );
-            })
-          }
-        </tbody>
+        {data.length > 0 ? (
+          <tbody {...getTableBodyProps()}>
+            {
+              // Loop over the table rows
+              rows.map((row) => {
+                // Prepare the row for display
+                prepareRow(row);
+                return (
+                  // Apply the row props
+                  <tr {...row.getRowProps()}>
+                    {
+                      // Loop over the rows cells
+                      row.cells.map((cell, colIndex) => (
+                        // Apply the cell props
+                        <td
+                          {...cell.getCellProps()}
+                          className={`activities_table_data ${getHeaderSuffix(colIndex)}`}
+                        >
+                          {
+                            // Render the cell contents
+                            cell.render("Cell", { editActivity: startEditActivity, deleteActivity })
+                          }
+                        </td>
+                      ))
+                    }
+                  </tr>
+                );
+              })
+            }
+          </tbody>
+        ) : (
+          <tbody>
+            <tr>
+              <td>No Activities Yet</td>
+            </tr>
+          </tbody>
+        )}
       </table>
 
       <Modal
         className="log_activity_modal"
         overlayClassName="add_roles_modal_overlay"
         isOpen={logModalOpen}
-        onRequestClose={() => setLogModalOpen(false)}
+        onRequestClose={() => closeModal()}
         contentLabel="Manually Log Activity"
       >
         <button
           className="close_button"
           aria-label="close_button"
           type="button"
-          onClick={() => setLogModalOpen(false)}
+          onClick={() => closeModal()}
         />
-        <form className="log_activity_form" onSubmit={(e) => logActivity(e)}>
-          <h2>Log New Activity</h2>
+        <form
+          className="log_activity_form"
+          onSubmit={editing ? (e) => updateActivity(e) : (e) => logActivity(e)}
+        >
+          <h2>{editing ? "Edit Activity" : "Log New Activity"}</h2>
           <p className="form_prompt">Date:</p>
           <input
-            type="text"
-            placeholder="Enter date of event"
+            type="date"
+            value={activityDate}
             onChange={(e) => setActivityDate(e.target.value)}
           />
           <p className="form_prompt">Event Name:</p>
           <input
             type="text"
-            placeholder="Enter the event name"
+            placeholder="Enter event name"
+            value={eventName}
             onChange={(e) => setEventName(e.target.value)}
           />
           <p className="form_prompt">Hours:</p>
           <input
-            type="text"
+            type="number"
             placeholder="Enter number of hours volunteered"
+            value={eventDuration}
             onChange={(e) => setEventDuration(e.target.value)}
           />
           <button className="modal-button button-primary" type="submit">
-            Add
+            {editing ? "Update" : "Add"}
           </button>
         </form>
       </Modal>

@@ -8,7 +8,7 @@ function UserCard({
   row,
   VerifyButtonCell,
   updateMyData,
-  updateMyRoles,
+  // updateMyRoles,
   handleConfirmationModal,
 }) {
   return (
@@ -31,7 +31,7 @@ function UserCard({
           column={{ id: "verified" }}
           handleConfirmationModal={handleConfirmationModal}
           updateMyData={updateMyData}
-          updateMyRoles={updateMyRoles}
+          // updateMyRoles={updateMyRoles}
           isVerified={user.verified}
           name={user.name}
           roles={user.roles}

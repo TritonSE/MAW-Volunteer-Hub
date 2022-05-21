@@ -17,10 +17,10 @@ Modal.setAppElement(document.getElementById("root"));
 function VerifyButtonCell({
   isVerified: initialVerified,
   name: userName,
-  row: { index, original },
+  row: { index },
   column: { id },
   updateMyData,
-  updateMyRoles,
+  // updateMyRoles,
   handleConfirmationModal,
   roles,
   user_id,
@@ -35,12 +35,12 @@ function VerifyButtonCell({
   }, [initialVerified]);
 
   function handleVerifyUser() {
-    updateMyData(index, id, true, original._id);
+    updateMyData(index, id, true, user_id);
     setIsVerifiedState(true);
   }
 
   const handleRolesUpdate = (selectedRoles) => {
-    updateMyRoles(index, "roles", selectedRoles);
+    updateMyData(index, "roles", selectedRoles, user_id);
   };
 
   function getModifiedRoles() {
@@ -66,18 +66,18 @@ function VerifyButtonCell({
     }
   }
 
-  if (!isVerifiedState) {
-    return (
-      <ScrollContainer className="assign_btn_container" vertical={false}>
-        <AssignBtn
-          label="Allow Access"
-          key={Math.random()}
-          admin
-          onClick={() => handleRoleBtnClick("Allow Access")}
-        />
-      </ScrollContainer>
-    );
-  }
+  // if (!isVerifiedState) {
+  //   return (
+  //     <ScrollContainer className="assign_btn_container" vertical={false}>
+  //       <AssignBtn
+  //         label="Allow Access"
+  //         key={Math.random()}
+  //         admin
+  //         onClick={() => handleRoleBtnClick("Allow Access")}
+  //       />
+  //     </ScrollContainer>
+  //   );
+  // }
   return (
     <div>
       <ScrollContainer className="assign_btn_container" vertical={false}>
@@ -197,22 +197,22 @@ export default function UserManage() {
     });
   };
 
-  const updateMyRoles = (rowIndex, columnId, value) => {
-    setUserData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          api_user_info(row._id).then((res) => {
-            if (!res || res.error) navigate(window.location);
-          });
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
-      })
-    );
-  };
+  // const updateMyRoles = (rowIndex, columnId, value) => {
+  //   setUserData((old) =>
+  //     old.map((row, index) => {
+  //       if (index === rowIndex) {
+  //         api_user_info(row._id).then((res) => {
+  //           if (!res || res.error) navigate(window.location);
+  //         });
+  //         return {
+  //           ...old[rowIndex],
+  //           [columnId]: value,
+  //         };
+  //       }
+  //       return row;
+  //     })
+  //   );
+  // };
 
   const handleConfirmationModal = ({ name, isOpen }) => {
     setModalState({ name, isOpen });
@@ -234,7 +234,7 @@ export default function UserManage() {
           tableHeaders={headers}
           userData={userData}
           updateMyData={updateMyData}
-          updateMyRoles={updateMyRoles}
+          // updateMyRoles={updateMyRoles}
           handleConfirmationModal={handleConfirmationModal}
           filter={filter}
           setFilter={setFilter}
@@ -244,7 +244,7 @@ export default function UserManage() {
           userData={userData}
           VerifyButtonCell={VerifyButtonCell}
           updateMyData={updateMyData}
-          updateMyRoles={updateMyRoles}
+          // updateMyRoles={updateMyRoles}
           handleConfirmationModal={handleConfirmationModal}
           filter={filter}
           setFilter={setFilter}

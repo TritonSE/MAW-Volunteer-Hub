@@ -42,6 +42,10 @@ const API_ENDPOINTS = {
 
   SET_ROLES: "/user/set-roles",
 
+  ADD_EVENT: "/user/newmanual",
+  EDIT_EVENT: "/user/editmanual",
+  DELETE_EVENT: "/user/delmanual",
+
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 };

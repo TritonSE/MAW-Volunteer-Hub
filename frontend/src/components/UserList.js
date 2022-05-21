@@ -41,7 +41,7 @@ function UserList({
   tableHeaders,
   userData,
   updateMyData,
-  updateMyRoles,
+  // updateMyRoles,
   handleConfirmationModal,
   filter,
   setFilter,
@@ -88,7 +88,7 @@ function UserList({
       columns,
       data,
       updateMyData, // will be available in cell render
-      updateMyRoles,
+      // updateMyRoles,
       handleConfirmationModal, // for showing confirm modal
       autoResetGlobalFilter: false,
     },
