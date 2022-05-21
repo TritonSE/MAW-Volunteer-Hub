@@ -237,7 +237,7 @@ router.get("/role/:role", (req, res) =>
 );
 
 router.post("/newmanual/:id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -270,7 +270,7 @@ router.post("/newmanual/:id", (req, res) => {
 });
 
 router.delete("/delmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -288,7 +288,7 @@ router.delete("/delmanual/:id/:event_id", (req, res) => {
 });
 
 router.patch("/editmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }

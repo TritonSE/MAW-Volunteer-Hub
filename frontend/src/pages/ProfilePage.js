@@ -508,7 +508,7 @@ function ProfilePage() {
               <ProfileRoles
                 roles={addAdminRoles()}
                 admin={currentUser.admin === 2}
-                id={user._id}
+                id={currentUser._id}
                 rolesChanged={setRolesChanged}
               />
               <ProfileCompleted tasks={user.__v} />
