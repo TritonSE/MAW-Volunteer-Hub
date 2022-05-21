@@ -256,6 +256,7 @@ async function api_delete_event(id, event_id) {
     method: "DELETE",
     type: "application/json",
   });
+  return res;
 }
 
 export {

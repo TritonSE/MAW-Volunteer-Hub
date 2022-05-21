@@ -52,6 +52,7 @@ const columns = [
 
 export default function ProfileActivities(props) {
   const [logModalOpen, setLogModalOpen] = useState(false);
+  const [errorModalOpen, setErrorModalOpen] = useState(false);
   const [activityDate, setActivityDate] = useState("");
   const [eventName, setEventName] = useState("");
   const [eventDuration, setEventDuration] = useState("");
@@ -89,7 +90,7 @@ export default function ProfileActivities(props) {
   function logActivity(e) {
     e.preventDefault();
     api_add_event(props.id, activityDate, eventName, eventDuration).then((res) => {
-      // console.log(res.success === true);
+      setErrorModalOpen(!res.success);
     });
 
     // Call back to ProfilePage.js
@@ -124,7 +125,7 @@ export default function ProfileActivities(props) {
       eventName,
       eventDuration
     ).then((res) => {
-      // console.log(res.success === true);
+      setErrorModalOpen(!res.success);
     });
 
     // Call back to ProfilePage.js to fetch new user data.
@@ -137,7 +138,7 @@ export default function ProfileActivities(props) {
 
   function deleteActivity(activity) {
     api_delete_event(props.id, activity.original._id).then((res) => {
-      // console.log(res);
+      setErrorModalOpen(!res.success);
     });
 
     props.updateEvents(true);
@@ -208,8 +209,8 @@ export default function ProfileActivities(props) {
           </tbody>
         ) : (
           <tbody>
-            <tr>
-              <td>No Activities Yet</td>
+            <tr className="no_activities_row">
+              <td className="no_activities">No Activities Yet</td>
             </tr>
           </tbody>
         )}
@@ -257,6 +258,23 @@ export default function ProfileActivities(props) {
             {editing ? "Update" : "Add"}
           </button>
         </form>
+      </Modal>
+
+      <Modal
+        className="error_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={errorModalOpen}
+        onRequestClose={() => setErrorModalOpen(false)}
+        contentLabel="Error Modal"
+      >
+        <h3>Unable to Perform Action</h3>
+        <button
+          className="modal-button button-primary"
+          type="button"
+          onClick={() => setErrorModalOpen(false)}
+        >
+          Okay
+        </button>
       </Modal>
     </div>
   );
