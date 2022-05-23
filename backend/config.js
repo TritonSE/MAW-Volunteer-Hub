@@ -26,5 +26,9 @@ module.exports = {
     secret_key: process.env.AWS_EMAIL_SECRET_KEY || "",
     email: "MAWVolunteerHub@gmail.com",
     emailid_arn: "arn:aws:ses:us-west-1:141769618659:identity/MAWVolunteerHub@gmail.com",
+    contact_list: "MAW",
+    transactional: "Transactional",
+    messaging: "Messaging",
+    calendar_events: "CalendarEvents",
   },
 };

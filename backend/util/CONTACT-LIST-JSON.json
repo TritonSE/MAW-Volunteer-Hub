@@ -1,0 +1,24 @@
+{
+  "ContactListName": "MAW",
+  "Description": "Make-A-Wish San Diego Email Contact List",
+  "Topics": [
+    {
+      "TopicName": "Messaging",
+      "DisplayName": "Messages & Announcements",
+      "Description": "When an administrator sends a message or announcement from the volunteer hub about an event or any other topic to specified volunteer role(s), you will receive the message as an email (if you are in the list of roles).",
+      "DefaultSubscriptionStatus": "OPT_IN"
+    },
+    {
+      "TopicName": "CalendarEvents",
+      "DisplayName": "Event Assignments & Information",
+      "Description": "When an administrator assigns you to an event, you will receive an email notifying you that you have been assigned as a volunteer for that event. The email serves as a notification that you would have to login to the volunteer hub and respond whether you will be attending the event.",
+      "DefaultSubscriptionStatus": "OPT_IN"
+    },
+    {
+      "TopicName": "Transactional",
+      "DisplayName": "Account Transactional Information",
+      "Description": "Emails for transactional information including account signup confirmation and account access verification notifications.",
+      "DefaultSubscriptionStatus": "OPT_IN"
+    }
+  ]
+}

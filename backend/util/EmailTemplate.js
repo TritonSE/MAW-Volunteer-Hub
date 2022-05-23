@@ -26,6 +26,11 @@ const EmailTemplate = {
 
   FromEmailAddress: `Make-A-Wish (MAW) San Diego <${config.amazon_ses.email}>`,
   FromEmailAddressIdentityArn: config.amazon_ses.emailid_arn,
+
+  ListManagementOptions: {
+    ContactListName: config.amazon_ses.contact_list,
+  },
+
   ReplyToAddresses: [config.amazon_ses.email],
 };
 

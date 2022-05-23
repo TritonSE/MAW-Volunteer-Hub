@@ -272,9 +272,9 @@ router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
 
       sendEmailFunction
         .sendEmailMessage(emails, html, subject, roles_to_message)
-        .then(() => {
+        .then((emailResponse) => {
           // emailResponse inside parentheses
-          // console.log(emailResponse);
+          console.log(emailResponse);
           res.json({ success: true });
         })
         .catch((err) => {

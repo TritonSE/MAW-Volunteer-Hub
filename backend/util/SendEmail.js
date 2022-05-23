@@ -38,6 +38,8 @@ module.exports = {
     message.Content.Simple.Subject.Data = msgSubject;
     message.Destination.ToAddresses = [user.email];
 
+    message.ListManagementOptions.TopicName = config.amazon_ses.transactional;
+
     const command = new SendEmailCommand(message);
     const res = await client.send(command);
     return res;
@@ -66,6 +68,8 @@ module.exports = {
     message.Content.Simple.Body.Text.Data = msgText;
     message.Content.Simple.Subject.Data = msgSubject;
     message.Destination.ToAddresses = [user.email];
+
+    message.ListManagementOptions.TopicName = config.amazon_ses.transactional;
 
     const command = new SendEmailCommand(message);
     const res = await client.send(command);
@@ -98,9 +102,9 @@ module.exports = {
         Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
         <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
         <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or reply to this email.</p>
-        <p>To opt-out of MESSAGING emails, you can Unsubscribe from messaging emails: {Unsubscribe}. 
-        If you want to stop recieving all communication or deactivate your account, you can email
-        MAWVolunteerHub@gmail.com with your request.</p> 
+        <p>To opt-out of Messaging emails, you can <a href="{{amazonSESUnsubscribeUrl}}" target="_blank">Unsubscribe</a>. 
+        If you want to stop recieving all communication from MAW and delete or deactivate your account, you can 
+        email MAWVolunteerHub@gmail.com with your request.</p> 
         <br/>
         <p>Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
       </footer>`;
@@ -115,6 +119,8 @@ module.exports = {
     message.Destination.ToAddresses = users;
     // message.Destination.BccAddresses = users; // if we want to BCC instead of TO
     // message.Destination.CcAddresses = [config.amazon_ses.email]; // UNCOMMENT WHEN MERGING TO PRODUCTION
+
+    message.ListManagementOptions.TopicName = config.amazon_ses.messaging;
 
     const command = new SendEmailCommand(message);
     const res = await client.send(command);
