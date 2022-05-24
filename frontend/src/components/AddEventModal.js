@@ -66,7 +66,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
   const [numberNeeded, setNumberNeeded] = useState();
   const [errorNumberNeeded, setErrorNumberNeeded] = useState();
 
-  const [volunteers, setVolunteers] = useState([]);
+  const [volunteers, setVolunteers] = useState({});
 
   const [loc, setLoc] = useState();
   const [errorLoc, setErrorLoc] = useState();
@@ -167,7 +167,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     setNumberNeeded(currentEvent?.number_needed ?? "");
     setErrorNumberNeeded();
 
-    setVolunteers(Object.values(currentEvent?.attendees ?? {}).map((att) => att.volunteer));
+    setVolunteers(structuredClone(currentEvent?.attendees ?? {}));
 
     setLoc(currentEvent?.location ?? "");
     setErrorLoc();
@@ -238,15 +238,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
       completed: false,
     };
 
-    volunteers.forEach(({ _id }) => {
-      /* Nullish assignment via new JS operator */
-      rep.attendees[_id] ??= {
-        volunteer: _id,
-        guests: [],
-        response: "",
-      };
-    });
-
+    rep.attendees = volunteers;
     repetitions[date] = rep;
 
     /*
@@ -492,6 +484,7 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
         <h1>Event Created</h1>
       </div>
       <AssignModal
+        name={name}
         isOpen={assignModal}
         setOpen={setAssignModal}
         volunteers={volunteers}

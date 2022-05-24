@@ -145,6 +145,9 @@ function CalendarPage() {
     const res = await api_calendar_all();
     if (res && res instanceof Array) {
       setEvents(res.map(sanitize_event));
+      // react-simple-scheduler v1.2.8 memoizes for
+      //   performance, this forces a rerender
+      window.dispatchEvent(new Event("resize"));
     }
   }, [eventAcquire]);
 

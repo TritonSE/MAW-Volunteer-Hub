@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactSelect from "react-select";
 import ROLES from "../constants/roles";
 
-export default function RoleSelect({ value, setValue, hasError }) {
+export default function RoleSelect({ value, setValue, hasError, variant }) {
   const [hasAll, setHasAll] = useState();
   const [rolesAdj, setRolesAdj] = useState();
 
@@ -53,6 +53,8 @@ export default function RoleSelect({ value, setValue, hasError }) {
       )
   );
 
+  const IndicatorSeparator = React.memo(() => null);
+
   const styles = {
     container: (provided) => ({
       ...provided,
@@ -74,6 +76,17 @@ export default function RoleSelect({ value, setValue, hasError }) {
       ...provided,
       maxHeight: "70px",
     }),
+    dropdownIndicator: (provided) => {
+      if (variant === 1) {
+        return {
+          ...provided,
+          background: "var(--primary-blue)",
+          color: "white !important",
+          height: "100%",
+        };
+      }
+      return provided;
+    },
     menu: (provided) => ({
       ...provided,
       transform: "translateY(-7px)",
@@ -118,8 +131,11 @@ export default function RoleSelect({ value, setValue, hasError }) {
       allowSelectAll
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
-      components={{ MultiValue }}
-      placeholder="Add event to..."
+      components={{
+        MultiValue,
+        ...(variant === 1 && { IndicatorSeparator }),
+      }}
+      placeholder={variant === 1 ? "Search by role..." : "Add event to..."}
       onChange={(newVal) => {
         if (newVal.includes(rolesAdj[0])) {
           if (hasAll) {

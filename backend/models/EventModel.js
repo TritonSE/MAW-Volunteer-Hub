@@ -10,6 +10,10 @@ const AttendeeSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
+  was_assigned: {
+    type: Boolean,
+    default: false,
+  },
   guests: {
     type: [GuestSchema],
     default: [],

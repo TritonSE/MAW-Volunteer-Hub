@@ -1,0 +1,94 @@
+.assign_modal .search_form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.assign_modal .searchbar {
+  width: 180px;
+  height: 40px;
+  border-radius: 3px 0 0 3px;
+  border: none;
+  border-bottom: 1.5px solid #bbbcbc;
+  padding: 7px;
+  font-family: "Lato", sans-serif;
+  box-sizing: border-box;
+  border: 1px solid black;
+}
+.assign_modal .search_button {
+  width: 53px;
+  height: 40px;
+  border: none;
+  cursor: pointer;
+  background: var(--primary-blue);
+  border-radius: 0 3px 3px 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assign_modal .content {
+  background: #f9f9f9;
+  overflow: auto;
+}
+
+.assign_modal .header {
+  display: flex;
+  background: #0057b81a;
+  padding: 15px 32px;
+  box-sizing: border-box;
+  border-radius: 11px;
+  border: 1px solid #0057b81a;
+}
+.assign_modal .column.wide {
+  min-width: 150px;
+}
+.assign_modal .column.fill {
+  flex: 1;
+}
+
+.assign_modal .user_row {
+  display: flex;
+  align-items: center;
+  padding-left: 32px;
+  padding-right: 32px;
+  box-sizing: border-box;
+}
+.assign_modal .user_row.alt {
+  background: #bbbcbc33;
+  border-radius: 8px;
+}
+
+.assign_modal .roles {
+  display: flex;
+  overflow: auto;
+  margin-right: 12px;
+}
+.assign_modal .role_pill {
+  float: left;
+  white-space: nowrap;
+  border-radius: 20px;
+  padding: 7px 16px;
+  background: white;
+  box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
+  margin-right: 12px;
+  font-size: 14px;
+}
+
+.assign_modal .user_assign {
+  width: 103px;
+  height: 26px;
+  color: white;
+  background: var(--primary-blue);
+  border-radius: 3px;
+  border: none;
+  cursor: pointer;
+  font-family: "Lato", sans-serif;
+}
+.assign_modal .user_assign.state_1 {
+  background: var(--grey);
+}
+.assign_modal .user_assign.state_2 {
+  background: var(--secondary-blue);
+}

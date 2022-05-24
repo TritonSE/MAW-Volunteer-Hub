@@ -100,19 +100,6 @@
   height: 50vh;
   overflow: auto;
 }
-.view_modal input.searchbar {
-  width: 252px;
-  border: none;
-  border-bottom: 1.5px solid #bbbcbc;
-  padding: 7px;
-  font-family: "Lato", sans-serif;
-  outline: 0;
-  box-sizing: border-box;
-  background: #ffffff;
-  margin-left: 30px;
-  width: 240px;
-  border: 1px solid black;
-}
 .view_modal .evt_modal_content.scroll .spacer {
   height: 30px;
 }

@@ -76,6 +76,9 @@
   margin-bottom: 20px;
   background: #ffffff;
 }
+.evt_modal_content input.short {
+  width: 168px;
+}
 .evt_modal_content select {
   background: #ffffff;
 }
@@ -251,6 +254,16 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .evt_modal {
+    width: 100vw;
+    max-width: unset;
+    height: 100vh;
+    max-height: unset;
+  }
+  .evt_modal form {
+    height: 100vh;
+    overflow: auto;
+  }
   .evt_modal_content {
     display: block;
   }
