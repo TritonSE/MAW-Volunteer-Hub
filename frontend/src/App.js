@@ -19,6 +19,7 @@ import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 import HomePage from "./pages/HomePage";
+import ContactCard from "./components/ContactCard";
 
 import "./App.css";
 
