@@ -74,8 +74,8 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.virtual("verified").get(function () {
-  return this.roles.length > 0;
+UserSchema.virtual("verified").get(function check_verify() {
+  return this.roles.length > 0 || this.admin > 0;
 });
 
 UserSchema.pre("save", async function save(next) {

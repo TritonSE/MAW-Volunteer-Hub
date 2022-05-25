@@ -81,6 +81,7 @@
   margin: 0;
 }
 .profile-header-info p.deactivated {
+  color: var(--grey);
   text-align: right;
 }
 

@@ -405,7 +405,7 @@ function ProfilePage() {
               Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
               {new Date(user.createdAt).getFullYear()}
             </h2>
-            <p className="deactivated">{!user.active ? "(Deactivated)" : ""}&nbsp;</p>
+            <p className="deactivated">&nbsp;{!user.active ? "(Deactivated)" : ""}</p>
           </div>
         </div>
         <div className="profile-buttons-container">
