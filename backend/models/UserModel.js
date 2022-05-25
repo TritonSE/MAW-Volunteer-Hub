@@ -24,11 +24,6 @@ const ManualEventSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema(
   {
-    verified: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     // to make sure the user is a part of make-a-wish
     name: {
       type: String,
@@ -78,6 +73,10 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.virtual("verified").get(function () {
+  return this.roles.length > 0;
+});
 
 UserSchema.pre("save", async function save(next) {
   if (this.password && this.isModified("password")) {

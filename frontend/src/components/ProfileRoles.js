@@ -14,7 +14,7 @@ export default function ProfileRoles(props) {
   const [roles, setRoles] = useState(props.roles);
 
   function deleteRole(role) {
-    const newRoles = props.roles.filter((aRole) => aRole !== role);
+    const newRoles = roles.filter((aRole) => aRole !== role);
     api_update_roles(props.id, JSON.stringify(newRoles));
     setDeletedRole(role);
     setDeleteModalOpen(true);

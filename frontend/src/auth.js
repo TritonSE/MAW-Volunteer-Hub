@@ -233,6 +233,32 @@ async function api_update_roles(id, roles) {
   return res;
 }
 
+async function api_add_event(id, date, title, hours) {
+  const res = await api_call(`${API_ENDPOINTS.ADD_EVENT}/${id}`, {
+    data: { date, title, hours },
+    method: "POST",
+    type: "application/json",
+  });
+  return res;
+}
+
+async function api_edit_event(id, event_id, date, title, hours) {
+  const res = await api_call(`${API_ENDPOINTS.EDIT_EVENT}/${id}/${event_id}`, {
+    data: { date, title, hours },
+    method: "PATCH",
+    type: "application/json",
+  });
+  return res;
+}
+
+async function api_delete_event(id, event_id) {
+  const res = await api_call(`${API_ENDPOINTS.DELETE_EVENT}/${id}/${event_id}`, {
+    method: "DELETE",
+    type: "application/json",
+  });
+  return res;
+}
+
 export {
   api_validtoken,
   api_login,
@@ -259,4 +285,7 @@ export {
   api_user_edit,
   api_pfp_upload,
   api_update_roles,
+  api_add_event,
+  api_edit_event,
+  api_delete_event,
 };

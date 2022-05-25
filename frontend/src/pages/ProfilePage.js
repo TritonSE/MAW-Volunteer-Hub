@@ -46,6 +46,7 @@ function ProfilePage() {
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   const [rolesChanged, setRolesChanged] = useState(false);
+  const [eventsChanged, setEventsChanged] = useState(false);
 
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -231,6 +232,25 @@ function ProfilePage() {
     }
     getNewRoles();
   }, [rolesChanged]);
+
+  useEffect(() => {
+    async function getNewEvents() {
+      let searchId;
+      if (!id) {
+        searchId = currentUser._id;
+      } else {
+        searchId = id;
+      }
+
+      const res = await api_user_info(searchId);
+      if (!res || !res.user) setIs404(true);
+      else {
+        setEventsChanged(false);
+        setUser(res.user);
+      }
+    }
+    getNewEvents();
+  }, [eventsChanged]);
 
   useEffect(() => {
     if (!responseModalOpen) {
@@ -550,18 +570,22 @@ function ProfilePage() {
         </div>
       </Modal>
       <div>
-        {user.roles ? (
+        {user.roles && user.manualEvents ? (
           <div>
             <div className="user_stats">
               <ProfileRoles
                 roles={addAdminRoles()}
                 admin={currentUser.admin === 2}
-                id={user._id}
+                id={currentUser._id}
                 rolesChanged={setRolesChanged}
               />
               <ProfileCompleted tasks={user.__v} />
             </div>
-            <ProfileActivities />
+            <ProfileActivities
+              events={user.manualEvents}
+              id={user._id}
+              updateEvents={setEventsChanged}
+            />
           </div>
         ) : (
           "Loading..."
