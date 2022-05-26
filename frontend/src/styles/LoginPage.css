@@ -224,7 +224,7 @@
   height: 28px;
   padding: 0;
   padding-left: 5px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 /**
@@ -279,11 +279,11 @@
   }
 }
 
-@media only screen and (max-width: 325px) {
+@media only screen and (max-width: 350px) {
   .email-info {
     height: 50px;
   }
   .login_box {
-    height: 300px;
+    height: 305px;
   }
 }

@@ -105,7 +105,7 @@ export default function Message() {
         setSelectedRecipients(null);
         setModalText("The message was successfully sent via email!");
       } else {
-        setModalText("There was an error sending the message via email.");
+        setModalText(`There was an error sending the message via email: ${res.error}`);
       }
 
       setModalOpen(true);
@@ -142,6 +142,7 @@ export default function Message() {
               className="subject_line"
               onChange={(e) => setSubject(e.target.value)}
               value={subject}
+              placeholder="Please make sure the subject is accurate and descriptive."
             />
           </div>
           <ReactQuill

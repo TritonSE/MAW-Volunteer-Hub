@@ -77,15 +77,17 @@ module.exports = {
   },
 
   // Email message in html form when a message is posted
-  sendEmailMessage: async (users, html, subject, roles) => {
+  sendEmailMessage: async (user, html, subject, roles) => {
     const message = JSON.parse(JSON.stringify(EmailTemplate));
 
     const header = `
     <header>
       <div style="font-weight:bold; font-style:italic; font-size:12px">
-        You are receiving this message because you are in one or more of the following role(s): ${roles.join(
-          ", "
-        )}
+        Dear ${
+          user.name.split(" ")[0]
+        }, You are receiving this message because you are in one or more of the following role(s): ${roles.join(
+      ", "
+    )}
       </div>
     </header>
     <br/>
@@ -95,14 +97,14 @@ module.exports = {
       <br/>
       <hr>
       <footer style="font-size:11px">
-        <p>This email (which may contain commercial/marketing/solicitation content) was sent as a message 
+        <p>This email (which may contain commercial/marketing/solicitation/advertisement content) was sent as a message 
         from a <a href="https://wish.org/sandiego" target="_blank">Make-A-Wish San Diego</a> administrator 
-        to the afformentioned MAW role(s).</p>    
+        to the afformentioned MAW role(s) and is intended for ${user.email}.</p>    
         <p>You can login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
         Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
         <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
         <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or reply to this email.</p>
-        <p>To opt-out of Messaging emails, you can <a href="{{amazonSESUnsubscribeUrl}}" target="_blank">Unsubscribe</a>. 
+        <p>If you want to stop receiving Messaging emails, you can opt-out: <a href="{{amazonSESUnsubscribeUrl}}" target="_blank">Unsubscribe</a>. 
         If you want to stop recieving all communication from MAW and delete or deactivate your account, you can 
         email MAWVolunteerHub@gmail.com with your request.</p> 
         <br/>
@@ -116,9 +118,7 @@ module.exports = {
 
     message.Content.Simple.Body.Html.Data = full_html;
     message.Content.Simple.Subject.Data = full_subject;
-    message.Destination.ToAddresses = users;
-    // message.Destination.BccAddresses = users; // if we want to BCC instead of TO
-    // message.Destination.CcAddresses = [config.amazon_ses.email]; // UNCOMMENT WHEN MERGING TO PRODUCTION
+    message.Destination.ToAddresses = [user.email];
 
     message.ListManagementOptions.TopicName = config.amazon_ses.messaging;
 

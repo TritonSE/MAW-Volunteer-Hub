@@ -263,24 +263,52 @@ router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
 
   const subject = req.body.subject;
 
+  const is_error = false;
+  const send_success = [];
+  const send_error = [];
+
   UserModel.find({ roles: { $in: roles_to_message } })
-    .then((users) => {
-      // console.log(users);
+    .then((users_list) => {
+      // can call a single sendemail function here to "CC" MAW
 
-      const emails = users.map((elem) => elem.email);
-      // console.log(emails);
+      if (users_list.length !== 0) {
+        // users_list.forEach( user => {
 
-      sendEmailFunction
-        .sendEmailMessage(emails, html, subject, roles_to_message)
-        .then((emailResponse) => {
-          // emailResponse inside parentheses
-          console.log(emailResponse);
-          res.json({ success: true });
-        })
-        .catch((err) => {
-          console.log(err);
-          res.status(400).json(err);
+        //     sendEmailFunction
+        //       .sendEmailMessage(user, html, subject, roles_to_message)
+        //       .then((emailResponse) => {
+        //         // console.log(emailResponse);
+        //       })
+        //       .catch((err) => {
+        //         // console.log(err);
+        //         is_error = true;
+        //         res.status(400).json({ error: "There was an error sending at least 1 email." });
+        //       })
+
+        // })
+        // res.json({ success: true })
+
+        // Promise.allSettled( users_list.map(user => {
+        //   sendEmailFunction
+        //     .sendEmailMessage(user, html, subject, roles_to_message)
+        //     .then(() => send.success.push(user.email))
+        //     .catch(() => send_error.push(user.email))
+        // })).then(() => {
+        //   console.log(send_success);
+        //   console.log(send_error);
+        // });
+
+        const promises = [];
+        users_list.forEach((user) => {
+          promises.push(sendEmailFunction.sendEmailMessage(user, html, subject, roles_to_message));
         });
+
+        Promise.all(promises)
+          .then(() => res.json({ success: true }))
+          .catch(() => res.status(400).json({ error: "1 or more emails not sent" }));
+      } else {
+        res.status(400).json({ error: "No volunteers in role." });
+      }
     })
     .catch(errorHandler(res));
 });
