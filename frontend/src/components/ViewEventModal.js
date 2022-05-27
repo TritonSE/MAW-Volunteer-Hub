@@ -37,7 +37,7 @@ function GuestsContainer({ guests, addGuest, deleteGuest }) {
           onChange={(e) => setRelation(e.target.value)}
         />
         <button
-          type="button"
+          type="submit"
           className="fullwidth"
           onClick={() => {
             let has_error = 0;
@@ -447,45 +447,30 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             </button>
           </div>
           <div className="evt_modal_content">
-            <div className="columns non_responsive">
-              <div>
-                <div className="gentle">
+            <div>
+              <div className="gentle has_flex">
+                <div>
                   {attendeesArray.length} Volunteer{attendeesArray.length !== 1 ? "s" : ""}
                 </div>
-                <br />
-                {attendeesArray.map((att) => (
-                  <div key={att.volunteer._id}>
-                    <div className="very-gentle">{att.volunteer.name}</div>
-                    <div className="indented">
-                      {att.guests.map((guest) => (
-                        <span key={guest._id}>
-                          {guest.name}
-                          <br />
-                        </span>
-                      ))}
-                    </div>
-                    <br />
-                  </div>
-                ))}
-              </div>
-              <div>
-                <div className="gentle">
+                <div className="indented spaced">
                   {guestsCount} Guest{guestsCount !== 1 ? "s" : ""}
                 </div>
-                <br />
-                {attendeesArray.map((att) => (
-                  <div key={att.volunteer._id}>
-                    <br />
-                    {att.guests.map((guest) => (
-                      <span key={guest._id}>
-                        {guest.relation}
-                        <br />
-                      </span>
-                    ))}
-                    <br />
-                  </div>
-                ))}
               </div>
+              <br />
+              {attendeesArray.map((att) => (
+                <div key={att.volunteer._id}>
+                  <div className="very-gentle">{att.volunteer.name}</div>
+                  <div className="indented">
+                    {att.guests.map((guest) => (
+                      <div key={guest._id} className="has_flex has_gap">
+                        <div>{guest.name}</div>
+                        <div className="spaced">{guest.relation}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <br />
+                </div>
+              ))}
             </div>
           </div>
           {attendeesArray.length > 0 ? <br /> : null}

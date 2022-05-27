@@ -1,3 +1,6 @@
+/*
+ * GLOBAL MODAL STYLES
+ */
 .evt_modal_overlay {
   width: 100vw;
   height: 100vh;
@@ -24,6 +27,9 @@
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
+/*
+ * MODAL HEADING
+ */
 .evt_modal_header {
   height: 60px;
   background: var(--primary-blue);
@@ -53,6 +59,9 @@
   cursor: pointer;
 }
 
+/*
+ * MAIN MODAL FLEXBOX VIEW
+ */
 .evt_modal_content {
   display: flex;
   align-items: center;
@@ -76,9 +85,6 @@
   margin-bottom: 20px;
   background: #ffffff;
 }
-.evt_modal_content input.short {
-  width: 168px;
-}
 .evt_modal_content select {
   background: #ffffff;
 }
@@ -86,13 +92,18 @@
   border-bottom: 1.5px solid var(--primary-blue);
 }
 
+/*
+ * Input fields
+ */
 .evt_modal_content input[type="date"] {
   width: 168px;
   padding-bottom: 2px;
+  color: black;
 }
 .evt_modal_content input[type="time"] {
   width: 80px;
   padding-bottom: 0;
+  color: black;
 }
 .evt_modal_content input[type="number"] {
   width: 168px;
@@ -137,7 +148,8 @@
   height: 26px;
   font-family: "Lato", sans-serif;
   border-radius: 3px;
-  background: #ffffff;
+  background: white;
+  color: black;
   border: 1px solid #000000;
   cursor: pointer;
 }
@@ -147,6 +159,7 @@
   font-size: 16px;
   padding: 0;
   margin: 0;
+  color: black;
 }
 
 .evt_modal_content textarea {
@@ -229,6 +242,9 @@
   justify-content: space-between;
 }
 
+/*
+ * MODAL FOOTER and ACTION BUTTONS
+ */
 .evt_modal_footer {
   display: flex;
   align-items: center;
@@ -259,8 +275,9 @@
     max-width: unset;
     height: 100vh;
     max-height: unset;
+    overflow: auto;
   }
-  .evt_modal form {
+  .evt_modal form:not(.guest_form) {
     height: 100vh;
     overflow: auto;
   }

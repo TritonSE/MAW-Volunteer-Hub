@@ -151,6 +151,10 @@ function CalendarPage() {
     }
   }, [eventAcquire]);
 
+  useEffect(() => {
+    window.dispatchEvent(new Event("resize"));
+  }, [calEnabled]);
+
   return (
     <main className="calendar" role="main">
       <div>

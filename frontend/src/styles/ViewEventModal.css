@@ -2,6 +2,8 @@
   width: 300px !important;
   height: unset;
   min-height: unset;
+  max-height: 95vh;
+  overflow: auto;
 }
 .view_modal.evt_modal.admin {
   display: flex;
@@ -166,6 +168,7 @@
 .view_modal .evt_modal_smallbox .content {
   flex-grow: 3;
   color: #7a7a7a;
+  text-align: left;
 }
 
 .view_modal .evt_modal_smallbox .content .more {
@@ -229,7 +232,7 @@
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  margin-bottom: 10px;
+  padding-bottom: 10px;
 }
 .view_modal .guests_container .chips .chip {
   min-width: 80px;
@@ -340,6 +343,24 @@
   height: 32px;
   border-radius: 32px;
   margin: 0 8px 0 4px;
+}
+
+.indented {
+  margin-left: 30px;
+}
+.spaced {
+  padding-left: 10px;
+}
+.has_flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.has_flex div {
+  flex: 1;
+}
+.has_gap {
+  margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 600px) {

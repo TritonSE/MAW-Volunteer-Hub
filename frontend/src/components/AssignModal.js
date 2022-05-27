@@ -104,7 +104,7 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
       overlayClassName="evt_modal_overlay highest"
     >
       <div className="evt_modal_header">
-        <h1>Assign Volunteers to &quot;{name.trim() === "" ? "New Event" : name}&quot;</h1>
+        <h1>Assign Volunteers to {name.trim() === "" ? "Event" : `"${name}"`}</h1>
         <button type="button" onClick={() => setOpen(false)}>
           <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
         </button>

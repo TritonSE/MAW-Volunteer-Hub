@@ -38,7 +38,6 @@
   background: #0057b81a;
   padding: 15px 32px;
   box-sizing: border-box;
-  border-radius: 11px;
   border: 1px solid #0057b81a;
 }
 .assign_modal .column.wide {
@@ -57,13 +56,13 @@
 }
 .assign_modal .user_row.alt {
   background: #bbbcbc33;
-  border-radius: 8px;
 }
 
 .assign_modal .roles {
   display: flex;
   overflow: auto;
   margin-right: 12px;
+  padding: 10px 0;
 }
 .assign_modal .role_pill {
   float: left;

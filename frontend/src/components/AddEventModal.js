@@ -87,6 +87,9 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
     },
   ]);
 
+  // Crude mobile check, but mainly needed for iOS Safari detection
+  const is_mobile = navigator.userAgent.indexOf("Mobile") > -1;
+
   useEffect(() => setTo(dateFunctions.copy_time(from, to)), [from]);
 
   function on_open() {
@@ -305,8 +308,19 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               <input
                 type="date"
                 value={date_format(from, "4Y-2n-2d")}
-                onFocus={() => setCalendarVisible(true)}
-                readOnly
+                onFocus={() => {
+                  if (!is_mobile) {
+                    setCalendarVisible(true);
+                  }
+                }}
+                onChange={(e) => {
+                  if (is_mobile) {
+                    // Odd iOS Safari bug, dates are off by one
+                    const d = new Date(e.target.value);
+                    setFrom(dateFunctions.walk_day(d, 1));
+                  }
+                }}
+                readOnly={!is_mobile}
               />
               {from && calendarVisible ? (
                 <>
