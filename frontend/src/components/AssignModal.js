@@ -8,6 +8,15 @@ import "../styles/AddEventModal.css";
 import "../styles/ViewEventModal.css";
 import "../styles/AssignModal.css";
 
+function Abbreviator({ content, maxLength }) {
+  return (
+    <>
+      {content.substring(0, maxLength)}
+      {content.length >= maxLength ? <>...</> : null}
+    </>
+  );
+}
+
 export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolunteers }) {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -52,7 +61,9 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
 
     return (
       <div className={`user_row ${index % 2 === 0 ? "alt" : ""}`} style={style}>
-        <div className="column wide">{user.name}</div>
+        <div className="column wide">
+          <Abbreviator content={user.name} maxLength={20} />
+        </div>
         <div className="column fill roles">
           {user.roles.map((role) => {
             const obj = ROLES.find((tmp) => tmp.name === role);

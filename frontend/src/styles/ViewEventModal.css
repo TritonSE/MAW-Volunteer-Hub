@@ -35,6 +35,10 @@
   padding: 5px;
   margin-top: 12px;
 }
+.view_modal .question_response {
+  width: calc(100% - 30px);
+  min-width: unset;
+}
 
 .view_modal .question_info {
   color: #9b9cac;

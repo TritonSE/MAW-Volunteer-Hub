@@ -459,7 +459,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               <br />
               {attendeesArray.map((att) => (
                 <div key={att.volunteer._id}>
-                  <div className="very-gentle">{att.volunteer.name}</div>
+                  <div className="very-gentle">{att.volunteer.name}:</div>
                   <div className="indented">
                     {att.guests.map((guest) => (
                       <div key={guest._id} className="has_flex has_gap">
@@ -501,7 +501,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             <img alt="Close modal" src="/img/wishgranting_modal_close.svg" />
           </button>
         </div>
-        <div className="evt_modal_content nonflex spaced">
+        <div className="evt_modal_content nonflex">
           <div>
             <div className="spots_filled">
               {guestsCount + attendeesArray.length}/{event.number_needed} spots filled
@@ -548,6 +548,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 <br />
                 <textarea
                   placeholder="Type your response here..."
+                  className="question_response"
                   defaultValue={event.attendees[currentUser._id]?.response}
                   onChange={(e) => setResponse(e.target.value)}
                 />
