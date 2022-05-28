@@ -367,6 +367,12 @@
   margin-bottom: 10px;
 }
 
+@media only screen and (max-width: 650px) {
+  .view_modal .evt_modal_smallbox {
+    margin: 15px 30px;
+  }
+}
+
 @media only screen and (max-width: 600px) {
   .view_modal .evt_modal_content .columns:not(.non_responsive) {
     display: block;
