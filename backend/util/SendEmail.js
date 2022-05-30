@@ -124,6 +124,7 @@ module.exports = {
 
     const command = new SendEmailCommand(message);
     const res = await client.send(command);
-    return res;
+
+    return { res, email: user.email };
   },
 };

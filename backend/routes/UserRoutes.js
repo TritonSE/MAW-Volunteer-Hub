@@ -303,11 +303,34 @@ router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
           promises.push(sendEmailFunction.sendEmailMessage(user, html, subject, roles_to_message));
         });
 
-        Promise.all(promises)
-          .then(() => res.json({ success: true }))
-          .catch(() => res.status(400).json({ error: "1 or more emails not sent" }));
+        const success = [];
+        const email_list = users_list.map((user) => user.email);
+
+        Promise.allSettled(promises).then((results) => {
+          results.forEach((result) => {
+            if (result.status === "fulfilled") {
+              success.push(result.value.email);
+            }
+          });
+
+          // console.log(email_list);
+          // console.log(success);
+
+          const fail = email_list.filter((elem) => !success.includes(elem));
+          // console.log(fail);
+
+          if (fail.length === 0) {
+            res.json({ success: true });
+          } else {
+            res.status(400).json({ error: "1 or more emails not sent.", failed_emails: fail });
+          }
+        });
+
+        // Promise.all(promises)
+        //   .then(() => res.json({ success: true }))
+        //   .catch(() => res.status(400).json({ error: "1 or more emails not sent" }));
       } else {
-        res.status(400).json({ error: "No volunteers in role." });
+        res.status(400).json({ error: "No volunteers in role.", failed_emails: null });
       }
     })
     .catch(errorHandler(res));

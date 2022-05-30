@@ -104,9 +104,14 @@ export default function Message() {
         setSubject("");
         setSelectedRecipients(null);
         setModalText("The message was successfully sent via email!");
-      } else {
-        setModalText(`There was an error sending the message via email: ${res.error}`);
-      }
+      } else if (res.failed_emails === null)
+        setModalText(`There was an error sending the message: ${res.error}`);
+      else
+        setModalText(
+          `There was an error sending the message: ${
+            res.error
+          } Emails not sent to ${res.failed_emails.join(", ")}`
+        );
 
       setModalOpen(true);
     }
@@ -186,7 +191,9 @@ export default function Message() {
               <img src="/img/close-modal.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="login_modal_content">{modalOpen === true ? modalText : modalOpen}</div>
+          <div className="login_modal_content message_modal">
+            {modalOpen === true ? modalText : modalOpen}
+          </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
             Okay
           </button>
