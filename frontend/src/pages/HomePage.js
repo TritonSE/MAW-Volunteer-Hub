@@ -9,6 +9,8 @@ function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    document.title = "Home - Make-a-Wish San Diego";
+
     api_wish_wednesday().then((res) => {
       setMessage(res[0].message || "");
       setDate(res[0].createdAt || "");

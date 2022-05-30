@@ -5,6 +5,7 @@ const SITE_PAGES = {
   WISH_GRANTING: "/wish-granting",
   PROFILE: "/profile",
   MANAGE: "/manage",
+  CALENDAR: "/calendar",
 
   SIGNOUT: "/signout",
 };
@@ -39,6 +40,13 @@ const API_ENDPOINTS = {
 
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
+
+  CALENDAR_ALL: "/cal/all",
+  CALENDAR_ICS: "/cal/ics",
+  CALENDAR_NEW: "/cal/new",
+  CALENDAR_DELETE: "/cal/del",
+  CALENDAR_UPDATE: "/cal/upd",
+  CALENDAR_RESPOND: "/cal/res",
 
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
