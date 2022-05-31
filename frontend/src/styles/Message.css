@@ -1,13 +1,3 @@
-.title {
-  box-sizing: border-box;
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 24px;
-  line-height: 29px;
-  padding-left: 2vw;
-}
-
 .msg_layout {
   display: flex;
   flex-direction: column;
@@ -17,7 +7,17 @@
   overflow: auto;
 }
 
-.input_container {
+.msg_layout .title {
+  box-sizing: border-box;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  padding-left: 2vw;
+}
+
+.msg_layout .input_container {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -30,19 +30,19 @@
   padding-top: 20px;
 }
 
-.recipient_section {
+.msg_layout .recipient_section {
   display: flex;
   align-items: center;
 }
 
-.subject_section {
+.msg_layout .subject_section {
   display: flex;
   align-items: center;
   margin-top: 10px;
   margin-bottom: 30px;
 }
 
-.prompt_title {
+.msg_layout .prompt_title {
   width: 75px;
   font-family: "Lato";
   font-style: normal;
@@ -51,8 +51,8 @@
   line-height: 17px;
 }
 
-.subject_line,
-.select_recipients {
+.msg_layout .subject_line,
+.msg_layout .select_recipients {
   box-sizing: border-box;
   width: calc(100% - 75px);
 
@@ -60,12 +60,12 @@
   border-radius: 7px;
 }
 
-.subject_line {
+.msg_layout .subject_line {
   padding-left: 10px;
   height: 35px;
 }
 
-.message_meta {
+.msg_layout .message_meta {
   box-sizing: border-box;
   width: 90%;
   display: flex;
@@ -73,13 +73,13 @@
 }
 
 /* Controls ReactQuill editor height */
-.ql-container {
+.msg_layout .ql-container {
   height: 40vh;
   margin-bottom: 5vh;
 }
 
 @media only screen and (max-width: 1024px) and (max-height: 1024px) {
-  .ql-container {
+  .msg_layout .ql-container {
     height: 30vh;
   }
   .msg_layout {

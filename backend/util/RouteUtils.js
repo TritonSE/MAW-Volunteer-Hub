@@ -15,7 +15,7 @@ const validate =
   (body_params = [], query_params = []) =>
   (req, res, next) => {
     const body_valid = body_params.every((p) => {
-      if (!req.body[p] || req.body[p].trim() === "") {
+      if (req.body[p] === null || req.body[p].toString().trim() === "") {
         if (config.app.env === "development")
           res.status(400).json({ error: `"${p}" missing from body.` });
         else res.status(401).json({ error: "Access denied." });
