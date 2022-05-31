@@ -238,6 +238,7 @@ export default function ProfileActivities(props) {
           <input
             type="date"
             value={activityDate}
+            required
             onChange={(e) => setActivityDate(e.target.value)}
           />
           <p className="form_prompt">Event Name:</p>
@@ -245,6 +246,7 @@ export default function ProfileActivities(props) {
             type="text"
             placeholder="Enter event name"
             value={eventName}
+            required
             onChange={(e) => setEventName(e.target.value)}
           />
           <p className="form_prompt">Hours:</p>
@@ -252,6 +254,7 @@ export default function ProfileActivities(props) {
             type="number"
             placeholder="Enter number of hours volunteered"
             value={eventDuration}
+            required
             onChange={(e) => setEventDuration(e.target.value)}
           />
           <button className="modal-button button-primary" type="submit">
