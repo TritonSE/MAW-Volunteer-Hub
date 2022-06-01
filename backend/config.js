@@ -20,4 +20,11 @@ module.exports = {
     secret_key: process.env.AWS_SECRET_KEY || "",
     max_file_size: 1.6e7, // 16 MB
   },
+  google_oauth: {
+    client_id: process.env.GOOGLE_CLIENT_ID || "",
+    client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
+    redirect: "https://developers.google.com/oauthplayground",
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN || "",
+    maw_email: process.env.MAW_EMAIL_ADDRESS || "",
+  },
 };
