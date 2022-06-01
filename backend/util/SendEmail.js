@@ -28,12 +28,38 @@ const transporter = nodemailer.createTransport(
     secure: true,
   },
   {
-    from: config.google_oauth.maw_email,
+    from: `Make-A-Wish San Diego ${config.google_oauth.maw_email}`,
+    replyTo: config.google_oauth.maw_email,
   }
 );
 
 module.exports = {
-  sendEmailSignup: async (user) => {},
+  signup: async (user) => {
+    const msgSubject = "Thank you for joining Make-A-Wish San Diego!";
+
+    const msgHtml = `
+        <div>
+            <p>Dear ${user.name.split(" ")[0]},</p>
+            <p>Your account has been created. You will be notified when 
+            an admin has approved your account and have access to the website.</p>
+            <p>Thanks,<br/>MAW SD</p>
+        </div>`;
+
+    const msgText = `Dear ${user.name.split(" ")[0]}, \n
+        Your account has been created. You will be notified when an admin has approved 
+        your account and have access to the website. \nThanks, \nMAW SD`;
+
+    const data = {
+      to: user.email,
+      subject: msgSubject,
+      html: msgHtml,
+      text: msgText,
+    };
+
+    const res = await transporter.sendMail(data);
+
+    return res;
+  },
 
   sendEmailVerify: async (user) => {},
 };
