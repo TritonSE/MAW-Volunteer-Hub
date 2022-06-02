@@ -152,8 +152,8 @@ function LoginPage() {
           {!isLogin && (
             <p className="email-info">
               &#9432; By providing your email address, you are agreeing and opting-in to recieve
-              email communication from Make-A-Wish San Diego for messaging/announcements, account
-              info, and event invitations/assignments.
+              email communication from Make-A-Wish San Diego for messaging/announcements, event
+              invitations/assignments, and account info.
             </p>
           )}
           <PasswordField

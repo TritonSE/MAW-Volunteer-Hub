@@ -46,10 +46,9 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
 router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then((user) => {
-      sendEmail
-        .verify(user)
-        .then((emailResponse) => console.log(emailResponse))
-        .catch((err) => console.log(err));
+      sendEmail.verify(user);
+      // .then((emailResponse) => console.log(emailResponse))
+      // .catch((err) => console.log(err));
 
       res.status(200).json({ success: true });
     })
