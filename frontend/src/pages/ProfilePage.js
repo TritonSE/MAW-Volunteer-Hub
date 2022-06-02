@@ -142,17 +142,19 @@ function ProfilePage() {
   }
 
   async function deactivate_account() {
-    if (!id) return;
-
-    const res = await api_user_activate(id, !user.active);
+    const res = await api_user_activate(id ?? currentUser._id, !user.active);
     if (!res || res.error) {
       setResponseModalOpen((res ?? {}).error ?? "Unable to reach server, please try again.");
     } else {
       setDeactivateModalOpen(false);
 
-      const new_data = await api_user_info(id ?? currentUser._id);
-      if (new_data && new_data.user) {
-        setUser(new_data.user);
+      if (isCurrentUser) {
+        navigate("/signout");
+      } else {
+        const new_data = await api_user_info(id ?? currentUser._id);
+        if (new_data && new_data.user) {
+          setUser(new_data.user);
+        }
       }
     }
   }
@@ -409,7 +411,7 @@ function ProfilePage() {
           </div>
         </div>
         <div className="profile-buttons-container">
-          {!isCurrentUser && (
+          {(isCurrentUser || currentUser.admin > 0) && (
             <button
               type="button"
               className="change-password-button"
@@ -448,7 +450,18 @@ function ProfilePage() {
         onRequestClose={() => setDeactivateModalOpen(false)}
         contentLabel="Deactivate profile modal"
       >
-        <h1>Are you sure you want to {user.active ? "deactivate" : "activate"} this profile?</h1>
+        <h1>
+          Are you sure you want to {user.active ? "deactivate" : "activate"}{" "}
+          {isCurrentUser ? "your" : "this"} profile?
+          {isCurrentUser && (
+            <>
+              <br />
+              <br />
+              You will be logged out, and must contact an administrator to re-activate it in the
+              future.
+            </>
+          )}
+        </h1>
         <button
           className="close-button"
           aria-label="close-button"
@@ -464,7 +477,7 @@ function ProfilePage() {
             Cancel
           </button>
           <button
-            className="modal-button small button-primary"
+            className={`modal-button small ${isCurrentUser ? "button-danger" : "button-primary"}`}
             type="button"
             onClick={deactivate_account}
           >

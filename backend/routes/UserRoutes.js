@@ -95,11 +95,11 @@ router.put("/edit/:id", idParamValidator(), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.post("/activate/:id", idParamValidator(), validate(["active"]), adminValidator, (req, res) =>
+router.post("/activate/:id", idParamValidator(), validate(["active"]), (req, res) =>
   UserModel.findById(req.params.id)
     .then((user) => {
-      if (req.params.id === req.user._id) {
-        res.status(400).json({ error: "Cannot deactivate user's own profile." });
+      if (req.user.admin === 0 && req.params.id !== req.user._id) {
+        res.status(400).json({ error: "Insufficient permissions to deactivate profile." });
         return null;
       }
 
