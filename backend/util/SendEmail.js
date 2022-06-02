@@ -61,5 +61,33 @@ module.exports = {
     return res;
   },
 
-  sendEmailVerify: async (user) => {},
+  verify: async (user) => {
+    const msgHtml = `
+      <div>
+          <p>Dear ${user.name.split(" ")[0]},</p>
+          <p>Your account has been approved. You can now access the website at 
+          <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+          https://maw-volunteer-hub.herokuapp.com/login</a>.</p>
+          <p>Thanks,<br/>MAW SD</p>
+      </div>`;
+
+    const msgText = `Dear ${user.name.split(" ")[0]}, \n
+      Your account has been approved. You can now access the website at 
+      https://maw-volunteer-hub.herokuapp.com/login" \nThanks, \nMAW SD`;
+
+    const msgSubject = "Your Make-A-Wish San Diego account has been approved!";
+
+    const data = {
+      to: user.email,
+      subject: msgSubject,
+      html: msgHtml,
+      text: msgText,
+    };
+
+    const res = await transporter.sendMail(data);
+
+    return res;
+  },
+
+  sendEmailMessage: async () => {},
 };
