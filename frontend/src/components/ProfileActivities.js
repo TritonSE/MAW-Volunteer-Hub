@@ -38,13 +38,17 @@ const columns = [
     Header: "",
     accessor: "edit",
     Cell: (props) => (
-      <div className="edit_activity_container">
-        <button type="button" onClick={() => props.editActivity(props.cell.row)}>
-          <img src="/img/filelisting_edit.svg" alt="" />
-        </button>
-        <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
-          <img src="/img/filelisting_delete.svg" alt="" />
-        </button>
+      <div>
+        {props.admin ? (
+          <div className="edit_activity_container">
+            <button type="button" onClick={() => props.editActivity(props.cell.row)}>
+              <img src="/img/filelisting_edit.svg" alt="" />
+            </button>
+            <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
+              <img src="/img/filelisting_delete.svg" alt="" />
+            </button>
+          </div>
+        ) : null}
       </div>
     ),
   },
@@ -186,7 +190,7 @@ export default function ProfileActivities(props) {
                 prepareRow(row);
                 return (
                   // Apply the row props
-                  <tr {...row.getRowProps()}>
+                  <tr className="activities_row" {...row.getRowProps()}>
                     {
                       // Loop over the rows cells
                       row.cells.map((cell, colIndex) => (
@@ -197,7 +201,11 @@ export default function ProfileActivities(props) {
                         >
                           {
                             // Render the cell contents
-                            cell.render("Cell", { editActivity: startEditActivity, deleteActivity })
+                            cell.render("Cell", {
+                              editActivity: startEditActivity,
+                              deleteActivity,
+                              admin: props.admin,
+                            })
                           }
                         </td>
                       ))
@@ -210,6 +218,7 @@ export default function ProfileActivities(props) {
         ) : (
           <tbody>
             <tr className="no_activities_row">
+              <td className="no_activities" />
               <td className="no_activities">No Activities Yet</td>
             </tr>
           </tbody>

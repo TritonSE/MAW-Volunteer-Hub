@@ -47,7 +47,7 @@
     "qs": "^6.10.3",
     "rate-limiter-flexible": "^2.3.6",
     "sanitize-html": "^2.7.0",
-    "sharp": "^0.30.2"
+    "sharp": "^0.30.6"
   },
   "devDependencies": {
     "eslint": "^8.6.0",
