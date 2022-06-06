@@ -7,13 +7,7 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
-import {
-  api_user_info,
-  api_user_updatepass,
-  api_user_delete,
-  api_pfp_upload,
-  api_calendar_all,
-} from "../api";
+import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
@@ -51,7 +45,7 @@ function ProfilePage() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
-  const [calendarEvents, setCalendarEvents] = useState([]);
+  // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -251,17 +245,6 @@ function ProfilePage() {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
 
-  useEffect(() => {
-    async function getAllCalendarEvents() {
-      const res = await api_calendar_all();
-      if (!res) setIs404(true);
-      else {
-        setCalendarEvents(res);
-      }
-    }
-    getAllCalendarEvents();
-  }, []);
-
   function addAdminRoles() {
     let roles;
     if (user.admin === 1) {
@@ -275,9 +258,9 @@ function ProfilePage() {
   }
 
   // Change format of calendar events to fit in with the format of manual events.
-  function formatCalendarEvents(events) {
-    const allNonManual = [];
-    events.map((event) =>
+  function formatCalendarEvents() {
+    let allNonManual = [];
+    user.events.map((event) =>
       allNonManual.push({
         _id: event._id,
         date: event.from,
@@ -286,15 +269,8 @@ function ProfilePage() {
         notEditable: true,
       })
     );
+    allNonManual = allNonManual.concat(user.manualEvents);
     return allNonManual;
-  }
-
-  // Get both the manual and non-manual events for the user
-  function getAllEvents() {
-    let filteredCalendarEvents = calendarEvents.filter((event) => user.events.includes(event._id));
-    filteredCalendarEvents = formatCalendarEvents(filteredCalendarEvents);
-    filteredCalendarEvents = filteredCalendarEvents.concat(user.manualEvents);
-    return filteredCalendarEvents;
   }
 
   return is404 ? (
@@ -555,7 +531,7 @@ function ProfilePage() {
               <ProfileCompleted tasks={user.__v} />
             </div>
             <ProfileActivities
-              events={getAllEvents()}
+              events={formatCalendarEvents()}
               admin={currentUser.admin === 2}
               id={user._id}
               updateEvents={setEventsChanged}

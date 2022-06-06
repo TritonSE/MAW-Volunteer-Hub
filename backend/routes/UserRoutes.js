@@ -32,6 +32,7 @@ router.get("/users", (req, res) =>
 
 router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
+    .populate("events")
     .then((user) =>
       res.json({
         user: user.toJSON(),
