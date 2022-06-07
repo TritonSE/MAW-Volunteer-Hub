@@ -18,6 +18,14 @@ const columns = [
   {
     Header: "Event",
     accessor: "title",
+    Cell: (props) => (
+      <div className="event_title_container">
+        {!props.getNotEditable(props.row.index) ? (
+          <div className="man_event_marker">(Manually Added) </div>
+        ) : null}
+        <div className="event_title_value">{props.value}</div>
+      </div>
+    ),
   },
   {
     Header: "Hours",
@@ -139,17 +147,16 @@ export default function ProfileActivities(props) {
 
   // Determines if an activity should be editable or not.
   function getNotEditable(index) {
-    if (props.admin) return false;
     return data[index].notEditable;
   }
 
   return (
-    <div className="table_container">
+    <div className="activities_table">
       <div className="header_container">
         <h2>Activity Log</h2>
         <div className="manually_log_activity">
           <h2>Manually Log Activity</h2>
-          {props.admin ? (
+          {props.currId !== props.id ? (
             <div />
           ) : (
             <button type="button" className="add_roles" onClick={() => setLogModalOpen(true)}>
@@ -160,7 +167,7 @@ export default function ProfileActivities(props) {
           )}
         </div>
       </div>
-      <table className="activities_table" {...getTableProps()}>
+      <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>

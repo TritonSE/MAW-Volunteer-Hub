@@ -270,6 +270,9 @@ function ProfilePage() {
       })
     );
     allNonManual = allNonManual.concat(user.manualEvents);
+    allNonManual.sort(
+      (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
+    );
     return allNonManual;
   }
 
@@ -534,6 +537,7 @@ function ProfilePage() {
               events={formatCalendarEvents()}
               admin={currentUser.admin === 2}
               id={user._id}
+              currId={currentUser._id}
               updateEvents={setEventsChanged}
             />
           </div>
