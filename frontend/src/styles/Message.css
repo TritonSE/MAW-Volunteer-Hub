@@ -78,6 +78,68 @@
   margin-bottom: 5vh;
 }
 
+.button_container {
+  display: flex;
+  flex-direction: column;
+  margin-right: 40px;
+  align-items: flex-end;
+  height: 50px;
+}
+
+.post_announcement_message {
+  width: 100px;
+  height: 25px;
+  border-radius: 3px;
+  background: #1a68bf;
+
+  margin-bottom: 5px;
+
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.emptyfields {
+  font-size: 12px;
+  height: 20px;
+}
+
+.placeholder {
+  height: 20px;
+}
+
+.subject_line::placeholder {
+  color: gray;
+}
+
+.subject_line:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+.message_modal {
+  overflow: scroll;
+}
+
+/* hide scrollbar when listing message response */
+.message_modal::-webkit-scrollbar {
+  display: none;
+}
+.message_modal {
+  -ms-overflow-style: none;
+}
+
+.message_modal_container {
+  height: 212px !important;
+}
+
+/* Modal styles inherited from LoginPage */
+
 @media only screen and (max-width: 1024px) and (max-height: 1024px) {
   .msg_layout .ql-container {
     height: 30vh;

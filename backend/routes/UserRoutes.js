@@ -13,6 +13,7 @@ const {
   idParamValidator,
   adminValidator,
   primaryAdminValidator,
+  roleValidator,
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const userRoles = require("../util/UserRoles");
@@ -47,8 +48,6 @@ router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) 
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then((user) => {
       sendEmail.verify(user);
-      // .then((emailResponse) => console.log(emailResponse))
-      // .catch((err) => console.log(err));
 
       res.status(200).json({ success: true });
     })
@@ -286,6 +285,33 @@ router.patch("/editmanual/:id/:event_id", (req, res) => {
     })
     .then(() => res.json({ success: true }))
     .catch(errorHandler);
+});
+
+/**
+ * Message sending via email to all user(s) in role(s)
+ */
+router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
+  const roles_to_message = JSON.parse(req.body.roles);
+  const html = req.body.html;
+  const subject = req.body.subject;
+
+  UserModel.find({ roles: { $in: roles_to_message } })
+    .then((users_list) => {
+      // can call a single sendEmail here to CC MAW
+
+      if (users_list.length !== 0) {
+        users_list.forEach((user) => {
+          if (user.active === true) {
+            sendEmail.message(user, html, subject, roles_to_message);
+          }
+        });
+
+        res.json({ success: true });
+      } else {
+        res.status(400).json({ error: "No volunteers in role(s)." });
+      }
+    })
+    .catch(errorHandler(res));
 });
 
 module.exports = router;

@@ -89,5 +89,52 @@ module.exports = {
     return res;
   },
 
-  sendEmailMessage: async () => {},
+  message: async (user, html, subject, roles) => {
+    const header = `
+    <header>
+      <div style="font-weight:bold; font-style:italic; font-size:12px">
+        Dear ${
+          user.name.split(" ")[0]
+        }, You are receiving this message because you are in one or more of the following role(s): ${roles.join(
+      ", "
+    )}
+      </div>
+    </header>
+    <br/>
+    `;
+
+    const footer = `
+      <br/>
+      <hr>
+      <footer style="font-size:11px">
+        <p>This email (which may contain commercial/marketing/solicitation/advertisement content) was sent as a message 
+        from a <a href="https://wish.org/sandiego" target="_blank">Make-A-Wish San Diego</a> administrator 
+        to the afformentioned MAW role(s) and is intended for ${user.email}.</p>    
+        <p>You can login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+        Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
+        <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
+        <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or reply to this email.</p>
+        <p>If you want to stop receiving Messaging emails or stop recieving all communication from MAW, you can
+        email MAWVolunteerHub@gmail.com with your request to delete your account, or you can login
+        to the Volunteer Hub and deactivate your account.</p> 
+        <br/>
+        <p style="color:black">Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
+      </footer>`;
+
+    const full_html = header + html + footer;
+
+    const intro = "Message from Make-A-Wish: ";
+    const full_subject = intro + subject;
+
+    const data = {
+      to: user.email,
+      subject: full_subject,
+      html: full_html,
+      text: "Message only sent using html.",
+    };
+
+    const res = await transporter.sendMail(data);
+
+    return res;
+  },
 };

@@ -50,6 +50,8 @@ const API_ENDPOINTS = {
 
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
+
+  MESSAGE: "/user/message",
 };
 
 const SIDENAV_STEPS = [
@@ -71,7 +73,7 @@ const SIDENAV_ROUTES = [
 // const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 // const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
 
-const MANAGE_STEPS = ["People", "Wish Wednesday"];
-const MANAGE_ROUTES = ["people", "wish-wednesday"];
+const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
+const MANAGE_ROUTES = ["people", "message", "wish-wednesday"];
 
 export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };

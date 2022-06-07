@@ -20,8 +20,6 @@ router.post("/signup", (req, res, next) =>
       });
     } else {
       sendEmail.signup(user);
-      // .then((emailResponse) => console.log(emailResponse))
-      // .catch((err) => console.log(err));
 
       res.json({
         success: true,

@@ -213,6 +213,15 @@ const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method
 const api_wish_wednesday_add = (message) =>
   api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
 
+/**
+ * MESSAGING EMAILS
+ */
+const api_message_email = async (roles, html, subject) =>
+  api_call(API_ENDPOINTS.MESSAGE, {
+    data: { roles, html, subject },
+    method: "POST",
+  });
+
 export {
   api_validtoken,
   api_login,
@@ -244,4 +253,5 @@ export {
   api_calendar_respond,
   api_wish_wednesday,
   api_wish_wednesday_add,
+  api_message_email,
 };
