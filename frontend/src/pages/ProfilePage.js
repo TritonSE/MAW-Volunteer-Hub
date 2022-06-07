@@ -528,7 +528,7 @@ function ProfilePage() {
                 id={currentUser._id}
                 rolesChanged={setRolesChanged}
               />
-              <ProfileCompleted tasks={user.__v} />
+              <ProfileCompleted tasks={user.events.length + user.manualEvents.length} />
             </div>
             <ProfileActivities
               events={formatCalendarEvents()}

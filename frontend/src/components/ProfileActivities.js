@@ -28,7 +28,7 @@ const columns = [
     accessor: "edit",
     Cell: (props) => (
       <div>
-        {props.admin ? (
+        {!props.getNotEditable(props.row.index) ? (
           <div className="edit_activity_container">
             <button type="button" onClick={() => props.editActivity(props.cell.row)}>
               <img src="/img/filelisting_edit.svg" alt="" />
@@ -137,6 +137,12 @@ export default function ProfileActivities(props) {
     props.updateEvents(true);
   }
 
+  // Determines if an activity should be editable or not.
+  function getNotEditable(index) {
+    if (props.admin) return false;
+    return data[index].notEditable;
+  }
+
   return (
     <div className="table_container">
       <div className="header_container">
@@ -193,7 +199,7 @@ export default function ProfileActivities(props) {
                             cell.render("Cell", {
                               editActivity: startEditActivity,
                               deleteActivity,
-                              admin: props.admin,
+                              getNotEditable,
                             })
                           }
                         </td>
