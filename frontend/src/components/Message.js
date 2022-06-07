@@ -83,7 +83,7 @@ export default function Message() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalText, setModalText] = useState("");
 
-  // if any fields of the message are empty
+  // check if any fields of the message are empty
   const emptyFields = () => {
     const text_empty =
       convertedText.replace(/<(.|\n)*?>/g, "").trim().length === 0 &&
@@ -95,21 +95,14 @@ export default function Message() {
 
   // when "Post" is clicked, handle email sending
   const handleSubmit = async () => {
-    // console.log("Recipients: ");
-    // console.log(selectedRecipients);
-    // console.log("Subject: " + subject);
-    // console.log("Message: " + convertedText);
-
     // if fields are empty, don't allow email sending
     if (!emptyFields()) {
       const roles_to_message = selectedRecipients
         .map((elem) => elem.label)
         .filter((elem) => elem !== "All");
-      // console.log("ROLES TO MSG", roles_to_message);
 
       const res = await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
 
-      // console.log(res);
       if (res && res.success) {
         // clear fields if success
         setConvertedText("");
