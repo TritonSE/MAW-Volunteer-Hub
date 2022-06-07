@@ -9,22 +9,11 @@ import "../styles/ProfileActivities.css";
 const dateStart = 0;
 const dateEnd = 10;
 
-// Formats the date
-const formatDate = (original) => {
-  const trimmed = original.substring(dateStart, dateEnd);
-  const vals = trimmed.split("-");
-  const YEAR = 0;
-  const MONTH = 1;
-  const DAY = 2;
-
-  return vals[MONTH] + "/" + vals[DAY] + "/" + vals[YEAR];
-};
-
 const columns = [
   {
     Header: "Date",
     accessor: "date",
-    Cell: (props) => <div>{formatDate(props.cell.value)}</div>,
+    Cell: (props) => <div>{new Date(props.cell.value).toLocaleDateString()}</div>,
   },
   {
     Header: "Event",
@@ -149,7 +138,7 @@ export default function ProfileActivities(props) {
   }
 
   return (
-    <div>
+    <div className="table_container">
       <div className="header_container">
         <h2>Activity Log</h2>
         <div className="manually_log_activity">
