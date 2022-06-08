@@ -93,7 +93,7 @@ export default function Message() {
     return text_empty || recipients_empty || subject_empty;
   };
 
-  // when "Post" is clicked, handle email sending
+  // when "Post" is clicked, handle email sending and response modal
   const handleSubmit = async () => {
     // if fields are empty, don't allow email sending
     if (!emptyFields()) {

@@ -1,3 +1,10 @@
+/**
+ * Email Sending Module
+ * Contains functions for signup verification, site access notification, and messaging
+ * Utilizes Nodemailer which uses Gmail SMTP Transport to deliver messages
+ * and Google's OAuth2 for authentication.
+ */
+
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 

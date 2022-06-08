@@ -47,6 +47,7 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
 router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
     .then((user) => {
+      // send email
       sendEmail.verify(user);
 
       res.status(200).json({ success: true });
@@ -299,6 +300,7 @@ router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
     .then((users_list) => {
       // can call a single sendEmail here to CC MAW
 
+      // only send email if user(s) exit in role(s) and user is active
       if (users_list.length !== 0) {
         users_list.forEach((user) => {
           if (user.active === true) {

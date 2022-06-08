@@ -19,6 +19,7 @@ router.post("/signup", (req, res, next) =>
           : "Failed to sign up, please try again.",
       });
     } else {
+      // send email
       sendEmail.signup(user);
 
       res.json({
