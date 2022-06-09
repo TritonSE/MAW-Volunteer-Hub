@@ -16,14 +16,15 @@
 }
 
 .table_container {
-  height: 40vh;
+  height: 30vh;
+  overflow: scroll;
 }
 
 .activities_table {
   box-sizing: border-box;
   width: 100%;
   height: 40vh;
-  overflow: auto;
+  /* overflow: auto; */
   display: inline-block;
 
   background: white;
@@ -42,6 +43,10 @@
 /*Fix activity entry height*/
 .activities_table tbody tr {
   height: 5vh;
+}
+
+.activities_table tbody {
+  height: 10vh;
 }
 
 .activities_table_header {

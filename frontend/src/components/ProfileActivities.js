@@ -167,65 +167,67 @@ export default function ProfileActivities(props) {
           )}
         </div>
       </div>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, colIndex) => (
-                <th
-                  {...column.getHeaderProps()}
-                  className={`activities_table_header ${getHeaderSuffix(colIndex)}`}
-                >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        {/* Apply the table body props */}
-        {data.length > 0 ? (
-          <tbody {...getTableBodyProps()}>
-            {
-              // Loop over the table rows
-              rows.map((row) => {
-                // Prepare the row for display
-                prepareRow(row);
-                return (
-                  // Apply the row props
-                  <tr className="activities_row" {...row.getRowProps()}>
-                    {
-                      // Loop over the rows cells
-                      row.cells.map((cell, colIndex) => (
-                        // Apply the cell props
-                        <td
-                          {...cell.getCellProps()}
-                          className={`activities_table_data ${getHeaderSuffix(colIndex)}`}
-                        >
-                          {
-                            // Render the cell contents
-                            cell.render("Cell", {
-                              editActivity: startEditActivity,
-                              deleteActivity,
-                              getNotEditable,
-                            })
-                          }
-                        </td>
-                      ))
-                    }
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        ) : (
-          <tbody>
-            <tr className="no_activities_row">
-              <td className="no_activities" />
-              <td className="no_activities">No Activities Yet</td>
-            </tr>
-          </tbody>
-        )}
-      </table>
+      <div className="table_container">
+        <table {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, colIndex) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    className={`activities_table_header ${getHeaderSuffix(colIndex)}`}
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          {/* Apply the table body props */}
+          {data.length > 0 ? (
+            <tbody {...getTableBodyProps()}>
+              {
+                // Loop over the table rows
+                rows.map((row) => {
+                  // Prepare the row for display
+                  prepareRow(row);
+                  return (
+                    // Apply the row props
+                    <tr className="activities_row" {...row.getRowProps()}>
+                      {
+                        // Loop over the rows cells
+                        row.cells.map((cell, colIndex) => (
+                          // Apply the cell props
+                          <td
+                            {...cell.getCellProps()}
+                            className={`activities_table_data ${getHeaderSuffix(colIndex)}`}
+                          >
+                            {
+                              // Render the cell contents
+                              cell.render("Cell", {
+                                editActivity: startEditActivity,
+                                deleteActivity,
+                                getNotEditable,
+                              })
+                            }
+                          </td>
+                        ))
+                      }
+                    </tr>
+                  );
+                })
+              }
+            </tbody>
+          ) : (
+            <tbody>
+              <tr className="no_activities_row">
+                <td className="no_activities" />
+                <td className="no_activities">No Activities Yet</td>
+              </tr>
+            </tbody>
+          )}
+        </table>
+      </div>
 
       <Modal
         className="log_activity_modal"
