@@ -34,7 +34,7 @@
 }
 
 .btn_assign > .delete_role {
-  margin-left: 8px;
+  margin: 0 6px;
   padding: 0;
   width: 8px;
   height: 20px;
@@ -45,11 +45,11 @@
   background-position: center;
 }
 
-.btn_role {
-  color: white;
+.btn_assignrole {
   background: #0057b8;
-  /* border: 1px solid #ffffff; */
-  /* box-sizing: border-box; */
+}
+.btn_assignrole > button {
+  color: white;
 }
 
 .no_hover:hover {
@@ -69,57 +69,57 @@
 }
 
 .btn_aGreeter {
-  min-width: 140px;
+  /* min-width: 140px; */
   border: 1px solid #ffb549;
 }
 
 .btn_wGranter {
-  min-width: 125px;
+  /* min-width: 125px; */
   border: 1px solid #00bab3;
 }
 
 .btn_mentor {
-  min-width: 90px;
+  /* min-width: 90px; */
   border: 1px solid #8dc8e8;
 }
 
 .btn_pAdmin {
-  min-width: 135px;
+  /* min-width: 135px; */
   border: 1px solid #1a68bf;
 }
 
 .btn_volunteer {
-  min-width: 105px;
+  /* min-width: 105px; */
   border: 1px solid #ff585d;
 }
 
 .btn_office {
-  min-width: 80px;
+  /* min-width: 80px; */
   border: 1px solid #9ec37b;
 }
 
 .btn_speciale {
-  min-width: 130px;
+  /* min-width: 130px; */
   border: 1px solid #e09eff;
 }
 
 .btn_translator {
-  min-width: 105px;
+  /* min-width: 105px; */
   border: 1px solid #0057b8;
 }
 
 .btn_speaker {
-  min-width: 145px;
+  /* min-width: 145px; */
   border: 1px solid #e993b2;
 }
 
 .btn_las {
-  min-width: 120px;
+  /* min-width: 120px; */
   border: 1px solid #fbd872;
 }
 
 .btn_sAdmin {
-  min-width: 145px;
+  /* min-width: 145px; */
   border: 1px solid #3cba00;
 }
 

@@ -5,7 +5,7 @@ function AssignBtn({ label, onClick, onDelete, admin, profilePage }) {
   function btnType() {
     switch (label) {
       case "Assign Role":
-        return "btn_assign btn_role";
+        return "btn_assign btn_assignrole";
       case "Wish Granter":
         return "btn_assign btn_wGranter";
       case "Airport Greeter":
