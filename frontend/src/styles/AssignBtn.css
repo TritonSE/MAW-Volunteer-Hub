@@ -123,11 +123,11 @@
   border: 1px solid #3cba00;
 }
 
-/* .assign_btn_container {
+.assign_btn_container {
   display: flex;
   max-width: 212px;
   flex-direction: row;
-} */
+}
 
 .delete_role {
   background: transparent;
