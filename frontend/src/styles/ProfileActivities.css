@@ -18,13 +18,14 @@
 .table_container {
   height: 30vh;
   overflow: scroll;
+  position: relative;
 }
 
 .activities_table {
   box-sizing: border-box;
   width: 100%;
   height: 40vh;
-  /* overflow: auto; */
+
   display: inline-block;
 
   background: white;
@@ -38,6 +39,25 @@
 .activities_table table {
   border-spacing: 0;
   width: 100%;
+  position: realtive;
+}
+.activities_table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+/* create a pseudo for not displaying scrolled rows at the top corners
+of the header */
+.activities_table thead:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  border-radius: 0 0 15px 15px;
 }
 
 /*Fix activity entry height*/
@@ -50,9 +70,6 @@
 }
 
 .activities_table_header {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   text-align: center;
@@ -75,9 +92,6 @@
 }
 
 .activities_table_data {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 400;
   font-size: 14px;
   line-height: 17px;
   box-sizing: border-box;
@@ -226,25 +240,20 @@ tr:nth-child(2n) .activities_table_data_end {
 
 .man_event_marker {
   position: relative;
-  height: 0px;
-  right: 50%;
-
-  font-family: "Lato";
-  font-style: normal;
   font-weight: 300;
-  font-size: 14px;
+
+  font-size: 12px;
   line-height: 17px;
-
-  padding-right: 10px;
-
-  white-space: nowrap;
-
-  color: #000000;
-  display: flex;
-  flex-direction: column;
+  z-index: 1;
 }
 
 .event_title_value {
-  text-align: left;
-  padding-left: 10vw;
+  text-align: center;
+}
+
+.event_title_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

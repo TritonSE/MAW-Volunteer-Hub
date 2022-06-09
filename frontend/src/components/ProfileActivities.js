@@ -20,10 +20,10 @@ const columns = [
     accessor: "title",
     Cell: (props) => (
       <div className="event_title_container">
+        <div className="event_title_value">{props.value}</div>
         {!props.getNotEditable(props.row.index) ? (
           <div className="man_event_marker">(Manually Added) </div>
         ) : null}
-        <div className="event_title_value">{props.value}</div>
       </div>
     ),
   },
