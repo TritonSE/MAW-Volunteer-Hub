@@ -2,6 +2,7 @@
  * api.js: API interfacing
  */
 import axios from "axios";
+import qs from "qs";
 
 import { API_ENDPOINTS } from "./constants/links";
 
@@ -16,6 +17,7 @@ async function api_call(
     type = "application/x-www-form-urlencoded",
     blob = false,
     onProgress = null,
+    use_qs = false,
   } = {}
 ) {
   let has_attached = false;
@@ -41,9 +43,12 @@ async function api_call(
     options.headers["Content-Type"] = type;
   }
   if (data && Object.keys(data)) {
-    if (type === "multipart/form-data") options.data = new FormData();
-    else options.data = new URLSearchParams();
-    Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    if (use_qs) options.data = qs.stringify(data);
+    else {
+      if (type === "multipart/form-data") options.data = new FormData();
+      else options.data = new URLSearchParams();
+      Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    }
   }
 
   try {
@@ -171,6 +176,43 @@ const api_pfp_upload = (pfp, crop) =>
     type: "multipart/form-data",
   });
 
+/**
+ * CALENDAR
+ */
+const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
+
+const api_calendar_new = (data) =>
+  api_call(API_ENDPOINTS.CALENDAR_NEW, {
+    data,
+    method: "PUT",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_delete = (id) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_DELETE}/${id}`, {
+    method: "DELETE",
+  });
+
+const api_calendar_update = (id, data) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
+    data,
+    method: "PATCH",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_respond = (id, going, date, guests, response) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_RESPOND}/${id}`, {
+    data: {
+      going,
+      date,
+      guests: JSON.stringify(guests),
+      response,
+    },
+    method: "POST",
+  });
+
 const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
 
 const api_wish_wednesday_add = (message) =>
@@ -201,6 +243,11 @@ export {
   api_user_edit,
   api_user_activate,
   api_pfp_upload,
+  api_calendar_all,
+  api_calendar_new,
+  api_calendar_delete,
+  api_calendar_update,
+  api_calendar_respond,
   api_wish_wednesday,
   api_wish_wednesday_add,
 };

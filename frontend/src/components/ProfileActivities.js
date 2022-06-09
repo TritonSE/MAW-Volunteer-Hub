@@ -9,26 +9,23 @@ import "../styles/ProfileActivities.css";
 const dateStart = 0;
 const dateEnd = 10;
 
-// Formats the date
-const formatDate = (original) => {
-  const trimmed = original.substring(dateStart, dateEnd);
-  const vals = trimmed.split("-");
-  const YEAR = 0;
-  const MONTH = 1;
-  const DAY = 2;
-
-  return vals[MONTH] + "/" + vals[DAY] + "/" + vals[YEAR];
-};
-
 const columns = [
   {
     Header: "Date",
     accessor: "date",
-    Cell: (props) => <div>{formatDate(props.cell.value)}</div>,
+    Cell: (props) => <div>{new Date(props.cell.value).toLocaleDateString()}</div>,
   },
   {
     Header: "Event",
     accessor: "title",
+    Cell: (props) => (
+      <div className="event_title_container">
+        {!props.getNotEditable(props.row.index) ? (
+          <div className="man_event_marker">(Manually Added) </div>
+        ) : null}
+        <div className="event_title_value">{props.value}</div>
+      </div>
+    ),
   },
   {
     Header: "Hours",
@@ -38,13 +35,17 @@ const columns = [
     Header: "",
     accessor: "edit",
     Cell: (props) => (
-      <div className="edit_activity_container">
-        <button type="button" onClick={() => props.editActivity(props.cell.row)}>
-          <img src="/img/filelisting_edit.svg" alt="" />
-        </button>
-        <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
-          <img src="/img/filelisting_delete.svg" alt="" />
-        </button>
+      <div>
+        {!props.getNotEditable(props.row.index) ? (
+          <div className="edit_activity_container">
+            <button type="button" onClick={() => props.editActivity(props.cell.row)}>
+              <img src="/img/filelisting_edit.svg" alt="" />
+            </button>
+            <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
+              <img src="/img/filelisting_delete.svg" alt="" />
+            </button>
+          </div>
+        ) : null}
       </div>
     ),
   },
@@ -144,13 +145,18 @@ export default function ProfileActivities(props) {
     props.updateEvents(true);
   }
 
+  // Determines if an activity should be editable or not.
+  function getNotEditable(index) {
+    return data[index].notEditable;
+  }
+
   return (
-    <div>
+    <div className="activities_table">
       <div className="header_container">
         <h2>Activity Log</h2>
         <div className="manually_log_activity">
           <h2>Manually Log Activity</h2>
-          {props.admin ? (
+          {props.currId !== props.id ? (
             <div />
           ) : (
             <button type="button" className="add_roles" onClick={() => setLogModalOpen(true)}>
@@ -161,7 +167,7 @@ export default function ProfileActivities(props) {
           )}
         </div>
       </div>
-      <table className="activities_table" {...getTableProps()}>
+      <table {...getTableProps()}>
         <thead>
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
@@ -186,7 +192,7 @@ export default function ProfileActivities(props) {
                 prepareRow(row);
                 return (
                   // Apply the row props
-                  <tr {...row.getRowProps()}>
+                  <tr className="activities_row" {...row.getRowProps()}>
                     {
                       // Loop over the rows cells
                       row.cells.map((cell, colIndex) => (
@@ -197,7 +203,11 @@ export default function ProfileActivities(props) {
                         >
                           {
                             // Render the cell contents
-                            cell.render("Cell", { editActivity: startEditActivity, deleteActivity })
+                            cell.render("Cell", {
+                              editActivity: startEditActivity,
+                              deleteActivity,
+                              getNotEditable,
+                            })
                           }
                         </td>
                       ))
@@ -210,6 +220,7 @@ export default function ProfileActivities(props) {
         ) : (
           <tbody>
             <tr className="no_activities_row">
+              <td className="no_activities" />
               <td className="no_activities">No Activities Yet</td>
             </tr>
           </tbody>
@@ -238,6 +249,7 @@ export default function ProfileActivities(props) {
           <input
             type="date"
             value={activityDate}
+            required
             onChange={(e) => setActivityDate(e.target.value)}
           />
           <p className="form_prompt">Event Name:</p>
@@ -245,6 +257,7 @@ export default function ProfileActivities(props) {
             type="text"
             placeholder="Enter event name"
             value={eventName}
+            required
             onChange={(e) => setEventName(e.target.value)}
           />
           <p className="form_prompt">Hours:</p>
@@ -252,6 +265,7 @@ export default function ProfileActivities(props) {
             type="number"
             placeholder="Enter number of hours volunteered"
             value={eventDuration}
+            required
             onChange={(e) => setEventDuration(e.target.value)}
           />
           <button className="modal-button button-primary" type="submit">

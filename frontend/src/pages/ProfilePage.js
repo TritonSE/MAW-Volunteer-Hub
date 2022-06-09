@@ -52,6 +52,7 @@ function ProfilePage() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -279,6 +280,25 @@ function ProfilePage() {
       roles = user.roles;
     }
     return roles;
+  }
+
+  // Change format of calendar events to fit in with the format of manual events.
+  function formatCalendarEvents() {
+    let allNonManual = [];
+    user.events.map((event) =>
+      allNonManual.push({
+        _id: event._id,
+        date: event.from,
+        title: event.name,
+        hours: new Date(event.to).getHours() - new Date(event.from).getHours(),
+        notEditable: true,
+      })
+    );
+    allNonManual = allNonManual.concat(user.manualEvents);
+    allNonManual.sort(
+      (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
+    );
+    return allNonManual;
   }
 
   return is404 ? (
@@ -592,11 +612,13 @@ function ProfilePage() {
                 id={currentUser._id}
                 rolesChanged={setRolesChanged}
               />
-              <ProfileCompleted tasks={user.__v} />
+              <ProfileCompleted tasks={user.events.length + user.manualEvents.length} />
             </div>
             <ProfileActivities
-              events={user.manualEvents}
+              events={formatCalendarEvents()}
+              admin={currentUser.admin === 2}
               id={user._id}
+              currId={currentUser._id}
               updateEvents={setEventsChanged}
             />
           </div>

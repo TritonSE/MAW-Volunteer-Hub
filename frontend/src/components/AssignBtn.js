@@ -5,7 +5,7 @@ function AssignBtn({ label, onClick, onDelete, admin, profilePage }) {
   function btnType() {
     switch (label) {
       case "Assign Role":
-        return "btn_assign btn_role";
+        return "btn_assign btn_assignrole";
       case "Wish Granter":
         return "btn_assign btn_wGranter";
       case "Airport Greeter":
@@ -34,23 +34,18 @@ function AssignBtn({ label, onClick, onDelete, admin, profilePage }) {
     return "btn_assign btn_none";
   }
 
-  return (
-    <div>
-      {admin ? (
-        <div className="assign_btn_layout">
-          <button type="button" className={btnType()} onClick={() => onClick()}>
-            {label}
-          </button>
-          {profilePage ? (
-            <button type="button" className="delete_role" onClick={() => onDelete()}>
-              x
-            </button>
-          ) : null}
-        </div>
-      ) : (
-        <div className={btnType() + " no_hover"}>{label}</div>
-      )}
-    </div>
-  );
+  if (admin) {
+    return (
+      <div className={`assign_btn_layout ${btnType()}`}>
+        <button type="button" className="hover" onClick={() => onClick()}>
+          {label}
+        </button>
+        {profilePage ? (
+          <button type="button" className="delete_role hover" onClick={() => onDelete()} />
+        ) : null}
+      </div>
+    );
+  }
+  return <div className={`assign_btn_layout ${btnType()}`}>{label}</div>;
 }
 export default AssignBtn;

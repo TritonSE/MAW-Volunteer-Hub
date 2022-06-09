@@ -14,11 +14,12 @@ import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
+import CalendarPage from "./pages/CalendarPage";
+import HomePage from "./pages/HomePage";
 import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
-import HomePage from "./pages/HomePage";
 
 import "./App.css";
 
@@ -156,6 +157,15 @@ function App() {
               />
             ))}
           </Route>
+          {/* Calendar Page */}
+          <Route
+            path={SITE_PAGES.CALENDAR}
+            element={
+              <PageLayout>
+                <CalendarPage />
+              </PageLayout>
+            }
+          />
 
           {/* Sign out */}
           <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper />} />
