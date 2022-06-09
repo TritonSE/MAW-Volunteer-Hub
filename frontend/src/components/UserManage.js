@@ -124,7 +124,7 @@ const headers = [
   },
   // Replace the following three rows with the commented out rows for the full table
   {
-    Header: "",
+    Header: "Role",
     accessor: "verified",
     Cell: (props) => (
       <VerifyButtonCell
@@ -139,7 +139,19 @@ const headers = [
   },
   {
     Header: "Assignments Completed",
-    accessor: "empty",
+    accessor: "",
+    Cell: ({ row }) => {
+      const u = row.original;
+      let sum = u.manualEvents.length;
+      const today = new Date();
+      u.events.forEach((event) => {
+        if (new Date(event.to) < today) {
+          // only events if they have passed
+          sum++;
+        }
+      });
+      return sum;
+    },
   },
   {
     Header: "Volunteer Since",

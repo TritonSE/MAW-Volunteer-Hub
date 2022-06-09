@@ -4,6 +4,15 @@ import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
+  let sum = user.manualEvents.length;
+  const today = new Date();
+  user.events.forEach((event) => {
+    if (new Date(event.to) < today) {
+      // only events if they have passed
+      sum++;
+    }
+  });
+
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
@@ -15,7 +24,7 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
         >
           {user.name}
         </Link>
-        <div className="card_item_bottom">Assignments Completed: {user.completed ?? "N/A"}</div>
+        <div className="card_item_bottom">Assignments Completed: {sum ?? "N/A"}</div>
       </div>
       <div className="card_col">
         {/* <div className="card_item_top">{user.roles}</div> */}
@@ -30,7 +39,13 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
           user_id={user._id}
           admin={user.admin}
         />
-        <div className="card_item_bottom">Volunteer Start: {user.start ?? "N/A"}</div>
+        <div className="card_item_bottom">
+          Volunteer Start:{" "}
+          {new Date(user.createdAt).toLocaleString("default", {
+            month: "short",
+            year: "numeric",
+          }) ?? "N/A"}
+        </div>
       </div>
     </div>
   );
