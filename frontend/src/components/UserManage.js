@@ -138,8 +138,15 @@ const headers = [
     ),
   },
   {
-    Header: "",
+    Header: "Assignments Completed",
     accessor: "empty",
+  },
+  {
+    Header: "Volunteer Since",
+    accessor: "createdAt",
+    Cell: ({ value }) => (
+      <p>{new Date(value).toLocaleString("default", { month: "short", year: "numeric" })}</p>
+    ),
   },
 ];
 
