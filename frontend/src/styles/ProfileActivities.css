@@ -46,19 +46,6 @@
   top: 0;
   z-index: 2;
 }
-/* create a pseudo for not displaying scrolled rows at the top corners
-of the header */
-.activities_table thead:before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: white;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  border-radius: 0 0 15px 15px;
-}
 
 /*Fix activity entry height*/
 .activities_table tbody tr {
