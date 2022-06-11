@@ -589,6 +589,7 @@ function ProfilePage() {
               <ProfileRoles
                 roles={addAdminRoles()}
                 admin={currentUser.admin === 2}
+                active={user.active}
                 id={currentUser._id}
                 rolesChanged={setRolesChanged}
               />
@@ -597,6 +598,7 @@ function ProfilePage() {
             <ProfileActivities
               events={user.manualEvents}
               id={user._id}
+              active={user.active}
               updateEvents={setEventsChanged}
             />
           </div>

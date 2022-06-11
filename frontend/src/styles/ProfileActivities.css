@@ -17,6 +17,9 @@
 .manually_log_activity > .add_roles {
   margin-left: 10px;
 }
+.manually_log_activity > .add_roles:disabled {
+  cursor: default;
+}
 
 .activities_table {
   box-sizing: border-box;

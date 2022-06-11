@@ -29,9 +29,15 @@ export default function ProfileRoles(props) {
     <div className="roles_container">
       <div className="roles_header">
         <h2>Roles</h2>
+        {props.active}
         {/* Taken from ProfilePage.js and ProfilePage.css */}
         {props.admin ? (
-          <button type="button" className="add_roles" onClick={() => setRolesModalOpen(true)}>
+          <button
+            type="button"
+            disabled={!props.active}
+            className="add_roles"
+            onClick={() => setRolesModalOpen(true)}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
             </svg>
@@ -51,6 +57,7 @@ export default function ProfileRoles(props) {
                 onClick={props.admin ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(role)}
                 admin={props.admin}
+                active={props.active}
                 profilePage
               />
             ))

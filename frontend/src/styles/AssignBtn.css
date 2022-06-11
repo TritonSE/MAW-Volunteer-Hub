@@ -34,6 +34,9 @@
   border-radius: 20px;
   padding: 7px 16px;
 }
+.btn_assign:disabled {
+  cursor: default !important;
+}
 
 .btn_role {
   color: white;
@@ -129,7 +132,9 @@
   right: 22px;
   width: 0px;
 }
-
+.delete_role:disabled {
+  cursor: default !important;
+}
 .delete_role:hover {
   cursor: pointer;
 }

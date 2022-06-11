@@ -39,10 +39,18 @@ const columns = [
     accessor: "edit",
     Cell: (props) => (
       <div className="edit_activity_container">
-        <button type="button" onClick={() => props.editActivity(props.cell.row)}>
+        <button
+          type="button"
+          disabled={!props.active}
+          onClick={() => props.editActivity(props.cell.row)}
+        >
           <img src="/img/filelisting_edit.svg" alt="" />
         </button>
-        <button type="button" onClick={() => props.deleteActivity(props.cell.row)}>
+        <button
+          type="button"
+          disabled={!props.active}
+          onClick={() => props.deleteActivity(props.cell.row)}
+        >
           <img src="/img/filelisting_delete.svg" alt="" />
         </button>
       </div>
@@ -153,7 +161,12 @@ export default function ProfileActivities(props) {
           {props.admin ? (
             <div />
           ) : (
-            <button type="button" className="add_roles" onClick={() => setLogModalOpen(true)}>
+            <button
+              type="button"
+              disabled={!props.active}
+              className="add_roles"
+              onClick={() => setLogModalOpen(true)}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
               </svg>
@@ -197,7 +210,11 @@ export default function ProfileActivities(props) {
                         >
                           {
                             // Render the cell contents
-                            cell.render("Cell", { editActivity: startEditActivity, deleteActivity })
+                            cell.render("Cell", {
+                              active: props.active,
+                              editActivity: startEditActivity,
+                              deleteActivity,
+                            })
                           }
                         </td>
                       ))
