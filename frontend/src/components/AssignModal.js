@@ -1,3 +1,4 @@
+/* eslint react/no-unstable-nested-components: off */
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FixedSizeList as List } from "react-window";

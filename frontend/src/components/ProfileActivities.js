@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTable } from "react-table";
 import Modal from "react-modal";
-import { api_add_event, api_edit_event, api_delete_event } from "../auth";
+import { api_add_event, api_edit_event, api_delete_event } from "../api";
 
 import "../styles/ProfileActivities.css";
 

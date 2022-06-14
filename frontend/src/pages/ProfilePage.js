@@ -11,7 +11,6 @@ import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } f
 import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
-import ProfileCompleted from "../components/ProfleCompleted";
 import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
@@ -176,59 +175,21 @@ function ProfilePage() {
 
   useEffect(() => {
     async function handleUserInfo() {
-      if (!id) {
-        setUser(currentUser);
-        setIsCurrentUser(true);
-      } else {
-        const res = await api_user_info(id ?? "");
-        if (!res || !res.user) setIs404(true);
-        else {
-          setIs404(false);
-          setUser(res.user);
-          setIsCurrentUser(res.user._id === currentUser._id);
+      const res = await api_user_info(id ?? currentUser._id);
+      if (!res || !res.user) setIs404(true);
+      else {
+        setIs404(false);
+        setUser(res.user);
+        if (res.user._id === currentUser._id) {
+          setIsCurrentUser(true);
+          setCurrentUser(res.user);
+        } else {
+          setIsCurrentUser(false);
         }
       }
     }
     handleUserInfo();
-  }, [id]);
-
-  useEffect(() => {
-    async function getNewRoles() {
-      let searchId;
-      if (!id) {
-        searchId = currentUser._id;
-      } else {
-        searchId = id;
-      }
-
-      const res = await api_user_info(searchId);
-      if (!res || !res.user) setIs404(true);
-      else {
-        setRolesChanged(false);
-        setUser(res.user);
-      }
-    }
-    getNewRoles();
-  }, [rolesChanged]);
-
-  useEffect(() => {
-    async function getNewEvents() {
-      let searchId;
-      if (!id) {
-        searchId = currentUser._id;
-      } else {
-        searchId = id;
-      }
-
-      const res = await api_user_info(searchId);
-      if (!res || !res.user) setIs404(true);
-      else {
-        setEventsChanged(false);
-        setUser(res.user);
-      }
-    }
-    getNewEvents();
-  }, [eventsChanged]);
+  }, [id, rolesChanged, eventsChanged]);
 
   useEffect(() => {
     if (!responseModalOpen) {
@@ -244,18 +205,6 @@ function ProfilePage() {
   useEffect(() => {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
-
-  function addAdminRoles() {
-    let roles;
-    if (user.admin === 1) {
-      roles = ["Secondary Admin", ...user.roles];
-    } else if (user.admin === 2) {
-      roles = ["Primary Admin", "Secondary Admin", ...user.roles];
-    } else {
-      roles = user.roles;
-    }
-    return roles;
-  }
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
@@ -525,13 +474,24 @@ function ProfilePage() {
         {user.roles && user.manualEvents ? (
           <div>
             <div className="user_stats">
-              <ProfileRoles
-                roles={addAdminRoles()}
-                admin={currentUser.admin === 2}
-                id={currentUser._id}
-                rolesChanged={setRolesChanged}
-              />
-              <ProfileCompleted tasks={user.events.length + user.manualEvents.length} />
+              <ProfileRoles user={user} onRolesChange={setRolesChanged} />
+              <div className="assign_completed">
+                <h2 className="task_title">Assignments Completed</h2>
+                <p className="task_number">
+                  {user.events.reduce(
+                    (prev, next) =>
+                      prev +
+                      Object.entries(next.repetitions).reduce(
+                        (subprev, [date, subnext]) =>
+                          subprev +
+                          (new Date(date).getTime() <= Date.now() &&
+                            Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+                        0
+                      ),
+                    0
+                  ) + user.manualEvents.filter((evt) => evt.getTime() <= Date.now()).length}
+                </p>
+              </div>
             </div>
             <ProfileActivities
               events={formatCalendarEvents()}

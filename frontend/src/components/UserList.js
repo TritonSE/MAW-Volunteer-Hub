@@ -174,12 +174,11 @@ function UserList({
         <table className="people_table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
+              <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, colIndex) => (
                   <th
                     className={`people_table_header ${getColTitle(colIndex)}`}
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    key={Math.random()}
                   >
                     {column.render("Header")}
                     {/* This ternary operator should be removed to allow sorting for all columns */}
@@ -197,14 +196,13 @@ function UserList({
             {rows.map((row) => {
               prepareRow(row);
               return separateAdmin(row.original._id) ? (
-                <tr {...row.getRowProps()} key={Math.random()}>
+                <tr {...row.getRowProps()}>
                   {row.cells.map((cell, colIndex) => (
                     <td
                       {...cell.getCellProps()}
                       className={`people_table_data ${getColTitle(colIndex)}`}
-                      key={Math.random()}
                     >
-                      {cell.render("Cell")}
+                      {cell.render("Cell", { original: row.original })}
                     </td>
                   ))}
                 </tr>
