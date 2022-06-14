@@ -1,0 +1,166 @@
+.calendar {
+  display: flex;
+  justify-content: space-between;
+  margin: 21px;
+  font-family: "Lato", sans-serif;
+}
+
+.calendar h1,
+.calendar span,
+.calendar button .calendar div {
+  font-family: "Lato", sans-serif !important;
+}
+
+.calendar .calendar_new {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 142px;
+  height: 30px;
+  background: var(--primary-blue);
+  color: white;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 3px;
+  font-family: "Lato", sans-serif;
+  margin: 0 auto 17px;
+  padding-right: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.calendar .calendar_modal_toggle {
+  width: 30px;
+  height: 30px;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  padding: 0;
+}
+
+.calendar .react-simple-mobile-scheduler {
+  width: 90vw;
+  max-height: calc(100vh - 161px);
+  margin-top: 10px;
+  box-shadow: 0px 1px 4px rgb(0 0 0 / 25%);
+}
+
+.calendar .react-simple-calendar {
+  padding: 12px;
+  padding-bottom: 24px;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+.calendar .react-simple-calendar .head .month {
+  font-size: 14px;
+  margin-left: 8px;
+}
+.calendar .react-simple-calendar .today {
+  width: 24px;
+}
+
+.calendar_spacer {
+  height: 15px;
+}
+.calendars_list {
+  width: 200px;
+  background: white;
+  border-radius: 8px;
+  margin: 10px auto 0;
+  padding: 10px 14px;
+  box-sizing: border-box;
+  font-size: 14px;
+}
+
+.calendars_header {
+  margin-bottom: 12px;
+}
+
+.calendar_label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.calendar_label input[type="checkbox"] {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.calendar_label input[type="checkbox"] ~ .calendar_checkbox {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #000000;
+  display: block;
+  margin: 0;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+.calendars_list input[type="checkbox"]:checked ~ .calendar_checkbox {
+  background: var(--checked-color);
+  background-image: url(../../public/img/calendar_check.svg);
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  background-position: 3px center;
+  border: none;
+}
+
+.calendar .react-simple-scheduler {
+  width: calc(100vw - 200px - 20px - 24px - 21px);
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+}
+.calendar .react-simple-scheduler .head {
+  width: calc(100vw - 200px - 20px - 24px - 21px);
+}
+.calendar .react-simple-scheduler .body {
+  width: calc(100vw - 200px - 20px - 24px - 21px - 21px);
+  height: calc(91vh - 70px - 42px);
+  min-height: calc(576px - 70px);
+}
+
+/* TODO: Remove once css-refactor branch is merged in */
+.calendar_modal_overlay {
+  z-index: 1000;
+  position: fixed;
+  inset: 0px;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+.calendar_modal {
+  width: 95vw;
+  max-width: 210px;
+  max-height: 95vh;
+  border: none;
+  outline: 0;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+
+@media only screen and (max-width: 600px) {
+  .calendar {
+    justify-content: center;
+  }
+  .calendar .mobile_row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .calendar .calendar_new {
+    margin: 0;
+  }
+  .calendar .react-simple-scheduler {
+    display: none;
+  }
+}

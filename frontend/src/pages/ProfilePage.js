@@ -17,7 +17,6 @@ import {
 import { CurrentUser } from "../components/Contexts";
 
 import ProfileRoles from "../components/ProfileRoles";
-import ProfileCompleted from "../components/ProfleCompleted";
 import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
@@ -52,6 +51,7 @@ function ProfilePage() {
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -200,59 +200,21 @@ function ProfilePage() {
 
   useEffect(() => {
     async function handleUserInfo() {
-      if (!id) {
-        setUser(currentUser);
-        setIsCurrentUser(true);
-      } else {
-        const res = await api_user_info(id ?? "");
-        if (!res || !res.user) setIs404(true);
-        else {
-          setIs404(false);
-          setUser(res.user);
-          setIsCurrentUser(res.user._id === currentUser._id);
+      const res = await api_user_info(id ?? currentUser._id);
+      if (!res || !res.user) setIs404(true);
+      else {
+        setIs404(false);
+        setUser(res.user);
+        if (res.user._id === currentUser._id) {
+          setIsCurrentUser(true);
+          setCurrentUser(res.user);
+        } else {
+          setIsCurrentUser(false);
         }
       }
     }
     handleUserInfo();
-  }, [id]);
-
-  useEffect(() => {
-    async function getNewRoles() {
-      let searchId;
-      if (!id) {
-        searchId = currentUser._id;
-      } else {
-        searchId = id;
-      }
-
-      const res = await api_user_info(searchId);
-      if (!res || !res.user) setIs404(true);
-      else {
-        setRolesChanged(false);
-        setUser(res.user);
-      }
-    }
-    getNewRoles();
-  }, [rolesChanged]);
-
-  useEffect(() => {
-    async function getNewEvents() {
-      let searchId;
-      if (!id) {
-        searchId = currentUser._id;
-      } else {
-        searchId = id;
-      }
-
-      const res = await api_user_info(searchId);
-      if (!res || !res.user) setIs404(true);
-      else {
-        setEventsChanged(false);
-        setUser(res.user);
-      }
-    }
-    getNewEvents();
-  }, [eventsChanged]);
+  }, [id, rolesChanged, eventsChanged]);
 
   useEffect(() => {
     if (!responseModalOpen) {
@@ -269,16 +231,23 @@ function ProfilePage() {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
 
-  function addAdminRoles() {
-    let roles;
-    if (user.admin === 1) {
-      roles = ["Secondary Admin", ...user.roles];
-    } else if (user.admin === 2) {
-      roles = ["Primary Admin", "Secondary Admin", ...user.roles];
-    } else {
-      roles = user.roles;
-    }
-    return roles;
+  // Change format of calendar events to fit in with the format of manual events.
+  function formatCalendarEvents() {
+    let allNonManual = [];
+    user.events.map((event) =>
+      allNonManual.push({
+        _id: event._id,
+        date: event.from,
+        title: event.name,
+        hours: new Date(event.to).getHours() - new Date(event.from).getHours(),
+        notEditable: true,
+      })
+    );
+    allNonManual = allNonManual.concat(user.manualEvents);
+    allNonManual.sort(
+      (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
+    );
+    return allNonManual;
   }
 
   return is404 ? (
@@ -312,6 +281,7 @@ function ProfilePage() {
                   <input
                     id="pfp_input"
                     className="hidden"
+                    disabled={!user.active}
                     type="file"
                     accept="image/*"
                     onChange={prepare_pfp}
@@ -586,20 +556,36 @@ function ProfilePage() {
         {user.roles && user.manualEvents ? (
           <div>
             <div className="user_stats">
-              <ProfileRoles
-                roles={addAdminRoles()}
-                admin={currentUser.admin === 2}
-                active={user.active}
-                id={currentUser._id}
-                rolesChanged={setRolesChanged}
-              />
-              <ProfileCompleted tasks={user.__v} />
+              <ProfileRoles user={user} active={user.active} onRolesChange={setRolesChanged} />
+              <div className="assign_completed">
+                <h2 className="task_title">Assignments Completed</h2>
+                <p className="task_number">
+                  {user.events.reduce(
+                    (prev, next) =>
+                      prev +
+                      Object.entries(next.repetitions).reduce(
+                        (subprev, [date, subnext]) =>
+                          subprev +
+                          (new Date(date).setHours(
+                            new Date(next.to).getHours(),
+                            new Date(next.to).getMinutes()
+                          ) <= Date.now() &&
+                            Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+                        0
+                      ),
+                    0
+                  ) +
+                    user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now())
+                      .length}
+                </p>
+              </div>
             </div>
             <ProfileActivities
-              events={user.manualEvents}
               id={user._id}
+              currId={currentUser._id}
               active={user.active}
-              updateEvents={setEventsChanged}
+              events={formatCalendarEvents()}
+              updateEvents={() => setEventsChanged(Math.random())}
             />
           </div>
         ) : (

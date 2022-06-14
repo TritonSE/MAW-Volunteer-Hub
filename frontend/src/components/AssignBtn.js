@@ -1,59 +1,44 @@
-import React from "react";
+import React, { useContext } from "react";
+import ROLES from "../constants/roles";
+import { CurrentUser } from "./Contexts";
 import "../styles/AssignBtn.css";
 
-function AssignBtn({ label, onClick, onDelete, admin, active, profilePage }) {
-  function btnType() {
-    switch (label) {
-      case "Assign Role":
-        return "btn_assign btn_role";
-      case "Wish Granter":
-        return "btn_assign btn_wGranter";
-      case "Airport Greeter":
-        return "btn_assign btn_aGreeter";
-      case "Mentor":
-        return "btn_assign btn_mentor";
-      case "Volunteer":
-        return "btn_assign btn_volunteer";
-      case "Office":
-        return "btn_assign btn_office";
-      case "Special Events":
-        return "btn_assign btn_speciale";
-      case "Translator":
-        return "btn_assign btn_translator";
-      case "Speaker's Bureau":
-        return "btn_assign btn_speaker";
-      case "Las Estrellas":
-        return "btn_assign btn_las";
-      case "Allow Access":
-        return "btn_assign btn_access";
-      case "Primary Admin":
-        return "btn_assign btn_pAdmin";
-      case "Secondary Admin":
-        return "btn_assign btn_sAdmin";
-    }
-    return "btn_assign btn_none";
+function AssignBtn({ label, active = true, onClick, onDelete, profilePage }) {
+  const [currentUser] = useContext(CurrentUser);
+
+  let role = ROLES.find((tmp) => label === tmp.name);
+  if (!role && label !== "Assign Role") {
+    role = { color: "#bada55" };
   }
 
   return (
-    <div>
-      {admin ? (
-        <div className="assign_btn_layout">
-          <button type="button" disabled={!active} className={btnType()} onClick={() => onClick()}>
+    <div
+      className={`assign_btn_layout btn_assign ${label === "Assign Role" ? "btn_assignrole" : ""}`}
+      style={
+        role && {
+          border: `1px solid ${role.color}`,
+          padding: currentUser.admin === 2 ? null : "6px 15px",
+        }
+      }
+    >
+      {currentUser.admin === 2 ? (
+        <>
+          <button type="button" disabled={!active} className="hover" onClick={() => onClick()}>
             {label}
           </button>
-          {profilePage ? (
+          {profilePage && (
             <button
               type="button"
               disabled={!active}
-              className="delete_role"
+              className="delete_role hover"
               onClick={() => onDelete()}
             >
-              x
+              &nbsp;
             </button>
-          ) : null}
-        </div>
+          )}
+        </>
       ) : (
-        <div className={btnType() + " no_hover"}>{label}</div>
+        label
       )}
     </div>
   );

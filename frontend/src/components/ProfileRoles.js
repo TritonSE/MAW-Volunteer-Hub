@@ -1,40 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import ScrollContainer from "react-indiana-drag-scroll";
 import Modal from "react-modal";
 import AssignBtn from "./AssignBtn";
 import RolesModal from "./RolesModal";
-import { api_update_roles } from "../auth";
+import { api_update_roles } from "../api";
+import { CurrentUser } from "./Contexts";
 
 import "../styles/ProfileRoles.css";
 
-export default function ProfileRoles(props) {
+export default function ProfileRoles({ user, active, onRolesChange }) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletedRole, setDeletedRole] = useState("");
-  const [roles, setRoles] = useState(props.roles);
 
-  function deleteRole(role) {
-    const newRoles = roles.filter((aRole) => aRole !== role);
-    api_update_roles(props.id, JSON.stringify(newRoles));
-    setDeletedRole(role);
-    setDeleteModalOpen(true);
-    setRoles(newRoles);
+  const [currentUser] = useContext(CurrentUser);
+
+  async function deleteRole(role, newAdmin = user.admin) {
+    const newRoles = user.roles.filter((aRole) => aRole !== role);
+    const res = await api_update_roles(user._id, JSON.stringify(newRoles), newAdmin);
+    if (res && !res.error) {
+      onRolesChange(newRoles);
+      setDeletedRole(role);
+      setDeleteModalOpen(true);
+    } else {
+      setDeleteModalOpen(res.error ?? "Unable to reach server, please try again.");
+    }
   }
-
-  useEffect(() => {
-    setRoles(props.roles);
-  }, [props.roles]);
 
   return (
     <div className="roles_container">
       <div className="roles_header">
         <h2>Roles</h2>
-        {props.active}
         {/* Taken from ProfilePage.js and ProfilePage.css */}
-        {props.admin ? (
+        {currentUser.admin === 2 ? (
           <button
             type="button"
-            disabled={!props.active}
+            disabled={!active}
             className="add_roles"
             onClick={() => setRolesModalOpen(true)}
           >
@@ -48,34 +49,53 @@ export default function ProfileRoles(props) {
       </div>
 
       <ScrollContainer className="roles_scroller" vertical={false}>
-        {roles.length > 0
-          ? roles.map((role) => (
+        {user.roles.length > 0 || user.admin > 0 ? (
+          <>
+            {user.roles.map((role) => (
               <AssignBtn
+                key={role}
                 label={role}
-                key={Math.random()}
-                // Display role description when volunteers click?
-                onClick={props.admin ? () => setRolesModalOpen(true) : null}
+                onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(role)}
-                admin={props.admin}
-                active={props.active}
+                active={user.active}
                 profilePage
               />
-            ))
-          : ["No Roles"]}
+            ))}
+            {user.admin >= 1 && (
+              <AssignBtn
+                label="Primary Admin"
+                onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
+                onDelete={() => deleteRole(null, 0)}
+                active={user.active}
+                profilePage
+              />
+            )}
+            {user.admin === 2 && (
+              <AssignBtn
+                label="Secondary Admin"
+                onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
+                onDelete={() => deleteRole(null, 1)}
+                active={user.active}
+                profilePage
+              />
+            )}
+          </>
+        ) : (
+          ["No Roles"]
+        )}
       </ScrollContainer>
 
       <RolesModal
         open={rolesModalOpen}
         setOpen={setRolesModalOpen}
-        roles={roles}
-        id={props.id}
-        rolesChanged={props.rolesChanged}
+        user={user}
+        onRolesChange={onRolesChange}
       />
 
       <Modal
         className="delete_confirmation_modal"
         overlayClassName="add_roles_modal_overlay"
-        isOpen={deleteModalOpen}
+        isOpen={Boolean(deleteModalOpen)}
         onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Confirmation Modal"
       >
@@ -85,7 +105,11 @@ export default function ProfileRoles(props) {
           type="button"
           onClick={() => setDeleteModalOpen(false)}
         />
-        <p>{"The `" + deletedRole + "` role has been removed"}</p>
+        <p>
+          {deleteModalOpen === true
+            ? 'The "' + deletedRole + '" role has been removed.'
+            : `Error: ${deleteModalOpen}`}
+        </p>
       </Modal>
     </div>
   );
