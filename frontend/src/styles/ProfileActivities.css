@@ -1,5 +1,5 @@
 .header_container {
-  width: 80vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 }
@@ -7,8 +7,6 @@
 .manually_log_activity {
   display: flex;
   align-items: center;
-  position: relative;
-  right: 25px;
 }
 
 .manually_log_activity > .add_roles {
@@ -16,22 +14,20 @@
 }
 
 .table_container {
-  height: 30vh;
+  flex: 1;
   overflow: auto;
-  position: relative;
 }
 
 .activities_table {
   box-sizing: border-box;
-  width: 100%;
   height: 40vh;
 
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
 
   background: white;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
-  border-spacing: 0;
   padding: 0px 50px 0px 50px;
   margin-top: 75px;
 }
@@ -39,21 +35,11 @@
 .activities_table table {
   border-spacing: 0;
   width: 100%;
-  position: realtive;
 }
 .activities_table thead {
   position: sticky;
   top: 0;
   z-index: 2;
-}
-
-/*Fix activity entry height*/
-.activities_table tbody tr {
-  height: 5vh;
-}
-
-.activities_table tbody {
-  height: 10vh;
 }
 
 .activities_table_header {
@@ -80,16 +66,10 @@
 
 .activities_table_data {
   font-size: 14px;
-  line-height: 17px;
-  box-sizing: border-box;
-
-  color: #000000;
-
   padding: 15px 0px 10px 15px;
   text-align: center;
-  width: 30%;
-  text-overflow: auto;
-  max-height: 10px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .activities_table_data.start {
@@ -110,21 +90,21 @@ tr:nth-child(2n) .activities_table_data_end {
 }
 
 .log_activity_form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   background: white;
-  width: 50vw;
-  height: 40vh;
-  padding: 20px 30px 0px 30px;
+  width: 95vw;
+  max-width: 466px;
+  padding: 21px 25px 0px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+  font-family: "Lato", sans-serif;
 }
 
 .close_button {
   position: relative;
   left: 90%;
-  top: 45px;
+  top: 40px;
   border: none;
   background: none;
   background: url(../../public/img/close-modal.svg) no-repeat;
@@ -133,35 +113,30 @@ tr:nth-child(2n) .activities_table_data_end {
   cursor: pointer;
 }
 
-.log_activity_form > input {
-  box-sizing: border-box;
-  width: 100%;
-  height: 8%;
-  padding-left: 5px;
+.log_activity_form > h3 {
+  margin: 0 0 18px;
 }
 
-.log_activity_form > button {
-  margin-top: 25px;
-  position: relative;
-  left: 75%;
-  box-sizing: border-box;
-  width: 25%;
+.log_activity_form > input {
+  min-width: calc(100% - 8px);
+  width: calc(100% - 8px);
+  height: 28px;
+  padding-left: 5px;
+  font-family: "Lato", sans-serif;
+  color: black;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+/* iOS Safari fix */
+.log_activity_form > input::-webkit-date-and-time-value {
+  text-align: left;
 }
 
 .form_prompt {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  line-height: 17px;
-}
-
-.log_activity_form > h2 {
-  font-family: "Lato";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .edit_activity_container {
@@ -195,33 +170,65 @@ tr:nth-child(2n) .activities_table_data_end {
   padding: 20px;
 }
 
-@media only screen and (max-width: 500px) {
-  .log_activity_form {
-    width: 50vw;
-    height: 50vh;
-  }
+.log_activity_modal .react-simple-calendar {
+  position: absolute;
+  top: 429px;
+  padding: 10px;
+  border: 1px solid var(--primary-blue);
+  z-index: 100001;
+  font-family: "Lato", sans-serif;
+}
+.log_activity_modal .calendar_overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+}
 
-  .close_button {
-    left: 80%;
-  }
+.form_right {
+  display: flex;
+}
+.form_spacer {
+  flex: 1;
+}
+.form_right button {
+  margin-top: 25px;
+  width: 103px;
+  height: 26px;
 }
 
 @media only screen and (max-width: 750px) {
   .header_container {
-    width: 70vw;
     align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 20px);
+    margin: 0 10px;
   }
 
   .manually_log_activity > h2,
   .header_container > h2 {
     font-size: 18px;
-    width: 100px;
+  }
+
+  .activities_table {
+    margin-top: 30px;
+    padding: 0 10px 0 10px;
   }
 }
 
-@media only screen and (max-height: 720px) {
+@media only screen and (max-width: 400px) {
+  .manually_log_activity > h2,
+  .header_container > h2 {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-height: 400px) {
   .log_activity_form {
-    height: 60vh;
+    height: 90vh;
+    overflow: auto;
   }
 }
 

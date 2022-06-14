@@ -80,7 +80,7 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.virtual("verified").get(function () {
+UserSchema.virtual("verified").get(function check() {
   return this.roles.length > 0;
 });
 

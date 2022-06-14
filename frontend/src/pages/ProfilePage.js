@@ -484,12 +484,17 @@ function ProfilePage() {
                       Object.entries(next.repetitions).reduce(
                         (subprev, [date, subnext]) =>
                           subprev +
-                          (new Date(date).getTime() <= Date.now() &&
+                          (new Date(date).setHours(
+                            new Date(next.to).getHours(),
+                            new Date(next.to).getMinutes()
+                          ) <= Date.now() &&
                             Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
                         0
                       ),
                     0
-                  ) + user.manualEvents.filter((evt) => evt.getTime() <= Date.now()).length}
+                  ) +
+                    user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now())
+                      .length}
                 </p>
               </div>
             </div>
@@ -498,7 +503,7 @@ function ProfilePage() {
               admin={currentUser.admin === 2}
               id={user._id}
               currId={currentUser._id}
-              updateEvents={setEventsChanged}
+              updateEvents={() => setEventsChanged(Math.random())}
             />
           </div>
         ) : (

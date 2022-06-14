@@ -57,3 +57,13 @@
 .add_roles_form > .modal-button {
   margin-top: 15px;
 }
+
+@media only screen and (max-height: 520px) {
+  .add_roles_modal {
+    height: 90vh;
+  }
+  .add_roles_form {
+    height: 90vh;
+    overflow: auto;
+  }
+}

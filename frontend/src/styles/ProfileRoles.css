@@ -10,12 +10,17 @@
   color: var(--primary-blue);
   margin-left: 25px;
   padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add_roles > svg {
   width: 11px;
   height: 15px;
   fill: var(--primary-blue);
+  object-fit: cover;
 }
 
 .add_roles:hover {
@@ -29,13 +34,13 @@
   border-radius: 15px;
   box-sizing: border-box;
   width: 45%;
-  padding-left: 35px;
   padding-bottom: 20px;
 }
 
 .roles_header {
   display: flex;
   align-items: center;
+  margin-left: 35px;
 }
 
 .roles_scroller {
@@ -43,11 +48,12 @@
   height: 34px;
   overflow: auto;
   padding-right: 35px;
+  padding-left: 35px;
 }
 
 @media only screen and (max-width: 900px) {
   .roles_container {
-    width: 80%;
+    width: 100%;
   }
 }
 

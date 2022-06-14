@@ -17,6 +17,7 @@ function AssignBtn({ label, onClick, onDelete, profilePage }) {
       style={
         role && {
           border: `1px solid ${role.color}`,
+          padding: currentUser.admin === 2 ? null : "6px 15px",
         }
       }
     >

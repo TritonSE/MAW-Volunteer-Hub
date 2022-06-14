@@ -15,11 +15,10 @@ Modal.setAppElement(document.getElementById("root"));
 
 function VerifyButtonCell({ row: { index }, updateMyData, user }) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
-  const [modifiedRoles] = useState([
-    ...user.roles,
-    ...(user.admin === 2 ? ["Primary Admin", "Secondary Admin"] : null),
-    ...(user.admin === 1 ? ["Secondary Admin"] : null),
-  ]);
+
+  const modifiedRoles = user.roles.slice();
+  if (user.admin === 2) modifiedRoles.push("Primary Admin");
+  if (user.admin >= 1) modifiedRoles.push("Secondary Admin");
 
   return (
     <div>
@@ -32,7 +31,12 @@ function VerifyButtonCell({ row: { index }, updateMyData, user }) {
           />
         ) : (
           modifiedRoles.map((label) => (
-            <AssignBtn label={label} onClick={() => setRolesModalOpen(true)} profilePage={false} />
+            <AssignBtn
+              key={label}
+              label={label}
+              onClick={() => setRolesModalOpen(true)}
+              profilePage={false}
+            />
           ))
         )}
       </ScrollContainer>
@@ -101,13 +105,15 @@ export default function UserManage() {
     fetchUsers();
   }, []);
 
-  const updateMyData = (_rowIndex, columnId, value, userId) => {
+  const updateMyData = async (_rowIndex, columnId, value, userId) => {
     // We also turn on the flag to not reset the page
     // we don't use rowIndex because we filter before displaying, so the userData
     // includes users from both the admin and user lists
-    api_user_verify(userId).then((res) => {
-      if (!res || res.error) navigate(window.location);
+    const res = await api_user_verify(userId);
 
+    if (!res || res.error) {
+      navigate(window.location);
+    } else {
       const old = [...userData] ?? [];
       const i = old.findIndex((row) => row._id === userId);
 
@@ -117,7 +123,7 @@ export default function UserManage() {
       });
 
       setUserData(old);
-    });
+    }
   };
 
   const handleConfirmationModal = ({ name, isOpen }) => {
