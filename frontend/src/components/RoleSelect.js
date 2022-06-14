@@ -1,3 +1,4 @@
+/* eslint react/no-unstable-nested-components: off */
 import React, { useState, useEffect } from "react";
 import ReactSelect from "react-select";
 import ROLES from "../constants/roles";

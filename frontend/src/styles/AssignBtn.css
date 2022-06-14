@@ -1,75 +1,143 @@
-.btn_assign {
+.assign_btn_layout {
   display: flex;
   flex-direction: row;
-  align-items: flex-start;
-  min-width: 105px;
-  margin-right: 10px;
+  justify-content: center;
+  margin-left: 5px;
 
   font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
   line-height: 17px;
 
-  max-height: 31px;
+  height: 17px;
   text-align: center;
 
-  color: #ffffff;
+  background: #ffffff;
+  box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
 
+  border-radius: 20px;
+  padding: 6px 9px;
+}
+.assign_btn_layout > button {
+  height: 17px;
   font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 14px;
   line-height: 17px;
-
-  background: #0057b8;
-  border: 1px solid #ffffff;
-  box-sizing: border-box;
-  box-shadow: 1px 5px 8px rgba(0, 87, 184, 0.1);
-  border-radius: 20px;
-  padding: 7px 16px;
+  color: black;
+}
+.assign_btn_layout > button:nth-child(1) {
+  background: transparent;
+  border: none;
+  height: 17px;
+}
+.btn_assign {
+  white-space: nowrap;
 }
 
-.btn_assign:hover {
+.btn_assign > .delete_role {
+  margin: 0 6px;
+  padding: 0;
+  width: 8px;
+  height: 20px;
+
+  filter: invert(50%);
+  background: url(/public/img/wishgranting_modal_close.svg) no-repeat;
+  background-size: 8px;
+  background-position: center;
+}
+
+.btn_assignrole {
+  background: #0057b8;
+}
+.btn_assignrole > button {
+  color: white;
+}
+
+.no_hover:hover {
+  cursor: default;
+}
+.hover:hover {
   cursor: pointer;
 }
-
 .btn_access {
+  color: white;
   min-width: 115px;
   background: #0057b8;
   border: 1px solid #ffffff;
   box-sizing: border-box;
-  box-shadow: 1px 5px 8px rgba(0, 87, 184, 0.1);
   border-radius: 20px;
   padding: 7px 16px;
 }
 
 .btn_aGreeter {
-  min-width: 135px;
-  color: black;
-  background: #ffffff;
+  /* min-width: 140px; */
   border: 1px solid #ffb549;
-  box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
 }
 
 .btn_wGranter {
-  min-width: 120px;
-  color: black;
-  background: #ffffff;
+  /* min-width: 125px; */
   border: 1px solid #00bab3;
-  box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
 }
 
-.btn_meeter {
-  min-width: 80px;
-  background: #ffffff;
-  color: black;
+.btn_mentor {
+  /* min-width: 90px; */
   border: 1px solid #8dc8e8;
-  box-shadow: 3px 6px 14px rgba(0, 87, 184, 0.1);
+}
+
+.btn_pAdmin {
+  /* min-width: 135px; */
+  border: 1px solid #1a68bf;
+}
+
+.btn_volunteer {
+  /* min-width: 105px; */
+  border: 1px solid #ff585d;
+}
+
+.btn_office {
+  /* min-width: 80px; */
+  border: 1px solid #9ec37b;
+}
+
+.btn_speciale {
+  /* min-width: 130px; */
+  border: 1px solid #e09eff;
+}
+
+.btn_translator {
+  /* min-width: 105px; */
+  border: 1px solid #0057b8;
+}
+
+.btn_speaker {
+  /* min-width: 145px; */
+  border: 1px solid #e993b2;
+}
+
+.btn_las {
+  /* min-width: 120px; */
+  border: 1px solid #fbd872;
+}
+
+.btn_sAdmin {
+  /* min-width: 145px; */
+  border: 1px solid #3cba00;
 }
 
 .assign_btn_container {
   display: flex;
   max-width: 212px;
   flex-direction: row;
+}
+
+.delete_role {
+  background: transparent;
+  border: 0px;
+  position: relative;
+  color: gray;
+  /* right: 22px; */
+  width: 0px;
+}
+
+.delete_role:hover {
+  cursor: pointer;
 }
