@@ -216,7 +216,7 @@ const api_wish_wednesday_add = (message) =>
 /**
  * MESSAGING EMAILS
  */
-const api_message_email = async (roles, html, subject) =>
+const api_message_email = (roles, html, subject) =>
   api_call(API_ENDPOINTS.MESSAGE, {
     data: { roles, html, subject },
     method: "POST",
