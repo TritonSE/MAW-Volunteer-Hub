@@ -81,7 +81,7 @@ const UserSchema = new mongoose.Schema(
 );
 
 UserSchema.virtual("verified").get(function check() {
-  return this.roles.length > 0;
+  return this.admin > 0 || this.roles.length > 0;
 });
 
 UserSchema.pre("save", async function save(next) {

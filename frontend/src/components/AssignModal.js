@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FixedSizeList as List } from "react-window";
+import structuredClone from "@ungap/structured-clone";
 import RoleSelect from "./RoleSelect";
 import { api_user_all } from "../api";
 import ROLES from "../constants/roles";

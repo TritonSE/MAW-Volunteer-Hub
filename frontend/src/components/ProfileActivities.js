@@ -246,17 +246,19 @@ export default function ProfileActivities({ id, currId, events, updateEvents }) 
         onRequestClose={() => closeModal()}
         contentLabel="Manually Log Activity"
       >
-        <button
-          className="close_button"
-          aria-label="close_button"
-          type="button"
-          onClick={() => closeModal()}
-        />
         <form
           className="log_activity_form"
           onSubmit={editing ? (e) => updateActivity(e) : (e) => logActivity(e)}
         >
-          <h3>{editing ? "Edit Activity" : "Log New Activity"}</h3>
+          <div className="form_heading">
+            <h3>{editing ? "Edit Activity" : "Log New Activity"}</h3>
+            <button
+              className="close_button"
+              aria-label="close_button"
+              type="button"
+              onClick={() => closeModal()}
+            />
+          </div>
           <div className="form_prompt">Event Name</div>
           <input
             type="text"

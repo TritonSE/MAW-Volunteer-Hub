@@ -8,6 +8,7 @@ import {
   dateFunctions,
   date_format,
 } from "@cubedoodl/react-simple-scheduler";
+import structuredClone from "@ungap/structured-clone";
 import RoleSelect from "./RoleSelect";
 import AssignModal from "./AssignModal";
 import ROLES from "../constants/roles";
