@@ -9,7 +9,6 @@
   line-height: 17px;
 
   height: 17px;
-  /* box-sizing: border-box; */
   text-align: center;
 
   background: #ffffff;
@@ -23,6 +22,7 @@
   font-family: Lato;
   font-size: 14px;
   line-height: 17px;
+  color: black;
 }
 .assign_btn_layout > button:nth-child(1) {
   background: transparent;
@@ -40,9 +40,12 @@
   height: 20px;
 
   filter: invert(50%);
-  background: url(http://localhost:3000/img/wishgranting_modal_close.svg) no-repeat;
+  background: url(/public/img/wishgranting_modal_close.svg) no-repeat;
   background-size: 8px;
   background-position: center;
+}
+.btn_assign:disabled {
+  cursor: default !important;
 }
 
 .btn_assignrole {
@@ -137,7 +140,9 @@
   /* right: 22px; */
   width: 0px;
 }
-
+.delete_role:disabled {
+  cursor: default !important;
+}
 .delete_role:hover {
   cursor: pointer;
 }

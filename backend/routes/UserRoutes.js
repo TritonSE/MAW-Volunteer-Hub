@@ -195,19 +195,19 @@ router.patch(
         if (is_primary && admin < 2) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
           if (user._id.toString() !== req.user._id.toString()) {
-            throw new Error("Unable to remove primary admin status from another user.");
+            throw new URIError("Unable to remove primary admin status from another user.");
           }
           // only allow yourself to remove admin if there is at least one other primary admin
           return Promise.all([user, UserModel.find({ admin: 2 })]);
         }
         if (!is_primary && admin === 2 && req.user.admin < 2) {
-          throw new Error("Insufficient permissions to make user a primary admin.");
+          throw new URIError("Insufficient permissions to make user a primary admin.");
         }
         return Promise.all([user, null]);
       })
       .then(([user, primary_admins]) => {
         if (primary_admins && primary_admins.length <= 1) {
-          throw new Error("Unable to remove primary admin status from final primary admin.");
+          throw new URIError("Unable to remove primary admin status from final primary admin.");
         }
 
         user.roles = roles;
@@ -215,7 +215,10 @@ router.patch(
         return user.save();
       })
       .then(() => res.json({ success: true }))
-      .catch(errorHandler(res));
+      .catch((err) => {
+        if (err instanceof URIError) res.json({ error: err.message });
+        else errorHandler(res);
+      });
   }
 );
 
