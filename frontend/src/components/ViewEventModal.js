@@ -221,7 +221,10 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
 
   useEffect(() => setHasChanges(hasChanges + 1), [hasGuests, guests, response]);
 
-  useEffect(() => setAttendeesArray(Object.values(event.attendees)), [event]);
+  useEffect(
+    () => setAttendeesArray(Object.values(event.attendees).filter((att) => att.volunteer)),
+    [event]
+  );
 
   async function save_response(going) {
     if (going && hasGuests) {
@@ -459,7 +462,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
               <br />
               {attendeesArray.map((att) => (
                 <div key={att.volunteer._id}>
-                  <div className="very-gentle">{att.volunteer.name}:</div>
+                  <div className="very-gentle">{att.volunteer.name}</div>
                   <div className="indented">
                     {att.guests.map((guest) => (
                       <div key={guest._id} className="has_flex has_gap">
