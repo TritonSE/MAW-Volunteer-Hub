@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.0",
     "babel-polyfill": "^6.26.0",
+    "clean": "^4.0.2",
     "history": "^5.2.0",
     "html-react-parser": "^1.4.12",
     "http-proxy-middleware": "^2.0.2",

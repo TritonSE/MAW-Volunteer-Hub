@@ -1,3 +1,4 @@
+/* eslint react/no-unstable-nested-components: off */
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FixedSizeList as List } from "react-window";
@@ -29,6 +30,7 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
       users.filter(
         (user) =>
           user.name &&
+          user.active &&
           (user.name.toLowerCase().includes(e?.target?.value ?? search) ||
             user.email.toLowerCase().includes(e?.target?.value ?? search)) &&
           (roles.length === ROLES.length ||
@@ -40,8 +42,9 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
   useEffect(async () => {
     const res = await api_user_all();
     if (res?.users) {
-      setUsers(res.users);
-      setFilteredUsers(res.users);
+      const active_users = res.users.filter((user) => user.active);
+      setUsers(active_users);
+      setFilteredUsers(active_users);
     }
 
     function resize() {

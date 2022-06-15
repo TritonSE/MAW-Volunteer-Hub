@@ -41,6 +41,11 @@ const API_ENDPOINTS = {
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",
 
+  SET_ROLES: "/user/set-roles",
+
+  ADD_EVENT: "/user/newmanual",
+  EDIT_EVENT: "/user/editmanual",
+  DELETE_EVENT: "/user/delmanual",
   CALENDAR_ALL: "/cal/all",
   CALENDAR_ICS: "/cal/ics",
   CALENDAR_NEW: "/cal/new",

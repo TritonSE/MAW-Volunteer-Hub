@@ -208,6 +208,9 @@ const api_calendar_respond = (id, going, date, guests, response) =>
     method: "POST",
   });
 
+/*
+ * WISH WEDNESDAY
+ */
 const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
 
 const api_wish_wednesday_add = (message) =>
@@ -216,10 +219,40 @@ const api_wish_wednesday_add = (message) =>
 /**
  * MESSAGING EMAILS
  */
-const api_message_email = (roles, html, subject) =>
+const api_message_email = (roles, html, text, subject) =>
   api_call(API_ENDPOINTS.MESSAGE, {
-    data: { roles, html, subject },
+    data: { roles, html, text, subject },
     method: "POST",
+  });
+
+/*
+ * ROLES AND MANUAL EVENTS
+ */
+const api_update_roles = async (id, roles, admin) =>
+  api_call(`${API_ENDPOINTS.SET_ROLES}/${id}`, {
+    data: { roles, admin },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_add_event = async (id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.ADD_EVENT}/${id}`, {
+    data: { date, title, hours },
+    method: "POST",
+    type: "application/json",
+  });
+
+const api_edit_event = async (id, event_id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.EDIT_EVENT}/${id}/${event_id}`, {
+    data: { date, title, hours },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_delete_event = async (id, event_id) =>
+  api_call(`${API_ENDPOINTS.DELETE_EVENT}/${id}/${event_id}`, {
+    method: "DELETE",
+    type: "application/json",
   });
 
 export {
@@ -254,4 +287,8 @@ export {
   api_wish_wednesday,
   api_wish_wednesday_add,
   api_message_email,
+  api_update_roles,
+  api_add_event,
+  api_edit_event,
+  api_delete_event,
 };

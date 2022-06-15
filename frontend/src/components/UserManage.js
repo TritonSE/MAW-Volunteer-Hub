@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
+import RolesModal from "./RolesModal";
 import { SITE_PAGES } from "../constants/links";
 import { api_user_all, api_user_verify } from "../api";
 
@@ -12,53 +13,40 @@ import "../styles/UserManage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function VerifyButtonCell({
-  isVerified: initialVerified,
-  name: userName,
-  row: { index, original },
-  column: { id },
-  updateMyData,
-  handleConfirmationModal,
-}) {
-  const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
+function VerifyButtonCell({ row: { index }, updateMyData, user }) {
+  const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
-  useEffect(() => {
-    setIsVerifiedState(initialVerified);
-  }, [initialVerified]);
+  const modifiedRoles = user.roles.slice();
+  if (user.admin === 2) modifiedRoles.push("Primary Admin");
+  if (user.admin >= 1) modifiedRoles.push("Secondary Admin");
 
-  function handleVerifyUser() {
-    updateMyData(index, id, true, original._id);
-    setIsVerifiedState(true);
-  }
-
-  function handleRoleBtnClick(label) {
-    if (label === "Allow Access") {
-      // setIsOpen(true);
-      handleConfirmationModal({ name: userName, isOpen: true });
-      handleVerifyUser();
-      // setIsVerifiedState(true);
-      // setUserData(null);
-      // updateLocal(id, userData, setUserData);
-    }
-  }
-
-  if (!isVerifiedState) {
-    return (
-      <ScrollContainer className="assign_btn_container" vertical={false}>
-        <AssignBtn
-          label="Allow Access"
-          key={Math.random()}
-          onClick={() => handleRoleBtnClick("Allow Access")}
-        />
-      </ScrollContainer>
-    );
-  }
   return (
-    <ScrollContainer className="assign_btn_container" vertical={false}>
-      {/* {buttonLabels.map((label) => (
-            <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick(label)} />
-          ))} */}
-    </ScrollContainer>
+    <div>
+      <ScrollContainer className="assign_btn_container" vertical={false}>
+        {modifiedRoles.length === 0 ? (
+          <AssignBtn
+            label="Assign Role"
+            onClick={() => setRolesModalOpen(true)}
+            profilePage={false}
+          />
+        ) : (
+          modifiedRoles.map((label) => (
+            <AssignBtn
+              key={label}
+              label={label}
+              onClick={() => setRolesModalOpen(true)}
+              profilePage={false}
+            />
+          ))
+        )}
+      </ScrollContainer>
+      <RolesModal
+        open={rolesModalOpen}
+        setOpen={setRolesModalOpen}
+        user={user}
+        onRolesChange={(selectedRoles) => updateMyData(index, "roles", selectedRoles, user._id)}
+      />
+    </div>
   );
 }
 
@@ -76,9 +64,7 @@ const headers = [
   {
     Header: "",
     accessor: "verified",
-    Cell: (props) => (
-      <VerifyButtonCell {...props} isVerified={props.value} name={props.row.original.name} />
-    ),
+    Cell: (props) => <VerifyButtonCell {...props} isVerified={props.value} user={props.original} />,
   },
   {
     Header: "",
@@ -119,13 +105,15 @@ export default function UserManage() {
     fetchUsers();
   }, []);
 
-  const updateMyData = (_rowIndex, columnId, value, userId) => {
+  const updateMyData = async (_rowIndex, columnId, value, userId) => {
     // We also turn on the flag to not reset the page
     // we don't use rowIndex because we filter before displaying, so the userData
     // includes users from both the admin and user lists
-    api_user_verify(userId).then((res) => {
-      if (!res || res.error) navigate(window.location);
+    const res = await api_user_verify(userId);
 
+    if (!res || res.error) {
+      navigate(window.location);
+    } else {
       const old = [...userData] ?? [];
       const i = old.findIndex((row) => row._id === userId);
 
@@ -135,7 +123,7 @@ export default function UserManage() {
       });
 
       setUserData(old);
-    });
+    }
   };
 
   const handleConfirmationModal = ({ name, isOpen }) => {

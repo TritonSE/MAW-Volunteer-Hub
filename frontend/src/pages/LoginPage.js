@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
 import { api_login, api_signup } from "../api";
@@ -52,6 +52,9 @@ function LoginPage() {
 
   const [errors, setErrors] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+
+  const emailRef = useRef();
 
   const navigate = useNavigate();
 
@@ -107,8 +110,6 @@ function LoginPage() {
           setErrorMessage(res.error);
         }
       } else {
-        // TODO: This lets the user log in immediately
-        //   after signing up, for debug purposes
         setSuccessState(-1);
 
         // api.js guarantees that res will have an error object on failure
@@ -140,6 +141,7 @@ function LoginPage() {
             onChange={(e) => setName(e.target.value)}
           />
           <input
+            ref={emailRef}
             name="email"
             placeholder="Email"
             type="email"
@@ -148,13 +150,21 @@ function LoginPage() {
               ${errors.email ? "error" : ""}
             `}
             onChange={(e) => setEmail(e.target.value)}
+            onFocus={() => setTooltipVisible(true)}
+            onBlur={() => setTooltipVisible(false)}
           />
           {!isLogin && (
-            <p className="email-info">
-              &#9432; By providing your email address, you are agreeing and opting-in to recieve
+            <div
+              className="disclaimer_tooltip"
+              style={{
+                opacity: 0 + tooltipVisible,
+                zIndex: tooltipVisible ? 999 : -1,
+              }}
+            >
+              &#9432; By providing your email address, you are agreeing and opting-in to receive
               email communication from Make-A-Wish San Diego for messaging/announcements, event
               invitations/assignments, and account info.
-            </p>
+            </div>
           )}
           <PasswordField
             name="password"
@@ -217,7 +227,7 @@ function LoginPage() {
           </div>
           <div className="login_modal_content">
             {modalOpen === true
-              ? "Your account has been created! You should recieve a sign-up confirmation email shortly. Once an admin confirms, you will be notified via email and be able to access the website."
+              ? "Your account has been created! You should receive a sign-up confirmation email shortly. Once an administrator confirms, you will be notified via email and be able to access the website."
               : modalOpen}
           </div>
           <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>

@@ -48,13 +48,13 @@ module.exports = {
         <div>
             <p>Dear ${user.name.split(" ")[0]},</p>
             <p>Your account has been created. You will be notified when 
-            an admin has approved your account and have access to the website.</p>
+            an administrator has approved your account and given you access to the website.</p>
             <p>Thanks,<br/>MAW SD</p>
         </div>`;
 
     const msgText = `Dear ${user.name.split(" ")[0]}, \n
-        Your account has been created. You will be notified when an admin has approved 
-        your account and have access to the website. \nThanks, \nMAW SD`;
+        Your account has been created. You will be notified when an administrator has approved 
+        your account and given you access to the website. \nThanks, \nMAW SD`;
 
     const data = {
       to: user.email,
@@ -72,14 +72,14 @@ module.exports = {
     const msgHtml = `
       <div>
           <p>Dear ${user.name.split(" ")[0]},</p>
-          <p>Your account has been approved. You can now access the website at 
+          <p>Your account has been approved. You can now access the website at: 
           <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
-          https://maw-volunteer-hub.herokuapp.com/login</a>.</p>
+          https://maw-volunteer-hub.herokuapp.com/login</a></p>
           <p>Thanks,<br/>MAW SD</p>
       </div>`;
 
     const msgText = `Dear ${user.name.split(" ")[0]}, \n
-      Your account has been approved. You can now access the website at 
+      Your account has been approved. You can now access the website at: 
       https://maw-volunteer-hub.herokuapp.com/login" \nThanks, \nMAW SD`;
 
     const msgSubject = "Your Make-A-Wish San Diego account has been approved!";
@@ -96,13 +96,13 @@ module.exports = {
     return res;
   },
 
-  message: async (user, html, subject, roles) => {
+  message: async (user, html, text, subject, roles) => {
     const header = `
     <header>
       <div style="font-weight:bold; font-style:italic; font-size:12px">
         Dear ${
           user.name.split(" ")[0]
-        }, You are receiving this message because you are in one or more of the following role(s): ${roles.join(
+        }, you are receiving this message because you are in one or more of the following role(s): ${roles.join(
       ", "
     )}
       </div>
@@ -116,13 +116,13 @@ module.exports = {
       <footer style="font-size:11px">
         <p>This email (which may contain commercial/marketing/solicitation/advertisement content) was sent as a message 
         from a <a href="https://wish.org/sandiego" target="_blank">Make-A-Wish San Diego</a> administrator 
-        to the afformentioned MAW role(s) and is intended for ${user.email}.</p>    
-        <p>You can login to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+        to the aforementioned MAW role(s) and is intended for ${user.email}.</p>    
+        <p>You can log in to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
         Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
         <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
-        <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or reply to this email.</p>
-        <p>If you want to stop receiving Messaging emails or stop recieving all communication from MAW, you can
-        email MAWVolunteerHub@gmail.com with your request to delete your account, or you can login
+        <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or by replying to this email.</p>
+        <p>If you want to stop receiving messaging emails (or all communication from MAW), you can
+        email MAWVolunteerHub@gmail.com with your request to delete your account. Alternatively, you can log in
         to the Volunteer Hub and deactivate your account.</p> 
         <br/>
         <p style="color:black">Make-A-Wish San Diego <br/>4995 Murphy Canyon Rd. <br/>Suite 402 <br/>San Diego, CA 92123 </p>
@@ -137,7 +137,7 @@ module.exports = {
       to: user.email,
       subject: full_subject,
       html: full_html,
-      text: "Message only sent using html.",
+      text,
     };
 
     const res = await transporter.sendMail(data);

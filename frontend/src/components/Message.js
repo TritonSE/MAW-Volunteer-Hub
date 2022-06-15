@@ -10,6 +10,7 @@ Modal.setAppElement("#root");
 
 export default function Message() {
   const [convertedText, setConvertedText] = useState("");
+  const [rawText, setRawText] = useState("");
   const [selectedRecipients, setSelectedRecipients] = useState([]);
   const [subject, setSubject] = useState("");
   // message sending modal and modal text
@@ -43,10 +44,7 @@ export default function Message() {
       has_error = true;
     }
 
-    if (
-      convertedText.replace(/<(.|\n)*?>/g, "").trim().length === 0 &&
-      !convertedText.includes("<img")
-    ) {
+    if (rawText.trim() === "") {
       setMsgError(true);
       has_error = true;
     }
@@ -55,7 +53,12 @@ export default function Message() {
 
     const roles_to_message = selectedRecipients.map((elem) => elem.name);
 
-    const res = await api_message_email(JSON.stringify(roles_to_message), convertedText, subject);
+    const res = await api_message_email(
+      JSON.stringify(roles_to_message),
+      convertedText,
+      rawText,
+      subject
+    );
 
     if (res && res.success) {
       // clear fields if success
@@ -106,8 +109,9 @@ export default function Message() {
             modules={modules}
             value={convertedText}
             className={msgError ? "has_error" : ""}
-            onChange={(e) => {
-              setConvertedText(e);
+            onChange={(content, _delta, _src, editor) => {
+              setConvertedText(content);
+              setRawText(editor.getText(content));
               setMsgError(false);
             }}
             bounds=".message_meta"
@@ -118,7 +122,7 @@ export default function Message() {
               type="submit"
               onClick={() => handleSubmit()}
             >
-              Post
+              Send
             </button>
           </div>
         </div>
@@ -128,6 +132,7 @@ export default function Message() {
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
         className="login_react_modal message_modal_container"
+        overlayClassName="message_modal_overlay"
       >
         <div className="login_flex login_form login_modal">
           <div className="login_flex nomargin">

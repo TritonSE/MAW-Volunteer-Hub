@@ -10,6 +10,9 @@ import { API_ENDPOINTS } from "../constants/links";
 import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
+import ProfileRoles from "../components/ProfileRoles";
+import ProfileActivities from "../components/ProfileActivities";
+
 import "../styles/ProfilePage.css";
 
 Modal.setAppElement(document.getElementById("root"));
@@ -34,10 +37,14 @@ function ProfilePage() {
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
+  const [rolesChanged, setRolesChanged] = useState(false);
+  const [eventsChanged, setEventsChanged] = useState(false);
+
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -168,21 +175,21 @@ function ProfilePage() {
 
   useEffect(() => {
     async function handleUserInfo() {
-      if (!id) {
-        setUser(currentUser);
-        setIsCurrentUser(true);
-      } else {
-        const res = await api_user_info(id ?? "");
-        if (!res || !res.user) setIs404(true);
-        else {
-          setIs404(false);
-          setUser(res.user);
-          setIsCurrentUser(res.user._id === currentUser._id);
+      const res = await api_user_info(id ?? currentUser._id);
+      if (!res || !res.user) setIs404(true);
+      else {
+        setIs404(false);
+        setUser(res.user);
+        if (res.user._id === currentUser._id) {
+          setIsCurrentUser(true);
+          setCurrentUser(res.user);
+        } else {
+          setIsCurrentUser(false);
         }
       }
     }
     handleUserInfo();
-  }, [id]);
+  }, [id, rolesChanged, eventsChanged]);
 
   useEffect(() => {
     if (!responseModalOpen) {
@@ -198,6 +205,25 @@ function ProfilePage() {
   useEffect(() => {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
+
+  // Change format of calendar events to fit in with the format of manual events.
+  function formatCalendarEvents() {
+    let allNonManual = [];
+    user.events.map((event) =>
+      allNonManual.push({
+        _id: event._id,
+        date: event.from,
+        title: event.name,
+        hours: new Date(event.to).getHours() - new Date(event.from).getHours(),
+        notEditable: true,
+      })
+    );
+    allNonManual = allNonManual.concat(user.manualEvents);
+    allNonManual.sort(
+      (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
+    );
+    return allNonManual;
+  }
 
   return is404 ? (
     <Custom404Page />
@@ -444,6 +470,46 @@ function ProfilePage() {
           </button>
         </div>
       </Modal>
+      <div>
+        {user.roles && user.manualEvents ? (
+          <div>
+            <div className="user_stats">
+              <ProfileRoles user={user} onRolesChange={setRolesChanged} />
+              <div className="assign_completed">
+                <h2 className="task_title">Assignments Completed</h2>
+                <p className="task_number">
+                  {user.events.reduce(
+                    (prev, next) =>
+                      prev +
+                      Object.entries(next.repetitions).reduce(
+                        (subprev, [date, subnext]) =>
+                          subprev +
+                          (new Date(date).setHours(
+                            new Date(next.to).getHours(),
+                            new Date(next.to).getMinutes()
+                          ) <= Date.now() &&
+                            Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+                        0
+                      ),
+                    0
+                  ) +
+                    user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now())
+                      .length}
+                </p>
+              </div>
+            </div>
+            <ProfileActivities
+              events={formatCalendarEvents()}
+              admin={currentUser.admin === 2}
+              id={user._id}
+              currId={currentUser._id}
+              updateEvents={() => setEventsChanged(Math.random())}
+            />
+          </div>
+        ) : (
+          "Loading..."
+        )}
+      </div>
     </div>
   );
 }

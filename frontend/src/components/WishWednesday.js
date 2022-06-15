@@ -43,7 +43,6 @@ export default function WishWednesday() {
       setErrorMessage("Cannot create an empty Wish Wednesday post.");
       return;
     }
-    console.log(convertedText);
     const res = await api_wish_wednesday_add(convertedText);
     if (res && !res.error) {
       setModalVariant("wish_wednesday_success");

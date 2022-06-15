@@ -81,11 +81,12 @@
 
 .card_col {
   display: flex;
+  box-sizing: border-box;
   flex-direction: column;
   justify-content: space-between;
   padding-left: 30px;
   height: 65px;
-  width: 100%;
+  width: 50%;
 }
 .card_col > div > button {
   margin: 0;

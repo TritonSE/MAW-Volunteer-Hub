@@ -35,6 +35,7 @@ router.get("/users", (req, res) =>
 
 router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
+    .populate("events")
     .then((user) =>
       res.json({
         user: user.toJSON(),
@@ -186,19 +187,19 @@ router.patch(
         if (is_primary && admin < 2) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
           if (user._id.toString() !== req.user._id.toString()) {
-            throw new Error("Unable to remove primary admin status from another user.");
+            throw new URIError("Unable to remove primary admin status from another user.");
           }
           // only allow yourself to remove admin if there is at least one other primary admin
           return Promise.all([user, UserModel.find({ admin: 2 })]);
         }
         if (!is_primary && admin === 2 && req.user.admin < 2) {
-          throw new Error("Insufficient permissions to make user a primary admin.");
+          throw new URIError("Insufficient permissions to make user a primary admin.");
         }
         return Promise.all([user, null]);
       })
       .then(([user, primary_admins]) => {
         if (primary_admins && primary_admins.length <= 1) {
-          throw new Error("Unable to remove primary admin status from final primary admin.");
+          throw new URIError("Unable to remove primary admin status from final primary admin.");
         }
 
         user.roles = roles;
@@ -206,7 +207,10 @@ router.patch(
         return user.save();
       })
       .then(() => res.json({ success: true }))
-      .catch(errorHandler(res));
+      .catch((err) => {
+        if (err instanceof URIError) res.json({ error: err.message });
+        else errorHandler(res);
+      });
   }
 );
 
@@ -217,7 +221,7 @@ router.get("/role/:role", (req, res) =>
 );
 
 router.post("/newmanual/:id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -250,7 +254,7 @@ router.post("/newmanual/:id", (req, res) => {
 });
 
 router.delete("/delmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -268,7 +272,7 @@ router.delete("/delmanual/:id/:event_id", (req, res) => {
 });
 
 router.patch("/editmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -291,29 +295,33 @@ router.patch("/editmanual/:id/:event_id", (req, res) => {
 /**
  * Message sending via email to all user(s) in role(s)
  */
-router.post("/message", primaryAdminValidator, roleValidator, (req, res) => {
-  const roles_to_message = JSON.parse(req.body.roles);
-  const html = req.body.html;
-  const subject = req.body.subject;
+router.post(
+  "/message",
+  primaryAdminValidator,
+  roleValidator,
+  validate(["roles", "html", "text", "subject"]),
+  (req, res) => {
+    const roles_to_message = JSON.parse(req.body.roles);
+    UserModel.find({ active: true, roles: { $in: roles_to_message } })
+      .then((users_list) => {
+        if (users_list.length > 0) {
+          users_list.forEach((user) => {
+            sendEmail.message(
+              user,
+              req.body.html,
+              req.body.text,
+              req.body.subject,
+              roles_to_message
+            );
+          });
 
-  UserModel.find({ roles: { $in: roles_to_message } })
-    .then((users_list) => {
-      // can call a single sendEmail here to CC MAW
-
-      // only send email if user(s) exit in role(s) and user is active
-      if (users_list.length !== 0) {
-        users_list.forEach((user) => {
-          if (user.active === true) {
-            sendEmail.message(user, html, subject, roles_to_message);
-          }
-        });
-
-        res.json({ success: true });
-      } else {
-        res.status(400).json({ error: "No volunteers in role(s)." });
-      }
-    })
-    .catch(errorHandler(res));
-});
+          res.json({ success: true });
+        } else {
+          res.status(400).json({ error: "No volunteers in role(s)." });
+        }
+      })
+      .catch(errorHandler(res));
+  }
+);
 
 module.exports = router;
