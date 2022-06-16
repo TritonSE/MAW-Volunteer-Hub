@@ -241,12 +241,14 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
           ) : (
             <tbody>
               <tr className="no_activities_row">
-                <td className="no_activities">&nbsp;</td>
-                <td className="no_activities">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
               </tr>
               <tr className="no_activities_row">
-                <td className="no_activities" />
+                <td />
                 <td className="no_activities">No Activities Yet</td>
+                <td />
+                <td />
               </tr>
             </tbody>
           )}

@@ -163,6 +163,10 @@
   z-index: 100001;
   font-family: "Lato", sans-serif;
 }
+.evt_modal .react-simple-calendar td {
+  width: 24px;
+  height: 24px;
+}
 .evt_modal .date_picker_overlay {
   width: 100vw;
   height: 100vh;

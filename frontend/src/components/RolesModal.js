@@ -15,14 +15,17 @@ export default function RolesModal({ open, setOpen, user, onRolesChange }) {
     e.preventDefault();
     const res = await api_update_roles(user._id, JSON.stringify(selectedRoles), selectedAdmin);
     if (res && !res.error) {
-      onRolesChange(selectedRoles);
+      onRolesChange(selectedRoles, selectedAdmin);
       setOpen(false);
     } else {
       setErrorOpen(res?.error ?? "Unable to reach server, please try again.");
     }
   }
 
-  useEffect(() => setSelectedRoles(user.roles), [user]);
+  useEffect(() => {
+    setSelectedRoles(user.roles);
+    setSelectedAdmin(user.admin);
+  }, [user]);
 
   return (
     <>

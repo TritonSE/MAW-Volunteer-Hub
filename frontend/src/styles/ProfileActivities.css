@@ -164,6 +164,7 @@ tr:nth-child(2n) .activities_table_data_end {
 }
 
 .no_activities {
+  width: 50%;
   text-align: center;
 }
 

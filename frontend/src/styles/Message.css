@@ -107,10 +107,6 @@
   text-overflow: ellipsis;
 }
 
-.message_modal {
-  overflow: scroll;
-}
-
 /* hide scrollbar when listing message response */
 .message_modal::-webkit-scrollbar {
   display: none;
@@ -134,7 +130,7 @@
 
 @media only screen and (max-width: 600px) {
   .msg_layout {
-    padding: 20px 0 0;
+    padding: 20px 0;
   }
 }
 

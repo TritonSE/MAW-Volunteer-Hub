@@ -46,23 +46,6 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-    .then((user) => {
-      // send email
-      sendEmail.verify(user);
-
-      res.status(200).json({ success: true });
-    })
-    .catch(errorHandler(res))
-);
-
-router.put("/promote/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.findByIdAndUpdate(req.params.id, { admin: true })
-    .then(() => res.status(200).json({ success: true }))
-    .catch(errorHandler(res))
-);
-
 router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.deleteOne({ _id: req.params.id })
     .then(() => res.json({ success: true }))
@@ -217,6 +200,10 @@ router.patch(
       .then(([user, primary_admins]) => {
         if (primary_admins && primary_admins.length <= 1) {
           throw new URIError("Unable to remove primary admin status from final primary admin.");
+        }
+
+        if (user.roles.length === 0 && roles.length > 0) {
+          sendEmail.verify(user);
         }
 
         user.roles = roles;

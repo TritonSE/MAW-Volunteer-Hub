@@ -201,11 +201,11 @@
 .btn_table_control {
   background-color: transparent;
   border: 0px;
-  margin-left: 50px;
+  margin-left: 24px;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
-  line-height: 22px;
+  font-size: 28px;
+  line-height: 29px;
 }
 
 .btn_table_control:hover {

@@ -394,12 +394,13 @@ function ProfilePage() {
           {(isCurrentUser || currentUser.admin > 0) && (
             <button
               type="button"
-              className="change-password-button"
+              className="maw-ui_button"
               onClick={() => setDeactivateModalOpen(true)}
             >
               {user.active ? "Deactivate" : "Activate"} Profile
             </button>
           )}
+          &nbsp;&nbsp;
           {isCurrentUser && (
             <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
               Change Password
@@ -422,7 +423,7 @@ function ProfilePage() {
       {/* Deactivate Profile, Change Password, and Delete Profile Modals */}
       <Modal
         className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        overlayClassName="maw-ui_modal-overlay"
         isOpen={deactivateModalOpen}
         onRequestClose={() => setDeactivateModalOpen(false)}
         contentLabel="Deactivate profile modal"
@@ -447,14 +448,14 @@ function ProfilePage() {
         />
         <div className="delete-button-container">
           <button
-            className="modal-button small button-secondary"
+            className="maw-ui_button"
             type="button"
             onClick={() => setDeactivateModalOpen(false)}
           >
             Cancel
           </button>
           <button
-            className={`modal-button small ${isCurrentUser ? "button-danger" : "button-primary"}`}
+            className={`maw-ui_button ${isCurrentUser ? "error" : "primary"}`}
             type="button"
             onClick={deactivate_account}
           >
