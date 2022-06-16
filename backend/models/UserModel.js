@@ -50,7 +50,7 @@ const UserSchema = new mongoose.Schema(
     },
     active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     password: {
       type: String,
@@ -80,8 +80,8 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.virtual("verified").get(function check() {
-  return this.roles.length > 0;
+UserSchema.virtual("verified").get(function check_verify() {
+  return this.roles.length > 0 || this.admin > 0;
 });
 
 UserSchema.pre("save", async function save(next) {
