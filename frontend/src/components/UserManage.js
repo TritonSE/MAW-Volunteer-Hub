@@ -62,13 +62,37 @@ const headers = [
   },
   // Replace the following three rows with the commented out rows for the full table
   {
-    Header: "",
+    Header: "Role",
     accessor: "verified",
     Cell: (props) => <VerifyButtonCell {...props} isVerified={props.value} user={props.original} />,
   },
   {
-    Header: "",
-    accessor: "empty",
+    Header: "Assignments Completed",
+    accessor: "",
+    Cell: ({ row }) =>
+      row.original.events.reduce(
+        (prev, next) =>
+          prev +
+          Object.entries(next.repetitions).reduce(
+            (subprev, [date, subnext]) =>
+              subprev +
+              (new Date(date).setHours(
+                new Date(next.to).getHours(),
+                new Date(next.to).getMinutes()
+              ) <= Date.now() &&
+                Object.prototype.hasOwnProperty.call(subnext.attendees, row.original._id)),
+            0
+          ),
+        0
+      ) +
+      row.original.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now()).length,
+  },
+  {
+    Header: "Volunteer Since",
+    accessor: "createdAt",
+    Cell: ({ value }) => (
+      <p>{new Date(value).toLocaleString("default", { month: "short", year: "numeric" })}</p>
+    ),
   },
 ];
 
