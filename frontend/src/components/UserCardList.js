@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
-function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
+function UserCard({ user, row, VerifyButtonCell, updateMyData }) {
   const sum =
     user.events.reduce(
       (prev, next) =>
@@ -35,19 +35,9 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmatio
       </div>
       <div className="card_col">
         {/* <div className="card_item_top">{user.roles}</div> */}
-        <VerifyButtonCell
-          row={{ index: row }}
-          column={{ id: "verified" }}
-          handleConfirmationModal={handleConfirmationModal}
-          updateMyData={updateMyData}
-          isVerified={user.verified}
-          name={user.name}
-          roles={user.roles}
-          user_id={user._id}
-          admin={user.admin}
-        />
+        <VerifyButtonCell row={{ index: row }} updateMyData={updateMyData} user={user} />
         <div className="card_item_bottom">
-          Volunteer Start:{" "}
+          Volunteer Since:{" "}
           {new Date(user.createdAt).toLocaleString("default", {
             month: "short",
             year: "numeric",

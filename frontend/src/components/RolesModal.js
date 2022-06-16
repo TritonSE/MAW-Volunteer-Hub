@@ -1,95 +1,114 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { api_update_roles } from "../auth";
+import { useArrayState } from "@cubedoodl/react-simple-scheduler";
+import { api_update_roles } from "../api";
+import ROLES from "../constants/roles";
 import "../styles/RolesModal.css";
+import "../styles/ProfileRoles.css"; /* For error modal styles */
 
-const nonAdminRoles = [
-  "Wish Granter",
-  "Volunteer",
-  "Mentor",
-  "Airport Greeter",
-  "Office",
-  "Special Events",
-  "Translator",
-  "Speaker's Bureau",
-  "Las Estrellas",
-];
+export default function RolesModal({ open, setOpen, user, onRolesChange }) {
+  const [selectedRoles, setSelectedRoles, addRole, deleteRole] = useArrayState(user.roles);
+  const [selectedAdmin, setSelectedAdmin] = useState(user.admin);
+  const [errorOpen, setErrorOpen] = useState(false);
 
-const adminRoles = ["Primary Admin", "Secondary Admin"];
-
-export default function RolesModal(props) {
-  const [selectedRoles, setSelectedRoles] = useState(props.roles);
-
-  function handleManagePageUpdate() {
-    props.setRoles(selectedRoles);
-    props.updateMyRoles(selectedRoles);
-  }
-
-  function addRoles(e) {
+  async function addRoles(e) {
     e.preventDefault();
-    // Update manage page with local data.
-    api_update_roles(props.id, JSON.stringify(selectedRoles)).then(
-      props.manage ? handleManagePageUpdate() : props.rolesChanged(true)
-    );
-    props.setOpen(false);
-  }
-
-  // Modifies selectedRoles
-  function changeSelectionStatus(role) {
-    // Removes previously selected roles from selectedRoles
-    if (selectedRoles.indexOf(role) !== -1) {
-      const tempRoles = selectedRoles.filter((aRole) => aRole !== role);
-      setSelectedRoles(tempRoles);
-      // Adds newly selected roles to selectedRoles
+    const res = await api_update_roles(user._id, JSON.stringify(selectedRoles), selectedAdmin);
+    if (res && !res.error) {
+      onRolesChange(selectedRoles);
+      setOpen(false);
     } else {
-      const tempRoles = [...selectedRoles, role];
-      setSelectedRoles(tempRoles);
+      setErrorOpen(res?.error ?? "Unable to reach server, please try again.");
     }
   }
 
-  useEffect(() => setSelectedRoles(props.roles), [props.roles]);
+  useEffect(() => setSelectedRoles(user.roles), [user]);
 
   return (
-    <Modal
-      className="add_roles_modal"
-      overlayClassName="add_roles_modal_overlay"
-      isOpen={props.open}
-      onRequestClose={() => props.setOpen(false)}
-      contentLabel="Add Roles Modal"
-    >
-      <button
-        className="roles_close_button"
-        aria-label="roles_close_button"
-        type="button"
-        onClick={() => props.setOpen(false)}
-      />
-      <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
-        <h2>Assign Role</h2>
-        {nonAdminRoles.map((role) => (
-          <div className="role_choice" key={Math.random()}>
-            <input
-              type="checkbox"
-              checked={selectedRoles.includes(role)}
-              onChange={() => changeSelectionStatus(role)}
-            />
-            <label htmlFor="role_label">{role}</label>
+    <>
+      <Modal
+        className="add_roles_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={open}
+        onRequestClose={() => setOpen(false)}
+        contentLabel="Add Roles Modal"
+      >
+        <button
+          className="roles_close_button"
+          aria-label="roles_close_button"
+          type="button"
+          onClick={() => setOpen(false)}
+        />
+        <form className="add_roles_form" onSubmit={(e) => addRoles(e)}>
+          <h2>Assign Role</h2>
+          {ROLES.map((role) => (
+            <div key={role.name} className="role_choice">
+              <label htmlFor={role.name}>
+                <input
+                  type="checkbox"
+                  id={role.name}
+                  checked={selectedRoles.includes(role.name)}
+                  onChange={(e) => {
+                    if (e.target.checked) addRole(role.name);
+                    else deleteRole(role.name);
+                  }}
+                />
+                {role.name}
+              </label>
+            </div>
+          ))}
+          <p className="admin_roles_separator">Admin</p>
+          <div className="role_choice">
+            <label htmlFor="primary_admin">
+              <input
+                type="checkbox"
+                id="primary_admin"
+                checked={selectedAdmin === 2}
+                onChange={(e) => setSelectedAdmin(e.target.checked ? 2 : 0)}
+              />
+              Primary Admin
+            </label>
           </div>
-        ))}
-        <p className="admin_roles_separator">Admin</p>
-        {adminRoles.map((role) => (
-          <div className="role_choice" key={Math.random()}>
-            <input
-              type="checkbox"
-              checked={selectedRoles.includes(role)}
-              onChange={() => changeSelectionStatus(role)}
-            />
-            <label htmlFor="role_label">{role}</label>
+          <div className="role_choice">
+            <label htmlFor="secondary_admin">
+              <input
+                type="checkbox"
+                id="secondary_admin"
+                checked={selectedAdmin >= 1}
+                onChange={(e) => {
+                  switch (selectedAdmin) {
+                    case 0: /* Fall through */
+                    case 1:
+                      setSelectedAdmin(e.target.checked ? 1 : 0);
+                      break;
+                    case 2:
+                      setSelectedAdmin(e.target.checked ? 2 : 0);
+                  }
+                }}
+              />
+              Secondary Admin
+            </label>
           </div>
-        ))}
-        <button className="modal-button button-primary" type="submit">
-          Assign
-        </button>
-      </form>
-    </Modal>
+          <button className="modal-button button-primary" type="submit">
+            Assign
+          </button>
+        </form>
+      </Modal>
+      <Modal
+        className="delete_confirmation_modal"
+        overlayClassName="add_roles_modal_overlay"
+        isOpen={Boolean(errorOpen)}
+        onRequestClose={() => setErrorOpen(false)}
+        contentLabel="Error Modal"
+      >
+        <button
+          className="close_button_delete"
+          aria-label="close_button_delete"
+          type="button"
+          onClick={() => setErrorOpen(false)}
+        />
+        <p>Error: {errorOpen}</p>
+      </Modal>
+    </>
   );
 }

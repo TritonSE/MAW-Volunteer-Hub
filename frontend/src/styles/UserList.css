@@ -63,7 +63,7 @@
   border-radius: 11px 0px 0px 11px;
   text-align: left;
 }
-td {
+.table-container td {
   padding-left: 30px;
 }
 .end {
