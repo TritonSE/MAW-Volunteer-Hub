@@ -53,14 +53,17 @@ router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, re
       if (is_primary) {
         // throw an error if they are trying to delete a primary admin
         throw new URIError("Unable to delete an account with primary admin access.");
-      } else {
-        UserModel.deleteOne({ _id: req.params.id });
       }
     })
-    .then(() => res.json({ success: true }))
     .catch((err) => {
       if (err instanceof URIError) res.json({ error: err.message });
       else errorHandler(res);
+    });
+
+  UserModel.deleteOne({ _id: req.params.id })
+    .then(() => res.json({ success: true }))
+    .catch((err) => {
+      errorHandler(res);
     });
 });
 

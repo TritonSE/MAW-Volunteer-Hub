@@ -1,4 +1,3 @@
-/* eslint jsx-a11y/no-autofocus: off */
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ReactSelect from "react-select";
