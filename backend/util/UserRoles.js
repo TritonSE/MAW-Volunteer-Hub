@@ -8,4 +8,6 @@ module.exports = [
   "Translator",
   "Speaker's Bureau",
   "Las Estrellas",
+  "Primary Admin",
+  "Secondary Admin",
 ];

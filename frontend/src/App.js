@@ -25,8 +25,7 @@ import "./App.css";
 
 import UserManage from "./components/UserManage";
 
-// const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
-const MANAGE_COMPONENTS = [<UserManage />, <WishWednesday />];
+const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
 
 function ProtectedRoute({
   needsPrimaryAdmin = false,
