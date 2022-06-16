@@ -167,7 +167,6 @@
   background: var(--background-grey);
   position: absolute;
   width: 462px;
-  height: 202px;
   border-radius: 10px;
   box-sizing: border-box;
   left: calc(50vw - (462px / 2)) !important;

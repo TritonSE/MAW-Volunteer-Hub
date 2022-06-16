@@ -46,21 +46,6 @@ function UserList({
   setFilter,
 }) {
   const [showTab, setShowTab] = useState(0);
-  /**
-   * NOTE: This format only applies for the hard-coded user information used for V1
-   * userData should be formated as such:
-   * const userData = [
-   *    {
-   *        Name: "User's name",
-   *        Roles: []             // Contains user's roles via AssignBtn components
-   *        Completed: 0          // Number of assignments completed
-   *        Start: "Date"         // Day volunter started
-   *        Admin: {Num}         // 1 == secondary admin, 2 == primary admin, other = regular user
-   *    },
-   * ]
-   */
-
-  const data = React.useMemo(() => userData, [userData]);
 
   /**
    * tableHeaders should be formatted as such:
@@ -85,7 +70,7 @@ function UserList({
   } = useTable(
     {
       columns,
-      data,
+      data: userData,
       updateMyData, // will be available in cell render
       handleConfirmationModal, // for showing confirm modal
       autoResetGlobalFilter: false,

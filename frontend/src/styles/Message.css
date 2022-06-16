@@ -107,10 +107,6 @@
   text-overflow: ellipsis;
 }
 
-.message_modal {
-  overflow: scroll;
-}
-
 /* hide scrollbar when listing message response */
 .message_modal::-webkit-scrollbar {
   display: none;

@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ScrollContainer from "react-indiana-drag-scroll";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
 import RolesModal from "./RolesModal";
 import { SITE_PAGES } from "../constants/links";
-import { api_user_all, api_user_verify } from "../api";
+import { api_user_all } from "../api";
 
 import "../styles/UserManage.css";
 
@@ -44,7 +44,9 @@ function VerifyButtonCell({ row: { index }, updateMyData, user }) {
         open={rolesModalOpen}
         setOpen={setRolesModalOpen}
         user={user}
-        onRolesChange={(selectedRoles) => updateMyData(index, "roles", selectedRoles, user._id)}
+        onRolesChange={(selectedRoles, selectedAdmin) => {
+          updateMyData(index, ["roles", "admin"], [selectedRoles, selectedAdmin], user._id);
+        }}
       />
     </div>
   );
@@ -106,8 +108,6 @@ export default function UserManage() {
   const [hasFetched, setHasFetched] = useState(false);
   const [filter, setFilter] = useState("");
 
-  const navigate = useNavigate();
-
   // Updates the windowSize variable if the window is resized
   useEffect(() => {
     function handleResize() {
@@ -129,25 +129,20 @@ export default function UserManage() {
     fetchUsers();
   }, []);
 
-  const updateMyData = async (_rowIndex, columnId, value, userId) => {
-    // We also turn on the flag to not reset the page
-    // we don't use rowIndex because we filter before displaying, so the userData
-    // includes users from both the admin and user lists
-    const res = await api_user_verify(userId);
+  const updateMyData = (_rowIndex, columnId, value, userId) => {
+    const old = [...userData] ?? [];
+    const i = old.findIndex((row) => row._id === userId);
 
-    if (!res || res.error) {
-      navigate(window.location);
-    } else {
-      const old = [...userData] ?? [];
-      const i = old.findIndex((row) => row._id === userId);
+    if (i === -1) return;
 
-      old.splice(i, 1, {
-        ...old[i],
-        [columnId]: value,
+    if (Array.isArray(columnId)) {
+      columnId.forEach((col, ind) => {
+        old[i][col] = value[ind];
       });
-
-      setUserData(old);
+    } else {
+      old[i][columnId] = value;
     }
+    setUserData(old);
   };
 
   const handleConfirmationModal = ({ name, isOpen }) => {
