@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      uniqueCaseInsensitive: true,
       match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,24})+$/,
     },
     // Integer value. 0 = regular user, 1 = secondary admin, 2 = primary admin, >= 3 is regular user
