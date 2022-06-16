@@ -233,17 +233,27 @@ function ProfilePage() {
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
-    let allNonManual = [];
-    user.events.map((event) =>
-      allNonManual.push({
-        _id: event._id,
-        date: event.from,
-        title: event.name,
-        hours: new Date(event.to).getHours() - new Date(event.from).getHours(),
-        notEditable: true,
-      })
-    );
-    allNonManual = allNonManual.concat(user.manualEvents);
+    const allNonManual = [...user.manualEvents];
+    user.events.forEach((event) => {
+      const from = new Date(event.from);
+      const to = new Date(event.to);
+      const hours = Math.round(Math.abs(to.getTime() - from.getTime()) / 3.6e6);
+
+      Object.entries(event.repetitions).forEach(([datestr, rep]) => {
+        const date = new Date(datestr);
+        date.setHours(to.getHours(), to.getMinutes());
+
+        if (date.getTime() <= Date.now()) {
+          allNonManual.push({
+            _id: rep._id,
+            date,
+            title: event.name,
+            hours,
+            notEditable: true,
+          });
+        }
+      });
+    });
     allNonManual.sort(
       (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
     );

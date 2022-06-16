@@ -16,10 +16,9 @@ router.post("/signup", (req, res, next) =>
       // doesn't seem to be handling duplicate emails correctly after case
       // insensitivity hotfix
       res.status(500).json({
-        error:
-          resp && resp.errors && resp.errors.email
-            ? "Email is already in use."
-            : "Failed to sign up, please try again.",
+        error: resp.errors.email
+          ? "Email is already in use."
+          : "Failed to sign up, please try again.",
       });
     } else {
       // send email
