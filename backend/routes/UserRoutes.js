@@ -46,11 +46,23 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.deleteOne({ _id: req.params.id })
+router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) => {
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      const is_primary = user.admin === 2;
+      if (is_primary) {
+        // throw an error if they are trying to delete a primary admin
+        throw new URIError("Unable to delete an account with primary admin access.");
+      } else {
+        UserModel.deleteOne({ _id: req.params.id });
+      }
+    })
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res))
-);
+    .catch((err) => {
+      if (err instanceof URIError) res.json({ error: err.message });
+      else errorHandler(res);
+    });
+});
 
 router.put("/updatepass", validate(["old_pass", "new_pass"], []), (req, res) =>
   UserModel.findById(req.user._id)
