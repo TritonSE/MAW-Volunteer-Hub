@@ -4,6 +4,7 @@ module.exports = {
   app: {
     env: process.env.NODE_ENV || "development",
     port: process.env.PORT || "5000",
+    frontend_url: process.env.FRONTEND_URL || "localhost:3000",
   },
   auth: {
     // register_secret: process.env.REGISTER_SECRET || "tritonse",

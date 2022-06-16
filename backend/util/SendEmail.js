@@ -73,14 +73,14 @@ module.exports = {
       <div>
           <p>Dear ${user.name.split(" ")[0]},</p>
           <p>Your account has been approved. You can now access the website at: 
-          <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
-          https://maw-volunteer-hub.herokuapp.com/login</a></p>
+          <a href="${config.app.frontend_url}/login" target="_blank"> 
+          ${config.app.frontend_url}/login</a></p>
           <p>Thanks,<br/>MAW SD</p>
       </div>`;
 
     const msgText = `Dear ${user.name.split(" ")[0]}, \n
       Your account has been approved. You can now access the website at: 
-      https://maw-volunteer-hub.herokuapp.com/login" \nThanks, \nMAW SD`;
+      ${config.app.frontend_url}/login" \nThanks, \nMAW SD`;
 
     const msgSubject = "Your Make-A-Wish San Diego account has been approved!";
 
@@ -117,7 +117,7 @@ module.exports = {
         <p>This email (which may contain commercial/marketing/solicitation/advertisement content) was sent as a message 
         from a <a href="https://wish.org/sandiego" target="_blank">Make-A-Wish San Diego</a> administrator 
         to the aforementioned MAW role(s) and is intended for ${user.email}.</p>    
-        <p>You can log in to the <a href="https://maw-volunteer-hub.herokuapp.com/login" target="_blank"> 
+        <p>You can log in to the <a href="${config.app.frontend_url}/login" target="_blank"> 
         Volunteer Hub</a> or reply to this email (MAWVolunteerHub@gmail.com) if any action is needed.</p>
         <p>If you have any questions or general inquiries, you can reach out to us by visiting our 
         <a href="https://wish.org/sandiego/our-chapter" target="_blank">Contact Us page</a> or by replying to this email.</p>
