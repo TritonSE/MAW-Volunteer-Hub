@@ -6,6 +6,8 @@ const mongoose = require("mongoose");
 const config = require("../config");
 const log = require("./Logger");
 
+const ROLES = require("./UserRoles");
+
 /**
  * A simple parameter validator middleware,
  *   verifying that the given body parameters
@@ -69,6 +71,17 @@ const primaryAdminValidator = (req, res, next) => {
 };
 
 /**
+ * verifies that the ROLES specified when sending the email on the frontend
+ * are consistent with the ROLES on the backend
+ */
+const roleValidator = (req, res, next) => {
+  const roles = JSON.parse(req.body.roles);
+  const valid = roles.every((elem) => ROLES.indexOf(elem) !== -1);
+  if (valid) next();
+  else res.status(400).json({ error: "Incorrectly specified role(s)." });
+};
+
+/**
  * A simple error handler that prints the
  *   error to the screen if in development.
  */
@@ -84,4 +97,5 @@ module.exports = {
   adminValidator,
   primaryAdminValidator,
   errorHandler,
+  roleValidator,
 };

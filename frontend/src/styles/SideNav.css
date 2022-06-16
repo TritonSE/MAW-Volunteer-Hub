@@ -117,6 +117,7 @@
 
   .side_nav_display {
     width: 100vw;
+    height: unset;
   }
 
   .side_nav_selected {

@@ -13,9 +13,12 @@ const {
   idParamValidator,
   adminValidator,
   primaryAdminValidator,
+  roleValidator,
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
 const userRoles = require("../util/UserRoles");
+
+const sendEmail = require("../util/SendEmail");
 
 const upload = multer({
   dest: "server_uploads/",
@@ -45,7 +48,12 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
 
 router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
   UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-    .then(() => res.status(200).json({ success: true }))
+    .then((user) => {
+      // send email
+      sendEmail.verify(user);
+
+      res.status(200).json({ success: true });
+    })
     .catch(errorHandler(res))
 );
 
@@ -300,5 +308,37 @@ router.patch("/editmanual/:id/:event_id", (req, res) => {
     .then(() => res.json({ success: true }))
     .catch(errorHandler);
 });
+
+/**
+ * Message sending via email to all user(s) in role(s)
+ */
+router.post(
+  "/message",
+  primaryAdminValidator,
+  roleValidator,
+  validate(["roles", "html", "text", "subject"]),
+  (req, res) => {
+    const roles_to_message = JSON.parse(req.body.roles);
+    UserModel.find({ active: true, roles: { $in: roles_to_message } })
+      .then((users_list) => {
+        if (users_list.length > 0) {
+          users_list.forEach((user) => {
+            sendEmail.message(
+              user,
+              req.body.html,
+              req.body.text,
+              req.body.subject,
+              roles_to_message
+            );
+          });
+
+          res.json({ success: true });
+        } else {
+          res.status(400).json({ error: "No volunteers in role(s)." });
+        }
+      })
+      .catch(errorHandler(res));
+  }
+);
 
 module.exports = router;

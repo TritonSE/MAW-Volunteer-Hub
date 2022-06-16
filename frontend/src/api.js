@@ -221,6 +221,15 @@ const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method
 const api_wish_wednesday_add = (message) =>
   api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
 
+/**
+ * MESSAGING EMAILS
+ */
+const api_message_email = (roles, html, text, subject) =>
+  api_call(API_ENDPOINTS.MESSAGE, {
+    data: { roles, html, text, subject },
+    method: "POST",
+  });
+
 /*
  * ROLES AND MANUAL EVENTS
  */
@@ -283,6 +292,7 @@ export {
   api_calendar_respond,
   api_wish_wednesday,
   api_wish_wednesday_add,
+  api_message_email,
   api_update_roles,
   api_add_event,
   api_edit_event,

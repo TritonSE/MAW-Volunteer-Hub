@@ -60,8 +60,8 @@ export default function RoleSelect({ value, setValue, hasError, variant }) {
     container: (provided) => ({
       ...provided,
       flex: "1",
-      marginLeft: "10px",
-      maxWidth: "213px",
+      marginLeft: variant === 2 ? null : "10px",
+      maxWidth: variant === 2 ? null : "213px",
       maxHeight: "70px",
       fontSize: "14px",
     }),
@@ -136,7 +136,7 @@ export default function RoleSelect({ value, setValue, hasError, variant }) {
         MultiValue,
         ...(variant === 1 && { IndicatorSeparator }),
       }}
-      placeholder={variant === 1 ? "Search by role..." : "Add event to..."}
+      placeholder={["Add event to...", "Search by role...", "Send message to..."][variant ?? 0]}
       onChange={(newVal) => {
         if (newVal.includes(rolesAdj[0])) {
           if (hasAll) {
