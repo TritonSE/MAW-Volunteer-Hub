@@ -44,6 +44,9 @@
   background-size: 8px;
   background-position: center;
 }
+.btn_assign:disabled {
+  cursor: default !important;
+}
 
 .btn_assignrole {
   background: #0057b8;
@@ -137,7 +140,9 @@
   /* right: 22px; */
   width: 0px;
 }
-
+.delete_role:disabled {
+  cursor: default !important;
+}
 .delete_role:hover {
   cursor: pointer;
 }

@@ -3,7 +3,7 @@ import ROLES from "../constants/roles";
 import { CurrentUser } from "./Contexts";
 import "../styles/AssignBtn.css";
 
-function AssignBtn({ label, onClick, onDelete, profilePage }) {
+function AssignBtn({ label, active = true, onClick, onDelete, profilePage }) {
   const [currentUser] = useContext(CurrentUser);
 
   let role = ROLES.find((tmp) => label === tmp.name);
@@ -23,11 +23,16 @@ function AssignBtn({ label, onClick, onDelete, profilePage }) {
     >
       {currentUser.admin === 2 ? (
         <>
-          <button type="button" className="hover" onClick={() => onClick()}>
+          <button type="button" disabled={!active} className="hover" onClick={() => onClick()}>
             {label}
           </button>
           {profilePage && (
-            <button type="button" className="delete_role hover" onClick={() => onDelete()}>
+            <button
+              type="button"
+              disabled={!active}
+              className="delete_role hover"
+              onClick={() => onDelete()}
+            >
               &nbsp;
             </button>
           )}

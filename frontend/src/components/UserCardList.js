@@ -58,69 +58,51 @@ function UserCardSearch({ filter, setFilter }) {
 }
 
 function UserCardList({ userData, filter, setFilter, ...props }) {
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showTab, setShowTab] = useState(0);
 
   // Separates admins from volunteers
-  const separateAdmin = (id) => {
-    let isAdmin = false;
-
-    for (let i = 0; i < userData.length; i++) {
-      if (userData[i]._id === id) {
-        isAdmin = userData[i].admin === 1 || userData[i].admin === 2;
-      }
-    }
-
-    if (isAdmin && showAdmin) {
-      return true;
-    }
-
-    if (!isAdmin && !showAdmin) {
-      return true;
-    }
-
-    return false;
-  };
-
-  // Determine if a user should be displayed.
-  // Mainly considers the name search variable stored in filter
-  const displayUser = (id, userName) => {
-    if (userName && filter !== "") {
-      if (separateAdmin(id) && userName.toLowerCase().includes(filter.toLowerCase())) {
-        return true;
+  const do_filter = () =>
+    userData.filter((user) => {
+      if (!user.name.toLowerCase().includes(filter.toLowerCase())) {
+        return false;
       }
 
-      return false;
-    }
-
-    return separateAdmin(id);
-  };
-
-  const getButtonHeader = (ind) => {
-    if ((ind === 0 && !showAdmin) || (ind === 1 && showAdmin)) {
-      return " selected";
-    }
-
-    return "";
-  };
+      switch (showTab) {
+        case 0:
+          return user.active && !user.admin;
+        case 1:
+          return user.active && user.admin;
+        default:
+          return !user.active;
+      }
+    });
 
   return (
     <div className="user_mobile_display">
       <div className="user_toggle">
         <button
-          className={`toggle_btn${getButtonHeader(0)}`}
+          className={`toggle_btn ${showTab === 0 ? "selected" : ""}`}
           type="button"
           aria-label="volunteer"
-          onClick={() => setShowAdmin(false)}
+          onClick={() => setShowTab(0)}
         >
           Volunteers
         </button>
         <button
-          className={`toggle_btn${getButtonHeader(1)}`}
+          className={`toggle_btn ${showTab === 1 ? "selected" : ""}`}
           type="button"
           aria-label="volunteer"
-          onClick={() => setShowAdmin(true)}
+          onClick={() => setShowTab(1)}
         >
           Admins
+        </button>
+        <button
+          className={`toggle_btn ${showTab === 2 ? "selected" : ""}`}
+          type="button"
+          aria-label="deactivated"
+          onClick={() => setShowTab(2)}
+        >
+          Deactivated
         </button>
         {/* <button className={`toggle_btn${getButtonHeader(2)}`} type="button" aria-label="volunteer">
           Deactivated
@@ -128,12 +110,9 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
       </div>
       <UserCardSearch filter={filter} setFilter={setFilter} />
       <div className="card_list">
-        {userData.map(
-          (user, i) =>
-            displayUser(user._id, user.name) && (
-              <UserCard user={user} key={Math.random()} row={i} {...props} />
-            )
-        )}
+        {do_filter().map((user, i) => (
+          <UserCard user={user} key={Math.random()} row={i} {...props} />
+        ))}
       </div>
     </div>
   );
