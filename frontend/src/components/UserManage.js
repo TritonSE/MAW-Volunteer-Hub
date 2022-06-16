@@ -140,18 +140,23 @@ const headers = [
   {
     Header: "Assignments Completed",
     accessor: "",
-    Cell: ({ row }) => {
-      const u = row.original;
-      let sum = u.manualEvents.length;
-      const today = new Date();
-      u.events.forEach((event) => {
-        if (new Date(event.to) < today) {
-          // only events if they have passed
-          sum++;
-        }
-      });
-      return sum;
-    },
+    Cell: ({ row }) =>
+      row.original.events.reduce(
+        (prev, next) =>
+          prev +
+          Object.entries(next.repetitions).reduce(
+            (subprev, [date, subnext]) =>
+              subprev +
+              (new Date(date).setHours(
+                new Date(next.to).getHours(),
+                new Date(next.to).getMinutes()
+              ) <= Date.now() &&
+                Object.prototype.hasOwnProperty.call(subnext.attendees, row.original._id)),
+            0
+          ),
+        0
+      ) +
+      row.original.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now()).length,
   },
   {
     Header: "Volunteer Since",

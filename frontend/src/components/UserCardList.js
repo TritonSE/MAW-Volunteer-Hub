@@ -4,14 +4,21 @@ import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData, handleConfirmationModal }) {
-  let sum = user.manualEvents.length;
-  const today = new Date();
-  user.events.forEach((event) => {
-    if (new Date(event.to) < today) {
-      // only events if they have passed
-      sum++;
-    }
-  });
+  const sum =
+    user.events.reduce(
+      (prev, next) =>
+        prev +
+        Object.entries(next.repetitions).reduce(
+          (subprev, [date, subnext]) =>
+            subprev +
+            (new Date(date).setHours(
+              new Date(next.to).getHours(),
+              new Date(next.to).getMinutes()
+            ) <= Date.now() && Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+          0
+        ),
+      0
+    ) + user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now()).length;
 
   return (
     <div className="user_card" key={Math.random()}>
