@@ -27,6 +27,9 @@
   cursor: pointer;
   background: var(--background-grey);
 }
+.add_roles:disabled {
+  cursor: default;
+}
 
 .roles_container {
   background: #ffffff;

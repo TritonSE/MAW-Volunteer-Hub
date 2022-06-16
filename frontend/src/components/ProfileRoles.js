@@ -8,7 +8,7 @@ import { CurrentUser } from "./Contexts";
 
 import "../styles/ProfileRoles.css";
 
-export default function ProfileRoles({ user, onRolesChange }) {
+export default function ProfileRoles({ user, active, onRolesChange }) {
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deletedRole, setDeletedRole] = useState("");
@@ -33,7 +33,12 @@ export default function ProfileRoles({ user, onRolesChange }) {
         <h2>Roles</h2>
         {/* Taken from ProfilePage.js and ProfilePage.css */}
         {currentUser.admin === 2 ? (
-          <button type="button" className="add_roles" onClick={() => setRolesModalOpen(true)}>
+          <button
+            type="button"
+            disabled={!active}
+            className="add_roles"
+            onClick={() => setRolesModalOpen(true)}
+          >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
               <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
             </svg>
@@ -50,9 +55,9 @@ export default function ProfileRoles({ user, onRolesChange }) {
               <AssignBtn
                 key={role}
                 label={role}
-                // Display role description when volunteers click?
                 onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(role)}
+                active={user.active}
                 profilePage
               />
             ))}
@@ -61,6 +66,7 @@ export default function ProfileRoles({ user, onRolesChange }) {
                 label="Primary Admin"
                 onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(null, 0)}
+                active={user.active}
                 profilePage
               />
             )}
@@ -69,6 +75,7 @@ export default function ProfileRoles({ user, onRolesChange }) {
                 label="Secondary Admin"
                 onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
                 onDelete={() => deleteRole(null, 1)}
+                active={user.active}
                 profilePage
               />
             )}
