@@ -1,4 +1,3 @@
-/* eslint jsx-a11y/no-autofocus: off */
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import ReactSelect from "react-select";
@@ -8,6 +7,7 @@ import {
   dateFunctions,
   date_format,
 } from "@cubedoodl/react-simple-scheduler";
+import structuredClone from "@ungap/structured-clone";
 import RoleSelect from "./RoleSelect";
 import AssignModal from "./AssignModal";
 import ROLES from "../constants/roles";
@@ -386,7 +386,11 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <div className="indent">
-                <button type="button" onClick={() => setAssignModal(true)}>
+                <button
+                  type="button"
+                  className="maw-ui_button padded"
+                  onClick={() => setAssignModal(true)}
+                >
                   Assign volunteers
                 </button>
               </div>
@@ -456,8 +460,10 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               </div>
             </div>
           </div>
-          <div className="evt_modal_footer">
-            <button type="submit">{isEditing ? "Save" : "Create"}</button>
+          <div className="center">
+            <button type="submit" className="maw-ui_button primary">
+              {isEditing ? "Save" : "Create"}
+            </button>
           </div>
         </form>
       </Modal>

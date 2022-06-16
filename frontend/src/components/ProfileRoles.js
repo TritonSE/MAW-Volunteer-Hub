@@ -61,20 +61,20 @@ export default function ProfileRoles({ user, active, onRolesChange }) {
                 profilePage
               />
             ))}
-            {user.admin >= 1 && (
+            {user.admin === 2 && (
               <AssignBtn
                 label="Primary Admin"
-                onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
-                onDelete={() => deleteRole(null, 0)}
+                onClick={() => setRolesModalOpen(true)}
+                onDelete={() => deleteRole("Primary Admin", 1)}
                 active={user.active}
                 profilePage
               />
             )}
-            {user.admin === 2 && (
+            {user.admin >= 1 && (
               <AssignBtn
                 label="Secondary Admin"
-                onClick={currentUser.admin === 2 ? () => setRolesModalOpen(true) : null}
-                onDelete={() => deleteRole(null, 1)}
+                onClick={() => setRolesModalOpen(true)}
+                onDelete={() => deleteRole("Secondary Admin", 0)}
                 active={user.active}
                 profilePage
               />

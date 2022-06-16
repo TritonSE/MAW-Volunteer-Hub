@@ -63,14 +63,14 @@ const API_ENDPOINTS = {
 const SIDENAV_STEPS = [
   "Wish Discovery",
   "Wish Planning",
-  "Wish Enhancements",
+  "Wish Boosts",
   "Wish Reveal & Celebration",
   "Wish Closeout",
 ];
 const SIDENAV_ROUTES = [
   "wish-discovery",
   "wish-planning",
-  "wish-enhancements",
+  "wish-boosts",
   "wish-reveal-celebration",
   "wish-closeout",
 ];

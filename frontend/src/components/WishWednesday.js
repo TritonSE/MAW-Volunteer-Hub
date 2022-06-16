@@ -72,7 +72,7 @@ export default function WishWednesday() {
         />
         <div className="button_container">
           <button
-            className="post_announcement"
+            className="maw-ui_button primary"
             type="submit"
             onClick={() => handleWishWednesdayPost()}
           >

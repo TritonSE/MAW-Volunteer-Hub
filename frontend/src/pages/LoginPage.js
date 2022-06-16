@@ -230,7 +230,11 @@ function LoginPage() {
               ? "Your account has been created! You should receive a sign-up confirmation email shortly. Once an administrator confirms, you will be notified via email and be able to access the website."
               : modalOpen}
           </div>
-          <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
+          <button
+            type="button"
+            className="maw-ui_button primary"
+            onClick={() => setModalOpen(false)}
+          >
             Okay
           </button>
         </div>

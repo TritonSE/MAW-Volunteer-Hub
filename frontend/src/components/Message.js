@@ -117,11 +117,7 @@ export default function Message() {
             bounds=".message_meta"
           />
           <div className="button_container">
-            <button
-              className="post_announcement_message"
-              type="submit"
-              onClick={() => handleSubmit()}
-            >
+            <button className="maw-ui_button primary" type="submit" onClick={() => handleSubmit()}>
               Send
             </button>
           </div>
@@ -148,7 +144,11 @@ export default function Message() {
           <div className="login_modal_content message_modal">
             {modalOpen === true ? modalText : modalOpen}
           </div>
-          <button type="button" className="login_button_round" onClick={() => setModalOpen(false)}>
+          <button
+            type="button"
+            className="maw-ui_button primary"
+            onClick={() => setModalOpen(false)}
+          >
             Okay
           </button>
         </div>

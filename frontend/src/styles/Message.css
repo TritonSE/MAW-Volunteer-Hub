@@ -2,13 +2,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 50px 0px 50px;
+  padding: 0 30px 0px 30px;
   overflow: auto;
 }
 
 .msg_layout .title {
   box-sizing: border-box;
-  font-family: "Lato";
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
@@ -27,7 +26,6 @@
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
   padding-top: 20px;
-  font-family: "Lato", sans-serif;
 }
 
 .msg_layout .recipient_section {
@@ -44,7 +42,6 @@
 
 .msg_layout .prompt_title {
   width: 75px;
-  font-family: "Lato";
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -58,8 +55,6 @@
 
   border: 1px solid #000000;
   border-radius: 4px;
-
-  font-family: "Lato", sans-serif;
 }
 
 .msg_layout .subject_line {
@@ -81,14 +76,10 @@
 .msg_layout .ql-container {
   height: 40vh;
   margin-bottom: 5vh;
-  font-family: "Lato";
 }
 .quill.has_error .ql-toolbar,
 .quill.has_error .ql-container {
   border: 1px solid red;
-}
-.quill * {
-  font-family: "Lato", sans-serif !important;
 }
 
 /* Post Message & Modal */
@@ -97,22 +88,6 @@
   flex-direction: column;
   align-items: flex-end;
   height: 50px;
-}
-
-.post_announcement_message {
-  width: 103px;
-  height: 26px;
-  border: none;
-  border-radius: 3px;
-  background: var(--primary-blue);
-
-  margin-bottom: 5px;
-
-  font-family: "Lato", sans-serif;
-  font-weight: normal;
-  color: #ffffff;
-
-  cursor: pointer;
 }
 
 .emptyfields {
@@ -130,10 +105,6 @@
 
 .subject_line:placeholder-shown {
   text-overflow: ellipsis;
-}
-
-.message_modal {
-  overflow: scroll;
 }
 
 /* hide scrollbar when listing message response */
@@ -159,7 +130,7 @@
 
 @media only screen and (max-width: 600px) {
   .msg_layout {
-    padding: 20px 0 0;
+    padding: 20px 0;
   }
 }
 

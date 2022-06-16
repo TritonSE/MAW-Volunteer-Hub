@@ -241,12 +241,14 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
           ) : (
             <tbody>
               <tr className="no_activities_row">
-                <td className="no_activities">&nbsp;</td>
-                <td className="no_activities">&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
               </tr>
               <tr className="no_activities_row">
-                <td className="no_activities" />
+                <td />
                 <td className="no_activities">No Activities Yet</td>
+                <td />
+                <td />
               </tr>
             </tbody>
           )}
@@ -260,21 +262,23 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
         onRequestClose={() => closeModal()}
         contentLabel="Manually Log Activity"
       >
-        <button
-          className="close_button"
-          aria-label="close_button"
-          type="button"
-          onClick={() => closeModal()}
-        />
         <form
           className="log_activity_form"
           onSubmit={editing ? (e) => updateActivity(e) : (e) => logActivity(e)}
         >
-          <h3>{editing ? "Edit Activity" : "Log New Activity"}</h3>
+          <div className="form_heading">
+            <h3>{editing ? "Edit Activity" : "Log New Activity"}</h3>
+            <button
+              className="close_button"
+              aria-label="close_button"
+              type="button"
+              onClick={() => closeModal()}
+            />
+          </div>
           <div className="form_prompt">Event Name</div>
           <input
             type="text"
-            placeholder="Enter event name here"
+            placeholder="Enter event name here..."
             value={eventName}
             required
             onChange={(e) => setEventName(e.target.value)}
@@ -316,7 +320,7 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
           <div className="form_prompt">Hours</div>
           <input
             type="number"
-            placeholder="Enter number of hours volunteered here"
+            placeholder="Enter number of hours volunteered here..."
             value={eventDuration}
             min={0}
             required
@@ -324,10 +328,11 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
           />
           <div className="form_right">
             <div className="form_spacer" />
-            <button className="modal-button button-primary" type="submit">
+            <button className="maw-ui_button primary" type="submit">
               {editing ? "Update" : "Add"}
             </button>
           </div>
+          <br />
         </form>
       </Modal>
 
@@ -340,7 +345,7 @@ export default function ProfileActivities({ id, currId, active, events, updateEv
       >
         <h3>Unable to Perform Action</h3>
         <button
-          className="modal-button button-primary"
+          className="maw-ui_button primary"
           type="button"
           onClick={() => setErrorModalOpen(false)}
         >
