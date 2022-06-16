@@ -2,6 +2,7 @@
  * api.js: API interfacing
  */
 import axios from "axios";
+import qs from "qs";
 
 import { API_ENDPOINTS } from "./constants/links";
 
@@ -16,6 +17,7 @@ async function api_call(
     type = "application/x-www-form-urlencoded",
     blob = false,
     onProgress = null,
+    use_qs = false,
   } = {}
 ) {
   let has_attached = false;
@@ -41,9 +43,12 @@ async function api_call(
     options.headers["Content-Type"] = type;
   }
   if (data && Object.keys(data)) {
-    if (type === "multipart/form-data") options.data = new FormData();
-    else options.data = new URLSearchParams();
-    Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    if (use_qs) options.data = qs.stringify(data);
+    else {
+      if (type === "multipart/form-data") options.data = new FormData();
+      else options.data = new URLSearchParams();
+      Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    }
   }
 
   try {
@@ -159,11 +164,100 @@ const api_user_updatepass = (old_pass, new_pass) =>
 
 const api_user_edit = (id) => api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 
+const api_user_activate = (id, active) =>
+  api_call(`${API_ENDPOINTS.USER_ACTIVATE}/${id}`, {
+    data: { active },
+  });
+
 const api_pfp_upload = (pfp, crop) =>
   api_call(API_ENDPOINTS.PFP_UPLOAD, {
     data: { pfp, crop },
     method: "POST",
     type: "multipart/form-data",
+  });
+
+/**
+ * CALENDAR
+ */
+const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
+
+const api_calendar_new = (data) =>
+  api_call(API_ENDPOINTS.CALENDAR_NEW, {
+    data,
+    method: "PUT",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_delete = (id) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_DELETE}/${id}`, {
+    method: "DELETE",
+  });
+
+const api_calendar_update = (id, data) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
+    data,
+    method: "PATCH",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_respond = (id, going, date, guests, response) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_RESPOND}/${id}`, {
+    data: {
+      going,
+      date,
+      guests: JSON.stringify(guests),
+      response,
+    },
+    method: "POST",
+  });
+
+/*
+ * WISH WEDNESDAY
+ */
+const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
+
+const api_wish_wednesday_add = (message) =>
+  api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
+
+/**
+ * MESSAGING EMAILS
+ */
+const api_message_email = (roles, html, text, subject) =>
+  api_call(API_ENDPOINTS.MESSAGE, {
+    data: { roles, html, text, subject },
+    method: "POST",
+  });
+
+/*
+ * ROLES AND MANUAL EVENTS
+ */
+const api_update_roles = async (id, roles, admin) =>
+  api_call(`${API_ENDPOINTS.SET_ROLES}/${id}`, {
+    data: { roles, admin },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_add_event = async (id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.ADD_EVENT}/${id}`, {
+    data: { date, title, hours },
+    method: "POST",
+    type: "application/json",
+  });
+
+const api_edit_event = async (id, event_id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.EDIT_EVENT}/${id}/${event_id}`, {
+    data: { date, title, hours },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_delete_event = async (id, event_id) =>
+  api_call(`${API_ENDPOINTS.DELETE_EVENT}/${id}/${event_id}`, {
+    method: "DELETE",
+    type: "application/json",
   });
 
 export {
@@ -189,5 +283,18 @@ export {
   api_user_delete,
   api_user_updatepass,
   api_user_edit,
+  api_user_activate,
   api_pfp_upload,
+  api_calendar_all,
+  api_calendar_new,
+  api_calendar_delete,
+  api_calendar_update,
+  api_calendar_respond,
+  api_wish_wednesday,
+  api_wish_wednesday_add,
+  api_message_email,
+  api_update_roles,
+  api_add_event,
+  api_edit_event,
+  api_delete_event,
 };

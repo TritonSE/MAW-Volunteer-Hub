@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserList from "./UserList";
 import UserCardList from "./UserCardList";
 import AssignBtn from "./AssignBtn";
+import RolesModal from "./RolesModal";
 import { SITE_PAGES } from "../constants/links";
 import { api_user_all, api_user_verify } from "../api";
 
@@ -12,54 +13,40 @@ import "../styles/UserManage.css";
 
 Modal.setAppElement(document.getElementById("root"));
 
-function VerifyButtonCell({
-  isVerified: initialVerified,
-  name: userName,
-  row: { index },
-  column: { id },
-  updateMyData,
-  handleConfirmationModal,
-}) {
-  const [isVerifiedState, setIsVerifiedState] = useState(initialVerified);
+function VerifyButtonCell({ row: { index }, updateMyData, user }) {
+  const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
-  useEffect(() => {
-    setIsVerifiedState(initialVerified);
-  }, [initialVerified]);
+  const modifiedRoles = user.roles.slice();
+  if (user.admin === 2) modifiedRoles.push("Primary Admin");
+  if (user.admin >= 1) modifiedRoles.push("Secondary Admin");
 
-  function handleVerifyUser() {
-    // console.log({ index, id });
-    updateMyData(index, id, true);
-    setIsVerifiedState(true);
-  }
-
-  function handleRoleBtnClick(label) {
-    if (label === "Allow Access") {
-      // setIsOpen(true);
-      handleConfirmationModal({ name: userName, isOpen: true });
-      handleVerifyUser();
-      // setIsVerifiedState(true);
-      // setUserData(null);
-      // updateLocal(id, userData, setUserData);
-    }
-  }
-
-  if (!isVerifiedState) {
-    return (
-      <ScrollContainer className="assign_btn_container" vertical={false}>
-        <AssignBtn
-          label="Allow Access"
-          key={Math.random()}
-          onClick={() => handleRoleBtnClick("Allow Access")}
-        />
-      </ScrollContainer>
-    );
-  }
   return (
-    <ScrollContainer className="assign_btn_container" vertical={false}>
-      {/* {buttonLabels.map((label) => (
-            <AssignBtn label={label} key={Math.random()} onClick={() => handleRoleBtnClick(label)} />
-          ))} */}
-    </ScrollContainer>
+    <div>
+      <ScrollContainer className="assign_btn_container" vertical={false}>
+        {modifiedRoles.length === 0 ? (
+          <AssignBtn
+            label="Assign Role"
+            onClick={() => setRolesModalOpen(true)}
+            profilePage={false}
+          />
+        ) : (
+          modifiedRoles.map((label) => (
+            <AssignBtn
+              key={label}
+              label={label}
+              onClick={() => setRolesModalOpen(true)}
+              profilePage={false}
+            />
+          ))
+        )}
+      </ScrollContainer>
+      <RolesModal
+        open={rolesModalOpen}
+        setOpen={setRolesModalOpen}
+        user={user}
+        onRolesChange={(selectedRoles) => updateMyData(index, "roles", selectedRoles, user._id)}
+      />
+    </div>
   );
 }
 
@@ -75,15 +62,37 @@ const headers = [
   },
   // Replace the following three rows with the commented out rows for the full table
   {
-    Header: "",
+    Header: "Role",
     accessor: "verified",
-    Cell: (props) => (
-      <VerifyButtonCell {...props} isVerified={props.value} name={props.row.original.name} />
-    ),
+    Cell: (props) => <VerifyButtonCell {...props} isVerified={props.value} user={props.original} />,
   },
   {
-    Header: "",
-    accessor: "empty",
+    Header: "Assignments Completed",
+    accessor: "",
+    Cell: ({ row }) =>
+      row.original.events.reduce(
+        (prev, next) =>
+          prev +
+          Object.entries(next.repetitions).reduce(
+            (subprev, [date, subnext]) =>
+              subprev +
+              (new Date(date).setHours(
+                new Date(next.to).getHours(),
+                new Date(next.to).getMinutes()
+              ) <= Date.now() &&
+                Object.prototype.hasOwnProperty.call(subnext.attendees, row.original._id)),
+            0
+          ),
+        0
+      ) +
+      row.original.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now()).length,
+  },
+  {
+    Header: "Volunteer Since",
+    accessor: "createdAt",
+    Cell: ({ value }) => (
+      <p>{new Date(value).toLocaleString("default", { month: "short", year: "numeric" })}</p>
+    ),
   },
 ];
 
@@ -109,31 +118,36 @@ export default function UserManage() {
   }, []);
 
   // Get user data from backend
-  useEffect(async () => {
-    const res = await api_user_all();
-    if (res && !res.error) {
-      setUserData(res.users);
-      setHasFetched(true);
+  useEffect(() => {
+    async function fetchUsers() {
+      const res = await api_user_all();
+      if (res && !res.error) {
+        setUserData(res.users);
+        setHasFetched(true);
+      }
     }
+    fetchUsers();
   }, []);
 
-  const updateMyData = (rowIndex, columnId, value) => {
+  const updateMyData = async (_rowIndex, columnId, value, userId) => {
     // We also turn on the flag to not reset the page
-    setUserData((old) =>
-      old.map((row, index) => {
-        if (index === rowIndex) {
-          // verify user here, reload if fail
-          api_user_verify(row._id).then((res) => {
-            if (!res || res.error) navigate(window.location);
-          });
-          return {
-            ...old[rowIndex],
-            [columnId]: value,
-          };
-        }
-        return row;
-      })
-    );
+    // we don't use rowIndex because we filter before displaying, so the userData
+    // includes users from both the admin and user lists
+    const res = await api_user_verify(userId);
+
+    if (!res || res.error) {
+      navigate(window.location);
+    } else {
+      const old = [...userData] ?? [];
+      const i = old.findIndex((row) => row._id === userId);
+
+      old.splice(i, 1, {
+        ...old[i],
+        [columnId]: value,
+      });
+
+      setUserData(old);
+    }
   };
 
   const handleConfirmationModal = ({ name, isOpen }) => {
@@ -177,7 +191,8 @@ export default function UserManage() {
         overlayClassName="access_notification_overlay"
       >
         <div className="notification_contents">
-          {modalState.name ?? "User"} has been given access.
+          {modalState.name ?? "User"} has been given access and will be sent a notification via
+          email.
           <button
             type="button"
             className="confirmation_btn"

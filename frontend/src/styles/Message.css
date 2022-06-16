@@ -1,0 +1,170 @@
+.msg_layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 50px 0px 50px;
+  overflow: auto;
+}
+
+.msg_layout .title {
+  box-sizing: border-box;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  padding-left: 2vw;
+}
+
+.msg_layout .input_container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  border: 25px solid white;
+  background: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  padding-top: 20px;
+  font-family: "Lato", sans-serif;
+}
+
+.msg_layout .recipient_section {
+  display: flex;
+  align-items: center;
+}
+
+.msg_layout .subject_section {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.msg_layout .prompt_title {
+  width: 75px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 17px;
+}
+
+.msg_layout .subject_line,
+.msg_layout .select_recipients {
+  box-sizing: border-box;
+  width: calc(100% - 75px);
+
+  border: 1px solid #000000;
+  border-radius: 4px;
+
+  font-family: "Lato", sans-serif;
+}
+
+.msg_layout .subject_line {
+  padding-left: 10px;
+  height: 40px;
+}
+.msg_layout .subject_line.has_error {
+  border: 1px solid red;
+}
+
+.msg_layout .message_meta {
+  box-sizing: border-box;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Controls ReactQuill editor height */
+.msg_layout .ql-container {
+  height: 40vh;
+  margin-bottom: 5vh;
+  font-family: "Lato";
+}
+.quill.has_error .ql-toolbar,
+.quill.has_error .ql-container {
+  border: 1px solid red;
+}
+.quill * {
+  font-family: "Lato", sans-serif !important;
+}
+
+/* Post Message & Modal */
+.button_container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 50px;
+}
+
+.post_announcement_message {
+  width: 103px;
+  height: 26px;
+  border: none;
+  border-radius: 3px;
+  background: var(--primary-blue);
+
+  margin-bottom: 5px;
+
+  font-family: "Lato", sans-serif;
+  font-weight: normal;
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.emptyfields {
+  font-size: 12px;
+  height: 20px;
+}
+
+.placeholder {
+  height: 20px;
+}
+
+.subject_line::placeholder {
+  color: gray;
+}
+
+.subject_line:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+.message_modal {
+  overflow: scroll;
+}
+
+/* hide scrollbar when listing message response */
+.message_modal::-webkit-scrollbar {
+  display: none;
+}
+.message_modal {
+  -ms-overflow-style: none;
+}
+
+.message_modal_container {
+  height: 212px !important;
+}
+.message_modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3) !important;
+  z-index: 999;
+}
+
+@media only screen and (max-width: 600px) {
+  .msg_layout {
+    padding: 20px 0 0;
+  }
+}
+
+@media only screen and (max-width: 1024px) and (max-height: 1024px) {
+  .msg_layout .ql-container {
+    height: 30vh;
+  }
+}

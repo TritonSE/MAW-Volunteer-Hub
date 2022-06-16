@@ -7,8 +7,17 @@ import "react-image-crop/dist/ReactCrop.css";
 
 import Custom404Page from "./Custom404Page";
 import { API_ENDPOINTS } from "../constants/links";
-import { api_user_info, api_user_updatepass, api_user_delete, api_pfp_upload } from "../api";
+import {
+  api_user_info,
+  api_user_updatepass,
+  api_user_delete,
+  api_user_activate,
+  api_pfp_upload,
+} from "../api";
 import { CurrentUser } from "../components/Contexts";
+
+import ProfileRoles from "../components/ProfileRoles";
+import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
 
@@ -18,6 +27,7 @@ function ProfilePage() {
   const [passModalOpen, setPassModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [responseModalOpen, setResponseModalOpen] = useState();
+  const [deactivateModalOpen, setDeactivateModalOpen] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(0);
   const [changePassResponse, setChangePassResponse] = useState();
   const [pfpModalOpen, setPFPModalOpen] = useState(false);
@@ -34,10 +44,14 @@ function ProfilePage() {
   const [user, setUser] = useState({});
   const [isCurrentUser, setIsCurrentUser] = useState(false);
 
+  const [rolesChanged, setRolesChanged] = useState(false);
+  const [eventsChanged, setEventsChanged] = useState(false);
+
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
 
+  // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -127,6 +141,24 @@ function ProfilePage() {
     setCrop({ aspect: 1 });
   }
 
+  async function deactivate_account() {
+    const res = await api_user_activate(id ?? currentUser._id, !user.active);
+    if (!res || res.error) {
+      setResponseModalOpen((res ?? {}).error ?? "Unable to reach server, please try again.");
+    } else {
+      setDeactivateModalOpen(false);
+
+      if (isCurrentUser) {
+        navigate("/signout");
+      } else {
+        const new_data = await api_user_info(id ?? currentUser._id);
+        if (new_data && new_data.user) {
+          setUser(new_data.user);
+        }
+      }
+    }
+  }
+
   async function change_password(e) {
     e.preventDefault();
 
@@ -166,20 +198,23 @@ function ProfilePage() {
     return () => window.removeEventListener("resize", fix_crop);
   }, [imgRef]);
 
-  useEffect(async () => {
-    if (!id) {
-      setUser(currentUser);
-      setIsCurrentUser(true);
-    } else {
-      const res = await api_user_info(id ?? "");
+  useEffect(() => {
+    async function handleUserInfo() {
+      const res = await api_user_info(id ?? currentUser._id);
       if (!res || !res.user) setIs404(true);
       else {
         setIs404(false);
         setUser(res.user);
-        setIsCurrentUser(res.user._id === currentUser._id);
+        if (res.user._id === currentUser._id) {
+          setIsCurrentUser(true);
+          setCurrentUser(res.user);
+        } else {
+          setIsCurrentUser(false);
+        }
       }
     }
-  }, [id]);
+    handleUserInfo();
+  }, [id, rolesChanged, eventsChanged]);
 
   useEffect(() => {
     if (!responseModalOpen) {
@@ -196,10 +231,39 @@ function ProfilePage() {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
 
+  // Change format of calendar events to fit in with the format of manual events.
+  function formatCalendarEvents() {
+    const allNonManual = [...user.manualEvents];
+    user.events.forEach((event) => {
+      const from = new Date(event.from);
+      const to = new Date(event.to);
+      const hours = Math.round(Math.abs(to.getTime() - from.getTime()) / 3.6e6);
+
+      Object.entries(event.repetitions).forEach(([datestr, rep]) => {
+        const date = new Date(datestr);
+        date.setHours(to.getHours(), to.getMinutes());
+
+        if (date.getTime() <= Date.now()) {
+          allNonManual.push({
+            _id: rep._id,
+            date,
+            title: event.name,
+            hours,
+            notEditable: true,
+          });
+        }
+      });
+    });
+    allNonManual.sort(
+      (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
+    );
+    return allNonManual;
+  }
+
   return is404 ? (
     <Custom404Page />
   ) : (
-    <div className="profile-page">
+    <div className={`profile-page ${user?.active === false ? "deactivated" : ""}`}>
       <section className="header-section">
         <div className="profile-image">
           <img
@@ -227,6 +291,7 @@ function ProfilePage() {
                   <input
                     id="pfp_input"
                     className="hidden"
+                    disabled={!user.active}
                     type="file"
                     accept="image/*"
                     onChange={prepare_pfp}
@@ -313,15 +378,28 @@ function ProfilePage() {
           )}
         </div>
         <div className="profile-header-info">
-          <h1>{user.name}</h1>
-          <h2>
-            Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
-            {new Date(user.createdAt).getFullYear()}
-          </h2>
-          <br />
-          <p>{user.email}</p>
+          <div>
+            <h1>{user.name}</h1>
+            <p>{user.email}</p>
+          </div>
+          <div>
+            <h2>
+              Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
+              {new Date(user.createdAt).getFullYear()}
+            </h2>
+            <p className="deactivated">&nbsp;{!user.active ? "(Deactivated)" : ""}</p>
+          </div>
         </div>
         <div className="profile-buttons-container">
+          {(isCurrentUser || currentUser.admin > 0) && (
+            <button
+              type="button"
+              className="change-password-button"
+              onClick={() => setDeactivateModalOpen(true)}
+            >
+              {user.active ? "Deactivate" : "Activate"} Profile
+            </button>
+          )}
           {isCurrentUser && (
             <button
               type="button"
@@ -331,7 +409,7 @@ function ProfilePage() {
               Change Password
             </button>
           )}
-          {currentUser && currentUser.admin && (
+          {currentUser && currentUser.admin === 2 && (
             <button
               type="button"
               className="delete-account-button"
@@ -344,7 +422,50 @@ function ProfilePage() {
         {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>
 
-      {/* Change Password and Delete Profile Modals */}
+      {/* Deactivate Profile, Change Password, and Delete Profile Modals */}
+      <Modal
+        className="profile-page-modal"
+        overlayClassName="profile-page-modal-overlay"
+        isOpen={deactivateModalOpen}
+        onRequestClose={() => setDeactivateModalOpen(false)}
+        contentLabel="Deactivate profile modal"
+      >
+        <h1>
+          Are you sure you want to {user.active ? "deactivate" : "activate"}{" "}
+          {isCurrentUser ? "your" : "this"} profile?
+          {isCurrentUser && (
+            <>
+              <br />
+              <br />
+              You will be logged out, and must contact an administrator to re-activate it in the
+              future.
+            </>
+          )}
+        </h1>
+        <button
+          className="close-button"
+          aria-label="close-button"
+          type="button"
+          onClick={() => setDeactivateModalOpen(false)}
+        />
+        <div className="delete-button-container">
+          <button
+            className="modal-button small button-secondary"
+            type="button"
+            onClick={() => setDeactivateModalOpen(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className={`modal-button small ${isCurrentUser ? "button-danger" : "button-primary"}`}
+            type="button"
+            onClick={deactivate_account}
+          >
+            {user.active ? "Deactivate" : "Activate"}
+          </button>
+        </div>
+      </Modal>
+
       <Modal
         className="profile-page-modal"
         overlayClassName="profile-page-modal-overlay"
@@ -441,6 +562,46 @@ function ProfilePage() {
           </button>
         </div>
       </Modal>
+      <div>
+        {user.roles && user.manualEvents ? (
+          <div>
+            <div className="user_stats">
+              <ProfileRoles user={user} active={user.active} onRolesChange={setRolesChanged} />
+              <div className="assign_completed">
+                <h2 className="task_title">Assignments Completed</h2>
+                <p className="task_number">
+                  {user.events.reduce(
+                    (prev, next) =>
+                      prev +
+                      Object.entries(next.repetitions).reduce(
+                        (subprev, [date, subnext]) =>
+                          subprev +
+                          (new Date(date).setHours(
+                            new Date(next.to).getHours(),
+                            new Date(next.to).getMinutes()
+                          ) <= Date.now() &&
+                            Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+                        0
+                      ),
+                    0
+                  ) +
+                    user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now())
+                      .length}
+                </p>
+              </div>
+            </div>
+            <ProfileActivities
+              id={user._id}
+              currId={currentUser._id}
+              active={user.active}
+              events={formatCalendarEvents()}
+              updateEvents={() => setEventsChanged(Math.random())}
+            />
+          </div>
+        ) : (
+          "Loading..."
+        )}
+      </div>
     </div>
   );
 }

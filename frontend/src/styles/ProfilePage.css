@@ -4,6 +4,13 @@
   color: black;
   font-family: Lato;
 }
+.profile-page > * > div:not(.profile-buttons-container) {
+  transition: opacity 0.2s, filter 0.2s;
+}
+.profile-page.deactivated > * > div:not(.profile-buttons-container) {
+  opacity: 0.6;
+  filter: grayscale(1);
+}
 .header-section {
   display: inline-block;
   width: 100%;
@@ -51,36 +58,31 @@
 }
 
 .profile-header-info {
-  display: inline-block;
+  display: flex;
+  align-items: flex-end;
   margin: 30px 0 20px 0;
-  height: auto;
-  width: auto;
 }
-.profile-header-info > * {
-  margin: 0 50px 0 0;
-  width: auto;
-  display: inline-block;
-}
-.profile-header-info > h1 {
+.profile-header-info h1 {
   font-size: 30px;
   line-height: 36px;
   font-weight: normal;
+  margin: 0 50px 5px 0;
 }
-.profile-header-info > h2 {
+.profile-header-info h2 {
   font-size: 14px;
-  line-height: 17px;
+  line-height: 41px;
   color: var(--grey);
   font-weight: normal;
+  margin: 0;
 }
-.profile-header-info > p {
+.profile-header-info p {
   font-size: 12px;
   line-height: 14px;
+  margin: 0;
 }
-
-.profile-header-info > p {
-  font-size: 12px;
-  line-height: 14px;
-  margin-right: 150px;
+.profile-header-info p.deactivated {
+  color: var(--grey);
+  text-align: right;
 }
 
 .profile-buttons-container {
@@ -132,7 +134,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -280,4 +282,57 @@
 }
 .button-nomargin {
   margin: 0 !important;
+}
+
+.user_stats {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.assign_completed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+  width: 45%;
+  height: 50%;
+
+  background: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+}
+
+.task_number {
+  margin-left: 50px;
+
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+@media only screen and (max-width: 900px) {
+  .assign_completed {
+    width: 100%;
+    margin-top: 30px;
+  }
+}
+
+@media only screen and (max-width: 512px) {
+  .task_title {
+    font-size: 18px;
+  }
+  .assign_completed {
+    padding: 0px 20px 0px 20px;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .user_stats {
+    flex-direction: column;
+    align-items: center;
+  }
 }

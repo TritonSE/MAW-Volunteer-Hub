@@ -1,12 +1,12 @@
 /* Styles taken from Figma */
-tbody {
+.people_table tbody {
   display: block;
   height: calc(100vh - 300px);
   overflow-y: scroll;
 }
 
-thead,
-tbody tr {
+.people_table thead,
+.people_table tbody tr {
   display: table;
   width: 100%;
 }
@@ -14,7 +14,7 @@ tbody tr {
 .user_list_layout {
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: scroll;
 }
 .table-container {
   box-sizing: content-box;
@@ -37,65 +37,84 @@ tbody tr {
   font-size: 18px;
   line-height: 22px;
 }
+
 .people_table_header {
   height: 51px;
-  width: 225px;
+  width: 25%;
 
-  text-align: start;
+  text-align: left;
   padding-left: 30px;
 
   background: rgba(0, 87, 184, 0.1);
   box-sizing: border-box;
 }
-.people_table_header.start {
-  width: 200px !important;
-  border-radius: 11px 0px 0px 11px;
-}
-.people_table_header.end {
-  border-radius: 0px 11px 11px 0px;
-  width: 200px;
-}
 
 .people_table_data {
-  width: 200px;
+  width: 25%;
   height: 62px;
-  text-align: center;
 
   font-size: 14px;
   line-height: 17px;
 }
-.people_table_data.start {
+
+.start {
+  box-sizing: border-box;
+  width: 20%;
+  border-radius: 11px 0px 0px 11px;
   text-align: left;
-  padding-left: 50px;
-  border-radius: 8px 0px 0px 8px;
 }
-.people_table_data.end {
+.table-container td {
+  padding-left: 60px;
+}
+.end {
+  width: 20%;
   flex: 1;
   border-radius: 0px 8px 8px 0px;
 }
+
+/* .people_table_header.start {
+   width: 200px !important; 
+  box-sizing: border-box;
+  width: 20%;
+  border-radius: 11px 0px 0px 11px;
+} */
+
+/* .people_table_header.end {
+  flex: 1;
+  width: 20%;
+  border-radius: 0px 11px 11px 0px;
+  /* width: 200px; */
+
+/* .people_table_data.start {
+  box-sizing: border-box;
+  /* Should be adjusted when the rest of the table is implemented 
+  width: 20%;
+  text-align: left;
+  padding-left: 50px;
+  border-radius: 8px 0px 0px 8px;
+} */
 
 .sort_toggle {
   margin-left: 10px;
 }
 
-tr:nth-child(2n) .people_table_data_start,
-tr:nth-child(2n) .people_table_data,
-tr:nth-child(2n) .people_table_data_end {
+.people_table tr:nth-child(2n) .people_table_data_start,
+.people_table tr:nth-child(2n) .people_table_data,
+.people_table tr:nth-child(2n) .people_table_data_end {
   background: rgba(187, 188, 188, 0.2);
 }
 
 .user_search_bar {
-  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 15px 20px;
-  width: 230px;
+  margin-top: 15px;
+  margin-bottom: 15px;
 }
 
 .user_search_button {
-  position: absolute;
-  right: 0px;
+  position: relative;
+  left: -50px;
   background: #1a68bf;
   width: 53px;
   height: 30px;
@@ -104,6 +123,9 @@ tr:nth-child(2n) .people_table_data_end {
   background-image: url("../../public/img/searchbar.svg");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.user_search_button:hover {
   cursor: pointer;
 }
 
@@ -111,20 +133,26 @@ tr:nth-child(2n) .people_table_data_end {
   border: 1px solid #000000;
   height: 26px;
   width: 230px;
-  border-radius: 3px;
-  padding: 1px 63px 1px 10px;
+  border-radius: 3px 0px 0px 3px;
+  padding-left: 10px;
 
   font-family: Lato;
+  font-style: normal;
+  font-weight: 300;
   font-size: 12px;
   line-height: 14px;
+}
+
+.user_search_input:focus {
+  font-weight: normal;
 }
 
 .people_table_controls {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* width: calc(100vw - 200px); */
-  margin: 10px 30px;
+  width: 100vw - 200px;
+  margin: 10px;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -133,22 +161,36 @@ tr:nth-child(2n) .people_table_data_end {
     align-items: center;
     margin-top: 25px;
   }
+  .user_search_bar {
+    /* This is a temporary alignment. Will need to be changed 
+       when the category filter bar is added in later versions*/
+    padding-left: 125px;
+  }
 
-  tbody,
+  .people_table tbody,
   .people_table {
     height: calc(100vh - 340px);
   }
 }
 
-@media only screen and (max-width: 850px) {
-  tbody,
+/* @media only screen and (max-width: 850px) {
+  .people_table tbody,
   .people_table {
     height: calc(100vh - 380px);
   }
   .people_table_controls {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     margin-top: 25px;
+  }
+} */
+
+@media only screen and (max-width: 1200px) {
+  .people_table_header {
+    font-size: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
   }
 }
 
@@ -161,12 +203,12 @@ tr:nth-child(2n) .people_table_data_end {
 .btn_table_control {
   background-color: transparent;
   border: 0px;
-  margin: 0 20px;
+  margin-left: 24px;
   font-family: Lato;
   font-style: normal;
   font-weight: bold;
-  font-size: 28px;
-  line-height: 29px;
+  font-size: 24px;
+  line-height: 22px;
 }
 
 .btn_table_control:hover {

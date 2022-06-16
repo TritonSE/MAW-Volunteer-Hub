@@ -45,7 +45,7 @@ function UserList({
   filter,
   setFilter,
 }) {
-  const [showAdmin, setShowAdmin] = useState(false);
+  const [showTab, setShowTab] = useState(0);
   /**
    * NOTE: This format only applies for the hard-coded user information used for V1
    * userData should be formated as such:
@@ -55,7 +55,7 @@ function UserList({
    *        Roles: []             // Contains user's roles via AssignBtn components
    *        Completed: 0          // Number of assignments completed
    *        Start: "Date"         // Day volunter started
-   *        Admin: {bool}         // True: is admin; False: not admin
+   *        Admin: {Num}         // 1 == secondary admin, 2 == primary admin, other = regular user
    *    },
    * ]
    */
@@ -94,7 +94,9 @@ function UserList({
     useSortBy
   );
 
-  useEffect(() => setGlobalFilter(filter), [filter]);
+  useEffect(() => {
+    setGlobalFilter(filter);
+  }, [filter]);
 
   const getArrowImage = (sorted, direction) => {
     if (sorted) {
@@ -122,18 +124,17 @@ function UserList({
   // Determine if a row should be displayed based on which tab the table is on.
   // Uses the id of the user to check to see if the user is an admin.
   // NOTE: This could be problematic if users have the same name. Emails should work though.
-  const separateAdmin = (id) => {
-    const isAdmin = userData.some((user) => user._id === id && user.admin);
+  const filterRows = (id) => {
+    const user = userData.find((tmp) => tmp._id === id) ?? {};
 
-    if (isAdmin && showAdmin) {
-      return true;
+    switch (showTab) {
+      case 0:
+        return user.active && !user.admin;
+      case 1:
+        return user.active && user.admin;
+      default:
+        return !user.active;
     }
-
-    if (!isAdmin && !showAdmin) {
-      return true;
-    }
-
-    return false;
   };
 
   return (
@@ -143,18 +144,26 @@ function UserList({
           <button
             type="button"
             className="btn_table_control"
-            style={!showAdmin ? { color: "#0057b8" } : {}}
-            onClick={() => setShowAdmin(false)}
+            style={showTab === 0 ? { color: "#0057b8" } : {}}
+            onClick={() => setShowTab(0)}
           >
             Volunteers
           </button>
           <button
             type="button"
             className="btn_table_control"
-            style={showAdmin ? { color: "#0057b8" } : {}}
-            onClick={() => setShowAdmin(true)}
+            style={showTab === 1 ? { color: "#0057b8" } : {}}
+            onClick={() => setShowTab(1)}
           >
             Admins
+          </button>
+          <button
+            type="button"
+            className="btn_table_control"
+            style={showTab === 2 ? { color: "#0057b8" } : {}}
+            onClick={() => setShowTab(2)}
+          >
+            Deactivated
           </button>
         </div>
         <GlobalFilter
@@ -170,12 +179,11 @@ function UserList({
         <table className="people_table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={Math.random()}>
+              <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column, colIndex) => (
                   <th
                     className={`people_table_header ${getColTitle(colIndex)}`}
                     {...column.getHeaderProps(column.getSortByToggleProps())}
-                    key={Math.random()}
                   >
                     {column.render("Header")}
                     {/* This ternary operator should be removed to allow sorting for all columns */}
@@ -192,15 +200,14 @@ function UserList({
           <tbody {...getTableBodyProps()}>
             {rows.map((row) => {
               prepareRow(row);
-              return separateAdmin(row.original._id) ? (
-                <tr {...row.getRowProps()} key={Math.random()}>
+              return filterRows(row.original._id) ? (
+                <tr {...row.getRowProps()}>
                   {row.cells.map((cell, colIndex) => (
                     <td
                       {...cell.getCellProps()}
                       className={`people_table_data ${getColTitle(colIndex)}`}
-                      key={Math.random()}
                     >
-                      {cell.render("Cell")}
+                      {cell.render("Cell", { original: row.original })}
                     </td>
                   ))}
                 </tr>

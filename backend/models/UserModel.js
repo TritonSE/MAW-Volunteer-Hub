@@ -2,15 +2,28 @@ const mongoose = require("mongoose");
 const uniqueValidator = require("mongoose-unique-validator");
 const bcrypt = require("bcrypt");
 
-const { Schema } = mongoose;
+const ManualEventSchema = new mongoose.Schema({
+  date: {
+    type: Date,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+    minlength: 1,
+  },
+  hours: {
+    type: Number,
+    required: true,
+    validate: [
+      (num) => !Number.isNaN(Number.parseInt(num, 10)) && num >= 0,
+      "Event must have a valid duration.",
+    ],
+  },
+});
 
-const UserSchema = new Schema(
+const UserSchema = new mongoose.Schema(
   {
-    verified: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     // to make sure the user is a part of make-a-wish
     name: {
       type: String,
@@ -27,16 +40,17 @@ const UserSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
+      uniqueCaseInsensitive: true,
       match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,24})+$/,
     },
+    // Integer value. 0 = regular user, 1 = secondary admin, 2 = primary admin, >= 3 is regular user
     admin: {
-      type: Boolean,
-      default: false,
+      type: Number,
+      default: 0,
     },
     active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     password: {
       type: String,
@@ -49,9 +63,26 @@ const UserSchema = new Schema(
       type: Date,
       // required: true
     },
+    /**
+     * EVENTS
+     */
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "event",
+      },
+    ],
+    manualEvents: {
+      type: [ManualEventSchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );
+
+UserSchema.virtual("verified").get(function check_verify() {
+  return this.roles.length > 0 || this.admin > 0;
+});
 
 UserSchema.pre("save", async function save(next) {
   if (this.password && this.isModified("password")) {

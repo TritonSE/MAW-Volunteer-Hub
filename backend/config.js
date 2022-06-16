@@ -4,6 +4,7 @@ module.exports = {
   app: {
     env: process.env.NODE_ENV || "development",
     port: process.env.PORT || "5000",
+    frontend_url: process.env.FRONTEND_URL || "localhost:3000",
   },
   auth: {
     // register_secret: process.env.REGISTER_SECRET || "tritonse",
@@ -19,5 +20,12 @@ module.exports = {
     access_key: process.env.AWS_ACCESS_KEY || "",
     secret_key: process.env.AWS_SECRET_KEY || "",
     max_file_size: 1.6e7, // 16 MB
+  },
+  google_oauth: {
+    client_id: process.env.GOOGLE_CLIENT_ID || "",
+    client_secret: process.env.GOOGLE_CLIENT_SECRET || "",
+    redirect: "https://developers.google.com/oauthplayground",
+    refresh_token: process.env.GOOGLE_REFRESH_TOKEN || "",
+    maw_email: process.env.MAW_EMAIL_ADDRESS || "",
   },
 };

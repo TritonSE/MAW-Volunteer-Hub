@@ -1,0 +1,83 @@
+.add_roles {
+  height: 23px;
+  width: 23px;
+
+  border-radius: 50%;
+  box-shadow: 0 6px 14px rgba(26, 104, 191, 0.1);
+  background: #ffffff;
+  border: 1px solid var(--primary-blue);
+  font-size: 20px;
+  color: var(--primary-blue);
+  margin-left: 25px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add_roles > svg {
+  width: 11px;
+  height: 15px;
+  fill: var(--primary-blue);
+  object-fit: cover;
+}
+
+.add_roles:hover {
+  cursor: pointer;
+  background: var(--background-grey);
+}
+.add_roles:disabled {
+  cursor: default;
+}
+
+.roles_container {
+  background: #ffffff;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  box-sizing: border-box;
+  width: 45%;
+  padding-bottom: 20px;
+}
+
+.roles_header {
+  display: flex;
+  align-items: center;
+  margin-left: 35px;
+}
+
+.roles_scroller {
+  display: flex;
+  height: 34px;
+  overflow: auto;
+  padding-right: 35px;
+  padding-left: 35px;
+}
+
+@media only screen and (max-width: 900px) {
+  .roles_container {
+    width: 100%;
+  }
+}
+
+.delete_confirmation_modal {
+  background: #ffffff;
+  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  padding: 20px;
+  width: 300px;
+  text-align: center;
+}
+
+.close_button_delete {
+  position: relative;
+
+  left: 45%;
+  top: 0px;
+  border: none;
+  background: none;
+  background: url(../../public/img/close-modal.svg) no-repeat;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}

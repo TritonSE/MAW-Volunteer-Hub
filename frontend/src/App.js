@@ -14,6 +14,10 @@ import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
+import CalendarPage from "./pages/CalendarPage";
+import HomePage from "./pages/HomePage";
+import Message from "./components/Message";
+import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 
@@ -21,10 +25,10 @@ import "./App.css";
 
 import UserManage from "./components/UserManage";
 
-const MANAGE_COMPONENTS = [<UserManage />, <div>Message</div>, <div>Wish Wednesday</div>];
+const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
 
 function ProtectedRoute({
-  needsAdmin = false,
+  needsPrimaryAdmin = false,
   dest = SITE_PAGES.LOGIN,
   children = null,
   useChildren = false,
@@ -34,10 +38,13 @@ function ProtectedRoute({
   const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
   if (doCheck) {
-    useEffect(async () => {
-      const res = await api_validtoken();
-      setCurrentUser(res ? res.user : null);
-      setHasFired(true);
+    useEffect(() => {
+      async function handleValidation() {
+        const res = await api_validtoken();
+        setCurrentUser(res ? res.user : null);
+        setHasFired(true);
+      }
+      handleValidation();
     }, []);
   } else {
     useEffect(() => {
@@ -45,7 +52,7 @@ function ProtectedRoute({
     }, [currentUser]);
   }
 
-  if (!currentUser || (!currentUser.admin && needsAdmin)) {
+  if (!currentUser || (currentUser.admin !== 2 && needsPrimaryAdmin)) {
     if (hasFired) return <Navigate to={dest} />;
     return null;
   }
@@ -55,9 +62,12 @@ function ProtectedRoute({
 function SignoutHelper() {
   const [_currentUser, setCurrentUser] = useContext(CurrentUser);
 
-  useEffect(async () => {
-    await api_signout();
-    setCurrentUser();
+  useEffect(() => {
+    async function handleSignOut() {
+      await api_signout();
+      setCurrentUser();
+    }
+    handleSignOut();
   }, []);
 
   return <Navigate to={SITE_PAGES.LOGIN} />;
@@ -91,7 +101,7 @@ function App() {
             path={SITE_PAGES.MANAGE}
             element={
               <ProtectedRoute
-                needsAdmin
+                needsPrimaryAdmin
                 dest={SITE_PAGES.WISH_GRANTING}
                 useChildren
                 doCheck={false}
@@ -112,7 +122,17 @@ function App() {
             ))}
           </Route>
           {/* Redirect to Manage Page, only when authenticated */}
-          <Route exact path="/" element={<Navigate to={SITE_PAGES.MANAGE} />} />
+          <Route
+            exact
+            path={SITE_PAGES.HOME}
+            element={
+              <ProtectedRoute needsAdmin={false} dest={SITE_PAGES.HOME} useChildren doCheck={false}>
+                <PageLayout>
+                  <HomePage />
+                </PageLayout>
+              </ProtectedRoute>
+            }
+          />
           {/* Wish Granting Page */}
           <Route
             path={SITE_PAGES.WISH_GRANTING}
@@ -136,6 +156,15 @@ function App() {
               />
             ))}
           </Route>
+          {/* Calendar Page */}
+          <Route
+            path={SITE_PAGES.CALENDAR}
+            element={
+              <PageLayout>
+                <CalendarPage />
+              </PageLayout>
+            }
+          />
 
           {/* Sign out */}
           <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper />} />

@@ -16,7 +16,9 @@ export default function PageLayout({ children }) {
     if (res) setStructure(res);
   }
 
-  useEffect(() => get_structure(), []);
+  useEffect(() => {
+    get_structure();
+  }, []);
 
   const fileStructure_memo = useMemo(() => [structure, get_structure], [{}, get_structure]);
 
