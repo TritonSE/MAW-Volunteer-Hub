@@ -4,6 +4,22 @@ import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
 
 function UserCard({ user, row, VerifyButtonCell, updateMyData }) {
+  const sum =
+    user.events.reduce(
+      (prev, next) =>
+        prev +
+        Object.entries(next.repetitions).reduce(
+          (subprev, [date, subnext]) =>
+            subprev +
+            (new Date(date).setHours(
+              new Date(next.to).getHours(),
+              new Date(next.to).getMinutes()
+            ) <= Date.now() && Object.prototype.hasOwnProperty.call(subnext.attendees, user._id)),
+          0
+        ),
+      0
+    ) + user.manualEvents.filter((evt) => new Date(evt.date).getTime() <= Date.now()).length;
+
   return (
     <div className="user_card" key={Math.random()}>
       <div className="card_col">
@@ -14,12 +30,18 @@ function UserCard({ user, row, VerifyButtonCell, updateMyData }) {
         >
           {user.name}
         </Link>
-        <div className="card_item_bottom">Assignments Completed: {user.completed ?? "N/A"}</div>
+        <div className="card_item_bottom">Assignments Completed: {sum ?? "N/A"}</div>
       </div>
       <div className="card_col">
         {/* <div className="card_item_top">{user.roles}</div> */}
         <VerifyButtonCell row={{ index: row }} updateMyData={updateMyData} user={user} />
-        <div className="card_item_bottom">Volunteer Start: {user.start ?? "N/A"}</div>
+        <div className="card_item_bottom">
+          Volunteer Since:{" "}
+          {new Date(user.createdAt).toLocaleString("default", {
+            month: "short",
+            year: "numeric",
+          }) ?? "N/A"}
+        </div>
       </div>
     </div>
   );

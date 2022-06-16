@@ -36,47 +36,62 @@
   font-size: 18px;
   line-height: 22px;
 }
+
 .people_table_header {
   height: 51px;
-  width: 225px;
+  width: 25%;
 
-  text-align: start;
+  text-align: left;
   padding-left: 30px;
 
   background: rgba(0, 87, 184, 0.1);
   box-sizing: border-box;
 }
-.people_table_header.start {
-  /* width: 200px !important; */
-  box-sizing: border-box;
-  width: 33%;
-  border-radius: 11px 0px 0px 11px;
-}
-.people_table_header.end {
-  border-radius: 0px 11px 11px 0px;
-  width: 200px;
-}
 
 .people_table_data {
-  width: 200px;
+  width: 25%;
   height: 62px;
-  text-align: center;
 
   font-size: 14px;
   line-height: 17px;
 }
-.people_table_data.start {
+
+.start {
   box-sizing: border-box;
-  /* Should be adjusted when the rest of the table is implemented */
+  width: 20%;
+  border-radius: 11px 0px 0px 11px;
+  text-align: left;
+}
+.table-container td {
+  padding-left: 60px;
+}
+.end {
+  width: 20%;
+  flex: 1;
+  border-radius: 0px 8px 8px 0px;
+}
+
+/* .people_table_header.start {
+   width: 200px !important; 
+  box-sizing: border-box;
+  width: 20%;
+  border-radius: 11px 0px 0px 11px;
+} */
+
+/* .people_table_header.end {
+  flex: 1;
+  width: 20%;
+  border-radius: 0px 11px 11px 0px;
+  /* width: 200px; */
+
+/* .people_table_data.start {
+  box-sizing: border-box;
+  /* Should be adjusted when the rest of the table is implemented 
   width: 20%;
   text-align: left;
   padding-left: 50px;
   border-radius: 8px 0px 0px 8px;
-}
-.people_table_data.end {
-  flex: 1;
-  border-radius: 0px 8px 8px 0px;
-}
+} */
 
 .sort_toggle {
   margin-left: 10px;
@@ -156,7 +171,7 @@
   }
 }
 
-@media only screen and (max-width: 850px) {
+/* @media only screen and (max-width: 850px) {
   .people_table tbody,
   .people_table {
     height: calc(100vh - 380px);
@@ -165,6 +180,15 @@
     flex-direction: row;
     align-items: center;
     margin-top: 25px;
+  }
+} */
+
+@media only screen and (max-width: 1200px) {
+  .people_table_header {
+    font-size: 14px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
   }
 }
 
@@ -177,7 +201,7 @@
 .btn_table_control {
   background-color: transparent;
   border: 0px;
-  margin-left: 50px;
+  margin-left: 24px;
   font-style: normal;
   font-weight: bold;
   font-size: 28px;

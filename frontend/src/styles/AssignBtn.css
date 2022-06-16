@@ -73,7 +73,7 @@
 
 .assign_btn_container {
   display: flex;
-  max-width: 212px;
+  width: 212px;
   flex-direction: row;
 }
 
