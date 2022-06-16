@@ -66,6 +66,12 @@ const UserSchema = new mongoose.Schema(
     /**
      * EVENTS
      */
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "event",
+      },
+    ],
     manualEvents: {
       type: [ManualEventSchema],
       default: [],
