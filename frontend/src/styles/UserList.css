@@ -25,7 +25,6 @@
   background-color: white;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
 
-  font-family: Lato;
   font-style: normal;
   font-weight: normal;
 }
@@ -64,7 +63,7 @@
   text-align: left;
 }
 .table-container td {
-  padding-left: 60px;
+  padding-left: 30px;
 }
 .end {
   width: 20%;
@@ -136,7 +135,6 @@
   border-radius: 3px 0px 0px 3px;
   padding-left: 10px;
 
-  font-family: Lato;
   font-style: normal;
   font-weight: 300;
   font-size: 12px;
@@ -204,11 +202,10 @@
   background-color: transparent;
   border: 0px;
   margin-left: 24px;
-  font-family: Lato;
   font-style: normal;
   font-weight: bold;
-  font-size: 24px;
-  line-height: 22px;
+  font-size: 28px;
+  line-height: 29px;
 }
 
 .btn_table_control:hover {

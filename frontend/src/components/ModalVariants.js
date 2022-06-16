@@ -41,7 +41,7 @@ function ModalVariants() {
       title: "Add File",
       name: {
         title: "File Name",
-        placeholder: "Type file name here",
+        placeholder: "Type file name here...",
       },
       has_upload: true,
       action_button: {
@@ -63,7 +63,7 @@ function ModalVariants() {
       title: "Edit File",
       name: {
         title: "File Name",
-        placeholder: "Type file name here",
+        placeholder: "Type file name here...",
       },
       has_upload: true,
       action_button: {
@@ -104,7 +104,7 @@ function ModalVariants() {
       title: "Add Category",
       name: {
         title: "Category Name",
-        placeholder: "Type category title here",
+        placeholder: "Type category title here...",
       },
       has_upload: false,
       action_button: {
@@ -116,7 +116,7 @@ function ModalVariants() {
       title: "Edit Category",
       name: {
         title: "Category Name",
-        placeholder: "Type category title here",
+        placeholder: "Type category title here...",
       },
       has_upload: false,
       action_button: {
@@ -158,7 +158,7 @@ function ModalVariants() {
           <div className="wishgranting_modal_center thin center">
             <button
               type="button"
-              className="wishgranting_modal_button primary"
+              className="maw-ui_button primary"
               onClick={() => setErrorMessage()}
             >
               Okay
@@ -204,7 +204,7 @@ function ModalVariants() {
           <div className="wishgranting_modal_center thin center">
             <button
               type="button"
-              className="wishgranting_modal_button primary"
+              className="maw-ui_button primary"
               onClick={() => {
                 history.push("/");
                 setOpen(false);
@@ -332,18 +332,10 @@ function ModalVariants() {
               <div className="wishgranting_modal_center">{variant.center.title}</div>
               <br />
               <div className="wishgranting_modal_center thin">
-                <button
-                  type="button"
-                  className="wishgranting_modal_button"
-                  onClick={() => setOpen(false)}
-                >
+                <button type="button" className="maw-ui_button" onClick={() => setOpen(false)}>
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="wishgranting_modal_button error"
-                  disabled={!submitEnabled}
-                >
+                <button type="submit" className="maw-ui_button error" disabled={!submitEnabled}>
                   {variant.center.action_button.title}
                 </button>
               </div>
@@ -351,11 +343,7 @@ function ModalVariants() {
           ) : null}
           {variant.action_button ? (
             <div className="wishgranting_modal_bottom">
-              <button
-                type="submit"
-                className="wishgranting_modal_button primary"
-                disabled={!submitEnabled}
-              >
+              <button type="submit" className="maw-ui_button primary" disabled={!submitEnabled}>
                 {variant.action_button.title}
               </button>
             </div>

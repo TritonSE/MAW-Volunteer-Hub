@@ -22,7 +22,6 @@
   min-height: 460px;
   border-radius: 10px;
   outline: 0;
-  font-family: "Lato", sans-serif;
   background: white;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
@@ -79,7 +78,6 @@
   border: none;
   border-bottom: 1.5px solid #bbbcbc;
   padding: 7px;
-  font-family: "Lato", sans-serif;
   outline: 0;
   box-sizing: border-box;
   margin-bottom: 20px;
@@ -143,25 +141,6 @@
   border-bottom: 1.5px solid red;
 }
 
-.evt_modal_content button:not(.chevron) {
-  width: 129px;
-  height: 26px;
-  font-family: "Lato", sans-serif;
-  border-radius: 3px;
-  background: white;
-  color: black;
-  border: 1px solid #000000;
-  cursor: pointer;
-}
-.evt_modal_content button.unstyled {
-  width: 100%;
-  border: none;
-  font-size: 16px;
-  padding: 0;
-  margin: 0;
-  color: black;
-}
-
 .evt_modal_content textarea {
   min-width: 208px;
   min-height: 74px;
@@ -183,6 +162,10 @@
   border: 1px solid var(--primary-blue);
   z-index: 100001;
   font-family: "Lato", sans-serif;
+}
+.evt_modal .react-simple-calendar td {
+  width: 24px;
+  height: 24px;
 }
 .evt_modal .date_picker_overlay {
   width: 100vw;
@@ -242,33 +225,6 @@
   justify-content: space-between;
 }
 
-/*
- * MODAL FOOTER and ACTION BUTTONS
- */
-.evt_modal_footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.evt_modal_footer button {
-  width: 103px;
-  height: 26px;
-  border-radius: 3px;
-  font-family: "Lato", sans-serif;
-  background: var(--primary-blue);
-  color: #ffffff;
-  border: none;
-  cursor: pointer;
-}
-.evt_modal_footer button.unstyled {
-  background: white;
-  color: black;
-  border: 1px solid black;
-}
-.evt_modal_footer button:disabled {
-  opacity: 0.5;
-}
-
 @media only screen and (max-width: 600px) {
   .evt_modal {
     width: 100vw;
@@ -286,9 +242,6 @@
   }
   .evt_modal_content .evt_modal_row {
     justify-content: flex-start;
-  }
-  .evt_modal_footer {
-    margin-bottom: 20px;
   }
 }
 
@@ -390,7 +343,6 @@
 }
 
 .wand_container h1 {
-  font-family: "Lato";
   font-size: 24px;
 
   color: #ffffff;

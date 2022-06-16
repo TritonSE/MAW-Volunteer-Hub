@@ -60,6 +60,7 @@
 
 .assign_modal .roles {
   display: flex;
+  flex-direction: row;
   overflow: auto;
   margin-right: 12px;
   padding: 10px 0;
@@ -75,19 +76,9 @@
   font-size: 14px;
 }
 
-.assign_modal .user_assign {
-  width: 103px;
-  height: 26px;
-  color: white;
-  background: var(--primary-blue);
-  border-radius: 3px;
-  border: none;
-  cursor: pointer;
-  font-family: "Lato", sans-serif;
+.assign_modal .state_1 {
+  background: var(--grey) !important;
 }
-.assign_modal .user_assign.state_1 {
-  background: var(--grey);
-}
-.assign_modal .user_assign.state_2 {
-  background: var(--secondary-blue);
+.assign_modal .state_2 {
+  background: var(--secondary-blue) !important;
 }
