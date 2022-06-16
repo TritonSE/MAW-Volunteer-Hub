@@ -233,17 +233,27 @@ function ProfilePage() {
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
-    let allNonManual = [];
-    user.events.map((event) =>
-      allNonManual.push({
-        _id: event._id,
-        date: event.from,
-        title: event.name,
-        hours: new Date(event.to).getHours() - new Date(event.from).getHours(),
-        notEditable: true,
-      })
-    );
-    allNonManual = allNonManual.concat(user.manualEvents);
+    const allNonManual = [...user.manualEvents];
+    user.events.forEach((event) => {
+      const from = new Date(event.from);
+      const to = new Date(event.to);
+      const hours = Math.round(Math.abs(to.getTime() - from.getTime()) / 3.6e6);
+
+      Object.entries(event.repetitions).forEach(([datestr, rep]) => {
+        const date = new Date(datestr);
+        date.setHours(to.getHours(), to.getMinutes());
+
+        if (date.getTime() <= Date.now()) {
+          allNonManual.push({
+            _id: rep._id,
+            date,
+            title: event.name,
+            hours,
+            notEditable: true,
+          });
+        }
+      });
+    });
     allNonManual.sort(
       (event1, event2) => new Date(event1.date).getTime() - new Date(event2.date).getTime()
     );
@@ -384,12 +394,13 @@ function ProfilePage() {
           {(isCurrentUser || currentUser.admin > 0) && (
             <button
               type="button"
-              className="change-password-button"
+              className="maw-ui_button"
               onClick={() => setDeactivateModalOpen(true)}
             >
               {user.active ? "Deactivate" : "Activate"} Profile
             </button>
           )}
+          &nbsp;&nbsp;
           {isCurrentUser && (
             <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
               Change Password
@@ -412,7 +423,7 @@ function ProfilePage() {
       {/* Deactivate Profile, Change Password, and Delete Profile Modals */}
       <Modal
         className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        overlayClassName="maw-ui_modal-overlay"
         isOpen={deactivateModalOpen}
         onRequestClose={() => setDeactivateModalOpen(false)}
         contentLabel="Deactivate profile modal"
@@ -437,14 +448,14 @@ function ProfilePage() {
         />
         <div className="delete-button-container">
           <button
-            className="modal-button small button-secondary"
+            className="maw-ui_button"
             type="button"
             onClick={() => setDeactivateModalOpen(false)}
           >
             Cancel
           </button>
           <button
-            className={`modal-button small ${isCurrentUser ? "button-danger" : "button-primary"}`}
+            className={`maw-ui_button ${isCurrentUser ? "error" : "primary"}`}
             type="button"
             onClick={deactivate_account}
           >

@@ -58,7 +58,7 @@
 .no_hover:hover {
   cursor: default;
 }
-.hover:hover {
+.hover:not(:disabled):hover {
   cursor: pointer;
 }
 .btn_access {
@@ -69,61 +69,6 @@
   box-sizing: border-box;
   border-radius: 20px;
   padding: 7px 16px;
-}
-
-.btn_aGreeter {
-  /* min-width: 140px; */
-  border: 1px solid #ffb549;
-}
-
-.btn_wGranter {
-  /* min-width: 125px; */
-  border: 1px solid #00bab3;
-}
-
-.btn_mentor {
-  /* min-width: 90px; */
-  border: 1px solid #8dc8e8;
-}
-
-.btn_pAdmin {
-  /* min-width: 135px; */
-  border: 1px solid #1a68bf;
-}
-
-.btn_volunteer {
-  /* min-width: 105px; */
-  border: 1px solid #ff585d;
-}
-
-.btn_office {
-  /* min-width: 80px; */
-  border: 1px solid #9ec37b;
-}
-
-.btn_speciale {
-  /* min-width: 130px; */
-  border: 1px solid #e09eff;
-}
-
-.btn_translator {
-  /* min-width: 105px; */
-  border: 1px solid #0057b8;
-}
-
-.btn_speaker {
-  /* min-width: 145px; */
-  border: 1px solid #e993b2;
-}
-
-.btn_las {
-  /* min-width: 120px; */
-  border: 1px solid #fbd872;
-}
-
-.btn_sAdmin {
-  /* min-width: 145px; */
-  border: 1px solid #3cba00;
 }
 
 .assign_btn_container {

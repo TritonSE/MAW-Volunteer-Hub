@@ -69,10 +69,11 @@
 }
 .profile-header-info h2 {
   font-size: 14px;
-  line-height: 41px;
-  color: var(--grey);
   font-weight: normal;
-  margin: 0;
+  text-align: right;
+  margin: 23px 0 7px 0;
+  box-sizing: border-box;
+  color: var(--grey);
 }
 .profile-header-info p {
   font-size: 12px;
@@ -90,14 +91,15 @@
   flex-wrap: wrap;
   width: 100%;
 }
-@media (max-width: 350px) {
+@media (max-width: 500px) {
   .profile-buttons-container {
-    justify-content: flex-start;
+    justify-content: center;
   }
 }
 .profile-buttons-container button {
   font-size: 14px;
   padding: 3px 10px;
+  margin-top: 10px;
 }
 .change-password-button {
   border: 1px solid black;
@@ -199,6 +201,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  margin-top: 10px;
 }
 .button-nomargin {
   margin: 0 !important;
