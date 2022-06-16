@@ -1,22 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
 
-@keyframes fadein {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-@keyframes popin {
-  0% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
+/*
+ * GLOBAL THEMING
+ */
 :root {
   --primary-blue: #1a68bf;
 
@@ -39,18 +25,137 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Lato", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
   background: var(--background-grey);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div,
+span,
+p,
+a,
+button,
+input {
+  font-family: "Lato", sans-serif !important;
+}
+
+/*
+ * GLOBAL UTILITY CLASSES
+ */
 .hidden {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  width: 32px;
+}
+
+/*
+ * SITEWIDE STYLES
+ */
+button.maw-ui_button {
+  border-radius: 3px;
+  min-width: 103px;
+  height: 26px;
+  font-family: "Lato", sans-serif;
+  cursor: pointer;
+  border: 1px solid black;
+  background: white;
+  color: black;
+  font-weight: normal;
+  transition: opacity 0.1s;
+}
+button.maw-ui_button:disabled {
+  opacity: 0.5;
+}
+button.maw-ui_button.primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+button.maw-ui_button.error {
+  background: var(--secondary-red);
+  color: white;
+  border: none;
+}
+button.maw-ui_button.fullwidth {
+  width: 100%;
+}
+button.maw-ui_button.padded {
+  padding: 0 10px;
+}
+button.maw-ui_button.text {
+  text-decoration: underline;
+  border: none;
+  font-size: 16px;
+  padding: 0;
+}
+
+input.maw-ui_input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 7px;
+  /* border: 1px solid #0057b8; */
+  border: 1px solid black;
+  border-radius: 3px;
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+}
+input.maw-ui_input.error {
+  border: 1px solid var(--secondary-red);
+}
+input.maw-ui_input.underline {
+  border: none;
+  border-bottom: 1.5px solid #bbbcbc;
+  outline: 0;
+  margin-bottom: 20px;
+  background: #ffffff;
+}
+input.maw-ui_input.underline:focus {
+  border-bottom: 1.5px solid var(--primary-blue);
+}
+
+/*
+ * GLOBAL MODAL STYLING
+ */
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes popin {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .ReactModal__Overlay {
@@ -65,4 +170,75 @@ body {
 }
 .ReactModal__Content.closing {
   animation: popin 0.25s reverse !important;
+}
+
+.maw-ui_modal-overlay {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  inset: 0px;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.maw-ui_modal {
+  width: 95vw;
+  max-width: 466px;
+  height: 95vh;
+  max-height: 278px;
+  padding: 21px 25px;
+  border: none;
+  outline: 0;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  position: relative;
+  box-sizing: border-box;
+  font-family: "Lato", sans-serif;
+}
+.maw-ui_modal.thin {
+  max-height: 202px;
+}
+.maw-ui_modal.noshape {
+  width: unset;
+  max-width: unset;
+  height: unset;
+  max-height: unset;
+}
+
+.maw-ui_modal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.maw-ui_modal-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.maw-ui_modal-header h3 {
+  margin: 0;
+}
+.maw-ui_modal-header button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.maw-ui_modal-content {
+  flex: 1;
+}
+
+.maw-ui_modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }

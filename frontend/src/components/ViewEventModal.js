@@ -38,7 +38,7 @@ function GuestsContainer({ guests, addGuest, deleteGuest }) {
         />
         <button
           type="submit"
-          className="fullwidth"
+          className="maw-ui_button primary fullwidth"
           onClick={() => {
             let has_error = 0;
             if (name.trim() === "") {
@@ -95,15 +95,15 @@ function ConfirmationModal({
       </div>
       <br />
       <div className="rows">
-        <button type="button" onClick={() => setConfirmModal(0)}>
+        <button type="button" className="maw-ui_button" onClick={() => setConfirmModal(0)}>
           Cancel
         </button>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <button type="button" className="error" onClick={() => setIsOpen(false)}>
+        <button type="button" className="maw-ui_button error" onClick={() => setIsOpen(false)}>
           Return
         </button>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <button type="button" className="primary" onClick={() => saveResponse(true)}>
+        <button type="button" className="maw-ui_button primary" onClick={() => saveResponse(true)}>
           Save
         </button>
       </div>
@@ -112,11 +112,11 @@ function ConfirmationModal({
       <div>Are you sure you want to respond &quot;Not going&quot;?</div>
       <br />
       <div className="rows">
-        <button type="button" onClick={() => setConfirmModal(0)}>
+        <button type="button" className="maw-ui_button" onClick={() => setConfirmModal(0)}>
           Cancel
         </button>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <button type="button" className="error" onClick={() => saveResponse(false)}>
+        <button type="button" className="maw-ui_button error" onClick={() => saveResponse(false)}>
           Yes
         </button>
       </div>
@@ -128,7 +128,7 @@ function ConfirmationModal({
       No guests listed.
       <br />
       <br />
-      <button type="button" onClick={() => setConfirmModal(0)}>
+      <button type="button" className="maw-ui_button primary" onClick={() => setConfirmModal(0)}>
         Return
       </button>
     </div>,
@@ -139,7 +139,7 @@ function ConfirmationModal({
       Invalid guests list.
       <br />
       <br />
-      <button type="button" onClick={() => setConfirmModal(0)}>
+      <button type="button" className="maw-ui_button primary" onClick={() => setConfirmModal(0)}>
         Return
       </button>
     </div>,
@@ -148,11 +148,11 @@ function ConfirmationModal({
       <br />
       <br />
       <div className="rows">
-        <button type="button" onClick={() => setConfirmModal(0)}>
+        <button type="button" className="maw-ui_button" onClick={() => setConfirmModal(0)}>
           Cancel
         </button>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <button type="button" className="error" onClick={() => deleteEvent()}>
+        <button type="button" className="maw-ui_button error" onClick={() => deleteEvent()}>
           Yes
         </button>
       </div>
@@ -369,7 +369,7 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
                 </div>
                 <button
                   type="button"
-                  className="prop unstyled underlined"
+                  className="prop maw-ui_button text"
                   onClick={() => setVolModal(true)}
                 >
                   View who is going
@@ -561,17 +561,25 @@ export default function ViewEventModal({ event, isOpen, setIsOpen, changeEvent, 
             )}
           </div>
         </div>
-        <div className="evt_modal_footer">
+        <div className="center">
           {!event.attendees[currentUser._id] ? (
-            <button type="button" onClick={() => save_response(true)}>
+            <button
+              type="button"
+              className="maw-ui_button primary"
+              onClick={() => save_response(true)}
+            >
               Going
             </button>
           ) : (
             <div className="evt_modal_spaced">
-              <button type="button" className="unstyled" onClick={() => setConfirmModal(2)}>
+              <button type="button" className="maw-ui_button" onClick={() => setConfirmModal(2)}>
                 Not going
               </button>
-              <button type="button" onClick={() => save_response(true)}>
+              <button
+                type="button"
+                className="maw-ui_button primary"
+                onClick={() => save_response(true)}
+              >
                 Save
               </button>
             </div>

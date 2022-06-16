@@ -88,7 +88,7 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
         <div className="column">
           <button
             type="button"
-            className={`user_assign state_${state}`}
+            className={`maw-ui_button primary state_${state}`}
             onClick={() => {
               const cpy = structuredClone(volunteers);
               if (state === 0) {
@@ -156,8 +156,8 @@ export default function AssignModal({ name, isOpen, setOpen, volunteers, setVolu
         </List>
       </div>
       <br />
-      <div className="evt_modal_footer">
-        <button type="button" onClick={() => setOpen(false)}>
+      <div className="center">
+        <button type="button" className="maw-ui_button primary" onClick={() => setOpen(false)}>
           Save
         </button>
       </div>

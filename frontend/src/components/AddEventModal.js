@@ -387,7 +387,11 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               />
               <br />
               <div className="indent">
-                <button type="button" onClick={() => setAssignModal(true)}>
+                <button
+                  type="button"
+                  className="maw-ui_button padded"
+                  onClick={() => setAssignModal(true)}
+                >
                   Assign volunteers
                 </button>
               </div>
@@ -457,8 +461,10 @@ export default function AddEventModal({ currentEvent, setCurrentEvent, onAddEven
               </div>
             </div>
           </div>
-          <div className="evt_modal_footer">
-            <button type="submit">{isEditing ? "Save" : "Create"}</button>
+          <div className="center">
+            <button type="submit" className="maw-ui_button primary">
+              {isEditing ? "Save" : "Create"}
+            </button>
           </div>
         </form>
       </Modal>

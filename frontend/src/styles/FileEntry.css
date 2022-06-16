@@ -13,7 +13,6 @@
   border-radius: 8px;
   background: rgba(187, 188, 188, 0.2);
 
-  font-family: "Lato", sans-serif;
   font-size: 15px;
 }
 .filelisting:nth-child(2n),
@@ -84,9 +83,6 @@
   position: absolute;
   transition: top 0.4s;
   width: 100%;
-}
-.filelisting_no_files {
-  font-family: "Lato", sans-serif;
 }
 
 /* if the file entry & file listing is displaying for the search modal */

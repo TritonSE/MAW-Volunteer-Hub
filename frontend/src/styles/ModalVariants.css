@@ -85,32 +85,6 @@
   right: 32px;
 }
 
-.wishgranting_modal_button {
-  border-radius: 3px;
-  width: 103px;
-  height: 26px;
-  font-family: "Lato", sans-serif;
-  cursor: pointer;
-  border: 1px solid black;
-  background: white;
-  color: black;
-  font-weight: normal;
-  transition: opacity 0.1s;
-}
-.wishgranting_modal_button.primary {
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-}
-.wishgranting_modal_button.error {
-  background: #ff797d;
-  color: white;
-  border: none;
-}
-.wishgranting_modal_button:disabled {
-  opacity: 0.5;
-}
-
 .wishgranting_modal_center {
   display: flex;
   align-items: center;

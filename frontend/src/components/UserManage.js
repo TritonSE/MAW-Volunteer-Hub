@@ -171,7 +171,7 @@ export default function UserManage() {
           email.
           <button
             type="button"
-            className="confirmation_btn"
+            className="maw-ui_button primary"
             onClick={() => handleConfirmationModal({ name: "", isOpen: false })}
           >
             Okay

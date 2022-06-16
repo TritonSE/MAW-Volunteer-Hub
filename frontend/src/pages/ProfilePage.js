@@ -243,7 +243,7 @@ function ProfilePage() {
           />
           {isCurrentUser && (
             <>
-              <button type="button">
+              <button type="button" className="center">
                 <label htmlFor="pfp_input">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -269,7 +269,7 @@ function ProfilePage() {
 
               <Modal
                 className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
+                overlayClassName="maw-ui_modal-overlay"
                 isOpen={pfpModalOpen}
                 onRequestClose={() => {
                   if (!dragActive) {
@@ -304,7 +304,7 @@ function ProfilePage() {
                 <div className="modal-flex-crop">
                   <button
                     type="button"
-                    className="modal-button button-nomargin change-password-button"
+                    className="maw-ui_button fullwidth button-nomargin"
                     onClick={() => setPFPModalOpen(false)}
                   >
                     Cancel
@@ -312,7 +312,7 @@ function ProfilePage() {
                   <span>&nbsp;</span>
                   <button
                     type="button"
-                    className="modal-button button-primary button-nomargin"
+                    className="maw-ui_button fullwidth primary button-nomargin"
                     onClick={do_upload}
                     style={{ opacity }}
                   >
@@ -322,7 +322,7 @@ function ProfilePage() {
               </Modal>
               <Modal
                 className="profile-page-modal"
-                overlayClassName="profile-page-modal-overlay"
+                overlayClassName="maw-ui_modal-overlay"
                 isOpen={Boolean(pfpErrorModalOpen)}
                 onRequestClose={() => setPFPErrorModalOpen(false)}
                 contentLabel="Profile picture error"
@@ -332,7 +332,7 @@ function ProfilePage() {
                 <br />
                 <button
                   type="button"
-                  className="modal-button button-primary button-nomargin"
+                  className="maw-ui_button primary"
                   onClick={() => setPFPErrorModalOpen(false)}
                 >
                   Okay
@@ -352,18 +352,15 @@ function ProfilePage() {
         </div>
         <div className="profile-buttons-container">
           {isCurrentUser && (
-            <button
-              type="button"
-              className="change-password-button"
-              onClick={() => setPassModalOpen(true)}
-            >
+            <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
               Change Password
             </button>
           )}
+          &nbsp;&nbsp;
           {currentUser && currentUser.admin === 2 && (
             <button
               type="button"
-              className="delete-account-button"
+              className="maw-ui_button error"
               onClick={() => setDeleteModalOpen(true)}
             >
               Delete Profile
@@ -376,7 +373,7 @@ function ProfilePage() {
       {/* Change Password and Delete Profile Modals */}
       <Modal
         className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        overlayClassName="maw-ui_modal-overlay"
         isOpen={passModalOpen}
         onRequestClose={() => setPassModalOpen(false)}
         contentLabel="Change Password Modal"
@@ -389,32 +386,40 @@ function ProfilePage() {
         />
         <form className="change-pass-form" onSubmit={change_password}>
           <input
-            placeholder="Enter old password"
+            placeholder="Enter old password..."
             type="password"
+            className="maw-ui_input"
             value={oldPass}
             onChange={(e) => setOldPass(e.target.value)}
           />
+          <br />
+          <br />
           <input
-            placeholder="Enter new password"
+            placeholder="Enter new password..."
             type="password"
+            className="maw-ui_input"
             value={newPass}
             onChange={(e) => setNewPass(e.target.value)}
           />
+          <br />
+          <br />
           <input
-            placeholder="Reenter new password"
+            placeholder="Reenter new password..."
             type="password"
+            className="maw-ui_input"
             value={confirmPass}
             onChange={(e) => setConfirmPass(e.target.value)}
           />
-
+          <br />
+          <br />
           <div
             className="change-pass-errorbox"
             style={{ visibility: changePassResponse ? "visible" : "hidden" }}
           >
             {changePassResponse}
           </div>
-
-          <button className="modal-button button-primary" type="submit">
+          <br />
+          <button className="maw-ui_button primary fullwidth" type="submit">
             Change password
           </button>
         </form>
@@ -422,12 +427,17 @@ function ProfilePage() {
 
       <Modal
         className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        overlayClassName="maw-ui_modal-overlay"
         isOpen={deleteModalOpen}
         onRequestClose={() => setDeleteModalOpen(false)}
         contentLabel="Delete Account Modal"
       >
-        <h1>Are you sure you want to delete this profile?</h1>
+        <h1>
+          Are you sure you want to delete this profile?
+          <br />
+          This action cannot be undone.
+        </h1>
+        <br />
         <button
           className="close-button"
           aria-label="close-button"
@@ -435,18 +445,10 @@ function ProfilePage() {
           onClick={() => setDeleteModalOpen(false)}
         />
         <div className="delete-button-container">
-          <button
-            className="modal-button small button-secondary"
-            type="button"
-            onClick={() => setDeleteModalOpen(false)}
-          >
+          <button className="maw-ui_button" type="button" onClick={() => setDeleteModalOpen(false)}>
             Cancel
           </button>
-          <button
-            className="modal-button small button-danger"
-            type="button"
-            onClick={delete_account}
-          >
+          <button className="maw-ui_button error" type="button" onClick={delete_account}>
             Delete
           </button>
         </div>
@@ -454,7 +456,7 @@ function ProfilePage() {
 
       <Modal
         className="profile-page-modal"
-        overlayClassName="profile-page-modal-overlay"
+        overlayClassName="maw-ui_modal-overlay"
         isOpen={Boolean(responseModalOpen)}
         onRequestClose={() => setResponseModalOpen()}
         contentLabel="Response"
@@ -462,7 +464,7 @@ function ProfilePage() {
         <h1>{responseModalOpen}</h1>
         <div className="delete-button-container">
           <button
-            className="modal-button small button-primary"
+            className="maw-ui_button primary"
             type="button"
             onClick={() => setResponseModalOpen()}
           >

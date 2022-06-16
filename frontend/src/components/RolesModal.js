@@ -89,7 +89,8 @@ export default function RolesModal({ open, setOpen, user, onRolesChange }) {
               Secondary Admin
             </label>
           </div>
-          <button className="modal-button button-primary" type="submit">
+          <br />
+          <button className="maw-ui_button primary fullwidth" type="submit">
             Assign
           </button>
         </form>

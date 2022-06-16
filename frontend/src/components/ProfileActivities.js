@@ -262,7 +262,7 @@ export default function ProfileActivities({ id, currId, events, updateEvents }) 
           <div className="form_prompt">Event Name</div>
           <input
             type="text"
-            placeholder="Enter event name here"
+            placeholder="Enter event name here..."
             value={eventName}
             required
             onChange={(e) => setEventName(e.target.value)}
@@ -304,7 +304,7 @@ export default function ProfileActivities({ id, currId, events, updateEvents }) 
           <div className="form_prompt">Hours</div>
           <input
             type="number"
-            placeholder="Enter number of hours volunteered here"
+            placeholder="Enter number of hours volunteered here..."
             value={eventDuration}
             min={0}
             required
@@ -312,10 +312,11 @@ export default function ProfileActivities({ id, currId, events, updateEvents }) 
           />
           <div className="form_right">
             <div className="form_spacer" />
-            <button className="modal-button button-primary" type="submit">
+            <button className="maw-ui_button primary" type="submit">
               {editing ? "Update" : "Add"}
             </button>
           </div>
+          <br />
         </form>
       </Modal>
 
@@ -328,7 +329,7 @@ export default function ProfileActivities({ id, currId, events, updateEvents }) 
       >
         <h3>Unable to Perform Action</h3>
         <button
-          className="modal-button button-primary"
+          className="maw-ui_button primary"
           type="button"
           onClick={() => setErrorModalOpen(false)}
         >
