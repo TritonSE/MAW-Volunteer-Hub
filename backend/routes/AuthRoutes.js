@@ -104,7 +104,11 @@ router.post("/reset", validate(["code", "password"]), (req, res) =>
   UserModel.findOne({ resetCode: req.body.code })
     .then((user) => {
       // Reset code is valid for 30 minutes
-      if (!user || Date.now() - user.resetDate.getTime() > 1.8e6) {
+      if (
+        !user ||
+        req.body.code.trim() === "" ||
+        Date.now() - user.resetDate.getTime() > 30 * 60 * 1000
+      ) {
         throw new URIError("Email link expired, please return to login.");
       } else {
         user.resetCode = "";

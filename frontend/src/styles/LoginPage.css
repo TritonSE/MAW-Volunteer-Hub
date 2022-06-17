@@ -98,6 +98,17 @@
   padding: 0;
   float: left;
 }
+.login button.underline {
+  display: inline;
+  width: unset;
+  height: unset;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  color: black;
+  font-size: 12px;
+}
 
 .login_password {
   height: calc(60px - 14px);

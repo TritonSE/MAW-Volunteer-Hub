@@ -237,9 +237,9 @@ function LoginPage() {
               />
               Keep me signed in
             </label>
-            <a href="#forgot" onClick={() => setFormFlow(2)}>
+            <button type="button" className="underline" onClick={() => setFormFlow(2)}>
               Forgot password
-            </a>
+            </button>
             <span>&nbsp;</span>
           </div>
           <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>

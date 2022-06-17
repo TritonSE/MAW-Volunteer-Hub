@@ -62,35 +62,45 @@ export default function ResetPage() {
 
   return (
     <div className="reset_page">
-      <form className="box column" onSubmit={handle_submit} method="POST">
-        {flowState === 0 ? (
-          <>
-            <div className="center column">
-              <div className="icon" />
-              <h2>Reset Password</h2>
-            </div>
-            <PasswordField
-              name="password"
-              placeholder="New password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <PasswordField
-              placeholder="Re-enter new password"
-              onChange={(e) => setCPass(e.target.value)}
-            />
-            <div className={`errorbox center ${errorMessage ? "" : "hidden"}`}>{errorMessage}</div>
-            <div className="fill" />
-            <button
-              type="submit"
-              className="maw-ui_button primary fullwidth"
-              disabled={!validate()}
-            >
-              Reset
-            </button>
-          </>
-        ) : (
+      <form className="box" onSubmit={handle_submit} method="POST">
+        <div
+          className="slider column fullheight"
+          style={{
+            right: flowState === 0 ? "0" : "350px",
+          }}
+        >
+          <div className="center column">
+            <div className="icon" />
+            <h2>Reset Password</h2>
+          </div>
+          <PasswordField
+            name="password"
+            placeholder="New password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <PasswordField
+            placeholder="Re-enter new password"
+            onChange={(e) => setCPass(e.target.value)}
+          />
+          <div
+            className="errorbox center"
+            style={{ visibility: errorMessage ? "visible" : "hidden" }}
+          >
+            {errorMessage}
+          </div>
+          <button type="submit" className="maw-ui_button primary fullwidth" disabled={!validate()}>
+            Reset
+          </button>
+        </div>
+        <div
+          className="slider column fullheight"
+          style={{
+            top: "-300px",
+            left: flowState === 0 ? "350px" : "0",
+          }}
+        >
           <div className="center column fullheight">
-            <h2>Success!</h2>
+            <h2>Successfully changed password!</h2>
             <br />
             <a href={SITE_PAGES.LOGIN}>
               <button type="button" className="maw-ui_button primary padded">
@@ -100,7 +110,7 @@ export default function ResetPage() {
             <br />
             <br />
           </div>
-        )}
+        </div>
       </form>
     </div>
   );
