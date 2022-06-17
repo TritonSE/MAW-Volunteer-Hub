@@ -128,7 +128,7 @@
 .login_flex_center {
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex: 1;
 }
 
 .login_flex_center input[type="checkbox"] {

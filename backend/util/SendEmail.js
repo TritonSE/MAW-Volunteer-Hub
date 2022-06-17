@@ -144,4 +144,49 @@ module.exports = {
 
     return res;
   },
+
+  reset: async (user) => {
+    const html = `
+      <div>
+        Dear ${user.name.split(" ")[0]},
+        <br />
+        <br />
+        Your Make-A-Wish San Diego password request was received successfully. The following link is valid for 30 minutes, after
+        which you must request a new one.
+        <br />
+        <br />
+        <a href="${config.app.frontend_url}/reset/${
+      user.resetCode
+    }" target="_blank">Click here to reset your password.</a>
+        <br />
+        <br />
+        Thanks,
+        <br />
+        MAW SD
+      </div>
+    `;
+
+    const text = `
+      Dear ${user.name.split(" ")[0]},
+
+      Your Make-A-Wish San Diego password request was received successfully. The following link is valid for 30 minutes, after
+      which you must request a new one.
+
+      Please go to the following address to reset your password: ${config.app.frontend_url}/reset/${
+      user.resetCode
+    }
+
+      Thanks,
+      MAW SD
+    `;
+
+    const res = await transporter.sendMail({
+      to: user.email,
+      subject: "Your Make-A-Wish San Diego password reset request",
+      html,
+      text,
+    });
+
+    return res;
+  },
 };
