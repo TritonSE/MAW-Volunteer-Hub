@@ -8,7 +8,7 @@ function PasswordField({ name, placeholder, onChange }) {
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <div className="maw-ui_input">
+    <div className="password">
       <input
         name={name}
         placeholder={placeholder}
@@ -25,7 +25,7 @@ function PasswordField({ name, placeholder, onChange }) {
         <img
           alt="Toggle password visibility"
           src={isVisible ? "/img/login_visible.svg" : "/img/login_notvisible.svg"}
-          className={"login_password_eye" + (isVisible ? " visible" : "")}
+          className={"eye" + (isVisible ? " visible" : "")}
         />
       </button>
     </div>

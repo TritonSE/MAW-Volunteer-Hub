@@ -38,17 +38,32 @@
   background-size: 25px;
 }
 
+.reset_page .password {
+  display: flex;
+  height: calc(60px - 14px);
+}
+
 .reset_page button.unstyled {
+  width: 0;
+  height: 0;
+  border: 0;
   background: transparent;
-  border: none;
   margin: 0;
   padding: 0;
-  position: relative;
-  bottom: 30px;
-  right: 50px;
+  float: left;
 }
 .reset_page button.padded {
   padding: 0 15px;
+}
+
+.reset_page button.unstyled .eye {
+  display: block;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 6px;
+  right: 22px;
+  cursor: pointer;
 }
 
 .reset_page .errorbox {
@@ -59,4 +74,10 @@
   font-size: 10pt;
   flex: 1;
   margin-bottom: 16px;
+}
+
+@media only screen and (max-width: 450px) {
+  .reset_page .box {
+    margin: 0;
+  }
 }
