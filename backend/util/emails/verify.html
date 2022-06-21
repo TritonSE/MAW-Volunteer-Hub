@@ -28,15 +28,13 @@
       }
 
       .message {
-        margin: 50px 100px;
-        color: black !important;
-      }
-      .message-notop {
-        margin: 25px 100px 50px;
+        max-width: 800px;
+        width: 90%;
+        margin: 50px auto;
         color: black !important;
       }
 
-      a {
+      a.button {
         min-width: 103px;
         min-height: 26px;
         background: #1a68bf;
@@ -48,6 +46,7 @@
         font-weight: normal;
         text-decoration: none;
         padding: 10px 12px;
+        white-space: nowrap;
       }
 
       .footer {
@@ -79,12 +78,12 @@
       </tr>
       <tr>
         <td align="center">
-          <a href="%s/login" target="_blank"> Click Here to Log In </a>
+          <a class="button" href="%s/login" target="_blank">Click Here to Log In</a>
         </td>
       </tr>
       <tr>
         <td>
-          <div class="message-notop">
+          <div class="message">
             Thanks,
             <br />
             MAW SD
