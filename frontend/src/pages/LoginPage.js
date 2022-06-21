@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import Modal from "react-modal";
 import { useNavigate } from "react-router-dom";
-import { api_login, api_signup } from "../api";
+import { api_login, api_signup, api_forgot } from "../api";
 import { SITE_PAGES } from "../constants/links";
 import { CurrentUser } from "../components/Contexts";
 import "../index.css";
@@ -39,9 +39,10 @@ function PasswordField({ name, placeholder, className, onChange }) {
 function LoginPage() {
   const [_currentUser, setCurrentUser] = useContext(CurrentUser);
 
-  const [isLogin, setIsLogin] = useState(true);
+  // 0 is login, 1 is signup, 2 is forgotten password
+  const [formFlow, setFormFlow] = useState(0);
   const [successState, setSuccessState] = useState(-1);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState([false, false, ""]);
   const [doRemember, setDoRemember] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -65,21 +66,37 @@ function LoginPage() {
     const email_regex = /\S+@\S+\.\S+/;
 
     if (!is_submit) {
-      if (isLogin) return email_regex.test(email) && password;
-      return name && email_regex.test(email) && password && rpassword && password === rpassword;
+      switch (formFlow) {
+        case 0:
+          return email_regex.test(email) && password;
+        case 1:
+          return name && email_regex.test(email) && password && rpassword && password === rpassword;
+        case 2:
+          return email_regex.test(email);
+      }
     }
 
-    let errors_obj = {
-      email: !email_regex.test(email),
-      password: !password.trim(),
-    };
+    let errors_obj = {};
 
-    if (!isLogin) {
-      errors_obj = {
-        name: !name.trim(),
-        ...errors_obj,
-        rpassword: !rpassword.trim() || password !== rpassword,
-      };
+    switch (formFlow) {
+      case 0:
+        errors_obj = {
+          email: !email_regex.test(email),
+          password: !password.trim(),
+        };
+        break;
+      case 1:
+        errors_obj = {
+          name: !name.trim(),
+          ...errors_obj,
+          rpassword: !rpassword.trim() || password !== rpassword,
+        };
+        break;
+      case 2:
+        errors_obj = {
+          email: !email_regex.test(email),
+        };
+        break;
     }
 
     setErrors(errors_obj);
@@ -95,25 +112,49 @@ function LoginPage() {
       const formdata = Object.fromEntries(new FormData(e.target).entries());
 
       setIsWaiting(true);
-      const res = await (isLogin ? api_login(formdata) : api_signup(formdata));
+
+      const res = await [api_login, api_signup, api_forgot][formFlow](formdata);
       const success = Boolean(res && res.success);
       setIsWaiting(false);
 
-      if (isLogin) {
-        setSuccessState(success);
+      switch (formFlow) {
+        case 0:
+          setSuccessState(success);
 
-        if (res.user) {
-          setCurrentUser(res.user);
-          window.scrollTo(0, 0);
-          navigate(SITE_PAGES.HOME);
-        } else {
-          setErrorMessage(res.error);
-        }
-      } else {
-        setSuccessState(-1);
-
-        // api.js guarantees that res will have an error object on failure
-        setModalOpen(success ? true : res.error);
+          if (res.user) {
+            setCurrentUser(res.user);
+            window.scrollTo(0, 0);
+            navigate(SITE_PAGES.HOME);
+          } else {
+            setErrorMessage(res.error);
+          }
+          break;
+        case 1:
+          setSuccessState(-1);
+          setModalOpen(
+            success
+              ? [
+                  true,
+                  false,
+                  "Your account has been created! You should receive a sign-up confirmation email shortly. Once an administrator confirms, you will be notified via email and be able to access the website.",
+                ]
+              : [true, true, res.error]
+          );
+          break;
+        case 2:
+          if (success) {
+            setSuccessState(-1);
+            setFormFlow(0);
+            setModalOpen([
+              true,
+              false,
+              "Password reset requested successfully! You should receive a confirmation email shortly. Please follow the steps within it to reset your password.",
+            ]);
+          } else {
+            setSuccessState(0);
+            setErrorMessage(res?.error ? res.error : "Internal server error, please try again.");
+          }
+          break;
       }
     }
   }
@@ -135,7 +176,7 @@ function LoginPage() {
             name="name"
             placeholder="Full Name"
             className={`
-              ${isLogin ? "hidden" : ""}
+              ${formFlow !== 1 ? "hidden" : ""}
               ${errors.name ? "error" : ""}
             `}
             onChange={(e) => setName(e.target.value)}
@@ -146,14 +187,13 @@ function LoginPage() {
             placeholder="Email"
             type="email"
             className={`
-              ${isLogin ? "" : "adjust-margin"}
               ${errors.email ? "error" : ""}
             `}
             onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setTooltipVisible(true)}
             onBlur={() => setTooltipVisible(false)}
           />
-          {!isLogin && (
+          {formFlow === 1 && (
             <div
               className="disclaimer_tooltip"
               style={{
@@ -169,6 +209,7 @@ function LoginPage() {
           <PasswordField
             name="password"
             className={`
+              ${formFlow === 2 ? "hidden" : ""}
               ${errors.password ? "error" : ""}
             `}
             placeholder="Password"
@@ -178,14 +219,14 @@ function LoginPage() {
 
           <PasswordField
             className={`
-              ${isLogin ? "hidden" : ""}
+              ${formFlow !== 1 ? "hidden" : ""}
               ${errors.rpassword ? "error" : ""}
             `}
             placeholder="Re-enter password"
             type="password"
             onChange={(e) => setRPassword(e.target.value)}
           />
-          <div className={"login_flex" + (isLogin ? "" : " hidden")}>
+          <div className={"login_flex" + (formFlow === 0 ? "" : " hidden")}>
             <label htmlFor="remember" className="login_flex_center login_pointer">
               <input
                 type="checkbox"
@@ -196,44 +237,51 @@ function LoginPage() {
               />
               Keep me signed in
             </label>
-            {/* <a href="#forgot">Forgot password</a> */}
+            <button type="button" className="underline" onClick={() => setFormFlow(2)}>
+              Forgot password
+            </button>
             <span>&nbsp;</span>
           </div>
           <button type="submit" disabled={!validate()} className={isWaiting ? "waiting" : ""}>
-            {isLogin ? "Login" : "Create new account"}
+            {["Login", "Create new account", "Send link to email"][formFlow]}
           </button>
         </div>
-        {isLogin && !successState ? <div className="login_errorbox">{errorMessage}</div> : null}
-        <button type="button" className="login_switch" onClick={() => setIsLogin(!isLogin)}>
-          {isLogin ? "Create new account" : "I already have an account"}
+        {formFlow !== 1 && !successState ? (
+          <div className="login_errorbox">{errorMessage}</div>
+        ) : null}
+        <button
+          type="button"
+          className="login_switch"
+          onClick={() => {
+            if (formFlow === 0) setFormFlow(1);
+            else setFormFlow(0);
+          }}
+        >
+          {["Create new account", "I already have an account", "Return to login"][formFlow]}
         </button>
       </form>
 
       <Modal
-        isOpen={Boolean(modalOpen)}
-        onRequestClose={() => setModalOpen(false)}
+        isOpen={Boolean(modalOpen[0])}
+        onRequestClose={() => setModalOpen([false, false, ""])}
         className="login_react_modal"
       >
         <div className="login_flex login_form login_modal">
           <div className="login_flex nomargin">
-            {modalOpen === true ? <div>&nbsp;</div> : <h3>Error</h3>}
+            {!modalOpen[1] ? <div>&nbsp;</div> : <h3>Error</h3>}
             <button
               type="button"
               className="login_button_unstyled"
-              onClick={() => setModalOpen(false)}
+              onClick={() => setModalOpen([false, false, ""])}
             >
               <img src="/img/close-modal.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="login_modal_content">
-            {modalOpen === true
-              ? "Your account has been created! You should receive a sign-up confirmation email shortly. Once an administrator confirms, you will be notified via email and be able to access the website."
-              : modalOpen}
-          </div>
+          <div className="login_modal_content">{modalOpen[2]}</div>
           <button
             type="button"
             className="maw-ui_button primary"
-            onClick={() => setModalOpen(false)}
+            onClick={() => setModalOpen([false, false, ""])}
           >
             Okay
           </button>

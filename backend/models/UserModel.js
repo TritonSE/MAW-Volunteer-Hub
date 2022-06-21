@@ -64,6 +64,14 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       // required: true
     },
+    resetCode: {
+      type: String,
+      default: "",
+    },
+    resetDate: {
+      type: Date,
+      default: new Date(0),
+    },
     /**
      * EVENTS
      */

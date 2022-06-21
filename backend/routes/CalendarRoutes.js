@@ -14,21 +14,27 @@ const populate = (event) =>
   });
 
 const bulk_modify = (event, remove = false) => {
-  const bulk = UserModel.collection.initializeUnorderedBulkOp();
+  const atts = [];
   const op = {};
   op[remove ? "$pull" : "$addToSet"] = {
     events: event._id,
   };
 
-  (event?.attendees ?? []).forEach(({ volunteer }) => {
-    bulk.find.updateOne(
-      {
-        _id: volunteer,
-      },
-      op
-    );
+  Array.from(event.repetitions.values()).forEach((rep) => {
+    atts.push(...Array.from(rep.attendees.values()).map((att) => att.volunteer));
   });
-  return event?.attendees?.length > 0 ? bulk.execute() : null;
+
+  return UserModel.updateMany(
+    {
+      _id: {
+        $in: atts,
+      },
+    },
+    op,
+    {
+      multi: true,
+    }
+  );
 };
 
 router.get("/all", (req, res) =>
@@ -123,13 +129,17 @@ router.put(
 
 router.delete("/del/:id", idParamValidator(false, "event"), adminValidator, (req, res) =>
   EventModel.findByIdAndDelete(req.params.id)
-    .then(() => res.json({ success: true }))
+    .then((event) => {
+      res.json({ success: true });
+      return bulk_modify(event, true);
+    })
     .catch(errorHandler(res))
 );
 
 router.patch("/upd/:id", idParamValidator(false, "event"), adminValidator, (req, res) =>
   populate(EventModel.findById(req.params.id))
-    .then((event) => {
+    .then((event) => Promise.all([event, bulk_modify(event, true)]))
+    .then(([event]) => {
       /*
        * Note: mongoose strict mode is enabled by default, meaning any
        *   properties passed via req.body that are not listed in the

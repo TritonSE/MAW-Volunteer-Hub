@@ -10,6 +10,7 @@ import {
 } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
+import ResetPage from "./pages/ResetPage";
 import ProfilePage from "./pages/ProfilePage";
 import WishGrantingPage from "./pages/WishGrantingPage";
 import Custom404Page from "./pages/Custom404Page";
@@ -81,6 +82,9 @@ function App() {
       <Routes>
         {/* Log In Page */}
         <Route exact path={SITE_PAGES.LOGIN} element={<LoginPage />} />
+
+        {/* Password Reset Page */}
+        <Route path={`${SITE_PAGES.RESET}/:code`} element={<ResetPage />} />
 
         <Route exact path="/" element={<ProtectedRoute />}>
           {/* Profile Page */}
