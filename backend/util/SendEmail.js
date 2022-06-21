@@ -112,6 +112,7 @@ module.exports = {
         roles.join(", "),
         html,
         user.email,
+        config.app.frontend_url,
         config.app.frontend_url
       ),
       text,
