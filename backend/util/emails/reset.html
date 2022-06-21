@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Your Password Reset Request - Make-A-Wish San Diego</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap");
+
+      * {
+        font-family: "Lato", sans-serif !important;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #f7f7f7;
+      }
+
+      .header {
+        width: 100%;
+        background: linear-gradient(90deg, #487db9 -1.35%, #3975b8 52.84%, #0459b8 102.69%);
+        padding: 10px 0;
+      }
+
+      .header img.logo {
+        width: 200px;
+      }
+
+      .message {
+        margin: 50px 100px;
+        color: black !important;
+      }
+
+      a {
+        min-width: 103px;
+        min-height: 26px;
+        background: #1a68bf;
+        color: white !important;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 3px;
+        font-family: "Lato", sans-serif;
+        font-weight: normal;
+        text-decoration: none;
+        padding: 10px 12px;
+      }
+
+      .footer {
+        background: #bbbcbc;
+        font-size: 12px;
+        color: #555555;
+        padding: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center">
+          <div class="header">
+            <img class="logo" src="cid:maw_logo" alt="Make-A-Wish Logo" />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="message">
+            Dear %s,
+            <br />
+            <br />
+            Your Make-A-Wish San Diego password request was received successfully. The following
+            link is valid for 30 minutes, after which you must request a new one.
+            <br />
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <a href="%s/reset/%s" target="_blank"> Click Here to Reset Your Password </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="message">
+            Thanks,
+            <br />
+            MAW SD
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <div class="footer">
+            Make-A-Wish San Diego
+            <br />
+            4995 Murphy Canyon Rd.
+            <br />
+            Suite 402
+            <br />
+            San Diego, CA 92123
+          </div>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

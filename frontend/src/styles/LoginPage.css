@@ -98,6 +98,17 @@
   padding: 0;
   float: left;
 }
+.login button.underline {
+  display: inline;
+  width: unset;
+  height: unset;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  color: black;
+  font-size: 12px;
+}
 
 .login_password {
   height: calc(60px - 14px);
@@ -128,7 +139,7 @@
 .login_flex_center {
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex: 1;
 }
 
 .login_flex_center input[type="checkbox"] {

@@ -59,7 +59,7 @@ router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, re
     .then(() => res.json({ success: true }))
     .catch((err) => {
       if (err instanceof URIError) res.json({ error: err.message });
-      else errorHandler(res);
+      else errorHandler(res)(err);
     })
 );
 
@@ -224,7 +224,7 @@ router.patch(
       .then(() => res.json({ success: true }))
       .catch((err) => {
         if (err instanceof URIError) res.json({ error: err.message });
-        else errorHandler(res);
+        else errorHandler(res)(err);
       });
   }
 );

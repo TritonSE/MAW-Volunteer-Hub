@@ -78,6 +78,14 @@ const api_signup = async ({ name, email, password }) =>
     error: "Unable to connect to server, please try again.",
   };
 
+const api_forgot = async ({ email }) =>
+  (await api_call(API_ENDPOINTS.FORGOT, { data: { email } })) ?? {
+    error: "Unable to connect to server, please try again.",
+  };
+
+const api_reset = async ({ code, password }) =>
+  api_call(API_ENDPOINTS.RESET, { data: { code, password } });
+
 const api_signout = async () => api_call(API_ENDPOINTS.SIGNOUT);
 
 /**
@@ -260,6 +268,8 @@ export {
   api_validtoken,
   api_login,
   api_signup,
+  api_forgot,
+  api_reset,
   api_signout,
   api_file_upload,
   api_file_delete,

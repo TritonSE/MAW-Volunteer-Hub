@@ -2,6 +2,7 @@
 const SITE_PAGES = {
   HOME: "/",
   LOGIN: "/login",
+  RESET: "/reset",
   WISH_GRANTING: "/wish-granting",
   PROFILE: "/profile",
   MANAGE: "/manage",
@@ -13,6 +14,8 @@ const SITE_PAGES = {
 const API_ENDPOINTS = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/signup",
+  FORGOT: "/auth/forgot",
+  RESET: "/auth/reset",
   SIGNOUT: "/auth/signout",
   TOKEN: "/auth/token",
 
