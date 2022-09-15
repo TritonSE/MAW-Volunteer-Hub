@@ -20,6 +20,7 @@ import WishStep from "./components/WishStep";
 import { CurrentUser } from "./components/Contexts";
 import HomePage from "./pages/HomePage";
 import ContactCard from "./components/ContactCard";
+import { ContactUsPage } from "./pages/ContactUsPage";
 
 import "./App.css";
 
@@ -166,7 +167,7 @@ function App() {
             path="*"
             element={
               <PageLayout>
-                <Custom404Page />
+                <ContactUsPage />
               </PageLayout>
             }
           />

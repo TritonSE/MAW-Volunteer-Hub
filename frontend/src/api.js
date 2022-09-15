@@ -171,6 +171,8 @@ const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method
 const api_wish_wednesday_add = (message) =>
   api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
 
+const api_contacts = () => api_call(API_ENDPOINTS.CONTACTS, { method: "GET" });
+
 export {
   api_validtoken,
   api_login,
@@ -197,4 +199,5 @@ export {
   api_pfp_upload,
   api_wish_wednesday,
   api_wish_wednesday_add,
+  api_contacts,
 };

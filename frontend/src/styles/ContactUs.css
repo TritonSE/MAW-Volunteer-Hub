@@ -1,0 +1,51 @@
+.Contacts {
+  margin-left: 50px;
+  align-self: flex-start;
+  display: flex;
+  width: calc(30px + 228px + 228px + 76px + 20px);
+  height: inherit;
+  flex-flow: row wrap;
+}
+
+.titles {
+  display: flex;
+  width: 90%;
+  height: inherit;
+  justify-content: space-between;
+}
+
+.title_Contacts {
+  align-self: flex-start;
+  width: calc(30px + 228px + 228px + 76px - 33px);
+  display: flex;
+  justify-content: space-between;
+  height: inherit;
+}
+
+.title_Contacts > div {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  margin-left: 10px;
+}
+
+.title_Contacts > Button {
+  width: 142px;
+  height: 30px;
+  box-sizing: border-box;
+  border: none;
+  background: #1a68bf;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #ffffff;
+}

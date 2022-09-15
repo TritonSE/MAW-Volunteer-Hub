@@ -16,6 +16,7 @@ const userRoutes = require("./routes/UserRoutes");
 const fileRoutes = require("./routes/FileRoutes");
 const categoryRoutes = require("./routes/CategoryRoutes");
 const WishWedRoutes = require("./routes/WishWedRoutes");
+const contactRoutes = require("./routes/ContactRoutes");
 
 const rateLimiter = require("./middleware/RateLimiter");
 
@@ -41,6 +42,7 @@ app.use("/user", jwt_middleware, userRoutes);
 app.use("/file", jwt_middleware, fileRoutes);
 app.use("/category", jwt_middleware, categoryRoutes);
 app.use("/wishwed", jwt_middleware, WishWedRoutes);
+app.use("/contact", jwt_middleware, contactRoutes);
 
 app.get(["/", "/*"], (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));

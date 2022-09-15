@@ -8,7 +8,7 @@ main {
 
 .contact_card {
   position: relative;
-  border: solid 2px;
+  border: solid 1px;
   width: 227px;
   height: 369px;
   z-index: 0;
@@ -26,21 +26,26 @@ main {
 }
 
 .delete {
-  position: absolute;
-  width: 12.39px;
-  height: 12.39px;
-  left: 32px;
-  top: 3%;
+  position: relative;
+  margin-left: 10px;
+  margin-top: 8px;
+  border: none;
+  background: none;
+  width: 13px;
+  height: 13px;
   cursor: pointer;
   z-index: 2;
 }
 
 .contact_icon {
-  position: absolute;
+  /* position: absolute;
   left: 19.74%;
   right: 19.74%;
   top: 10.6%;
-  bottom: 51.9%;
+  bottom: 51.9%; */
+  position: relative;
+  display: flex;
+  margin: 0 auto;
   z-index: 2;
 }
 
@@ -55,10 +60,8 @@ main {
 }
 
 .card_name {
-  position: absolute;
-  left: 25.44%;
-  margin-bottom: 4px;
-  top: 54.62%;
+  justify-self: center;
+  margin-top: 24px;
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -68,15 +71,8 @@ main {
   color: #000000;
 }
 
-.grid1 {
-  position: relative;
-  top: 61.32%;
-  display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto auto;
-}
-
-.grid1 > div {
+.position {
+  justify-self: center;
   font-style: normal;
   font-weight: 250;
   font-size: 14px;
@@ -85,15 +81,12 @@ main {
   color: #000000;
 }
 
-.grid2 {
-  position: absolute;
-  left: 10%;
-  top: 82.35%;
-  grid-template-rows: 17px 17px;
-  grid-gap: 10px;
+#pos1 {
+  margin-top: 10px;
 }
 
-.grid2 > div {
+.info {
+  justify-self: flex-start;
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
@@ -102,6 +95,11 @@ main {
   text-decoration-line: underline;
   margin-bottom: 18px;
   color: #000000;
+  margin-left: 30px;
+}
+
+#info1 {
+  margin-top: 25px;
 }
 
 .whotocard {
