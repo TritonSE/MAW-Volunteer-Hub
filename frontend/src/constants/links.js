@@ -44,6 +44,7 @@ const API_ENDPOINTS = {
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 
   CONTACTS: "/contact/all",
+  CONTACTS_ADD: "/contact/add",
 };
 
 const SIDENAV_STEPS = [

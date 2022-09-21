@@ -171,7 +171,22 @@ const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method
 const api_wish_wednesday_add = (message) =>
   api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
 
+/**
+ * CONTACT CARD
+ */
 const api_contacts = () => api_call(API_ENDPOINTS.CONTACTS, { method: "GET" });
+
+const api_contacts_add = (name, position, organization, email, phone) =>
+  api_call(API_ENDPOINTS.CONTACTS_ADD, {
+    method: "POST",
+    data: {
+      name,
+      position,
+      organization,
+      email,
+      phone,
+    },
+  });
 
 export {
   api_validtoken,
@@ -200,4 +215,5 @@ export {
   api_wish_wednesday,
   api_wish_wednesday_add,
   api_contacts,
+  api_contacts_add,
 };
