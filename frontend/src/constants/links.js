@@ -7,6 +7,7 @@ const SITE_PAGES = {
   PROFILE: "/profile",
   MANAGE: "/manage",
   CALENDAR: "/calendar",
+  RESOURCES: "/resources",
 
   SIGNOUT: "/signout",
 };
@@ -78,6 +79,24 @@ const SIDENAV_ROUTES = [
   "wish-closeout",
 ];
 
+const RESOURCES_SIDENAV_STEPS = [
+  "Wish Granter Refreshers",
+  "Wish Policy Updates",
+  "Chapter Trainings",
+  "Make-A-Wish University",
+  "Make-A-Wish Foundation History",
+  "Other",
+];
+
+const RESOURCES_SIDENAV_ROUTES = [
+  "refreshers",
+  "updates",
+  "trainings",
+  "university",
+  "history",
+  "other",
+];
+
 // re add message when completed
 // const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 // const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
@@ -85,4 +104,13 @@ const SIDENAV_ROUTES = [
 const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 const MANAGE_ROUTES = ["people", "message", "wish-wednesday"];
 
-export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };
+export {
+  SITE_PAGES,
+  API_ENDPOINTS,
+  SIDENAV_STEPS,
+  SIDENAV_ROUTES,
+  MANAGE_STEPS,
+  MANAGE_ROUTES,
+  RESOURCES_SIDENAV_ROUTES,
+  RESOURCES_SIDENAV_STEPS,
+};

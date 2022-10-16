@@ -11,16 +11,23 @@
   width: 100%;
   height: 171px;
   background-color: rgba(16, 16, 16, 0.65);
-  /*
-   * TODO: Different steps' pages should probably have different backgrounds,
-   *   need to ask designers
-   */
-  background-image: url("../../public/img/wishgranting_back.png");
   background-blend-mode: darken;
   background-size: cover;
   display: flex;
   align-items: center;
   margin-bottom: 24px;
+}
+
+/**
+ * Different background images for different pages
+ */
+
+.wishgranting_back {
+  background-image: url("../../public/img/wishgranting_back.png");
+}
+
+.resources_back {
+  background-image: url("../../public/img/resources_back.png");
 }
 
 .wishgranting_title {
