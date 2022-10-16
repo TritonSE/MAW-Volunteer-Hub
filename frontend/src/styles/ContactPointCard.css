@@ -1,0 +1,71 @@
+.conptcard_background {
+  background-color: white;
+  box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 2px;
+  aspect-ratio: 1 / 1;
+  width: 25vw;
+}
+
+.conptcard_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 20px 10px 20px;
+}
+
+.conptcard_step_num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 8px 10px 40px rgba(0, 87, 184, 0.1);
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  width: 5vw;
+
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 43px;
+  /* identical to box height */
+
+  color: #0057b8;
+}
+
+.conptcard_title {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  /* identical to box height */
+  text-align: center;
+  color: #0057b8;
+  padding: 0px 10px 0px 10px;
+}
+
+.conptcard_description {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+
+  color: #000000;
+  padding: 20px 30px 0px 30px;
+}
+
+.conptrcard_links {
+  display: flex;
+  justify-items: space-between;
+  flex-wrap: wrap;
+  padding: 70px 40px 30px 40px;
+}
+
+.conptrcard_links .contact_info {
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+  padding-top: 10px;
+}

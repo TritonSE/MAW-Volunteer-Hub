@@ -20,6 +20,7 @@ import ProfileRoles from "../components/ProfileRoles";
 import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
+import ContactPointCard from "../components/ContactPointCard";
 
 Modal.setAppElement(document.getElementById("root"));
 
@@ -605,6 +606,7 @@ function ProfilePage() {
           "Loading..."
         )}
       </div>
+      <ContactPointCard />
     </div>
   );
 }
