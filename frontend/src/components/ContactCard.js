@@ -1,16 +1,16 @@
 import "../styles/ContactCard.css";
 import React from "react";
 
-function ContactCard({ Name, Position, Org, Email, Phone }) {
+function ContactCard({ Id, Name, Position, Org, Email, Phone, Delete, Edit }) {
   const Mailto = "mailto:" + Email;
   return (
     <div>
       <main>
         <div className="contact_card">
-          <button type="submit">
+          <button type="button" onClick={() => Edit()}>
             <img className="edit" src="/img/edit_icon2.svg" />
           </button>
-          <button className="delete" type="submit">
+          <button className="delete" type="button" onClick={() => Delete()}>
             <img src="/img/delete_icon2.svg" />
           </button>
           <div className="card_back" />

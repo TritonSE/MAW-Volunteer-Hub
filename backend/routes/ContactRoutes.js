@@ -38,4 +38,20 @@ router.delete("/delete/:id", idParamValidator(), (req, res) =>
     .catch(errorHandler(res))
 );
 
+router.patch("/edit/:id", idParamValidator(), (req, res) => {
+  Contact.findById(req.params.id)
+    .then((contact) => {
+      Object.assign(contact, {
+        name: req.body.updated_name ? req.body.updated_name : contact.name,
+        position: req.body.updated_position ? req.body.updated_position : contact.position,
+        organization: req.body.updated_org ? req.body.updated_org : contact.organization,
+        email: req.body.updated_email ? req.body.updated_email : contact.email,
+        phone: req.body.updated_phone ? req.body.updated_phone : contact.phone,
+      });
+      contact.save();
+    })
+    .then(() => res.json({ success: true }))
+    .catch(errorHandler(res));
+});
+
 module.exports = router;

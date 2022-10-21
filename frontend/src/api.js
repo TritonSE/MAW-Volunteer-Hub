@@ -188,6 +188,22 @@ const api_contacts_add = (name, position, organization, email, phone) =>
     },
   });
 
+const api_contacts_delete = (id) => {
+  api_call(`${API_ENDPOINTS.CONTACTS_DELETE}/${id}`, { method: "DELETE" });
+};
+
+const api_contacts_edit = (id, name, email, phone, org, position) =>
+  api_call(`${API_ENDPOINTS.CONTACTS_EDIT}/${id}`, {
+    method: "PATCH",
+    data: {
+      updated_name: name,
+      updated_email: email,
+      updated_phone: phone,
+      updated_org: org,
+      updated_position: position,
+    },
+  });
+
 export {
   api_validtoken,
   api_login,
@@ -216,4 +232,6 @@ export {
   api_wish_wednesday_add,
   api_contacts,
   api_contacts_add,
+  api_contacts_delete,
+  api_contacts_edit,
 };
