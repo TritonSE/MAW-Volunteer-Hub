@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "../styles/EditContactModal.css";
 
-function ContactCardInfoSection({ name, phone, index, submit }) {
+function ContactCardInfoSection({ name, phone, index, submit, setSubmit }) {
   const [contactName, setContactName] = useState(name);
   const [contactPhone, setContactPhone] = useState(phone);
 
@@ -10,6 +10,7 @@ function ContactCardInfoSection({ name, phone, index, submit }) {
     if (submit) {
       console.log("ContactName" + (index + 1) + ": " + contactName);
       console.log("ContactPhone" + (index + 1) + ": " + contactPhone);
+      setSubmit(false);
     }
   }, [submit]);
 
@@ -104,6 +105,7 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
               phone={contact.phone}
               index={i}
               submit={submitValues}
+              setSubmit={setSubmitValues}
             />
           ))}
         </div>

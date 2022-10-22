@@ -3,7 +3,7 @@
   box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.15);
   border-radius: 2px;
   aspect-ratio: 1 / 1;
-  width: 25vw;
+  width: 35vw;
 }
 
 .conptcard_header {
@@ -59,8 +59,9 @@
 .conptrcard_links {
   display: flex;
   justify-items: space-between;
+  position: relative;
   flex-wrap: wrap;
-  padding: 70px 40px 30px 40px;
+  padding: 25vh 40px 3vh 40px;
 }
 
 .conptrcard_links .contact_info {
