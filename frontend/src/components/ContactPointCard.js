@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/ContactPointCard.css";
+import EditContactModal from "./EditContactModal";
 
 function ContactPointCard() {
+  const [editModalOpen, setEditModalOpen] = useState(false);
   /**
    * Input Needed:
    * 1). Step Number
@@ -27,7 +29,7 @@ function ContactPointCard() {
     <div className="conptcard_background">
       <div className="conptcard_header">
         <div className="conptcard_step_num">1</div>
-        <button className="edit-button" type="submit">
+        <button className="edit-button" type="button" onClick={() => setEditModalOpen(true)}>
           <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
         </button>
       </div>
@@ -47,6 +49,11 @@ function ContactPointCard() {
           </div>
         ))}
       </div>
+      <EditContactModal
+        open={editModalOpen}
+        setOpen={setEditModalOpen}
+        contactInput={[{ name: "James", phone: "x1000" }]}
+      />
     </div>
   );
 }
