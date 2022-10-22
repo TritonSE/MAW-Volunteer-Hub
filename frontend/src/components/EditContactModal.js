@@ -1,18 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Modal from "react-modal";
 import "../styles/EditContactModal.css";
 
-function ContactCardInfoSection({ name, phone, index, submit, setSubmit }) {
+function ContactCardInfoSection({ name, phone, index, updateName, updatePhone }) {
   const [contactName, setContactName] = useState(name);
   const [contactPhone, setContactPhone] = useState(phone);
 
-  useEffect(() => {
-    if (submit) {
-      console.log("ContactName" + (index + 1) + ": " + contactName);
-      console.log("ContactPhone" + (index + 1) + ": " + contactPhone);
-      setSubmit(false);
-    }
-  }, [submit]);
+  const handleContactChange = (nameVal) => {
+    setContactName(nameVal);
+    updateName(nameVal, index);
+  };
+
+  const handlePhoneChange = (phoneVal) => {
+    setContactPhone(phoneVal);
+    updatePhone(phoneVal, index);
+  };
 
   return (
     <div className="contact_card_info">
@@ -22,7 +24,7 @@ function ContactCardInfoSection({ name, phone, index, submit, setSubmit }) {
         placeholder="Full name here"
         value={contactName}
         onChange={(e) => {
-          setContactName(e.target.value);
+          handleContactChange(e.target.value);
         }}
       />
       <div className="phone_info_label">Phone Extension {index + 1}</div>
@@ -31,7 +33,7 @@ function ContactCardInfoSection({ name, phone, index, submit, setSubmit }) {
         placeholder="Position / role in organization"
         value={contactPhone}
         onChange={(e) => {
-          setContactPhone(e.target.value);
+          handlePhoneChange(e.target.value);
         }}
       />
     </div>
@@ -39,14 +41,11 @@ function ContactCardInfoSection({ name, phone, index, submit, setSubmit }) {
 }
 
 export default function EditContactModal({ open, setOpen, contactInput }) {
-  /**
-   * Input Needed:
-   * 1). Contact Information
-   */
   const NUM_CONTACTS = 4;
-  const [submitValues, setSubmitValues] = useState(false);
+  const [description, setDescription] = useState("");
 
-  function initContacts() {
+  // Fills in blanks for empty contacts
+  const initContacts = () => {
     const res = contactInput;
     while (res.length < NUM_CONTACTS) {
       res.push({
@@ -55,27 +54,36 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
       });
     }
     return res;
-  }
+  };
 
-  const contacts = initContacts();
+  const originalContacts = initContacts();
+  const updatedContacts = originalContacts;
 
-  function closeModal() {
-    setOpen(false);
-    setSubmitValues(false);
-  }
-
-  function handleSubmit(e) {
+  // This is the function that will talk to the backend
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitValues(true);
+    console.log("Description: " + description);
+    for (let i = 0; i < updatedContacts.length; i++) {
+      console.log(updatedContacts[i].name + " " + updatedContacts[i].phone);
+    }
     setOpen(false);
-  }
+  };
+
+  // Callbacks
+  const updateName = (nameVal, index) => {
+    updatedContacts[index].name = nameVal;
+  };
+
+  const updatePhone = (phoneVal, index) => {
+    updatedContacts[index].phone = phoneVal;
+  };
 
   return (
     <Modal
       className="edit_contacts_modal"
       overlayClassName="maw-ui_modal-overlay"
       isOpen={open}
-      onRequestClose={() => closeModal()}
+      onRequestClose={() => setOpen(false)}
       contentLabel="Add Contacts Modal"
     >
       <form className="add_contacts_form" onSubmit={(e) => handleSubmit(e)}>
@@ -85,27 +93,28 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
             className="contacts_close_button"
             aria-label="contacts_close_button"
             type="button"
-            onClick={() => closeModal()}
+            onClick={() => setOpen(false)}
           />
         </div>
         <input
           className="contact_card_description"
           type="text"
           placeholder="Contact Card Description Here"
+          value={description}
           onChange={(e) => {
-            console.log(e.target.value);
+            setDescription(e.target.value);
           }}
         />
 
         <div className="contact_card_main_section">
-          {contacts.map((contact, i) => (
+          {originalContacts.map((contact, i) => (
             <ContactCardInfoSection
               key={Math.random()}
               name={contact.name}
               phone={contact.phone}
               index={i}
-              submit={submitValues}
-              setSubmit={setSubmitValues}
+              updateName={updateName}
+              updatePhone={updatePhone}
             />
           ))}
         </div>
