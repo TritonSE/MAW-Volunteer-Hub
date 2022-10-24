@@ -17,6 +17,7 @@ const fileRoutes = require("./routes/FileRoutes");
 const categoryRoutes = require("./routes/CategoryRoutes");
 const calendarRoutes = require("./routes/CalendarRoutes");
 const wishWedRoutes = require("./routes/WishWedRoutes");
+const contactPointRoutes = require("./routes/ContactPointRoutes");
 
 const rateLimiter = require("./middleware/RateLimiter");
 
@@ -42,6 +43,7 @@ app.use("/file", jwt_middleware, fileRoutes);
 app.use("/category", jwt_middleware, categoryRoutes);
 app.use("/cal", jwt_middleware, calendarRoutes);
 app.use("/wishwed", jwt_middleware, wishWedRoutes);
+app.use("/contactpoint", contactPointRoutes);
 
 app.get(["/", "/*"], (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
