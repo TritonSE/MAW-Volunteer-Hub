@@ -12,7 +12,7 @@ function AdditionalResourcesPage() {
     document.title = "Additional Resources - Make-a-Wish San Diego";
   }, []);
 
-  return <SideNav tabs={tabs} />;
+  return <SideNav tabs={tabs} isResources />;
 }
 
 export default AdditionalResourcesPage;
