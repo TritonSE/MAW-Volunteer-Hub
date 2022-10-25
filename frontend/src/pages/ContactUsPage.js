@@ -29,8 +29,6 @@ export function ContactUsPage() {
     }
   };
 
-  // console.log(contacts[0]);
-
   const contactAdd = async (e) => {
     e.preventDefault();
 
@@ -110,15 +108,15 @@ export function ContactUsPage() {
         isOpen={addOpen}
         onRequestClose={() => setAddOpen(false)}
         contentLabel="Add Contact"
-        className="wishgranting_react_modal"
-        overlayClassName="wishgranting_react_modal"
+        className="contact_react_modal"
+        overlayClassName="contact_react_modal"
       >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
+        <div className="contact_modal">
+          <div className="contact_modal_header">
             <h3>Add Contact</h3>
             <button
               type="button"
-              className="wishgranting_modal_close"
+              className="contact_modal_close"
               onClick={() => {
                 setAddOpen(false);
               }}
@@ -126,31 +124,42 @@ export function ContactUsPage() {
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <form className="wishgranting_modal_center column" onSubmit={contactAdd}>
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
-            <br />
+          <form onSubmit={contactAdd}>
+            <label>Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Full Name here"
+            />
+            <label>Position</label>
             <input
               value={position}
               onChange={(e) => setPosition(e.target.value)}
-              placeholder="Position"
+              placeholder="Position / role in Organization"
+              type="text"
             />
-            <br />
+            <label>Organization</label>
             <input
               value={org}
               onChange={(e) => setOrg(e.target.value)}
-              placeholder="Organization"
+              placeholder="Organization here"
+              type="text"
             />
-            <br />
+            <label>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder="Email address here"
             />
-            <br />
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" />
-            <br />
-            <br />
+            <label>Phone</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
+            />
             <button type="submit">Add</button>
           </form>
         </div>
@@ -162,16 +171,16 @@ export function ContactUsPage() {
           setId("");
           setDeleteOpen(false);
         }}
-        contentLabel="Add Contact"
-        className="wishgranting_react_modal"
-        overlayClassName="wishgranting_react_modal"
+        contentLabel="DeleteContact"
+        className="contact_react_modal"
+        overlayClassName="contact_react_modal"
       >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
-            <h3>Add Contact</h3>
+        <div className="contact_modal">
+          <div className="contact_modal_header">
+            <h3>Delete Contact</h3>
             <button
               type="button"
-              className="wishgranting_modal_close"
+              className="contact_modal_close"
               onClick={() => {
                 setId("");
                 setDeleteOpen(false);
@@ -180,31 +189,27 @@ export function ContactUsPage() {
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="wishgranting_modal_center column">
-            Do you want to Delete this contact?
-            <br />
-            <br />
-            <br />
-            <button
-              type="button"
-              onClick={() => {
-                contactDelete(id);
-              }}
-            >
-              Confirm
-            </button>
-            <br />
-            <br />
-            <button
-              type="button"
-              onClick={() => {
-                setId("");
-                setDeleteOpen(false);
-              }}
-            >
-              Cancel
-            </button>
-            <br />
+          <div className="column">
+            Are you sure you want to delete this contact?
+            <div className="buttons">
+              <button
+                type="button"
+                onClick={() => {
+                  setId("");
+                  setDeleteOpen(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  contactDelete(id);
+                }}
+              >
+                Confirm
+              </button>
+            </div>
           </div>
         </div>
       </Modal>
@@ -215,16 +220,16 @@ export function ContactUsPage() {
           setEditId("");
           setEditOpen(false);
         }}
-        contentLabel="Add Contact"
-        className="wishgranting_react_modal"
-        overlayClassName="wishgranting_react_modal"
+        contentLabel="Edit Contact"
+        className="contact_react_modal"
+        overlayClassName="contact_react_modal"
       >
-        <div className="wishgranting_modal">
-          <div className="wishgranting_modal_header">
+        <div className="contact_modal">
+          <div className="contact_modal_header">
             <h3>Edit Contact</h3>
             <button
               type="button"
-              className="wishgranting_modal_close"
+              className="contact_modal_close"
               onClick={() => {
                 setEditId("");
                 setEditOpen(false);
@@ -233,33 +238,44 @@ export function ContactUsPage() {
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <form className="wishgranting_modal_center column">
-            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Name" />
-            <br />
+          <form>
+            <label>Name</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder=" Full Name here"
+            />
+            <label>Position</label>
             <input
               value={position}
               onChange={(e) => setPosition(e.target.value)}
-              placeholder="Position"
+              placeholder="Position / role in organization"
+              type="text"
             />
-            <br />
+            <label>Organization</label>
             <input
               value={org}
               onChange={(e) => setOrg(e.target.value)}
-              placeholder="Organization"
+              placeholder="Organization here"
+              type="text"
             />
-            <br />
+            <label>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
+              placeholder="Email here"
             />
-            <br />
-            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Phone" />
-            <br />
-            <br />
+            <label>Phone</label>
+            <input
+              type="text"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Phone Number"
+            />
             <button
-              type="button"
+              type="submit"
               onClick={() => {
                 console.log(id);
                 contactEdit(editId);

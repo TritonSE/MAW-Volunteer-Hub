@@ -49,3 +49,143 @@
   line-height: 17px;
   color: #ffffff;
 }
+
+.ReactModal__Overlay.contact_react_modal {
+  z-index: 1000;
+  position: fixed;
+  inset: 0px;
+  background-color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+.ReactModal__Content.contact_react_modal {
+  width: 95vw;
+  max-width: 466px;
+  max-height: 420px;
+  padding-top: 21px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  border: none !important;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px !important;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.contact_modal h3 {
+  margin: 0;
+}
+
+.contact_modal {
+  font-family: "Lato", sans-serif;
+}
+
+.contact_modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.contact_modal_close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.contact_modal input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 13px;
+  margin-top: 4px;
+}
+
+.contact_modal input[type="email"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 13px;
+}
+
+.contact_modal label {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.contact_modal button[type="submit"] {
+  margin-top: 15px;
+  margin: 0 auto;
+  float: right;
+  background: #1a68bf;
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  border: none;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 10px;
+}
+
+.column {
+  display: flex;
+  height: inherit;
+  flex-flow: column wrap;
+  text-align: center;
+}
+
+.column button {
+  border: 1px solid #000000;
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  margin-bottom: 10px;
+}
+
+.column button:nth-child(2) {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+  background: #ff797d;
+  border: 1px solid #ff797d;
+  border-radius: 3px;
+}
+
+.column button:nth-child(2):hover {
+  border: 1px solid black;
+}
+
+.buttons {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
