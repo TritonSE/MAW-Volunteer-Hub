@@ -181,31 +181,4 @@ router.get("/pfp/:id/:time", (req, res) => {
     .catch(errorHandler(res));
 });
 
-// router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
-//   Promise.all([
-//     Contact.findById(req.contact._id),
-//     uploadFileStream(
-//       compressor,
-//       `pfp/${req.file.filename}-${Date.now()}-${Math.round(Math.random() * 1e9)}`
-//     ),
-//   ])
-//     .then(([contact, result]) => {
-//       const old = contact.profilePicture;
-
-//       Object.assign(contact, {
-//         profilePicture: result.key,
-//         profilePictureModified: new Date(),
-//       });
-
-//       return Promise.all([
-//         contact.toJSON(),
-//         contact.save(),
-//         old ? deleteFileAWS(old) : null,
-//         fs.unlink(req.file.path),
-//       ]);
-//     })
-//     .then(([contact]) => res.json({ success: true, contact }))
-//     .catch(errorHandler(res));
-// });
-
 module.exports = router;

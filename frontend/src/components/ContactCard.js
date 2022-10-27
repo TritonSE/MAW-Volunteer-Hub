@@ -51,33 +51,4 @@ function ContactCard({
   );
 }
 
-// function Whoto() {
-//   return (
-//     <div>
-//       <main>
-//         <div className="whotocard">
-//           <div className="counter">
-//             <p>1</p>
-//           </div>
-//           <div className="heading">
-//             <p>Volunteer Assignment</p>
-//           </div>
-//           <div className="description">
-//             <p>
-//               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id sed nibh orci condimentum
-//               blandit. Feugiat viverra quam ornare venenatis in odio mi
-//             </p>
-//           </div>
-//           <div className="grid">
-//             <div>Charlie Lerner x100</div>
-//             <div>Charlie Lerner x100</div>
-//             <div>Charlie Lerner x100</div>
-//             <div>Charlie Lerner x100</div>
-//           </div>
-//         </div>
-//       </main>
-//     </div>
-//   );
-// }
-
 export default ContactCard;
