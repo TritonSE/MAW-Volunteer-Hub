@@ -176,7 +176,7 @@ const api_wish_wednesday_add = (message) =>
  */
 const api_contacts = () => api_call(API_ENDPOINTS.CONTACTS, { method: "GET" });
 
-const api_contacts_add = (name, position, organization, email, phone) =>
+const api_contacts_add = (name, position, organization, email, phone, pfp, crop) =>
   api_call(API_ENDPOINTS.CONTACTS_ADD, {
     method: "POST",
     data: {
@@ -185,7 +185,10 @@ const api_contacts_add = (name, position, organization, email, phone) =>
       organization,
       email,
       phone,
+      pfp,
+      crop,
     },
+    type: "multipart/form-data",
   });
 
 const api_contacts_delete = (id) => {

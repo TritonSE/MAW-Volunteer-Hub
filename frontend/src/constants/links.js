@@ -47,6 +47,7 @@ const API_ENDPOINTS = {
   CONTACTS_ADD: "/contact/add",
   CONTACTS_DELETE: "/contact/delete",
   CONTACTS_EDIT: "/contact/edit",
+  CONTACTS_PFP_GET: "/contact/pfp",
 };
 
 const SIDENAV_STEPS = [
