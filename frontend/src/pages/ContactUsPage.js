@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
 import "../styles/ContactUs.css";
 import ReactCrop from "react-image-crop";
@@ -303,7 +303,7 @@ export function ContactUsPage() {
     <>
       <main>
         <div className="titles">
-          <div className="title_Contacts">
+          <div className="title_contacts">
             <div>Contacts</div>
             <button type="button" onClick={() => handleAddModalOpen()}>
               <img src="/img/add.svg" />
@@ -312,7 +312,7 @@ export function ContactUsPage() {
           </div>
           <div />
         </div>
-        <div className="Contacts">
+        <div className="contacts">
           {contacts.map((element) => (
             <ContactCard
               key={element._id}
@@ -353,11 +353,9 @@ export function ContactUsPage() {
             </button>
           </div>
           <form onSubmit={contactAdd}>
-            <button type="button">
+            <button className="upload_image_button" type="button">
               <label htmlFor="pfp_input">
-                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
-                  <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
-                </svg>
+                Upload Image
                 <input
                   id="pfp_input"
                   className="hidden"
@@ -371,7 +369,8 @@ export function ContactUsPage() {
                 />
               </label>
             </button>
-
+            <p className="upload_image_status_text">{file ? `${file.name}` : ""}</p>
+            <br />
             <Modal
               className="profile-page-modal"
               overlayClassName="profile-page-modal-overlay"
@@ -507,9 +506,9 @@ export function ContactUsPage() {
               <img src="/img/wishgranting_modal_close.svg" alt="Close modal" />
             </button>
           </div>
-          <div className="column">
+          <div className="delete_modal_body">
             Are you sure you want to delete this contact?
-            <div className="buttons">
+            <div className="delete_modal_button_container">
               <button type="button" onClick={() => handleModalClose()}>
                 Cancel
               </button>
@@ -545,11 +544,9 @@ export function ContactUsPage() {
             </button>
           </div>
           <form>
-            <button type="button">
+            <button className="upload_image_button" type="button">
               <label htmlFor="pfp_input">
-                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
-                  <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
-                </svg>
+                Edit Image
                 <input
                   id="pfp_input"
                   className="hidden"
@@ -563,7 +560,10 @@ export function ContactUsPage() {
                 />
               </label>
             </button>
-
+            <p className="upload_image_status_text">
+              {file ? `${file.name}` : "Using current image"}
+            </p>
+            <br />
             <Modal
               className="profile-page-modal"
               overlayClassName="profile-page-modal-overlay"
