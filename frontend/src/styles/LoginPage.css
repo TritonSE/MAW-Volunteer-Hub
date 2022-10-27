@@ -49,8 +49,6 @@
 
   border: 1px solid #000000;
 
-  font-family: "Lato" !important;
-
   margin-bottom: 16px;
 }
 .login input.error:not([type="checkbox"]),
@@ -66,8 +64,6 @@
   background: rgba(0, 87, 184, 0.9);
   color: #ffffff;
   border: 0;
-
-  font-family: "Lato" !important;
 
   opacity: 1;
   transition: opacity 0.1s;
@@ -102,6 +98,17 @@
   padding: 0;
   float: left;
 }
+.login button.underline {
+  display: inline;
+  width: unset;
+  height: unset;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  color: black;
+  font-size: 12px;
+}
 
 .login_password {
   height: calc(60px - 14px);
@@ -124,7 +131,6 @@
   width: 100%;
   margin-bottom: 16px;
   font-size: 12px;
-  font-family: "Lato", sans-serif;
 }
 .login_flex.nomargin {
   margin: 0;
@@ -133,7 +139,7 @@
 .login_flex_center {
   display: flex;
   align-items: center;
-  justify-content: center;
+  flex: 1;
 }
 
 .login_flex_center input[type="checkbox"] {
@@ -145,6 +151,7 @@
 }
 
 .login_form {
+  position: relative;
   display: flex;
   flex-direction: column;
 }
@@ -159,7 +166,6 @@
   padding: 10px;
   background: var(--secondary-red);
   text-align: center;
-  font-family: "Lato", sans-serif;
   font-size: 10pt;
   color: white;
   margin-top: auto;
@@ -172,7 +178,6 @@
   background: var(--background-grey);
   position: absolute;
   width: 462px;
-  height: 202px;
   border-radius: 10px;
   box-sizing: border-box;
   left: calc(50vw - (462px / 2)) !important;
@@ -185,7 +190,6 @@
 .login_modal {
   height: 100%;
   text-align: center;
-  font-family: "Lato", sans-serif;
   font-size: 16px;
 }
 .login_modal_content {
@@ -202,15 +206,20 @@
   border: none;
   cursor: pointer;
 }
-.login_button_round {
-  width: 103px;
-  height: 26px;
-  background: var(--primary-blue);
-  border: 3px solid var(--primary-blue);
-  border-radius: 3px;
+
+.disclaimer_tooltip {
+  position: absolute;
+  top: -58px;
+  width: 100%;
+  height: 105px;
+  background: #222222;
   color: white;
-  font-family: "Lato", sans-serif;
-  cursor: pointer;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 10px;
+  box-sizing: border-box;
+
+  transition: opacity 0.2s;
 }
 
 /**

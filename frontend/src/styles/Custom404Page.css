@@ -4,8 +4,6 @@
   justify-content: center;
   text-align: center;
   height: calc(100vh - 150px);
-
-  font-family: "Lato", sans-serif;
 }
 
 .notfound_flex_center .logo {

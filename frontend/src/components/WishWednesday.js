@@ -43,7 +43,7 @@ export default function WishWednesday() {
       setErrorMessage("Cannot create an empty Wish Wednesday post.");
       return;
     }
-    console.log(convertedText);
+
     const res = await api_wish_wednesday_add(convertedText);
     if (res && !res.error) {
       setModalVariant("wish_wednesday_success");
@@ -72,7 +72,7 @@ export default function WishWednesday() {
         />
         <div className="button_container">
           <button
-            className="post_announcement"
+            className="maw-ui_button primary"
             type="submit"
             onClick={() => handleWishWednesdayPost()}
           >

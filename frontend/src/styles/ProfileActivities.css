@@ -1,0 +1,257 @@
+.header_container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.manually_log_activity {
+  display: flex;
+  align-items: center;
+}
+
+.manually_log_activity > .add_roles {
+  margin-left: 10px;
+}
+.manually_log_activity > .add_roles:disabled {
+  cursor: default;
+}
+
+.table_container {
+  flex: 1;
+  overflow: auto;
+}
+
+.activities_table {
+  box-sizing: border-box;
+  height: 40vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: white;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 15px;
+  padding: 0px 50px 0px 50px;
+  margin-top: 75px;
+}
+
+.activities_table table {
+  border-spacing: 0;
+  width: 100%;
+}
+.activities_table thead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.activities_table_header {
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  padding: 12.5px 0px 12.5px 20px;
+
+  box-sizing: border-box;
+  width: 30%;
+
+  color: #101010;
+  background: #e5eef8;
+}
+
+.activities_table_header.start {
+  border-radius: 15px 0px 0px 15px;
+  text-align: start;
+}
+
+.activities_table_header.end {
+  border-radius: 0px 15px 15px 0px;
+}
+
+.activities_table_data {
+  font-size: 14px;
+  padding: 15px 0px 10px 15px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.activities_table_data.start {
+  border-radius: 13px 0px 0px 13px;
+  text-align: start;
+}
+
+.activities_table_data.end {
+  border-radius: 0px 13px 13px 0px;
+  width: 10%;
+  text-align: center;
+}
+
+tr:nth-child(2n) .activities_table_data_start,
+tr:nth-child(2n) .activities_table_data,
+tr:nth-child(2n) .activities_table_data_end {
+  background: rgba(187, 188, 188, 0.2);
+}
+
+.log_activity_form {
+  background: white;
+  width: 95vw;
+  max-width: 466px;
+  padding: 21px 25px 0px;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  font-family: "Lato", sans-serif;
+}
+
+.form_heading {
+  display: flex;
+}
+
+.form_heading h3 {
+  margin: 0 0 18px;
+  flex: 1;
+}
+
+.close_button {
+  border: none;
+  background: none;
+  background: url(../../public/img/close-modal.svg) no-repeat;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+}
+
+.log_activity_form > input {
+  min-width: calc(100% - 8px);
+  width: calc(100% - 8px);
+  height: 28px;
+  padding-left: 5px;
+  font-family: "Lato", sans-serif;
+  color: black;
+  background: white;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+/* iOS Safari fix */
+.log_activity_form > input::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.form_prompt {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.edit_activity_container {
+  display: flex;
+  padding-right: 10px;
+}
+
+.edit_activity_container > button {
+  background: transparent;
+  border: 0;
+}
+
+.edit_activity_container > button:hover {
+  cursor: pointer;
+}
+
+.no_activities_row {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.no_activities {
+  width: 50%;
+  text-align: center;
+}
+
+.error_modal {
+  background: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.log_activity_modal .react-simple-calendar {
+  position: absolute;
+  padding: 10px;
+  border: 1px solid var(--primary-blue);
+  z-index: 100001;
+  font-family: "Lato", sans-serif;
+}
+.log_activity_modal .calendar_overlay {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+}
+
+.form_right {
+  display: flex;
+}
+.form_spacer {
+  flex: 1;
+}
+.form_right button {
+  margin-top: 25px;
+  width: 103px;
+  height: 26px;
+}
+
+@media only screen and (max-width: 750px) {
+  .header_container {
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 20px);
+    margin: 0 10px;
+  }
+
+  .manually_log_activity > h2,
+  .header_container > h2 {
+    font-size: 18px;
+  }
+
+  .activities_table {
+    margin-top: 30px;
+    padding: 0 10px 0 10px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .manually_log_activity > h2,
+  .header_container > h2 {
+    font-size: 16px;
+  }
+}
+
+@media only screen and (max-height: 400px) {
+  .log_activity_form {
+    height: 90vh;
+    overflow: auto;
+  }
+}
+
+.man_event_marker {
+  position: relative;
+  font-weight: 300;
+
+  font-size: 12px;
+  line-height: 17px;
+  z-index: 1;
+}
+
+.event_title_value {
+  text-align: center;
+}
+
+.event_title_container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}

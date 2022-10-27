@@ -9,7 +9,7 @@ import "react-image-crop/dist/ReactCrop.css";
 
 Modal.setAppElement("#root");
 
-export function ContactUsPage() {
+export default function ContactUsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteId, setDeleteId] = useState("");

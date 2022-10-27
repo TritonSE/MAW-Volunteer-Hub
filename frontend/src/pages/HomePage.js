@@ -5,15 +5,22 @@ import { api_wish_wednesday } from "../api";
 
 function HomePage() {
   const [message, setMessage] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api_wish_wednesday().then((res) => {
-      setMessage(res[0].message || "");
-      setDate(res[0].createdAt || "");
-      setLoading(false);
-    });
+    document.title = "Home - Make-a-Wish San Diego";
+
+    async function fetch_wish_wed() {
+      const res = await api_wish_wednesday();
+      if (res && !res.error && res?.length > 0) {
+        setMessage(res[0]?.message);
+        setDate(new Date(res[0]?.createdAt));
+        setLoading(false);
+      }
+    }
+
+    fetch_wish_wed();
   }, []);
 
   return (
@@ -25,7 +32,7 @@ function HomePage() {
       {!loading && (
         <div>
           <h2 id="wish-wednesday-title">
-            Wish Wednesday [{new Date(date).toLocaleDateString("en-US")}]
+            Wish Wednesday [{date.toLocaleDateString("en-US")}]
             {/*
               Temporarily removed due to unspecified functionality
               <button className="edit-button" type="submit">

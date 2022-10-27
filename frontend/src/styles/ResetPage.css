@@ -1,0 +1,83 @@
+.reset_page {
+  width: 100vw;
+  min-height: 100vh;
+  background: url(../../public/img/login_background.svg) no-repeat;
+  background-position: bottom center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reset_page .box {
+  width: 250px;
+  height: 300px;
+  background: white;
+  border-radius: 20px;
+  padding: 50px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  margin: 50px;
+  overflow: hidden;
+}
+.reset_page .fullheight {
+  height: 100%;
+}
+.reset_page .slider {
+  position: relative;
+  transition: right 0.5s, left 0.5s;
+}
+
+.reset_page .icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  border: 2px solid black;
+  padding: 15px;
+  background: url(../../public/img/reset_user.svg) no-repeat;
+  background-position: center;
+  background-size: 25px;
+}
+
+.reset_page .password {
+  display: flex;
+  height: calc(60px - 14px);
+}
+
+.reset_page button.unstyled {
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+.reset_page button.padded {
+  padding: 0 15px;
+}
+
+.reset_page button.unstyled .eye {
+  display: block;
+  width: 16px;
+  height: 16px;
+  position: relative;
+  top: 6px;
+  right: 22px;
+  cursor: pointer;
+}
+
+.reset_page .errorbox {
+  width: 100%;
+  background: var(--secondary-red);
+  color: white;
+  text-align: center;
+  font-size: 10pt;
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+@media only screen and (max-width: 450px) {
+  .reset_page .box {
+    margin: 0;
+  }
+}

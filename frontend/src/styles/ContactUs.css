@@ -1,5 +1,5 @@
 .contacts {
-  margin-left: 50px;
+  margin: 10px 30px;
   align-self: flex-start;
   display: flex;
   width: calc(30px + 228px + 228px + 76px + 20px);
@@ -8,6 +8,7 @@
 }
 
 .titles {
+  margin: 30px;
   display: flex;
   width: 90%;
   height: inherit;

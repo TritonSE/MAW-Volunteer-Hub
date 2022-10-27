@@ -1,12 +1,6 @@
-main {
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
 .contact_card {
+  margin: 30px;
+
   position: relative;
   width: 227px;
   height: 369px;

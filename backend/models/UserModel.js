@@ -24,11 +24,6 @@ const ManualEventSchema = new mongoose.Schema({
 
 const UserSchema = new mongoose.Schema(
   {
-    verified: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
     // to make sure the user is a part of make-a-wish
     name: {
       type: String,
@@ -46,6 +41,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      uniqueCaseInsensitive: true,
       match: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,24})+$/,
     },
     // Integer value. 0 = regular user, 1 = secondary admin, 2 = primary admin, >= 3 is regular user
@@ -55,7 +51,7 @@ const UserSchema = new mongoose.Schema(
     },
     active: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     password: {
       type: String,
@@ -68,9 +64,23 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       // required: true
     },
+    resetCode: {
+      type: String,
+      default: "",
+    },
+    resetDate: {
+      type: Date,
+      default: new Date(0),
+    },
     /**
      * EVENTS
      */
+    events: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "event",
+      },
+    ],
     manualEvents: {
       type: [ManualEventSchema],
       default: [],
@@ -78,6 +88,10 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.virtual("verified").get(function check_verify() {
+  return this.roles.length > 0 || this.admin > 0;
+});
 
 UserSchema.pre("save", async function save(next) {
   if (this.password && this.isModified("password")) {

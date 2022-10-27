@@ -13,8 +13,12 @@ const {
   idParamValidator,
   adminValidator,
   primaryAdminValidator,
+  roleValidator,
 } = require("../util/RouteUtils");
 const { uploadFileStream, deleteFileAWS, getFileStream } = require("../util/S3Util");
+const userRoles = require("../util/UserRoles");
+
+const sendEmail = require("../util/SendEmail");
 
 const upload = multer({
   dest: "server_uploads/",
@@ -25,12 +29,14 @@ const upload = multer({
 // returns all users
 router.get("/users", (req, res) =>
   UserModel.find()
+    .populate("events")
     .then((users) => res.json({ users }))
     .catch(errorHandler(res))
 );
 
 router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
+    .populate("events")
     .then((user) =>
       res.json({
         user: user.toJSON(),
@@ -40,22 +46,21 @@ router.get("/info/:id?", idParamValidator(true), (req, res) =>
     .catch(errorHandler(res))
 );
 
-router.put("/verify/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.findByIdAndUpdate(req.params.id, { verified: true })
-    .then(() => res.status(200).json({ success: true }))
-    .catch(errorHandler(res))
-);
-
-router.put("/promote/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.findByIdAndUpdate(req.params.id, { admin: true })
-    .then(() => res.status(200).json({ success: true }))
-    .catch(errorHandler(res))
-);
-
 router.delete("/delete/:id", idParamValidator(), primaryAdminValidator, (req, res) =>
-  UserModel.deleteOne({ _id: req.params.id })
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      const is_primary = user.admin === 2;
+      if (is_primary) {
+        // throw an error if they are trying to delete a primary admin
+        throw new URIError("Unable to delete an account with primary admin access.");
+      }
+    })
+    .then(() => UserModel.deleteOne({ _id: req.params.id }))
     .then(() => res.json({ success: true }))
-    .catch(errorHandler(res))
+    .catch((err) => {
+      if (err instanceof URIError) res.json({ error: err.message });
+      else errorHandler(res)(err);
+    })
 );
 
 router.put("/updatepass", validate(["old_pass", "new_pass"], []), (req, res) =>
@@ -92,6 +97,22 @@ router.put("/edit/:id", idParamValidator(), (req, res) =>
       );
       return user.save();
     })
+    .catch(errorHandler(res))
+);
+
+router.post("/activate/:id", idParamValidator(), validate(["active"]), (req, res) =>
+  UserModel.findById(req.params.id)
+    .then((user) => {
+      if (req.user.admin === 0 && req.params.id !== req.user._id) {
+        res.status(400).json({ error: "Insufficient permissions to deactivate profile." });
+        return null;
+      }
+
+      user.active = req.body.active;
+
+      return user.save();
+    })
+    .then(() => res.json({ success: true }))
     .catch(errorHandler(res))
 );
 
@@ -159,30 +180,22 @@ router.patch(
   adminValidator,
   (req, res) => {
     const roles = JSON.parse(req.body.roles);
-    const keyroles = [
-      "Wish Granter",
-      "Volunteer",
-      "Mentor",
-      "Airport Greeter",
-      "Office",
-      "Special Events",
-      "Translator",
-      "Speaker's Bureau",
-      "Las Estrellas",
-      "Primary Admin",
-      "Secondary Admin",
-    ];
-    // validate roles based on keyroles
-    if (!roles.every((element) => keyroles.includes(element))) {
+    const admin = Number.parseInt(req.body.admin ?? 0, 10);
+
+    // validate given roles based on list of roles
+    if (!roles.every((element) => userRoles.includes(element))) {
       res.status(400).json({ error: "Invalid roles input." });
+      return;
+    }
+    if (Number.isNaN(admin)) {
+      res.status(400).json({ error: "Invalid admin value." });
       return;
     }
 
     UserModel.findById(req.params.id)
       .then((user) => {
         const is_primary = user.admin === 2;
-        const will_be_primary = roles.includes("Primary Admin");
-        if (is_primary && !will_be_primary) {
+        if (is_primary && admin < 2) {
           // throw an error if they are trying to remove primary admin from an account that isn't their own
           if (user._id.toString() !== req.user._id.toString()) {
             throw new URIError("Unable to remove primary admin status from another user.");
@@ -190,7 +203,7 @@ router.patch(
           // only allow yourself to remove admin if there is at least one other primary admin
           return Promise.all([user, UserModel.find({ admin: 2 })]);
         }
-        if (!is_primary && will_be_primary && req.user.admin < 2) {
+        if (!is_primary && admin === 2 && req.user.admin < 2) {
           throw new URIError("Insufficient permissions to make user a primary admin.");
         }
         return Promise.all([user, null]);
@@ -200,32 +213,18 @@ router.patch(
           throw new URIError("Unable to remove primary admin status from final primary admin.");
         }
 
-        // Reset user admin state based on highest level of admin found in role array
-        user.admin = 0;
-
-        if (roles.includes("Secondary Admin")) {
-          user.admin = 1;
-          roles.splice(roles.indexOf("Secondary Admin"), 1);
-        }
-
-        // Primary Admin state validated as middleware and p.a. removal handled by first if
-        if (roles.includes("Primary Admin")) {
-          user.admin = 2;
-          roles.splice(roles.indexOf("Primary Admin"), 1);
+        if (user.roles.length === 0 && roles.length > 0) {
+          sendEmail.verify(user);
         }
 
         user.roles = roles;
+        user.admin = admin;
         return user.save();
       })
       .then(() => res.json({ success: true }))
       .catch((err) => {
-        // Use specific error type to give the user an error message
-        //   for bad input data (rather than just "Internal server error.")
-        if (err instanceof URIError) {
-          res.status(403).json({ error: err.message });
-        } else {
-          errorHandler(res);
-        }
+        if (err instanceof URIError) res.json({ error: err.message });
+        else errorHandler(res)(err);
       });
   }
 );
@@ -237,7 +236,7 @@ router.get("/role/:role", (req, res) =>
 );
 
 router.post("/newmanual/:id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -270,7 +269,7 @@ router.post("/newmanual/:id", (req, res) => {
 });
 
 router.delete("/delmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -288,7 +287,7 @@ router.delete("/delmanual/:id/:event_id", (req, res) => {
 });
 
 router.patch("/editmanual/:id/:event_id", (req, res) => {
-  if (req.user._id.toString() !== req.params.id && req.admin !== 2) {
+  if (req.user._id.toString() !== req.params.id && req.user.admin !== 2) {
     res.status(403).json({ error: "Access denied. " });
     return;
   }
@@ -307,5 +306,37 @@ router.patch("/editmanual/:id/:event_id", (req, res) => {
     .then(() => res.json({ success: true }))
     .catch(errorHandler);
 });
+
+/**
+ * Message sending via email to all user(s) in role(s)
+ */
+router.post(
+  "/message",
+  primaryAdminValidator,
+  roleValidator,
+  validate(["roles", "html", "text", "subject"]),
+  (req, res) => {
+    const roles_to_message = JSON.parse(req.body.roles);
+    UserModel.find({ active: true, roles: { $in: roles_to_message } })
+      .then((users_list) => {
+        if (users_list.length > 0) {
+          users_list.forEach((user) => {
+            sendEmail.message(
+              user,
+              req.body.html,
+              req.body.text,
+              req.body.subject,
+              roles_to_message
+            );
+          });
+
+          res.json({ success: true });
+        } else {
+          res.status(400).json({ error: "No volunteers in role(s)." });
+        }
+      })
+      .catch(errorHandler(res));
+  }
+);
 
 module.exports = router;

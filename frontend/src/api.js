@@ -2,6 +2,7 @@
  * api.js: API interfacing
  */
 import axios from "axios";
+import qs from "qs";
 
 import { API_ENDPOINTS } from "./constants/links";
 
@@ -16,6 +17,7 @@ async function api_call(
     type = "application/x-www-form-urlencoded",
     blob = false,
     onProgress = null,
+    use_qs = false,
   } = {}
 ) {
   let has_attached = false;
@@ -41,9 +43,12 @@ async function api_call(
     options.headers["Content-Type"] = type;
   }
   if (data && Object.keys(data)) {
-    if (type === "multipart/form-data") options.data = new FormData();
-    else options.data = new URLSearchParams();
-    Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    if (use_qs) options.data = qs.stringify(data);
+    else {
+      if (type === "multipart/form-data") options.data = new FormData();
+      else options.data = new URLSearchParams();
+      Object.keys(data).forEach((key) => options.data.append(key, data[key]));
+    }
   }
 
   try {
@@ -72,6 +77,14 @@ const api_signup = async ({ name, email, password }) =>
   (await api_call(API_ENDPOINTS.SIGNUP, { data: { name, email, password } })) ?? {
     error: "Unable to connect to server, please try again.",
   };
+
+const api_forgot = async ({ email }) =>
+  (await api_call(API_ENDPOINTS.FORGOT, { data: { email } })) ?? {
+    error: "Unable to connect to server, please try again.",
+  };
+
+const api_reset = async ({ code, password }) =>
+  api_call(API_ENDPOINTS.RESET, { data: { code, password } });
 
 const api_signout = async () => api_call(API_ENDPOINTS.SIGNOUT);
 
@@ -144,10 +157,6 @@ const api_user_info = (id) => api_call(`${API_ENDPOINTS.USER_INFO}/${id}`, { met
 
 const api_user_all = () => api_call(API_ENDPOINTS.USER_ALL, { method: "GET" });
 
-const api_user_verify = (id) => api_call(`${API_ENDPOINTS.USER_VERIFY}/${id}`, { method: "PUT" });
-
-const api_user_promote = (id) => api_call(`${API_ENDPOINTS.USER_PROMOTE}/${id}`, { method: "PUT" });
-
 const api_user_delete = (id) =>
   api_call(`${API_ENDPOINTS.USER_DELETE}/${id}`, { method: "DELETE" });
 
@@ -159,6 +168,11 @@ const api_user_updatepass = (old_pass, new_pass) =>
 
 const api_user_edit = (id) => api_call(`${API_ENDPOINTS.USER_EDIT}/${id}`, { method: "PUT" });
 
+const api_user_activate = (id, active) =>
+  api_call(`${API_ENDPOINTS.USER_ACTIVATE}/${id}`, {
+    data: { active },
+  });
+
 const api_pfp_upload = (pfp, crop) =>
   api_call(API_ENDPOINTS.PFP_UPLOAD, {
     data: { pfp, crop },
@@ -166,6 +180,46 @@ const api_pfp_upload = (pfp, crop) =>
     type: "multipart/form-data",
   });
 
+/**
+ * CALENDAR
+ */
+const api_calendar_all = () => api_call(API_ENDPOINTS.CALENDAR_ALL, { method: "GET" });
+
+const api_calendar_new = (data) =>
+  api_call(API_ENDPOINTS.CALENDAR_NEW, {
+    data,
+    method: "PUT",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_delete = (id) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_DELETE}/${id}`, {
+    method: "DELETE",
+  });
+
+const api_calendar_update = (id, data) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_UPDATE}/${id}`, {
+    data,
+    method: "PATCH",
+    type: "application/x-www-form-urlencoded",
+    use_qs: true,
+  });
+
+const api_calendar_respond = (id, going, date, guests, response) =>
+  api_call(`${API_ENDPOINTS.CALENDAR_RESPOND}/${id}`, {
+    data: {
+      going,
+      date,
+      guests: JSON.stringify(guests),
+      response,
+    },
+    method: "POST",
+  });
+
+/*
+ * WISH WEDNESDAY
+ */
 const api_wish_wednesday = () => api_call(API_ENDPOINTS.WISH_WEDNESDAY, { method: "GET" });
 
 const api_wish_wednesday_add = (message) =>
@@ -210,10 +264,51 @@ const api_contacts_edit = (id, name, email, phone, org, position, pfp, crop) =>
     type: "multipart/form-data",
   });
 
+/*
+ * MESSAGING EMAILS
+ */
+const api_message_email = (roles, html, text, subject) =>
+  api_call(API_ENDPOINTS.MESSAGE, {
+    data: { roles, html, text, subject },
+    method: "POST",
+  });
+
+/*
+ * ROLES AND MANUAL EVENTS
+ */
+const api_update_roles = async (id, roles, admin) =>
+  api_call(`${API_ENDPOINTS.SET_ROLES}/${id}`, {
+    data: { roles, admin },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_add_event = async (id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.ADD_EVENT}/${id}`, {
+    data: { date, title, hours },
+    method: "POST",
+    type: "application/json",
+  });
+
+const api_edit_event = async (id, event_id, date, title, hours) =>
+  api_call(`${API_ENDPOINTS.EDIT_EVENT}/${id}/${event_id}`, {
+    data: { date, title, hours },
+    method: "PATCH",
+    type: "application/json",
+  });
+
+const api_delete_event = async (id, event_id) =>
+  api_call(`${API_ENDPOINTS.DELETE_EVENT}/${id}/${event_id}`, {
+    method: "DELETE",
+    type: "application/json",
+  });
+
 export {
   api_validtoken,
   api_login,
   api_signup,
+  api_forgot,
+  api_reset,
   api_signout,
   api_file_upload,
   api_file_delete,
@@ -228,16 +323,25 @@ export {
   api_category_download,
   api_user_info,
   api_user_all,
-  api_user_verify,
-  api_user_promote,
   api_user_delete,
   api_user_updatepass,
   api_user_edit,
+  api_user_activate,
   api_pfp_upload,
+  api_calendar_all,
+  api_calendar_new,
+  api_calendar_delete,
+  api_calendar_update,
+  api_calendar_respond,
   api_wish_wednesday,
   api_wish_wednesday_add,
   api_contacts,
   api_contacts_add,
   api_contacts_delete,
   api_contacts_edit,
+  api_message_email,
+  api_update_roles,
+  api_add_event,
+  api_edit_event,
+  api_delete_event,
 };

@@ -16,27 +16,18 @@
   top: 0;
   height: calc(100vh - 73px);
   min-width: 225px;
+  overflow-y: scroll;
 }
 
 .side_nav_links {
-  left: 17.39%;
-  right: 16.96%;
-  top: 36%;
-  bottom: 34.67%;
-
   width: 190px;
   height: 59px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
   font-size: 18px;
-  line-height: 22px;
 
   text-align: center;
   color: #0057b8;
 
   background-color: white;
-  border-width: 0px;
   border-radius: 8px;
 
   margin: 40px 20px 40px 20px;
@@ -90,24 +81,17 @@
     background: var(--blue-gradient);
     box-shadow: none;
     align-self: unset;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     z-index: 998;
   }
 
   .side_nav_links {
-    left: 11.76%;
-    right: 11.76%;
-    top: 23.53%;
-    bottom: 23.53%;
     color: white;
     white-space: nowrap;
     width: fit-content;
     height: 40px;
-    font-family: Lato;
-    font-style: normal;
-    font-weight: normal;
     font-size: 16px;
-    line-height: 18px;
     background-color: rgba(255, 0, 0, 0);
 
     padding-right: 20px;
@@ -117,6 +101,7 @@
 
   .side_nav_display {
     width: 100vw;
+    height: unset;
   }
 
   .side_nav_selected {
