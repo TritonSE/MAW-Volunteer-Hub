@@ -195,7 +195,7 @@ const api_contacts_delete = (id) => {
   api_call(`${API_ENDPOINTS.CONTACTS_DELETE}/${id}`, { method: "DELETE" });
 };
 
-const api_contacts_edit = (id, name, email, phone, org, position) =>
+const api_contacts_edit = (id, name, email, phone, org, position, pfp, crop) =>
   api_call(`${API_ENDPOINTS.CONTACTS_EDIT}/${id}`, {
     method: "PATCH",
     data: {
@@ -204,7 +204,10 @@ const api_contacts_edit = (id, name, email, phone, org, position) =>
       updated_phone: phone,
       updated_org: org,
       updated_position: position,
+      ...(pfp && { pfp }),
+      ...(crop && { crop }),
     },
+    type: "multipart/form-data",
   });
 
 export {

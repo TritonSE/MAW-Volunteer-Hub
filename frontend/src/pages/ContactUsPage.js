@@ -179,7 +179,7 @@ export function ContactUsPage() {
     setDeleteId(id);
     setDeleteOpen(true);
   };
-  console.log(contacts);
+
   const handleModalClose = () => {
     // clears modal props and opens modal
     setDeleteId("");
@@ -191,26 +191,31 @@ export function ContactUsPage() {
       org: "",
       email: "",
       phone: "",
-      file: null,
-      crop: { aspect: 1 },
     });
 
     setAddOpen(false);
     setEditOpen(false);
     setDeleteOpen(false);
+    setPFPModalOpen(false);
+    setPFPErrorModalOpen(false);
+    setCrop({ aspect: 1 });
+    setUpImg();
+    setFile();
+    setImgRef();
   };
 
   const contactAdd = async (e) => {
     e.preventDefault();
-    console.log(modalProps);
     setOpacity(0.5);
 
-    const corrected_crop = {
-      width: Math.floor((crop.width / 100) * imgRef.naturalWidth),
-      height: Math.floor((crop.height / 100) * imgRef.naturalHeight),
-      left: Math.floor((crop.x / 100) * imgRef.naturalWidth),
-      top: Math.floor((crop.y / 100) * imgRef.naturalHeight),
-    };
+    const corrected_crop = imgRef
+      ? {
+          width: Math.floor((crop.width / 100) * imgRef.naturalWidth),
+          height: Math.floor((crop.height / 100) * imgRef.naturalHeight),
+          left: Math.floor((crop.x / 100) * imgRef.naturalWidth),
+          top: Math.floor((crop.y / 100) * imgRef.naturalHeight),
+        }
+      : null;
 
     const res = await api_contacts_add(
       modalProps.name,
@@ -219,12 +224,11 @@ export function ContactUsPage() {
       modalProps.email,
       modalProps.phone,
       file,
-      JSON.stringify(corrected_crop)
+      imgRef ? JSON.stringify(corrected_crop) : null
     );
     if (!res || res.error) {
       /* TODO */
       setPFPErrorModalOpen("Failed to upload file, please try again.");
-      console.log(res);
     } else {
       setAddOpen(false);
       getContacts();
@@ -232,25 +236,51 @@ export function ContactUsPage() {
     setOpacity(1);
     setPFPModalOpen(false);
     setCrop({ aspect: 1 });
+    handleModalClose();
   };
 
-  const contactEdit = async (delId) => {
-    const res = await api_contacts_edit(
-      delId,
-      modalProps.name,
-      modalProps.email,
-      modalProps.phone,
-      modalProps.org,
-      modalProps.position
-    );
-    console.log(res);
-    if (!res || res.error) {
-      /* TODO */
-      console.log(res);
+  const contactEdit = async (e, delId) => {
+    e.preventDefault();
+    if (imgRef && file) {
+      const corrected_crop = {
+        width: Math.floor((crop.width / 100) * imgRef.naturalWidth),
+        height: Math.floor((crop.height / 100) * imgRef.naturalHeight),
+        left: Math.floor((crop.x / 100) * imgRef.naturalWidth),
+        top: Math.floor((crop.y / 100) * imgRef.naturalHeight),
+      };
+      const res = await api_contacts_edit(
+        delId,
+        modalProps.name,
+        modalProps.email,
+        modalProps.phone,
+        modalProps.org,
+        modalProps.position,
+        file,
+        JSON.stringify(corrected_crop)
+      );
+      if (!res || res.error) {
+        /* TODO */
+      } else {
+        setEditOpen(false);
+        getContacts();
+      }
     } else {
-      setEditOpen(false);
-      getContacts();
+      const res = await api_contacts_edit(
+        delId,
+        modalProps.name,
+        modalProps.email,
+        modalProps.phone,
+        modalProps.org,
+        modalProps.position
+      );
+      if (!res || res.error) {
+        /* TODO */
+      } else {
+        setEditOpen(false);
+        getContacts();
+      }
     }
+    handleModalClose();
   };
 
   const contactDelete = async (id) => {
@@ -259,10 +289,10 @@ export function ContactUsPage() {
     getContacts();
     if (!res || res.error) {
       /* TODO */
-      console.log(res);
     } else {
       getContacts();
     }
+    handleModalClose();
   };
 
   useEffect(() => {
@@ -515,6 +545,96 @@ export function ContactUsPage() {
             </button>
           </div>
           <form>
+            <button type="button">
+              <label htmlFor="pfp_input">
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24">
+                  <path d="M24 10h-10v-10h-4v10h-10v4h10v10h4v-10h10z" />
+                </svg>
+                <input
+                  id="pfp_input"
+                  className="hidden"
+                  type="file"
+                  accept="image/*"
+                  onChange={prepare_pfp}
+                  onClick={(e) => {
+                    e.target.value = null;
+                  }}
+                  hidden
+                />
+              </label>
+            </button>
+
+            <Modal
+              className="profile-page-modal"
+              overlayClassName="profile-page-modal-overlay"
+              isOpen={pfpModalOpen}
+              onRequestClose={() => {
+                if (!dragActive) {
+                  setPFPModalOpen(false);
+                  setCrop({ aspect: 1 });
+                }
+              }}
+              contentLabel="Change profile picture"
+            >
+              <h1 className="modal-title-crop">Crop Profile Picture</h1>
+              <span className="modal-subtitle-crop">Click and drag to crop</span>
+              <ReactCrop
+                crop={crop}
+                aspect={1}
+                minWidth={10}
+                ruleOfThirds
+                onChange={(_c, pc) => setCrop(pc)}
+                onComplete={(_c, pc) => setCrop(pc)}
+                onDragStart={() => setDragActive(true)}
+                onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
+              >
+                <img
+                  alt="Crop modal"
+                  src={upImg}
+                  style={{
+                    maxHeight: "calc(100vh - 180px)",
+                  }}
+                  onLoad={fix_crop}
+                />
+              </ReactCrop>
+              <br />
+              <div className="modal-flex-crop">
+                <button
+                  type="button"
+                  className="modal-button button-nomargin change-password-button"
+                  onClick={() => setPFPModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <span>&nbsp;</span>
+                <button
+                  type="button"
+                  className="modal-button button-primary button-nomargin"
+                  onClick={do_upload}
+                  style={{ opacity }}
+                >
+                  Upload
+                </button>
+              </div>
+            </Modal>
+            <Modal
+              className="profile-page-modal"
+              overlayClassName="profile-page-modal-overlay"
+              isOpen={Boolean(pfpErrorModalOpen)}
+              onRequestClose={() => setPFPErrorModalOpen(false)}
+              contentLabel="Profile picture error"
+            >
+              <h1 className="modal-title-crop">Error:</h1>
+              <span>{pfpErrorModalOpen}</span>
+              <br />
+              <button
+                type="button"
+                className="modal-button button-primary button-nomargin"
+                onClick={() => setPFPErrorModalOpen(false)}
+              >
+                Okay
+              </button>
+            </Modal>
             <label>Name</label>
             <input
               type="text"
@@ -557,8 +677,8 @@ export function ContactUsPage() {
             />
             <button
               type="submit"
-              onClick={() => {
-                contactEdit(editId);
+              onClick={(e) => {
+                contactEdit(e, editId);
               }}
             >
               Edit
