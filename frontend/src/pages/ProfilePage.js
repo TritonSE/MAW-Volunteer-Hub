@@ -13,6 +13,7 @@ import {
   api_user_delete,
   api_user_activate,
   api_pfp_upload,
+  api_get_contact_points,
 } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
@@ -51,6 +52,10 @@ function ProfilePage() {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
+
+  // FIXME: MOVE TO CONTACTS PAGE LATER
+  const [contactPoints, setContactPoints] = useState({});
+  const [submittedChanges, setSubmittedChanges] = useState(false);
 
   // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
@@ -231,6 +236,23 @@ function ProfilePage() {
   useEffect(() => {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
+
+  const [gotContactInfo, setGotContactInfo] = useState(false);
+
+  // FIXME: MOVE TO CONTACT PAGE LATER
+  useEffect(() => {
+    async function handleContactPointInfo() {
+      const res = await api_get_contact_points();
+      if (!res) setIs404(true);
+      else {
+        setIs404(false);
+        const resArr = res.map((contact) => contact);
+        setContactPoints(resArr);
+        setGotContactInfo(true);
+      }
+    }
+    handleContactPointInfo();
+  }, []);
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
@@ -606,7 +628,17 @@ function ProfilePage() {
           "Loading..."
         )}
       </div>
-      <ContactPointCard />
+      <div>
+        {gotContactInfo
+          ? contactPoints?.map((contact) => (
+              <ContactPointCard
+                key={Math.random()}
+                description={contact.description}
+                contacts={contact.contacts}
+              />
+            ))
+          : null}
+      </div>
     </div>
   );
 }

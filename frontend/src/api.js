@@ -264,6 +264,15 @@ const api_delete_event = async (id, event_id) =>
     type: "application/json",
   });
 
+const api_get_contact_points = async () =>
+  api_call(`${API_ENDPOINTS.CONTACT_POINT_ALL}`, {
+    method: "GET",
+    type: "application/json",
+  });
+
+// TODO: api_create_contact_point
+// TODO: api_update_contact_point
+
 export {
   api_validtoken,
   api_login,
@@ -301,4 +310,5 @@ export {
   api_add_event,
   api_edit_event,
   api_delete_event,
+  api_get_contact_points,
 };

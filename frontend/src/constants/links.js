@@ -61,6 +61,10 @@ const API_ENDPOINTS = {
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 
   MESSAGE: "/user/message",
+
+  CONTACT_POINT_ALL: "/contactpoint/all",
+  CONTACT_POINT_CREATE: "/contactpoint/create",
+  CONTACT_POINT_UPDATE: "/contactpoint/edit",
 };
 
 const SIDENAV_STEPS = [

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/ContactPointCard.css";
 import EditContactModal from "./EditContactModal";
 
-function ContactPointCard() {
+function ContactPointCard({ description, contacts }) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   /**
    * Input Needed:
@@ -11,20 +11,22 @@ function ContactPointCard() {
    * 3). Step Description
    * 4). Contact Points
    */
-  const contactPoints = [
-    {
-      Name: "Charlie Lerner",
-      Extension: "x100",
-    },
-    {
-      Name: "Dharlie Lerner",
-      Extension: "x101",
-    },
-    {
-      Name: "Eharlie Lerner",
-      Extension: "x102",
-    },
-  ];
+  // const contactPoints = [
+  //   {
+  //     Name: "Charlie Lerner",
+  //     Extension: "x100",
+  //   },
+  //   {
+  //     Name: "Dharlie Lerner",
+  //     Extension: "x101",
+  //   },
+  //   {
+  //     Name: "Eharlie Lerner",
+  //     Extension: "x102",
+  //   },
+  // ];
+  const [cardDescription, setCardDescription] = useState(description);
+  const [contactList, setContactList] = useState(contacts);
   return (
     <div className="conptcard_background">
       <div className="conptcard_header">
@@ -35,16 +37,13 @@ function ContactPointCard() {
       </div>
       <div className="conptcard_body">
         <h3 className="conptcard_title">Wish Discovery</h3>
-        <p className="conptcard_description">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id sed nibh orci condimentum
-          blandit. Feugiat viverra quam ornare venenatis in odio mi.
-        </p>
+        <p className="conptcard_description">{cardDescription}</p>
       </div>
       <div className="conptrcard_links">
-        {contactPoints.map((contact) => (
+        {contactList.map((contact) => (
           <div className="contact_info" key={Math.random()}>
             <a href="/">
-              {contact.Name} {contact.Extension}{" "}
+              {contact.name} {contact.phone}{" "}
             </a>
           </div>
         ))}
