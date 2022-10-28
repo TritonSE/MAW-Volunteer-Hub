@@ -23,12 +23,15 @@ router.post("/create", (req, res) =>
     .catch(errorHandler(res))
 );
 
-// WIP: Not correct. Contact card can't just updateOne like this
-router.patch("/edit", (req, res) =>
+// Finds the ContactPoint Card and updates everything.
+router.put("/edit/:id", (req, res) =>
   ContactPointCard.findById(req.params.id)
     .then((contactCard) =>
       contactCard
-        .updateOne({ _id: req.params.field }, req.params.newValue)
+        .updateOne({
+          description: req.body.description,
+          contacts: req.body.contacts,
+        })
         .then(() => res.json({ success: true }))
     )
     .catch(errorHandler(res))
