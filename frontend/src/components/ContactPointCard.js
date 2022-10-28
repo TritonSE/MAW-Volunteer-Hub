@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/ContactPointCard.css";
 import EditContactModal from "./EditContactModal";
 
-function ContactPointCard({ description, contacts }) {
+function ContactPointCard({ description, contacts, id }) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   /**
    * Input Needed:
@@ -11,22 +11,14 @@ function ContactPointCard({ description, contacts }) {
    * 3). Step Description
    * 4). Contact Points
    */
-  // const contactPoints = [
-  //   {
-  //     Name: "Charlie Lerner",
-  //     Extension: "x100",
-  //   },
-  //   {
-  //     Name: "Dharlie Lerner",
-  //     Extension: "x101",
-  //   },
-  //   {
-  //     Name: "Eharlie Lerner",
-  //     Extension: "x102",
-  //   },
-  // ];
   const [cardDescription, setCardDescription] = useState(description);
   const [contactList, setContactList] = useState(contacts);
+
+  useEffect(() => {
+    setCardDescription(description);
+    setContactList(contacts);
+  }, [editModalOpen]);
+
   return (
     <div className="conptcard_background">
       <div className="conptcard_header">
@@ -51,7 +43,9 @@ function ContactPointCard({ description, contacts }) {
       <EditContactModal
         open={editModalOpen}
         setOpen={setEditModalOpen}
-        contactInput={[{ name: "James", phone: "x1000" }]}
+        cardDescription={cardDescription}
+        contactInput={contactList}
+        cardId={id}
       />
     </div>
   );

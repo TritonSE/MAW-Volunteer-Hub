@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+/* eslint-disable no-restricted-syntax */
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "../styles/EditContactModal.css";
+import { api_edit_contact_points } from "../api";
 
-function ContactCardInfoSection({ name, phone, index, updateName, updatePhone }) {
+function ContactCardInfoSection({ name, phone, index, updateName, updatePhone, modalOpen }) {
   const [contactName, setContactName] = useState(name);
   const [contactPhone, setContactPhone] = useState(phone);
 
@@ -15,6 +17,11 @@ function ContactCardInfoSection({ name, phone, index, updateName, updatePhone })
     setContactPhone(phoneVal);
     updatePhone(phoneVal, index);
   };
+
+  useEffect(() => {
+    setContactName(name);
+    setContactPhone(phone);
+  }, [modalOpen]);
 
   return (
     <div className="contact_card_info">
@@ -40,9 +47,9 @@ function ContactCardInfoSection({ name, phone, index, updateName, updatePhone })
   );
 }
 
-export default function EditContactModal({ open, setOpen, contactInput }) {
+export default function EditContactModal({ open, setOpen, cardDescription, contactInput, cardId }) {
   const NUM_CONTACTS = 4;
-  const [description, setDescription] = useState("");
+  const [description, setDescription] = useState(cardDescription);
 
   // Fills in blanks for empty contacts
   const initContacts = () => {
@@ -55,16 +62,52 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
     }
     return res;
   };
+  const [originalContacts, setOriginalContacts] = useState(initContacts());
 
-  const originalContacts = initContacts();
-  const updatedContacts = originalContacts;
+  useEffect(() => {
+    setDescription(cardDescription);
+    setOriginalContacts(contactInput);
+  }, [open]);
+
+  // Source: https://javascript.plainenglish.io/how-to-deep-copy-objects-and-arrays-in-javascript-7c911359b089
+  const deepCopyFunction = (inObject) => {
+    let value;
+    let key;
+
+    if (typeof inObject !== "object" || inObject === null) {
+      return inObject; // Return the value if inObject is not an object
+    }
+
+    // Create an array or object to hold the values
+    const outObject = Array.isArray(inObject) ? [] : {};
+
+    for (key in inObject) {
+      if (true) {
+        value = inObject[key];
+
+        // Recursively (deep) copy for nested objects, including arrays
+        outObject[key] = deepCopyFunction(value);
+      }
+    }
+    return outObject;
+  };
+
+  const updatedContacts = deepCopyFunction(contactInput);
 
   // This is the function that will talk to the backend
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Description: " + description);
     for (let i = 0; i < updatedContacts.length; i++) {
       console.log(updatedContacts[i].name + " " + updatedContacts[i].phone);
+    }
+
+    const res = await api_edit_contact_points(cardId, description, updatedContacts);
+    if (!res || res.error) {
+      console.log(res);
+      alert("Failed");
+    } else {
+      alert("Updated");
     }
     setOpen(false);
   };
@@ -99,7 +142,7 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
         <input
           className="contact_card_description"
           type="text"
-          placeholder="Contact Card Description Here"
+          placeholder={description ? "Description Goes Here" : null}
           value={description}
           onChange={(e) => {
             setDescription(e.target.value);
@@ -115,6 +158,7 @@ export default function EditContactModal({ open, setOpen, contactInput }) {
               index={i}
               updateName={updateName}
               updatePhone={updatePhone}
+              modalOpen={open}
             />
           ))}
         </div>

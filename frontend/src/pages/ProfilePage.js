@@ -633,6 +633,7 @@ function ProfilePage() {
           ? contactPoints?.map((contact) => (
               <ContactPointCard
                 key={Math.random()}
+                id={contact._id}
                 description={contact.description}
                 contacts={contact.contacts}
               />

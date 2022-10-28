@@ -270,6 +270,12 @@ const api_get_contact_points = async () =>
     type: "application/json",
   });
 
+const api_edit_contact_points = async (id, description, contacts) => {
+  api_call(`${API_ENDPOINTS.CONTACT_POINT_UPDATE}/${id}`, {
+    data: { description, contacts },
+    method: "PUT",
+  });
+};
 // TODO: api_create_contact_point
 // TODO: api_update_contact_point
 
@@ -311,4 +317,5 @@ export {
   api_edit_event,
   api_delete_event,
   api_get_contact_points,
+  api_edit_contact_points,
 };
