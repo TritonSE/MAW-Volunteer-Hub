@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 
 const ContactPointCard = require("../models/ContactPointModel");
 const { validate, adminValidator, idParamValidator, errorHandler } = require("../util/RouteUtils");
@@ -25,7 +26,8 @@ router.post("/create", (req, res) =>
 
 // Finds the ContactPoint Card and updates everything.
 router.put("/edit/:id", (req, res) =>
-  ContactPointCard.findById(req.params.id)
+  // console.log("HIT " + req.params.id + " " + req.body.description + " " + req.body.contacts)
+  ContactPointCard.findById(mongoose.Types.ObjectId(req.params.id))
     .then((contactCard) =>
       contactCard
         .updateOne({
