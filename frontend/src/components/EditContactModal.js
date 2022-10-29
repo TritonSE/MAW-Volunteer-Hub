@@ -102,7 +102,7 @@ export default function EditContactModal({ open, setOpen, cardDescription, conta
       console.log(updatedContacts[i].name + " " + updatedContacts[i].phone);
     }
 
-    const res = await api_edit_contact_points(cardId, description, updatedContacts);
+    const res = await api_edit_contact_points(cardId, description, JSON.stringify(updatedContacts));
     if (!res || res.error) {
       console.log(res);
       alert("Failed");

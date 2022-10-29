@@ -26,13 +26,12 @@ router.post("/create", (req, res) =>
 
 // Finds the ContactPoint Card and updates everything.
 router.put("/edit/:id", (req, res) =>
-  // console.log("HIT " + req.params.id + " " + req.body.description + " " + req.body.contacts)
   ContactPointCard.findById(mongoose.Types.ObjectId(req.params.id))
     .then((contactCard) =>
       contactCard
         .updateOne({
           description: req.body.description,
-          contacts: req.body.contacts,
+          contacts: JSON.parse(req.body.contacts).map((contact) => contact),
         })
         .then(() => res.json({ success: true }))
     )

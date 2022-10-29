@@ -270,14 +270,12 @@ const api_get_contact_points = async () =>
     type: "application/json",
   });
 
-const api_edit_contact_points = async (id, description, contacts) => {
+const api_edit_contact_points = async (id, newDescription, newContacts) =>
   api_call(`${API_ENDPOINTS.CONTACT_POINT_UPDATE}/${id}`, {
-    data: { description, contacts },
+    data: { description: `${newDescription}`, contacts: newContacts },
     method: "PUT",
+    type: "application/json",
   });
-};
-// TODO: api_create_contact_point
-// TODO: api_update_contact_point
 
 export {
   api_validtoken,
