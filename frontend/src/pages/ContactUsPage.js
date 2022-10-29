@@ -371,77 +371,6 @@ export default function ContactUsPage() {
             </button>
             <p className="upload_image_status_text">{file ? `${file.name}` : ""}</p>
             <br />
-            <Modal
-              className="profile-page-modal"
-              overlayClassName="profile-page-modal-overlay"
-              isOpen={pfpModalOpen}
-              onRequestClose={() => {
-                if (!dragActive) {
-                  setPFPModalOpen(false);
-                  setCrop({ aspect: 1 });
-                }
-              }}
-              contentLabel="Change profile picture"
-            >
-              <h1 className="modal-title-crop">Crop Profile Picture</h1>
-              <span className="modal-subtitle-crop">Click and drag to crop</span>
-              <ReactCrop
-                crop={crop}
-                aspect={1}
-                minWidth={10}
-                ruleOfThirds
-                onChange={(_c, pc) => setCrop(pc)}
-                onComplete={(_c, pc) => setCrop(pc)}
-                onDragStart={() => setDragActive(true)}
-                onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
-              >
-                <img
-                  alt="Crop modal"
-                  src={upImg}
-                  style={{
-                    maxHeight: "calc(100vh - 180px)",
-                  }}
-                  onLoad={fix_crop}
-                />
-              </ReactCrop>
-              <br />
-              <div className="modal-flex-crop">
-                <button
-                  type="button"
-                  className="modal-button button-nomargin change-password-button"
-                  onClick={() => setPFPModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <span>&nbsp;</span>
-                <button
-                  type="button"
-                  className="modal-button button-primary button-nomargin"
-                  onClick={do_upload}
-                  style={{ opacity }}
-                >
-                  Upload
-                </button>
-              </div>
-            </Modal>
-            <Modal
-              className="profile-page-modal"
-              overlayClassName="profile-page-modal-overlay"
-              isOpen={Boolean(pfpErrorModalOpen)}
-              onRequestClose={() => setPFPErrorModalOpen(false)}
-              contentLabel="Profile picture error"
-            >
-              <h1 className="modal-title-crop">Error:</h1>
-              <span>{pfpErrorModalOpen}</span>
-              <br />
-              <button
-                type="button"
-                className="modal-button button-primary button-nomargin"
-                onClick={() => setPFPErrorModalOpen(false)}
-              >
-                Okay
-              </button>
-            </Modal>
 
             <label>Name</label>
             <input
@@ -564,77 +493,6 @@ export default function ContactUsPage() {
               {file ? `${file.name}` : "Using current image"}
             </p>
             <br />
-            <Modal
-              className="profile-page-modal"
-              overlayClassName="profile-page-modal-overlay"
-              isOpen={pfpModalOpen}
-              onRequestClose={() => {
-                if (!dragActive) {
-                  setPFPModalOpen(false);
-                  setCrop({ aspect: 1 });
-                }
-              }}
-              contentLabel="Change profile picture"
-            >
-              <h1 className="modal-title-crop">Crop Profile Picture</h1>
-              <span className="modal-subtitle-crop">Click and drag to crop</span>
-              <ReactCrop
-                crop={crop}
-                aspect={1}
-                minWidth={10}
-                ruleOfThirds
-                onChange={(_c, pc) => setCrop(pc)}
-                onComplete={(_c, pc) => setCrop(pc)}
-                onDragStart={() => setDragActive(true)}
-                onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
-              >
-                <img
-                  alt="Crop modal"
-                  src={upImg}
-                  style={{
-                    maxHeight: "calc(100vh - 180px)",
-                  }}
-                  onLoad={fix_crop}
-                />
-              </ReactCrop>
-              <br />
-              <div className="modal-flex-crop">
-                <button
-                  type="button"
-                  className="modal-button button-nomargin change-password-button"
-                  onClick={() => setPFPModalOpen(false)}
-                >
-                  Cancel
-                </button>
-                <span>&nbsp;</span>
-                <button
-                  type="button"
-                  className="modal-button button-primary button-nomargin"
-                  onClick={do_upload}
-                  style={{ opacity }}
-                >
-                  Upload
-                </button>
-              </div>
-            </Modal>
-            <Modal
-              className="profile-page-modal"
-              overlayClassName="profile-page-modal-overlay"
-              isOpen={Boolean(pfpErrorModalOpen)}
-              onRequestClose={() => setPFPErrorModalOpen(false)}
-              contentLabel="Profile picture error"
-            >
-              <h1 className="modal-title-crop">Error:</h1>
-              <span>{pfpErrorModalOpen}</span>
-              <br />
-              <button
-                type="button"
-                className="modal-button button-primary button-nomargin"
-                onClick={() => setPFPErrorModalOpen(false)}
-              >
-                Okay
-              </button>
-            </Modal>
             <label>Name</label>
             <input
               type="text"
@@ -685,6 +543,77 @@ export default function ContactUsPage() {
             </button>
           </form>
         </div>
+      </Modal>
+      <Modal
+        className="contact_react_modal"
+        overlayClassName="contact_react_modal"
+        isOpen={pfpModalOpen}
+        onRequestClose={() => {
+          if (!dragActive) {
+            setPFPModalOpen(false);
+            setCrop({ aspect: 1 });
+          }
+        }}
+        contentLabel="Change contact picture"
+      >
+        <h1 className="modal-title-crop">Crop Contact Picture</h1>
+        <span className="modal-subtitle-crop">Click and drag to crop</span>
+        <ReactCrop
+          crop={crop}
+          aspect={1}
+          minWidth={10}
+          ruleOfThirds
+          onChange={(_c, pc) => setCrop(pc)}
+          onComplete={(_c, pc) => setCrop(pc)}
+          onDragStart={() => setDragActive(true)}
+          onDragEnd={() => setTimeout(() => setDragActive(false), 100)}
+        >
+          <img
+            alt="Crop modal"
+            src={upImg}
+            style={{
+              maxHeight: "calc(100vh - 180px)",
+            }}
+            onLoad={fix_crop}
+          />
+        </ReactCrop>
+        <br />
+        <div className="modal-flex-crop">
+          <button
+            type="button"
+            className="modal-button button-nomargin change-password-button"
+            onClick={() => setPFPModalOpen(false)}
+          >
+            Cancel
+          </button>
+          <span>&nbsp;</span>
+          <button
+            type="button"
+            className="modal-button button-primary button-nomargin"
+            onClick={do_upload}
+            style={{ opacity }}
+          >
+            Upload
+          </button>
+        </div>
+      </Modal>
+      <Modal
+        className="contact_react_modal"
+        overlayClassName="contact_react_modal"
+        isOpen={Boolean(pfpErrorModalOpen)}
+        onRequestClose={() => setPFPErrorModalOpen(false)}
+        contentLabel="Profile picture error"
+      >
+        <h1 className="modal-title-crop">Error:</h1>
+        <span>{pfpErrorModalOpen}</span>
+        <br />
+        <button
+          type="button"
+          className="modal-button button-primary button-nomargin"
+          onClick={() => setPFPErrorModalOpen(false)}
+        >
+          Okay
+        </button>
       </Modal>
     </>
   );

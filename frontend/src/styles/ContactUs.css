@@ -69,6 +69,19 @@
   box-sizing: border-box;
   position: relative;
 }
+.ReactModal__Content.contact_react_modal .button-primary {
+  width: 60px;
+  height: 26px;
+
+  background: #1a68bf;
+  color: #ffffff;
+
+  border-radius: 3px;
+  border: none;
+
+  font-family: "Lato";
+  font-size: 14px;
+}
 
 .contact_modal h3 {
   margin: 0;

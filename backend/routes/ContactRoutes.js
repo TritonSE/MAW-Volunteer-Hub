@@ -31,7 +31,8 @@ router.post(
     if (req.file && req.file.path) {
       const crop = JSON.parse(req.body.crop);
 
-      let compressor = sharp(req.file.path).rotate();
+      let compressor = sharp(req.file.path, { unlimited: true }).rotate();
+
       if (crop.width && crop.height && crop.left && crop.top) {
         compressor = compressor.extract(crop);
       }
@@ -111,7 +112,8 @@ router.patch("/edit/:id", idParamValidator(), upload.single("pfp"), (req, res) =
   if (req.file) {
     const crop = JSON.parse(req.body.crop);
 
-    let compressor = sharp(req.file.path).rotate();
+    let compressor = sharp(req.file.path, { unlimited: true }).rotate();
+
     if (crop.width && crop.height && crop.left && crop.top) {
       compressor = compressor.extract(crop);
     }
