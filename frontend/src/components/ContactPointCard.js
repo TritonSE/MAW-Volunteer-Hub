@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/ContactPointCard.css";
 import EditContactModal from "./EditContactModal";
 
-function ContactPointCard({ description, contacts, id }) {
+function ContactPointCard({ description, contacts, id, setModifiedContent }) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   /**
    * Input Needed:
@@ -46,6 +46,7 @@ function ContactPointCard({ description, contacts, id }) {
         cardDescription={cardDescription}
         contactInput={contactList}
         cardId={id}
+        modifiedContent={setModifiedContent}
       />
     </div>
   );

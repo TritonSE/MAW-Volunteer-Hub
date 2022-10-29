@@ -47,7 +47,14 @@ function ContactCardInfoSection({ name, phone, index, updateName, updatePhone, m
   );
 }
 
-export default function EditContactModal({ open, setOpen, cardDescription, contactInput, cardId }) {
+export default function EditContactModal({
+  open,
+  setOpen,
+  cardDescription,
+  contactInput,
+  cardId,
+  modifiedContent,
+}) {
   const NUM_CONTACTS = 4;
   const [description, setDescription] = useState(cardDescription);
 
@@ -97,19 +104,13 @@ export default function EditContactModal({ open, setOpen, cardDescription, conta
   // This is the function that will talk to the backend
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Description: " + description);
-    for (let i = 0; i < updatedContacts.length; i++) {
-      console.log(updatedContacts[i].name + " " + updatedContacts[i].phone);
-    }
-
+    setOpen(false);
     const res = await api_edit_contact_points(cardId, description, JSON.stringify(updatedContacts));
     if (!res || res.error) {
-      console.log(res);
-      alert("Failed");
+      alert("Update Failed");
     } else {
-      alert("Updated");
+      modifiedContent(true);
     }
-    setOpen(false);
   };
 
   // Callbacks

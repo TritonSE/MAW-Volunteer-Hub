@@ -55,7 +55,7 @@ function ProfilePage() {
 
   // FIXME: MOVE TO CONTACTS PAGE LATER
   const [contactPoints, setContactPoints] = useState({});
-  const [submittedChanges, setSubmittedChanges] = useState(false);
+  const [modifiedContent, setModifiedContent] = useState(false);
 
   // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
@@ -249,10 +249,13 @@ function ProfilePage() {
         const resArr = res.map((contact) => contact);
         setContactPoints(resArr);
         setGotContactInfo(true);
+        setModifiedContent(false);
       }
     }
-    handleContactPointInfo();
-  }, []);
+    if (!gotContactInfo || modifiedContent) {
+      handleContactPointInfo();
+    }
+  }, [modifiedContent]);
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
@@ -636,6 +639,7 @@ function ProfilePage() {
                 id={contact._id}
                 description={contact.description}
                 contacts={contact.contacts}
+                setModifiedContent={setModifiedContent}
               />
             ))
           : null}
