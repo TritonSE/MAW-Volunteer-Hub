@@ -633,9 +633,11 @@ function ProfilePage() {
       </div>
       <div>
         {gotContactInfo
-          ? contactPoints?.map((contact) => (
+          ? contactPoints?.map((contact, idx) => (
               <ContactPointCard
+                idx={idx + 1}
                 key={Math.random()}
+                step={contact.wishStep}
                 id={contact._id}
                 description={contact.description}
                 contacts={contact.contacts}

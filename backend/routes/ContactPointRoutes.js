@@ -17,6 +17,7 @@ router.get("/all", (req, res) =>
 
 router.post("/create", (req, res) =>
   ContactPointCard.create({
+    wishStep: req.body.wishStep,
     description: req.body.description,
     contacts: req.body.contacts,
   })

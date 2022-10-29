@@ -14,6 +14,10 @@ const ContactSchema = new mongoose.Schema({
 module.exports = mongoose.model(
   "ContactPointSchema",
   new mongoose.Schema({
+    wishStep: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,

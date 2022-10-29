@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../styles/ContactPointCard.css";
 import EditContactModal from "./EditContactModal";
 
-function ContactPointCard({ description, contacts, id, setModifiedContent }) {
+function ContactPointCard({ idx, step, description, contacts, id, setModifiedContent }) {
   const [editModalOpen, setEditModalOpen] = useState(false);
   /**
    * Input Needed:
@@ -22,13 +22,13 @@ function ContactPointCard({ description, contacts, id, setModifiedContent }) {
   return (
     <div className="conptcard_background">
       <div className="conptcard_header">
-        <div className="conptcard_step_num">1</div>
+        <div className="conptcard_step_num">{idx}</div>
         <button className="edit-button" type="button" onClick={() => setEditModalOpen(true)}>
           <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
         </button>
       </div>
       <div className="conptcard_body">
-        <h3 className="conptcard_title">Wish Discovery</h3>
+        <h3 className="conptcard_title">{step}</h3>
         <p className="conptcard_description">{cardDescription}</p>
       </div>
       <div className="conptrcard_links">
