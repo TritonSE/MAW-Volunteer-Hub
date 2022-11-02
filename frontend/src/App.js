@@ -17,6 +17,7 @@ import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import CalendarPage from "./pages/CalendarPage";
 import HomePage from "./pages/HomePage";
+import ContactUsPage from "./pages/ContactUsPage";
 import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
@@ -178,7 +179,7 @@ function App() {
             path="*"
             element={
               <PageLayout>
-                <Custom404Page />
+                <ContactUsPage />
               </PageLayout>
             }
           />

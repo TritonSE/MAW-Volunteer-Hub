@@ -60,6 +60,12 @@ const API_ENDPOINTS = {
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 
+  CONTACTS: "/contact/all",
+  CONTACTS_ADD: "/contact/add",
+  CONTACTS_DELETE: "/contact/delete",
+  CONTACTS_EDIT: "/contact/edit",
+  CONTACTS_PFP_GET: "/contact/pfp",
+
   MESSAGE: "/user/message",
 };
 
