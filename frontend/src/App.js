@@ -9,6 +9,8 @@ import {
   MANAGE_ROUTES,
   RESOURCES_SIDENAV_ROUTES,
   RESOURCES_SIDENAV_STEPS,
+  CONTACT_SIDENAV_ROUTES,
+  CONTACT_SIDENAV_STEPS,
 } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -19,6 +21,7 @@ import Custom404Page from "./pages/Custom404Page";
 import ManagePage from "./pages/ManagePage";
 import CalendarPage from "./pages/CalendarPage";
 import HomePage from "./pages/HomePage";
+import ContactUsPage from "./pages/ContactUsPage";
 import BoardMembersPage from "./pages/BoardMembersPage";
 import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
@@ -31,6 +34,8 @@ import "./App.css";
 import UserManage from "./components/UserManage";
 
 const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
+
+const CONTACT_COMPONENTS = [<BoardMembersPage />, <div />];
 
 function ProtectedRoute({
   needsPrimaryAdmin = false,
@@ -194,6 +199,30 @@ function App() {
                 key={name}
                 path={RESOURCES_SIDENAV_ROUTES[ind]}
                 element={<WishStep index={ind + 1} stepName={name} isResources />}
+              />
+            ))}
+          </Route>
+
+          {/* Contact Us Page */}
+          <Route
+            path={SITE_PAGES.CONTACT}
+            element={
+              <PageLayout>
+                <ContactUsPage />
+              </PageLayout>
+            }
+          >
+            <Route
+              exact
+              path={SITE_PAGES.CONTACT}
+              element={<Navigate to={`${SITE_PAGES.CONTACT}/${CONTACT_SIDENAV_ROUTES[0]}`} />}
+            />
+            {MANAGE_STEPS.map((name, ind) => (
+              <Route
+                exact
+                key={name}
+                path={CONTACT_SIDENAV_ROUTES[ind]}
+                element={CONTACT_COMPONENTS[ind]}
               />
             ))}
           </Route>

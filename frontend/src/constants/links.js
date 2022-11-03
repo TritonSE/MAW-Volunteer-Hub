@@ -8,6 +8,7 @@ const SITE_PAGES = {
   MANAGE: "/manage",
   CALENDAR: "/calendar",
   RESOURCES: "/resources",
+  CONTACT: "/contact",
 
   SIGNOUT: "/signout",
 };
@@ -61,11 +62,11 @@ const API_ENDPOINTS = {
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 
-  CONTACTS: "/contact/all",
-  CONTACTS_ADD: "/contact/add",
-  CONTACTS_DELETE: "/contact/delete",
-  CONTACTS_EDIT: "/contact/edit",
-  CONTACTS_PFP_GET: "/contact/pfp",
+  CONTACTS: "/contacts/all",
+  CONTACTS_ADD: "/contacts/add",
+  CONTACTS_DELETE: "/contacts/delete",
+  CONTACTS_EDIT: "/contacts/edit",
+  CONTACTS_PFP_GET: "/contacts/pfp",
 
   MESSAGE: "/user/message",
 };
@@ -103,9 +104,9 @@ const RESOURCES_SIDENAV_ROUTES = [
   "other",
 ];
 
-// re add message when completed
-// const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
-// const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+const CONTACT_SIDENAV_STEPS = ["Board Members", "Contact Points"];
+
+const CONTACT_SIDENAV_ROUTES = ["board", "contacts"];
 
 const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 const MANAGE_ROUTES = ["people", "message", "wish-wednesday"];
@@ -119,4 +120,6 @@ export {
   MANAGE_ROUTES,
   RESOURCES_SIDENAV_ROUTES,
   RESOURCES_SIDENAV_STEPS,
+  CONTACT_SIDENAV_STEPS,
+  CONTACT_SIDENAV_ROUTES,
 };
