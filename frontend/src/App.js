@@ -23,6 +23,7 @@ import CalendarPage from "./pages/CalendarPage";
 import HomePage from "./pages/HomePage";
 import ContactUsPage from "./pages/ContactUsPage";
 import BoardMembersPage from "./pages/BoardMembersPage";
+import ContactPointsPage from "./pages/ContactPointsPage";
 import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
@@ -35,7 +36,7 @@ import UserManage from "./components/UserManage";
 
 const MANAGE_COMPONENTS = [<UserManage />, <Message />, <WishWednesday />];
 
-const CONTACT_COMPONENTS = [<BoardMembersPage />, <div />];
+const CONTACT_COMPONENTS = [<BoardMembersPage />, <ContactPointsPage />];
 
 function ProtectedRoute({
   needsPrimaryAdmin = false,
@@ -235,7 +236,7 @@ function App() {
             path="*"
             element={
               <PageLayout>
-                <BoardMembersPage />
+                <Custom404Page />
               </PageLayout>
             }
           />
