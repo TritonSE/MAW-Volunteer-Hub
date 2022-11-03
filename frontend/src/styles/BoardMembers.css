@@ -1,0 +1,214 @@
+.contacts {
+  margin: 10px 30px;
+  align-self: flex-start;
+  display: flex;
+  width: calc(30px + 228px + 228px + 76px + 20px);
+  height: inherit;
+  flex-flow: row wrap;
+}
+
+.titles {
+  margin: 30px;
+  display: flex;
+  width: 90%;
+  height: inherit;
+  justify-content: space-between;
+}
+
+.title_contacts {
+  align-self: flex-start;
+  width: calc(30px + 228px + 228px + 76px - 33px);
+  display: flex;
+  justify-content: space-between;
+  height: inherit;
+}
+
+.title_contacts > div {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 29px;
+  margin-left: 10px;
+}
+
+.title_contacts > Button {
+  width: 142px;
+  height: 30px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  background: #1a68bf;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  font-family: "Lato";
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.ReactModal__Overlay.contact_react_modal {
+  z-index: 1000;
+  position: fixed;
+  inset: 0px;
+  background-color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+.ReactModal__Content.contact_react_modal {
+  max-width: 450px;
+  padding: 25px;
+  border: none !important;
+  background: white;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px !important;
+  box-sizing: border-box;
+  position: relative;
+}
+.ReactModal__Content.contact_react_modal .button-primary {
+  width: 60px;
+  height: 26px;
+
+  background: #1a68bf;
+  color: #ffffff;
+
+  border-radius: 3px;
+  border: none;
+
+  font-family: "Lato";
+  font-size: 14px;
+}
+
+.contact_modal h3 {
+  margin: 0;
+}
+
+.contact_modal {
+  font-family: "Lato", sans-serif;
+}
+
+.contact_modal_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.contact_modal_close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.contact_modal input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 13px;
+  margin-top: 4px;
+}
+
+.contact_modal input[type="email"] {
+  width: 100%;
+  box-sizing: border-box;
+  height: 28px;
+  padding: 0;
+  padding: 7px;
+  border: 1px solid #0057b8;
+  font-family: "Lato" !important;
+  border-radius: 3px;
+  font-size: 14px;
+  margin-bottom: 13px;
+}
+
+.contact_modal label {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+}
+
+.contact_modal button[type="submit"] {
+  float: right;
+  width: 103px;
+  height: 26px;
+  cursor: pointer;
+  margin-top: 15px 0 10px;
+
+  background: #1a68bf;
+  color: #ffffff;
+
+  border-radius: 3px;
+  border: none;
+
+  font-family: "Lato";
+  font-size: 14px;
+}
+
+.delete_modal_body {
+  display: flex;
+  height: inherit;
+  flex-flow: column wrap;
+  text-align: center;
+}
+.delete_modal_button_container {
+  display: flex;
+  justify-content: space-evenly;
+  margin: 20px 0;
+}
+.delete_modal_button_container button {
+  font-family: "Lato";
+  font-size: 14px;
+
+  border-radius: 3px;
+  width: 103px;
+  height: 26px;
+  cursor: pointer;
+}
+
+.delete_modal_button_container button:nth-child(1) {
+  background: white;
+  border: 1px solid black;
+}
+
+.delete_modal_button_container button:nth-child(2) {
+  color: #ffffff;
+  background: #ff797d;
+  border: 1px solid #ff797d;
+}
+
+.upload_image_button {
+  font-family: "Lato";
+  font-size: 14px;
+  border-radius: 3px;
+  background: white;
+  border: 1px solid black;
+  padding: 8px;
+  box-sizing: content-box;
+  margin: 0 12px 16px 0;
+  cursor: pointer;
+  transition: background 0.12s ease-in-out;
+}
+.upload_image_button > label {
+  cursor: pointer;
+}
+
+.upload_image_button:hover {
+  transition: background 0.15s ease-in-out;
+  background: rgb(245, 245, 245);
+}
+.upload_image_status_text {
+  position: relative;
+  display: inline;
+  font-family: "Lato";
+  font-size: 14px;
+}
