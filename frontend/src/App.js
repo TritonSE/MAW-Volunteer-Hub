@@ -7,6 +7,8 @@ import {
   SIDENAV_ROUTES,
   MANAGE_STEPS,
   MANAGE_ROUTES,
+  RESOURCES_SIDENAV_ROUTES,
+  RESOURCES_SIDENAV_STEPS,
 } from "./constants/links";
 import PageLayout from "./components/PageLayout";
 import LoginPage from "./pages/LoginPage";
@@ -21,6 +23,7 @@ import ContactUsPage from "./pages/ContactUsPage";
 import Message from "./components/Message";
 import WishWednesday from "./components/WishWednesday";
 import WishStep from "./components/WishStep";
+import AdditionalResourcesPage from "./pages/AdditionalResourcesPage";
 import { CurrentUser } from "./components/Contexts";
 
 import "./App.css";
@@ -170,6 +173,30 @@ function App() {
               </PageLayout>
             }
           />
+
+          {/* Additional Resource Page */}
+          <Route
+            path={SITE_PAGES.RESOURCES}
+            element={
+              <PageLayout>
+                <AdditionalResourcesPage />
+              </PageLayout>
+            }
+          >
+            <Route
+              exact
+              path={SITE_PAGES.RESOURCES}
+              element={<Navigate to={`${SITE_PAGES.RESOURCES}/${RESOURCES_SIDENAV_ROUTES[0]}`} />}
+            />
+            {RESOURCES_SIDENAV_STEPS.map((name, ind) => (
+              <Route
+                exact
+                key={name}
+                path={RESOURCES_SIDENAV_ROUTES[ind]}
+                element={<WishStep index={ind + 1} stepName={name} isResources />}
+              />
+            ))}
+          </Route>
 
           {/* Sign out */}
           <Route exact path={SITE_PAGES.SIGNOUT} element={<SignoutHelper />} />
