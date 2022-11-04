@@ -1,0 +1,12 @@
+.contactpoints_page_layout {
+  padding: 3vh 5vw 3vh 5vw;
+}
+
+.contactpoints_container {
+  box-sizing: border-box;
+  width: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

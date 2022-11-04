@@ -13,7 +13,6 @@ export default function ContactPointsPage() {
   const [gotContactInfo, setGotContactInfo] = useState(false);
   const [is404, setIs404] = useState(false);
 
-  // FIXME: MOVE TO CONTACT PAGE LATER
   useEffect(() => {
     async function handleContactPointInfo() {
       const res = await api_get_contact_points();
@@ -30,23 +29,27 @@ export default function ContactPointsPage() {
       handleContactPointInfo();
     }
   }, [modifiedContent]);
+
   return is404 ? (
     <Custom404Page />
   ) : (
-    <div className="contactpoints_container">
-      {gotContactInfo
-        ? contactPoints?.map((contact, idx) => (
-            <ContactPointCard
-              idx={idx + 1}
-              key={Math.random()}
-              step={contact.wishStep}
-              id={contact._id}
-              description={contact.description}
-              contacts={contact.contacts}
-              setModifiedContent={setModifiedContent}
-            />
-          ))
-        : null}
+    <div className="contactpoints_page_layout">
+      <h2 className="contactpoints_title">Contact Points</h2>
+      <div className="contactpoints_container">
+        {gotContactInfo
+          ? contactPoints?.map((contact, idx) => (
+              <ContactPointCard
+                idx={idx + 1}
+                key={Math.random()}
+                step={contact.wishStep}
+                id={contact._id}
+                description={contact.description}
+                contacts={contact.contacts}
+                setModifiedContent={setModifiedContent}
+              />
+            ))
+          : null}
+      </div>
     </div>
   );
 }
