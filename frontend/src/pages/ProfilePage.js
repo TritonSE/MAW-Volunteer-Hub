@@ -13,7 +13,6 @@ import {
   api_user_delete,
   api_user_activate,
   api_pfp_upload,
-  api_get_contact_points,
 } from "../api";
 import { CurrentUser } from "../components/Contexts";
 
@@ -21,7 +20,6 @@ import ProfileRoles from "../components/ProfileRoles";
 import ProfileActivities from "../components/ProfileActivities";
 
 import "../styles/ProfilePage.css";
-import ContactPointCard from "../components/ContactPointCard";
 
 Modal.setAppElement(document.getElementById("root"));
 
@@ -52,10 +50,6 @@ function ProfilePage() {
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [confirmPass, setConfirmPass] = useState("");
-
-  // FIXME: MOVE TO CONTACTS PAGE LATER
-  const [contactPoints, setContactPoints] = useState({});
-  const [modifiedContent, setModifiedContent] = useState(false);
 
   // const [calendarEvents, setCalendarEvents] = useState([]);
   const { id } = useParams();
@@ -236,26 +230,6 @@ function ProfilePage() {
   useEffect(() => {
     document.title = `${user.name ?? "Profile"} - Make-a-Wish San Diego`;
   }, [user]);
-
-  const [gotContactInfo, setGotContactInfo] = useState(false);
-
-  // FIXME: MOVE TO CONTACT PAGE LATER
-  useEffect(() => {
-    async function handleContactPointInfo() {
-      const res = await api_get_contact_points();
-      if (!res) setIs404(true);
-      else {
-        setIs404(false);
-        const resArr = res.map((contact) => contact);
-        setContactPoints(resArr);
-        setGotContactInfo(true);
-        setModifiedContent(false);
-      }
-    }
-    if (!gotContactInfo || modifiedContent) {
-      handleContactPointInfo();
-    }
-  }, [modifiedContent]);
 
   // Change format of calendar events to fit in with the format of manual events.
   function formatCalendarEvents() {
@@ -630,21 +604,6 @@ function ProfilePage() {
         ) : (
           "Loading..."
         )}
-      </div>
-      <div>
-        {gotContactInfo
-          ? contactPoints?.map((contact, idx) => (
-              <ContactPointCard
-                idx={idx + 1}
-                key={Math.random()}
-                step={contact.wishStep}
-                id={contact._id}
-                description={contact.description}
-                contacts={contact.contacts}
-                setModifiedContent={setModifiedContent}
-              />
-            ))
-          : null}
       </div>
     </div>
   );
