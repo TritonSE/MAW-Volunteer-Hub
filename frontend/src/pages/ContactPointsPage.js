@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 
 import Custom404Page from "./Custom404Page";
 import { api_get_contact_points } from "../api";
 
+import { CurrentUser } from "../components/Contexts";
 import ContactPointCard from "../components/ContactPointCard";
 
 import "../styles/ContactPointsPage.css";
@@ -12,6 +13,7 @@ export default function ContactPointsPage() {
   const [modifiedContent, setModifiedContent] = useState(false);
   const [gotContactInfo, setGotContactInfo] = useState(false);
   const [is404, setIs404] = useState(false);
+  const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
   useEffect(() => {
     async function handleContactPointInfo() {
@@ -46,6 +48,7 @@ export default function ContactPointsPage() {
                 description={contact.description}
                 contacts={contact.contacts}
                 setModifiedContent={setModifiedContent}
+                admin={currentUser.admin}
               />
             ))
           : null}
