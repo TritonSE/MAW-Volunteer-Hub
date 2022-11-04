@@ -149,10 +149,10 @@
 /* Media queries for responsive display desktop/mobile */
 
 /* 
-    Breakpoint 1: 795px
+    Breakpoint 1: Now at 1000px (previously 950px)
     Page Links media query: change max-width depending on number of pages 
 */
-@media only screen and (max-width: 795px) {
+@media only screen and (max-width: 1050px) {
   .pages-container {
     display: none;
   }

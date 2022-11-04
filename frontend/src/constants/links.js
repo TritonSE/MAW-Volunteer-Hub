@@ -7,6 +7,8 @@ const SITE_PAGES = {
   PROFILE: "/profile",
   MANAGE: "/manage",
   CALENDAR: "/calendar",
+  RESOURCES: "/resources",
+  CONTACT: "/contact",
 
   SIGNOUT: "/signout",
 };
@@ -60,6 +62,12 @@ const API_ENDPOINTS = {
   WISH_WEDNESDAY: "/wishwed/latest",
   WISH_WEDNESDAY_ADD: "/wishwed/add",
 
+  CONTACTS: "/contacts/all",
+  CONTACTS_ADD: "/contacts/add",
+  CONTACTS_DELETE: "/contacts/delete",
+  CONTACTS_EDIT: "/contacts/edit",
+  CONTACTS_PFP_GET: "/contacts/pfp",
+
   MESSAGE: "/user/message",
 
   CONTACT_POINT_ALL: "/contactpoint/all",
@@ -82,11 +90,40 @@ const SIDENAV_ROUTES = [
   "wish-closeout",
 ];
 
-// re add message when completed
-// const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
-// const MANAGE_ROUTES = ["people", "messages", "wish-wednesday"];
+const RESOURCES_SIDENAV_STEPS = [
+  "Wish Granter Refreshers",
+  "Wish Policy Updates",
+  "Chapter Trainings",
+  "Make-A-Wish University",
+  "Make-A-Wish Foundation History",
+  "Other",
+];
+
+const RESOURCES_SIDENAV_ROUTES = [
+  "refreshers",
+  "updates",
+  "trainings",
+  "university",
+  "history",
+  "other",
+];
+
+const CONTACT_SIDENAV_STEPS = ["Board Members", "Contact Points"];
+
+const CONTACT_SIDENAV_ROUTES = ["board", "contacts"];
 
 const MANAGE_STEPS = ["People", "Message", "Wish Wednesday"];
 const MANAGE_ROUTES = ["people", "message", "wish-wednesday"];
 
-export { SITE_PAGES, API_ENDPOINTS, SIDENAV_STEPS, SIDENAV_ROUTES, MANAGE_STEPS, MANAGE_ROUTES };
+export {
+  SITE_PAGES,
+  API_ENDPOINTS,
+  SIDENAV_STEPS,
+  SIDENAV_ROUTES,
+  MANAGE_STEPS,
+  MANAGE_ROUTES,
+  RESOURCES_SIDENAV_ROUTES,
+  RESOURCES_SIDENAV_STEPS,
+  CONTACT_SIDENAV_STEPS,
+  CONTACT_SIDENAV_ROUTES,
+};

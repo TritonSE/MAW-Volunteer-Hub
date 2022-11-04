@@ -226,6 +226,45 @@ const api_wish_wednesday_add = (message) =>
   api_call(API_ENDPOINTS.WISH_WEDNESDAY_ADD, { method: "POST", data: { message } });
 
 /**
+ * CONTACT CARD
+ */
+const api_contacts = () => api_call(API_ENDPOINTS.CONTACTS, { method: "GET" });
+
+const api_contacts_add = (name, position, organization, email, phone, pfp, crop) =>
+  api_call(API_ENDPOINTS.CONTACTS_ADD, {
+    method: "POST",
+    data: {
+      name,
+      position,
+      organization,
+      email,
+      phone,
+      pfp,
+      crop,
+    },
+    type: "multipart/form-data",
+  });
+
+const api_contacts_delete = (id) => {
+  api_call(`${API_ENDPOINTS.CONTACTS_DELETE}/${id}`, { method: "DELETE" });
+};
+
+const api_contacts_edit = (id, name, email, phone, org, position, pfp, crop) =>
+  api_call(`${API_ENDPOINTS.CONTACTS_EDIT}/${id}`, {
+    method: "PATCH",
+    data: {
+      updated_name: name,
+      updated_email: email,
+      updated_phone: phone,
+      updated_org: org,
+      updated_position: position,
+      ...(pfp && { pfp }),
+      ...(crop && { crop }),
+    },
+    type: "multipart/form-data",
+  });
+
+/*
  * MESSAGING EMAILS
  */
 const api_message_email = (roles, html, text, subject) =>
@@ -309,6 +348,10 @@ export {
   api_calendar_respond,
   api_wish_wednesday,
   api_wish_wednesday_add,
+  api_contacts,
+  api_contacts_add,
+  api_contacts_delete,
+  api_contacts_edit,
   api_message_email,
   api_update_roles,
   api_add_event,

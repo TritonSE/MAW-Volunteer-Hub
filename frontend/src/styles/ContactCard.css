@@ -1,0 +1,192 @@
+.contact_card {
+  margin: 30px;
+
+  position: relative;
+  width: 227px;
+  height: 369px;
+  z-index: 0;
+  border-radius: 2px;
+  box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.15);
+}
+
+.edit {
+  position: absolute;
+  width: 12.39px;
+  height: 12.39px;
+  left: 5%;
+  top: 3%;
+  cursor: pointer;
+  z-index: 2;
+  margin-right: 5px;
+}
+
+.delete {
+  position: relative;
+  margin-left: 10px;
+  margin-top: 8px;
+  border: none;
+  background: none;
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.contact_icon {
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  border-radius: 50%;
+  width: 138px;
+  height: 138px;
+  object-fit: cover;
+  z-index: 2;
+}
+
+.card_back {
+  position: absolute;
+  width: 229px;
+  height: 125px;
+  left: -0.6%;
+  top: -0.4%;
+  z-index: 1;
+  background-image: url("../../public/img/contact_back.svg");
+}
+
+.card_name {
+  justify-self: center;
+  margin-top: 24px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+}
+
+.position {
+  justify-self: center;
+  font-style: normal;
+  font-weight: 250;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #000000;
+}
+
+#pos1 {
+  margin-top: 10px;
+}
+
+.info {
+  justify-self: flex-start;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14px;
+  text-decoration-line: underline;
+  margin-bottom: 18px;
+  color: #000000;
+  margin-left: 30px;
+}
+
+#info1 {
+  margin-top: 25px;
+}
+
+.whotocard {
+  width: 332px;
+  height: 332px;
+  border: solid 1px;
+}
+
+.whotocard > .counter {
+  position: relative;
+  left: 15px;
+  top: 15px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  box-shadow: 8px 10px 40px rgba(0, 87, 184, 0.1);
+  height: 65px;
+  width: 65px;
+  border-radius: 35px;
+  text-align: center;
+  justify-content: center;
+}
+
+.whotocard > .counter > p {
+  position: relative;
+  margin: 0 auto;
+  padding-top: 10px;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 43px;
+  color: #0057b8;
+}
+
+.whotocard > .heading {
+  margin: 0 auto;
+  position: relative;
+  height: 22px;
+  width: 173px;
+  text-align: center;
+}
+
+.whotocard > .heading > p {
+  margin: 0 auto;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  color: #0057b8;
+  white-space: nowrap;
+}
+
+.whotocard > .description {
+  width: 272px;
+  height: 114px;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.whotocard > .description > p {
+  margin: 0 auto;
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+}
+
+.whotocard > .grid {
+  position: relative;
+  display: grid;
+  width: 272px;
+  height: 41px;
+  grid-template-rows: 17px 17px;
+  grid-template-columns: 121px 121px;
+  grid-gap: 7px;
+  grid-column-gap: 30px;
+  margin: auto;
+  white-space: nowrap;
+}
+
+.whotocard > .grid > div {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  /* identical to box height */
+  text-decoration-line: underline;
+
+  color: #000000;
+}
