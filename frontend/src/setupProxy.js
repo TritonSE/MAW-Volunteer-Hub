@@ -58,7 +58,7 @@ module.exports = (app) => {
     })
   );
   app.use(
-    "/contact",
+    "/contacts",
     createProxyMiddleware({
       target: "http://localhost:5000",
       changeOrigin: true,

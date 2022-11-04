@@ -121,7 +121,7 @@
 
 /* media queries for mobile menu */
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 1050px) {
   .nav-menu-mobile {
     display: flex;
   }

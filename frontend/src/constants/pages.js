@@ -2,7 +2,12 @@
     Pages for the site, to display in the navbar and its mobile dropdown.
     If adding more pages, adjust Page Links media query in NavBar.css
 */
-import { SITE_PAGES, SIDENAV_ROUTES, RESOURCES_SIDENAV_ROUTES } from "./links";
+import {
+  SITE_PAGES,
+  SIDENAV_ROUTES,
+  RESOURCES_SIDENAV_ROUTES,
+  CONTACT_SIDENAV_ROUTES,
+} from "./links";
 
 export const PAGES = {
   Manage: {
@@ -19,6 +24,10 @@ export const PAGES = {
   },
   "Additional Resources": {
     route: `${SITE_PAGES.RESOURCES}/${RESOURCES_SIDENAV_ROUTES[0]}`,
+    needs_admin: false,
+  },
+  Contact: {
+    route: `${SITE_PAGES.CONTACT}/${CONTACT_SIDENAV_ROUTES[0]}`,
     needs_admin: false,
   },
 };
