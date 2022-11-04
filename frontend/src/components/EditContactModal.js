@@ -140,7 +140,7 @@ export default function EditContactModal({
             onClick={() => setOpen(false)}
           />
         </div>
-        <input
+        <textarea
           className="contact_card_description"
           type="text"
           placeholder={description ? "Description Goes Here" : null}

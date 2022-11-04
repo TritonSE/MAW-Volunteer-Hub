@@ -27,6 +27,11 @@
 }
 
 .contact_card_description {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
   margin: 15px 0px 10px 0px;
 }
 
