@@ -18,7 +18,7 @@ function ContactPointCard({ idx, step, description, contacts, id, setModifiedCon
         <div className="conptcard_step_num">{idx}</div>
         {admin > 0 ? (
           <button className="edit-button" type="button" onClick={() => setEditModalOpen(true)}>
-            <img src="img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
+            <img src="/img/edit_icon.svg" alt="edit" style={{ height: "20px" }} />
           </button>
         ) : null}
       </div>
