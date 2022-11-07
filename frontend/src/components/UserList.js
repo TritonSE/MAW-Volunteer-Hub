@@ -79,6 +79,49 @@ function UserList({
     useSortBy
   );
 
+  // console.log(globalFilter);
+  // console.log(userData);
+  // console.log(showTab);
+
+  // console.log(userData);
+  // userData.forEach(u => {
+  //   console.log(u.name);
+  // });
+
+  // const [hours, setHours] = useState(0);
+
+  // function validate(admin) {
+  //   if (showTab === 0) {
+  //     return (admin === 0);
+  //   }
+  //   if (showTab === 1) {
+  //     return (admin === 1 || admin === 2);
+  //   }
+  //   return 0;
+  // }
+
+  // async function fetchHours(users) {
+
+  //   users.forEach(u=> console.log(u.name));
+
+  //   const res = await api_user_total_hours(users);
+  //   if (res && !res.error) {
+  //     setHours(res.hours);
+  //   }
+  // }
+
+  // useEffect(() => {
+
+  //   const vals = globalFilter === undefined ? "" : globalFilter;
+  //   // console.log(vals);
+
+  //   const filteredViewUsers = userData.filter(u => (u.name).includes(vals) && validate(u.admin));
+  //   filteredViewUsers.forEach(u => console.log(u.name));
+
+  //   fetchHours(filteredViewUsers);
+
+  // }, [showTab, globalFilter]);
+
   useEffect(() => {
     setGlobalFilter(filter);
   }, [filter]);

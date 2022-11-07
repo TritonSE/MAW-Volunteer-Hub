@@ -129,6 +129,8 @@ export default function UserManage() {
     fetchUsers();
   }, []);
 
+  console.log(userData);
+
   const updateMyData = (_rowIndex, columnId, value, userId) => {
     const old = [...userData] ?? [];
     const i = old.findIndex((row) => row._id === userId);

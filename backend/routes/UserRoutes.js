@@ -30,9 +30,126 @@ const upload = multer({
 router.get("/users", (req, res) =>
   UserModel.find()
     .populate("events")
-    .then((users) => res.json({ users }))
+    .then((users) => {
+      users.forEach((u) => {
+        // console.log(JSON.stringify(u.hours, null, 2));
+        u.hours = u.calc_hours;
+      });
+
+      res.json({ users });
+    })
     .catch(errorHandler(res))
 );
+
+/*
+router.post("/totalhours", (req, res) =>  {
+
+  const usersRequested = JSON.parse(req.body.users);
+  const uids = usersRequested.map(u => u._id);
+  // console.log(uids);
+
+//   UserModel.find({ _id: { $in: uids} })
+//     .then((users) => {
+
+//       users.forEach(u => {
+//         // console.log(u);
+
+//         const events = u.events;
+//         events.forEach(evt => {
+//           // Array.from(evt.repetitions.entries()).forEach(([date, rep]) => {
+//           //   if (date.getTime() <= Date.now() && rep.attendees[u._id]) {
+//           //     console.log(u.name + " attended " + evt.name + " on " + date);
+//           //   }
+//           // });
+//           console.log(evt.repetitions);
+//         });
+
+//       });
+
+//     })
+//   .catch(errorHandler(res))
+// }
+
+EventModel.find()
+  .then(events => {
+
+  })
+  
+
+
+
+  // EventModel.find() 
+  //   .then((events) => {
+  //     let events_hours = 0;
+  //     let manual_hours = 0; // is manual events in event model?
+
+  //     // console.log(events);
+
+  //     events.forEach((e) => {
+
+  //       // for each user u, for each event e
+  //       // if repeat >=0:
+  //       // get attendies
+  //       // for each repeition:
+  //       // if completed, add hours
+
+  //       if (e.repeat == 0) {
+
+  //         // single event
+  //         const now = Date.now();
+  //         const from = new Date(e.from);
+  //         const to = new Date(e.to);
+  
+  //         if (from < to && to <= now) {
+  //           const hours = (to - from)/3.6e6; //convert ms to hours
+  //           events_hours += hours;
+  //         }
+
+  //       } else if (e.repeat > 0) {
+  //         console.log(e);
+
+  //         const from = new Date(e.from);
+  //         const to = new Date(e.to);
+
+  //         const reps = Array.from(e.repetitions.keys());
+  //         reps.forEach((rep) => {
+
+  //           const now = Date.now();
+  //           console.log(rep);
+  //           const month = x;
+  //           const day = x;
+  //           const year = x;
+
+  //           const rep_date = new Date(year, month, day, 11, 59, 59); //create date on m/d/y with clock time 11:59:59
+
+  //         });
+
+  //       }
+
+
+  //       // repeated events?
+
+  //       // Array.from(evt.repetitions.values()).forEach((rep) => {
+  //       //   // if (new Date(rep.date).getTime() <= Date.now()) {
+  //       //   //   rep.completed = true;
+  //       //   //   do_push = true;
+  //       //   // }
+  //       // });
+
+  //     });
+
+ 
+
+
+  //     res.json({
+  //       hours: events_hours,
+  //     })
+
+  //   })
+  //   .catch(errorHandler(res))
+);
+
+*/
 
 router.get("/info/:id?", idParamValidator(true), (req, res) =>
   UserModel.findById(req.params.id ?? req.user._id)
