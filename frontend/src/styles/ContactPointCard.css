@@ -4,7 +4,7 @@
   margin-top: 5vh;
   border-radius: 2px;
   aspect-ratio: 1 / 1;
-  width: 30vw;
+  width: 550px;
 }
 
 .conptcard_header {
@@ -22,13 +22,13 @@
   box-shadow: 8px 10px 40px rgba(0, 87, 184, 0.1);
   border-radius: 50%;
   aspect-ratio: 1 / 1;
-  width: 5vw;
+  width: 120px;
 
   font-family: "Lato";
   font-style: normal;
   font-weight: 700;
-  font-size: 36px;
-  line-height: 43px;
+  font-size: 60px;
+  line-height: 60px;
   /* identical to box height */
 
   color: #0057b8;
@@ -38,8 +38,8 @@
   font-family: "Lato";
   font-style: normal;
   font-weight: 400;
-  font-size: 18px;
-  line-height: 22px;
+  font-size: 28px;
+  line-height: 28px;
   /* identical to box height */
   text-align: center;
   color: #0057b8;
@@ -50,11 +50,12 @@
   font-family: "Lato";
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 20px;
   line-height: 17px;
 
+  height: 300px;
   color: #000000;
-  padding: 20px 30px 0px 30px;
+  padding: 10px 50px 0px 50px;
 }
 
 .conptrcard_links {
@@ -62,7 +63,8 @@
   justify-items: space-between;
   position: relative;
   flex-wrap: wrap;
-  padding: 25vh 40px 3vh 40px;
+  font-size: 20px;
+  padding-bottom: 40px;
 }
 
 .conptrcard_links .contact_info {
