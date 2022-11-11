@@ -33,6 +33,10 @@
   font-size: 14px;
   line-height: 17px;
   margin: 15px 0px 10px 0px;
+  min-height: 40px;
+  max-height: 75px;
+  min-width: 335px;
+  max-width: 335px;
 }
 
 .edit_contacts_header {

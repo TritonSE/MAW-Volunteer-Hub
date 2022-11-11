@@ -51,11 +51,12 @@
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
-  line-height: 17px;
+  line-height: 21px;
 
   height: 300px;
   color: #000000;
   padding: 10px 50px 0px 50px;
+  overflow-y: scroll;
 }
 
 .conptrcard_links {
