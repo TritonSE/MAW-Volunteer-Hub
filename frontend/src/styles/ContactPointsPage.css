@@ -2,6 +2,10 @@
   padding: 3vh 5vw 3vh 5vw;
 }
 
+.contactpoints_title {
+  font-size: 1.5vw;
+}
+
 .contactpoints_container {
   box-sizing: border-box;
   width: 100%;
