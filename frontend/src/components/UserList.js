@@ -88,6 +88,7 @@ function UserList({
   //   console.log(u.name);
   // });
 
+  // total hours
   const [totalHours, setTotalHours] = useState(0);
 
   function validate(admin) {

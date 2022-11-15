@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { SITE_PAGES } from "../constants/links";
 import "../styles/UserCardList.css";
@@ -98,6 +98,39 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
       }
     });
 
+  // total hours
+  const [totalHours, setTotalHours] = useState(0);
+
+  function validate(admin) {
+    if (showTab === 0) {
+      return !admin;
+    }
+    if (showTab === 1) {
+      return admin;
+    }
+    return 0;
+  }
+
+  function addHours(users) {
+    let hours = 0;
+    users.forEach((u) => {
+      if (u.active) {
+        hours += u.hours;
+      }
+    });
+    setTotalHours(Math.round(hours));
+  }
+
+  useEffect(() => {
+    const vals = filter === undefined ? "" : filter;
+    // console.log(vals);
+
+    const filteredViewUsers = userData.filter((u) => u.name.includes(vals) && validate(u.admin));
+    filteredViewUsers.forEach((u) => console.log(u.name));
+
+    addHours(filteredViewUsers);
+  }, [showTab, filter]);
+
   return (
     <div className="user_mobile_display">
       <div className="user_toggle">
@@ -135,6 +168,7 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
           <UserCard user={user} key={Math.random()} row={i} {...props} />
         ))}
       </div>
+      <div className="hours-container-mobile">Total Hours: {totalHours.toLocaleString()}</div>
     </div>
   );
 }
