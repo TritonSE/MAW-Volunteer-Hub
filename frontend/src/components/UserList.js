@@ -88,39 +88,37 @@ function UserList({
   //   console.log(u.name);
   // });
 
-  // const [hours, setHours] = useState(0);
+  const [totalHours, setTotalHours] = useState(0);
 
-  // function validate(admin) {
-  //   if (showTab === 0) {
-  //     return (admin === 0);
-  //   }
-  //   if (showTab === 1) {
-  //     return (admin === 1 || admin === 2);
-  //   }
-  //   return 0;
-  // }
+  function validate(admin) {
+    if (showTab === 0) {
+      return !admin;
+    }
+    if (showTab === 1) {
+      return admin;
+    }
+    return 0;
+  }
 
-  // async function fetchHours(users) {
+  function addHours(users) {
+    let hours = 0;
+    users.forEach((u) => {
+      if (u.active) {
+        hours += u.hours;
+      }
+    });
+    setTotalHours(Math.round(hours));
+  }
 
-  //   users.forEach(u=> console.log(u.name));
+  useEffect(() => {
+    const vals = globalFilter === undefined ? "" : globalFilter;
+    // console.log(vals);
 
-  //   const res = await api_user_total_hours(users);
-  //   if (res && !res.error) {
-  //     setHours(res.hours);
-  //   }
-  // }
+    const filteredViewUsers = userData.filter((u) => u.name.includes(vals) && validate(u.admin));
+    filteredViewUsers.forEach((u) => console.log(u.name));
 
-  // useEffect(() => {
-
-  //   const vals = globalFilter === undefined ? "" : globalFilter;
-  //   // console.log(vals);
-
-  //   const filteredViewUsers = userData.filter(u => (u.name).includes(vals) && validate(u.admin));
-  //   filteredViewUsers.forEach(u => console.log(u.name));
-
-  //   fetchHours(filteredViewUsers);
-
-  // }, [showTab, globalFilter]);
+    addHours(filteredViewUsers);
+  }, [showTab, globalFilter]);
 
   useEffect(() => {
     setGlobalFilter(filter);
@@ -244,6 +242,7 @@ function UserList({
           </tbody>
         </table>
       </div>
+      <div className="hours-container">Total Hours: {totalHours.toLocaleString()}</div>
     </div>
   );
 }

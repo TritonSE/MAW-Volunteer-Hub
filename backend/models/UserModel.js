@@ -130,7 +130,7 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
       const year = d[3];
       // console.log(month, day, year);
 
-      const evt_date = new Date(year, month, day, 11, 59, 59, 59); // set event complete time to 11:59:59:59 on give yr/month/day
+      const evt_date = new Date(year, month, day, 11, 59, 59, 59); // set event complete time to 11:59:59:59 on every date
       // console.log(evt_date);
 
       const now = Date.now();
@@ -155,6 +155,14 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
       }
     });
   });
+
+  const manualEvents = this.manualEvents;
+  let manual_hours = 0;
+  manualEvents.forEach((evt) => {
+    manual_hours += evt.hours;
+  });
+
+  total_hours += manual_hours;
 
   return total_hours;
 });
