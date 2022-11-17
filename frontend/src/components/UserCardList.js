@@ -123,10 +123,8 @@ function UserCardList({ userData, filter, setFilter, ...props }) {
 
   useEffect(() => {
     const vals = filter === undefined ? "" : filter;
-    // console.log(vals);
 
     const filteredViewUsers = userData.filter((u) => u.name.includes(vals) && validate(u.admin));
-    filteredViewUsers.forEach((u) => console.log(u.name));
 
     addHours(filteredViewUsers);
   }, [showTab, filter]);

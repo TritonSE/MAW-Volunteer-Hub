@@ -77,6 +77,8 @@
   background: rgba(187, 188, 188, 0.2);
   border-radius: 8px;
   color: #101010;
+
+  overflow: hidden;
 }
 
 .card_col {

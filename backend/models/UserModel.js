@@ -102,13 +102,7 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
   let total_hours = 0;
 
   events.forEach((evt) => {
-    // console.log(evt);
-    // console.log(evt.repetitions.values());
     Array.from(evt.repetitions.entries()).forEach(([date, rep]) => {
-      // console.log("Date\n" + date);
-      // console.log("REP\n" + rep);
-      // console.log(date);
-
       const monthLookup = [
         "Jan",
         "Feb",
@@ -128,20 +122,12 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
       const month = monthLookup.indexOf(d[1]);
       const day = d[2];
       const year = d[3];
-      // console.log(month, day, year);
 
       const evt_date = new Date(year, month, day, 11, 59, 59, 59); // set event complete time to 11:59:59:59 on every date
-      // console.log(evt_date);
 
       const now = Date.now();
 
       const attendees_map = rep.attendees.toJSON();
-
-      // console.log(this._id);
-      // console.log('635d660880089272cc916656' in map);
-      // console.log('635d660880089272cc916656' in rep.attendees.keys());
-      // console.log(rep.attendees.values());
-      // rep.attendees.keys().forEach(e => console.log(e));
 
       if (evt_date <= now && this._id in attendees_map) {
         console.log(
@@ -149,8 +135,6 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
         );
 
         const hours = (evt.to - evt.from) / 3.6e6; // convert ms to hours
-        // console.log(hours);
-
         total_hours += hours;
       }
     });

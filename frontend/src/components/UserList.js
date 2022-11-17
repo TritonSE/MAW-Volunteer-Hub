@@ -79,15 +79,6 @@ function UserList({
     useSortBy
   );
 
-  // console.log(globalFilter);
-  // console.log(userData);
-  // console.log(showTab);
-
-  // console.log(userData);
-  // userData.forEach(u => {
-  //   console.log(u.name);
-  // });
-
   // total hours
   const [totalHours, setTotalHours] = useState(0);
 
@@ -113,10 +104,8 @@ function UserList({
 
   useEffect(() => {
     const vals = globalFilter === undefined ? "" : globalFilter;
-    // console.log(vals);
 
     const filteredViewUsers = userData.filter((u) => u.name.includes(vals) && validate(u.admin));
-    filteredViewUsers.forEach((u) => console.log(u.name));
 
     addHours(filteredViewUsers);
   }, [showTab, globalFilter]);
