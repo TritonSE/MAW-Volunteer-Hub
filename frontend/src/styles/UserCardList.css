@@ -157,7 +157,6 @@
 
 .hours-container-mobile {
   box-sizing: content-box;
-  overflow-x: auto;
   border: solid white;
   border-width: 10px 20px 10px 20px;
   border-radius: 15px;
