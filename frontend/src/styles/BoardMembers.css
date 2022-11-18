@@ -1,8 +1,7 @@
 .contacts {
-  margin: 10px 30px;
+  margin: 10px 20px;
   align-self: flex-start;
   display: flex;
-  width: calc(30px + 228px + 228px + 76px + 20px);
   height: inherit;
   flex-flow: row wrap;
 }
@@ -15,24 +14,18 @@
   justify-content: space-between;
 }
 
-.title_contacts {
+.titles > div {
   align-self: flex-start;
-  width: calc(30px + 228px + 228px + 76px - 33px);
-  display: flex;
-  justify-content: space-between;
-  height: inherit;
-}
-
-.title_contacts > div {
   font-family: "Lato";
   font-style: normal;
   font-weight: 700;
   font-size: 24px;
   line-height: 29px;
-  margin-left: 10px;
+  padding-left: 20px;
 }
 
-.title_contacts > Button {
+.titles > button {
+  align-self: flex-end;
   width: 142px;
   height: 30px;
   cursor: pointer;
