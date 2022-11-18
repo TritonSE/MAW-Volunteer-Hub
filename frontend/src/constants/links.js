@@ -41,7 +41,6 @@ const API_ENDPOINTS = {
   USER_UPDATE_PASS: "/user/updatepass",
   USER_EDIT: "/user/edit",
   USER_ACTIVATE: "/user/activate",
-  USER_TOTAL_HOURS: "/user/totalhours",
 
   PFP_GET: "/user/pfp",
   PFP_UPLOAD: "/user/pfp/upload",

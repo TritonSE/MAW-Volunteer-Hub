@@ -32,7 +32,6 @@ router.get("/users", (req, res) =>
     .populate("events")
     .then((users) => {
       users.forEach((u) => {
-        // console.log(JSON.stringify(u.hours, null, 2));
         u.hours = u.calc_hours;
       });
 

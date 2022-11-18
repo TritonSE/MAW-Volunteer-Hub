@@ -101,6 +101,8 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
   const events = this.events;
   let total_hours = 0;
 
+  let evt_hours = 0;
+
   events.forEach((evt) => {
     Array.from(evt.repetitions.entries()).forEach(([date, rep]) => {
       const monthLookup = [
@@ -131,7 +133,7 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
 
       if (evt_date <= now && this._id in attendees_map) {
         const hours = (evt.to - evt.from) / 3.6e6; // convert ms to hours
-        total_hours += hours;
+        evt_hours += hours;
       }
     });
   });
@@ -142,6 +144,7 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
     manual_hours += evt.hours;
   });
 
+  total_hours += evt_hours;
   total_hours += manual_hours;
 
   return total_hours;
