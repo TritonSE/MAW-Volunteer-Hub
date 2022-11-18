@@ -131,7 +131,15 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
 
       if (evt_date <= now && this._id in attendees_map) {
         console.log(
-          "user (" + this.name + ") has completed event (" + evt.name + ") at time " + evt_date
+          "user (" +
+            this.name +
+            ") has completed event (" +
+            evt.name +
+            ") at time " +
+            evt_date +
+            "{" +
+            (evt.to - evt.from) / 3.6e6 +
+            "} hours"
         );
 
         const hours = (evt.to - evt.from) / 3.6e6; // convert ms to hours
@@ -146,7 +154,10 @@ UserSchema.virtual("calc_hours").get(function calculate_hours() {
     manual_hours += evt.hours;
   });
 
+  console.log("\n\n ===EVT HOURS: " + total_hours + "====");
   total_hours += manual_hours;
+
+  console.log("\n\n ===MAN HOURS: " + manual_hours + "====");
 
   return total_hours;
 });
