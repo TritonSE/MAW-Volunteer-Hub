@@ -1,16 +1,15 @@
 .contactpoints_page_layout {
-  padding: 3vh 5vw 3vh 5vw;
+  padding: 30px 55px;
 }
 
 .contactpoints_title {
   font-size: 30px;
+  margin: 0;
 }
 
 .contactpoints_container {
-  box-sizing: border-box;
   width: 100%;
-
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
