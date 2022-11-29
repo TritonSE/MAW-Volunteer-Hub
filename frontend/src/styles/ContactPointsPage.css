@@ -1,5 +1,5 @@
 .contactpoints_page_layout {
-  padding: 30px 55px;
+  padding: 30px 55px 15px;
 }
 
 .contactpoints_title {
@@ -11,5 +11,5 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
 }
