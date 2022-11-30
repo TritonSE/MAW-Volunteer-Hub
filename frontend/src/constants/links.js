@@ -69,6 +69,10 @@ const API_ENDPOINTS = {
   CONTACTS_PFP_GET: "/contacts/pfp",
 
   MESSAGE: "/user/message",
+
+  CONTACT_POINT_ALL: "/contactpoint/all",
+  CONTACT_POINT_CREATE: "/contactpoint/create",
+  CONTACT_POINT_UPDATE: "/contactpoint/edit",
 };
 
 const SIDENAV_STEPS = [
