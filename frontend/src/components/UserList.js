@@ -79,6 +79,37 @@ function UserList({
     useSortBy
   );
 
+  // total hours
+  const [totalHours, setTotalHours] = useState(0);
+
+  function validate(admin) {
+    if (showTab === 0) {
+      return !admin;
+    }
+    if (showTab === 1) {
+      return admin;
+    }
+    return 0;
+  }
+
+  function addHours(users) {
+    let hours = 0;
+    users.forEach((u) => {
+      if (u.active) {
+        hours += u.hours;
+      }
+    });
+    setTotalHours(Math.round(hours));
+  }
+
+  useEffect(() => {
+    const vals = globalFilter === undefined ? "" : globalFilter;
+
+    const filteredViewUsers = userData.filter((u) => u.name.includes(vals) && validate(u.admin));
+
+    addHours(filteredViewUsers);
+  }, [showTab, globalFilter]);
+
   useEffect(() => {
     setGlobalFilter(filter);
   }, [filter]);
@@ -201,6 +232,7 @@ function UserList({
           </tbody>
         </table>
       </div>
+      <div className="hours-container">Total Hours: {totalHours.toLocaleString()}</div>
     </div>
   );
 }
