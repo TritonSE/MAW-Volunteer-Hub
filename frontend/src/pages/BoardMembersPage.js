@@ -301,16 +301,13 @@ export default function BoardMembersPage() {
 
   return (
     <>
-      <main>
+      <main id="board-members-page">
         <div className="titles">
-          <div className="title_contacts">
-            <div>Contacts</div>
-            <button type="button" onClick={() => handleAddModalOpen()}>
-              <img src="/img/add.svg" />
-              <div>Add Contact</div>
-            </button>
-          </div>
-          <div />
+          <div>Contacts</div>
+          <button type="button" onClick={() => handleAddModalOpen()}>
+            <img src="/img/add.svg" />
+            <div>Add Contact</div>
+          </button>
         </div>
         <div className="contacts">
           {contacts.map((element) => (
@@ -323,8 +320,7 @@ export default function BoardMembersPage() {
               email={element.email}
               phone={element.phone}
               handleDelete={() => {
-                setDeleteOpen(true);
-                setDeleteId(element._id);
+                handleDeleteModalOpen(element._id);
               }}
               handleEdit={() => handleEditModalOpen(element._id)}
               profilePictureModified={element.profilePictureModified}

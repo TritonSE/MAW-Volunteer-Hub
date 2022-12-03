@@ -1,7 +1,7 @@
 .calendar {
   display: flex;
   justify-content: space-between;
-  margin: 21px;
+  margin: 21px 21px 10px 21px;
   font-family: "Lato", sans-serif;
 }
 

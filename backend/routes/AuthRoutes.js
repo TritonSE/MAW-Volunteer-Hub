@@ -13,13 +13,17 @@ const sendEmail = require("../util/SendEmail");
 
 router.post("/signup", (req, res, next) =>
   passport.authenticate("signup", { session: false }, (resp, user) => {
-    if ((resp && resp.errors) || !user) {
+    if (resp && resp.errors) {
       // doesn't seem to be handling duplicate emails correctly after case
       // insensitivity hotfix
       res.status(500).json({
         error: resp.errors.email
           ? "Email is already in use."
           : "Failed to sign up, please try again.",
+      });
+    } else if (!user) {
+      res.status(500).json({
+        error: "Unable to create user, please try again",
       });
     } else {
       // send email

@@ -59,6 +59,7 @@ export default function PageLayout({ children }) {
       <FileStructure.Provider value={fileStructure_memo}>
         <ModalVariantsManager.Provider value={modal_variant_props}>
           <NavBar />
+          <div style={{ height: "73px" }} />
           {children}
           <ModalVariants />
         </ModalVariantsManager.Provider>
