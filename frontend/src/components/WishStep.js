@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from "../constants/links";
 import { FileStructure, ModalVariantsManager, CurrentUser } from "./Contexts";
 import "../styles/WishStep.css";
 
-function WishStep({ index, stepName }) {
+function WishStep({ index, stepName, isResources = false }) {
   /**
    * STATE
    */
@@ -54,9 +54,11 @@ function WishStep({ index, stepName }) {
    */
   return (
     <div className="wishgranting">
-      <div className="wishgranting_header">
+      <div
+        className={`wishgranting_header ${isResources ? "resources_back" : "wishgranting_back"}`}
+      >
         <h1 className="wishgranting_title">
-          Step {index}: {stepName}
+          {isResources ? "Additional Resources" : `Step ${index}: ${stepName}`}
         </h1>
       </div>
       <br />

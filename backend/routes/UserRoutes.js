@@ -30,7 +30,13 @@ const upload = multer({
 router.get("/users", (req, res) =>
   UserModel.find()
     .populate("events")
-    .then((users) => res.json({ users }))
+    .then((users) => {
+      users.forEach((u) => {
+        u.hours = u.calc_hours;
+      });
+
+      res.json({ users });
+    })
     .catch(errorHandler(res))
 );
 
@@ -133,7 +139,7 @@ router.get("/pfp/:id/:time", (req, res) => {
 router.post("/pfp/upload", upload.single("pfp"), (req, res) => {
   const crop = JSON.parse(req.body.crop);
 
-  let compressor = sharp(req.file.path).rotate();
+  let compressor = sharp(req.file.path, { unlimited: true }).rotate();
   if (crop.width && crop.height && crop.left && crop.top) {
     compressor = compressor.extract(crop);
   }

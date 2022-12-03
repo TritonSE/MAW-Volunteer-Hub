@@ -12,7 +12,7 @@ import "../styles/SideNav.css";
  *                      tab_content: {jsx component that will be rendered on the right-hand side of the screen}
  *                     }
  */
-function SideNav({ tabs, manage }) {
+function SideNav({ tabs, manage, isResources = false }) {
   function compute_route_tab() {
     let out = 0;
     // tabs.findIndex() causes React to throw an error
@@ -52,14 +52,16 @@ function SideNav({ tabs, manage }) {
           <Link
             to={tab.tab_route}
             key={tab.tab_name}
-            className={`side_nav_links${
-              tab_id === compute_route_tab() ? " side_nav_selected" : ""
+            className={`${isResources ? "side_nav_links_resources" : "side_nav_links"}${
+              tab_id === compute_route_tab()
+                ? ` ${isResources ? "side_nav_selected_resources" : "side_nav_selected"}`
+                : ""
             }`}
             onClick={() => setSelected(tab_id)}
           >
             {tab.tab_name}
             {manage && tab_id === compute_route_tab() && windowWidth < 650 ? (
-              <div className="arrow" />
+              <div className={`${isResources ? "arrow_resources" : "arrow"}`} />
             ) : null}
           </Link>
         ))}
