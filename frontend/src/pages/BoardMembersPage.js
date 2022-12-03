@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Modal from "react-modal";
 import "../styles/BoardMembers.css";
 import ReactCrop from "react-image-crop";
@@ -6,6 +6,8 @@ import ContactCard from "../components/ContactCard";
 import { api_contacts, api_contacts_add, api_contacts_delete, api_contacts_edit } from "../api";
 
 import "react-image-crop/dist/ReactCrop.css";
+
+import { CurrentUser } from "../components/Contexts";
 
 Modal.setAppElement("#root");
 
@@ -26,6 +28,8 @@ export default function BoardMembersPage() {
   const [file, setFile] = useState();
   const [imgRef, setImgRef] = useState();
   const [dragActive, setDragActive] = useState(false);
+
+  const [currentUser, setCurrentUser] = useContext(CurrentUser);
 
   async function do_upload() {
     setPFPModalOpen(false);
@@ -304,10 +308,12 @@ export default function BoardMembersPage() {
       <main id="board-members-page">
         <div className="titles">
           <div>Contacts</div>
-          <button type="button" onClick={() => handleAddModalOpen()}>
-            <img src="/img/add.svg" />
-            <div>Add Contact</div>
-          </button>
+          {currentUser.admin > 0 && (
+            <button type="button" onClick={() => handleAddModalOpen()}>
+              <img src="/img/add.svg" />
+              <div>Add Contact</div>
+            </button>
+          )}
         </div>
         <div className="contacts">
           {contacts.map((element) => (
@@ -324,6 +330,7 @@ export default function BoardMembersPage() {
               }}
               handleEdit={() => handleEditModalOpen(element._id)}
               profilePictureModified={element.profilePictureModified}
+              isAdmin={currentUser.admin > 0}
             />
           ))}
         </div>

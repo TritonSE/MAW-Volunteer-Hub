@@ -10,26 +10,45 @@
 }
 
 .edit {
+  margin: 0;
+  padding: 0;
+
   position: absolute;
-  width: 12.39px;
-  height: 12.39px;
-  left: 5%;
-  top: 3%;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   z-index: 2;
-  margin-right: 5px;
+
+  left: 10px;
+  top: 8px;
+  box-sizing: content-box;
+  background: none;
+  border: none;
+}
+
+.edit > image,
+.delete > image {
+  height: 16px;
+  width: 16px;
+  padding: 0;
+  margin: 0;
 }
 
 .delete {
-  position: relative;
-  margin-left: 10px;
-  margin-top: 8px;
-  border: none;
-  background: none;
-  width: 13px;
-  height: 13px;
+  margin: 0;
+  padding: 0;
+  
+  position: absolute;
+  width: 16px;
+  height: 16px;
   cursor: pointer;
   z-index: 2;
+
+  left: 38px;
+  top: 7px;
+  box-sizing: content-box;
+  background: none;
+  border: none;
 }
 
 .contact_icon {
@@ -41,6 +60,7 @@
   height: 138px;
   object-fit: cover;
   z-index: 2;
+  margin-top: 32px;
 }
 
 .card_back {

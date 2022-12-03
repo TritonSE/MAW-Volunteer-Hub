@@ -12,16 +12,21 @@ function ContactCard({
   handleDelete,
   handleEdit,
   profilePictureModified,
+  isAdmin = true,
 }) {
   const mailto = "mailto:" + email;
   return (
     <div className="contact_card">
-      <button type="button" onClick={() => handleEdit()}>
-        <img className="edit" src="/img/edit_icon2.svg" />
-      </button>
-      <button className="delete" type="button" onClick={() => handleDelete()}>
-        <img src="/img/delete_icon2.svg" />
-      </button>
+      {isAdmin && (
+        <button className="edit" type="button" onClick={() => handleEdit()}>
+          <img src="/img/edit_icon2.svg" />
+        </button>
+      )}
+      {isAdmin && (
+        <button className="delete" type="button" onClick={() => handleDelete()}>
+          <img src="/img/delete_icon2.svg" />
+        </button>
+      )}
       <div className="card_back" />
       <img
         alt={`${name}'s Profile Picture`}
