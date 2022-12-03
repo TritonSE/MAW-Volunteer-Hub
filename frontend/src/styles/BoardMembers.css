@@ -1,15 +1,16 @@
+#board-members-page {
+  padding: 30px 55px 15px;
+}
 .contacts {
-  margin: 10px 20px;
   align-self: flex-start;
   display: flex;
   height: inherit;
   flex-flow: row wrap;
+  justify-content: center;
 }
 
 .titles {
-  margin: 30px;
   display: flex;
-  width: 90%;
   height: inherit;
   justify-content: space-between;
 }
@@ -21,7 +22,6 @@
   font-weight: 700;
   font-size: 24px;
   line-height: 29px;
-  padding-left: 20px;
 }
 
 .titles > button {

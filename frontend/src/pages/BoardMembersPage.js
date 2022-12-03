@@ -301,7 +301,7 @@ export default function BoardMembersPage() {
 
   return (
     <>
-      <main>
+      <main id="board-members-page">
         <div className="titles">
           <div>Contacts</div>
           <button type="button" onClick={() => handleAddModalOpen()}>
