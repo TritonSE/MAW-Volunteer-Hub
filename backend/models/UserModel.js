@@ -72,6 +72,10 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: new Date(0),
     },
+    hours: {
+      type: Number,
+      defualt: 0,
+    },
     /**
      * EVENTS
      */
@@ -91,6 +95,59 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.virtual("verified").get(function check_verify() {
   return this.roles.length > 0 || this.admin > 0;
+});
+
+UserSchema.virtual("calc_hours").get(function calculate_hours() {
+  const events = this.events;
+  let total_hours = 0;
+
+  let evt_hours = 0;
+
+  events.forEach((evt) => {
+    Array.from(evt.repetitions.entries()).forEach(([date, rep]) => {
+      const monthLookup = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+
+      const d = date.split(" ");
+      const month = monthLookup.indexOf(d[1]);
+      const day = d[2];
+      const year = d[3];
+
+      const evt_date = new Date(year, month, day, 11, 59, 59, 59); // set event complete time to 11:59:59:59 on every date
+
+      const now = Date.now();
+
+      const attendees_map = rep.attendees.toJSON();
+
+      if (evt_date <= now && this._id in attendees_map) {
+        const hours = (evt.to - evt.from) / 3.6e6; // convert ms to hours
+        evt_hours += hours;
+      }
+    });
+  });
+
+  const manualEvents = this.manualEvents;
+  let manual_hours = 0;
+  manualEvents.forEach((evt) => {
+    manual_hours += evt.hours;
+  });
+
+  total_hours += evt_hours;
+  total_hours += manual_hours;
+
+  return total_hours;
 });
 
 UserSchema.pre("save", async function save(next) {

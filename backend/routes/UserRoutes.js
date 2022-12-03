@@ -30,7 +30,13 @@ const upload = multer({
 router.get("/users", (req, res) =>
   UserModel.find()
     .populate("events")
-    .then((users) => res.json({ users }))
+    .then((users) => {
+      users.forEach((u) => {
+        u.hours = u.calc_hours;
+      });
+
+      res.json({ users });
+    })
     .catch(errorHandler(res))
 );
 

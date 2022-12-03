@@ -1,0 +1,99 @@
+.conptcard_background {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 30px;
+
+  background-color: white;
+  box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.15);
+
+  margin: 30px 40px 20px 0;
+
+  border-radius: 2px;
+
+  width: 400px;
+  height: 400px;
+}
+
+.conptcard_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.conptcard_body {
+  flex: 1;
+  height: 100px;
+}
+
+.edit-button {
+  position: relative;
+  top: -15px;
+  right: -15px;
+}
+
+.conptcard_step_num {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  box-shadow: 8px 10px 40px rgba(0, 87, 184, 0.1);
+  border-radius: 50%;
+  aspect-ratio: 1 / 1;
+  width: 65px;
+
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 36px;
+  position: relative;
+  top: -15px;
+  left: -15px;
+  /* identical to box height */
+
+  color: #0057b8;
+}
+
+.conptcard_title {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 18px;
+  /* identical to box height */
+  text-align: center;
+  color: #0057b8;
+  margin-top: 0px;
+  margin-bottom: 20px;
+}
+
+.conptcard_description {
+  font-family: "Lato";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+
+  height: 75%;
+  min-height: 75%;
+  color: #000000;
+  padding: 0px 10px 0px 10px;
+  overflow-y: auto;
+}
+
+.conptrcard_links {
+  display: flex;
+  justify-items: space-between;
+  position: relative;
+  flex-wrap: wrap;
+  font-size: 14px;
+  height: 48px;
+  line-height: 21px;
+}
+
+.conptrcard_links .contact_info {
+  display: inline-block;
+  text-align: center;
+  width: 50%;
+}

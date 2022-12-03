@@ -1,7 +1,7 @@
 /* Styles taken from Figma */
 .people_table tbody {
   display: block;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 400px);
   overflow-y: scroll;
 }
 
@@ -153,6 +153,22 @@
   margin: 10px;
 }
 
+.hours-container {
+  box-sizing: content-box;
+  margin: 0 30px 10px;
+  overflow-x: auto;
+  border: 20px solid white;
+  border-radius: 15px;
+  background-color: white;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+
+  font-style: normal;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 29px;
+}
+
 @media only screen and (max-width: 1000px) {
   .people_table_controls {
     flex-direction: column;
@@ -167,7 +183,14 @@
 
   .people_table tbody,
   .people_table {
-    height: calc(100vh - 340px);
+    height: calc(100vh - 410px);
+  }
+}
+
+@media only screen and (max-width: 795px) {
+  .people_table tbody,
+  .people_table {
+    height: calc(100vh - 460px);
   }
 }
 
