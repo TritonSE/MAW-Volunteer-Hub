@@ -25,6 +25,7 @@ const upload = multer({
 
 router.post(
   "/add",
+  adminValidator,
   upload.single("pfp"),
   validate(["name", "phone", "position", "organization", "email"]),
   (req, res) => {
@@ -94,7 +95,7 @@ router.get("/all", (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.delete("/delete/:id", idParamValidator(), (req, res) => {
+router.delete("/delete/:id", adminValidator, idParamValidator(), (req, res) => {
   Contact.findOne({ _id: req.params.id })
     .then((contact) => {
       const old = contact.profilePicture;
@@ -108,7 +109,7 @@ router.delete("/delete/:id", idParamValidator(), (req, res) => {
     .catch(errorHandler(res));
 });
 
-router.patch("/edit/:id", idParamValidator(), upload.single("pfp"), (req, res) => {
+router.patch("/edit/:id", adminValidator, idParamValidator(), upload.single("pfp"), (req, res) => {
   if (req.file) {
     const crop = JSON.parse(req.body.crop);
 
