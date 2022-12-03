@@ -29,9 +29,9 @@ function ContactPointCard({ idx, step, description, contacts, id, setModifiedCon
       <div className="conptrcard_links">
         {contactList.map((contact) => (
           <div className="contact_info" key={Math.random()}>
-            <a href="/">
+            <p style={{ textDecoration: "underline", margin: "2px" }}>
               {contact.name} {contact.phone}{" "}
-            </a>
+            </p>
           </div>
         ))}
       </div>
