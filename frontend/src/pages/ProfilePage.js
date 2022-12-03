@@ -378,44 +378,44 @@ function ProfilePage() {
           )}
         </div>
         <div className="profile-header-info">
-          <div>
+          <div id="profile-info-container">
             <h1>{user.name}</h1>
             <p>{user.email}</p>
-          </div>
-          <div>
-            <h2>
+            <p className="joined-time-title">
               Joined {new Date(user.createdAt).toLocaleString("default", { month: "long" })}{" "}
-              {new Date(user.createdAt).getFullYear()}
-            </h2>
-            <p className="deactivated">&nbsp;{!user.active ? "(Deactivated)" : ""}</p>
+              {new Date(user.createdAt).getFullYear()}{" "}
+            </p>
+            {!user.active && <p className="deactivated">(Deactivated)</p>}
           </div>
-        </div>
-        <div className="profile-buttons-container">
-          {(isCurrentUser || currentUser.admin > 0) && (
-            <button
-              type="button"
-              className="maw-ui_button"
-              onClick={() => setDeactivateModalOpen(true)}
-            >
-              {user.active ? "Deactivate" : "Activate"} Profile
-            </button>
-          )}
-          &nbsp;&nbsp;
-          {isCurrentUser && (
-            <button type="button" className="maw-ui_button" onClick={() => setPassModalOpen(true)}>
-              Change Password
-            </button>
-          )}
-          &nbsp;&nbsp;
-          {currentUser && currentUser.admin === 2 && (
-            <button
-              type="button"
-              className="maw-ui_button error"
-              onClick={() => setDeleteModalOpen(true)}
-            >
-              Delete Profile
-            </button>
-          )}
+          <div className="profile-buttons-container">
+            {(isCurrentUser || currentUser.admin > 0) && (
+              <button
+                type="button"
+                className="maw-ui_button"
+                onClick={() => setDeactivateModalOpen(true)}
+              >
+                {user.active ? "Deactivate" : "Activate"} Profile
+              </button>
+            )}
+            {isCurrentUser && (
+              <button
+                type="button"
+                className="maw-ui_button"
+                onClick={() => setPassModalOpen(true)}
+              >
+                Change Password
+              </button>
+            )}
+            {currentUser && currentUser.admin === 2 && (
+              <button
+                type="button"
+                className="maw-ui_button error"
+                onClick={() => setDeleteModalOpen(true)}
+              >
+                Delete Profile
+              </button>
+            )}
+          </div>
         </div>
         {/* <div>{isCurrentUser ? <p>Current User</p> : <p>Not Current User</p>}</div> */}
       </section>

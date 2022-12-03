@@ -1,5 +1,10 @@
 .profile-page {
-  margin: 3% 6%;
+  box-sizing: border-box;
+  width: 100vw;
+  height: calc(100vh - 73px);
+  overflow-y: scroll;
+
+  padding: 30px 60px 0;
   display: block;
   color: black;
 }
@@ -58,8 +63,14 @@
 
 .profile-header-info {
   display: flex;
-  align-items: flex-end;
-  margin: 30px 0 20px 0;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+#profile-info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 .profile-header-info h1 {
   font-size: 30px;
@@ -67,29 +78,27 @@
   font-weight: normal;
   margin: 0 50px 5px 0;
 }
-.profile-header-info h2 {
-  font-size: 14px;
-  font-weight: normal;
-  text-align: right;
-  margin: 23px 0 7px 0;
-  box-sizing: border-box;
+.profile-header-info .joined-time-title {
   color: var(--grey);
 }
 .profile-header-info p {
   font-size: 12px;
   line-height: 14px;
-  margin: 0;
+  margin: 4px 0;
 }
 .profile-header-info p.deactivated {
+  font-size: 12px;
+  line-height: 14px;
+  margin: 4px 0;
   color: var(--grey);
   text-align: right;
 }
 
 .profile-buttons-container {
   display: flex;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  width: 100%;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 140px;
 }
 @media (max-width: 500px) {
   .profile-buttons-container {
@@ -237,9 +246,12 @@
 }
 
 @media only screen and (max-width: 900px) {
+  .profile-page {
+    padding: 30px 24px;
+  }
   .assign_completed {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 16px;
   }
 }
 
@@ -248,7 +260,7 @@
     font-size: 18px;
   }
   .assign_completed {
-    padding: 0px 20px 0px 20px;
+    padding: 0px 16px;
   }
 }
 

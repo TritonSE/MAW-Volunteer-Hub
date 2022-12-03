@@ -32,7 +32,7 @@
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
   border-radius: 15px;
   padding: 0px 50px 0px 50px;
-  margin-top: 75px;
+  margin-top: 32px;
 }
 
 .activities_table table {
@@ -203,7 +203,7 @@ tr:nth-child(2n) .activities_table_data_end {
   height: 26px;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 900px) {
   .header_container {
     align-items: center;
     justify-content: space-between;
@@ -217,19 +217,18 @@ tr:nth-child(2n) .activities_table_data_end {
   }
 
   .activities_table {
-    margin-top: 30px;
+    margin-top: 16px;
     padding: 0 10px 0 10px;
   }
 }
 
-@media only screen and (max-width: 400px) {
-  .manually_log_activity > h2,
+@media only screen and (max-height: 500px) {
+  .manually_log_activity > h2 {
+    font-size: 16px;
+  }
   .header_container > h2 {
     font-size: 16px;
   }
-}
-
-@media only screen and (max-height: 400px) {
   .log_activity_form {
     height: 90vh;
     overflow: auto;
